@@ -1,4 +1,4 @@
-# we_trade
+# We Trade
 
 A new Flutter project.
 
