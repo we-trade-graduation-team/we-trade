@@ -33,7 +33,7 @@ linter:
     always_specify_types: false
 
     # Incompatible with `prefer_final_locals`
-    # Having immutable local variables makes larger functions more predictible
+    # Having immutable local variables makes larger functions more predictable
     # so we will use `prefer_final_locals` instead.
     unnecessary_final: false
 
@@ -64,5 +64,5 @@ linter:
     # Conflicts with disabling `implicit-dynamic`
     avoid_annotating_with_dynamic: false
 
-    # Not nessecary for an application and more pointed towards public API's
+    # Not necessary for an application and more pointed towards public API's
     public_member_api_docs: false
