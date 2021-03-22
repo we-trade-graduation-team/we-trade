@@ -26,5 +26,6 @@ flutter:
   assets:
     - assets/icons/
     - assets/images/
+    - assets/images/Chat_screen_ava_temp/
     - assets/logos/
   
