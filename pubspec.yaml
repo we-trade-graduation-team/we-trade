@@ -2,7 +2,7 @@ name: we_trade
 
 description: A new Flutter project.
 
-publish_to: "none" 
+publish_to: "none"
 
 version: 1.0.0+1
 
@@ -12,19 +12,18 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  
+
   cupertino_icons: ^1.0.2
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  flutter_svg: ^0.21.0-nullsafety.0
 
 flutter:
-  
   uses-material-design: true
-  
+
   assets:
     - assets/icons/
     - assets/images/
     - assets/logos/
-  

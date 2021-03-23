@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
-import 'screens/home/homepage.dart';
+
+import 'configs/constants/routes.dart';
+import 'configs/constants/strings.dart';
+import 'configs/theme/theme.dart';
+import 'screens/onboarding/onboarding.dart';
 
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
@@ -7,11 +11,11 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: const MyHomePage(title: 'Flutter Home Page'),
+      debugShowCheckedModeBanner: false,
+      title: kAppTitle,
+      theme: theme(),
+      initialRoute: OnboardingScreen.routeName,
+      routes: routes,
     );
   }
 }
