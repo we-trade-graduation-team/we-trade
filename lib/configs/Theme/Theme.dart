@@ -13,14 +13,14 @@ ThemeData theme() {
   );
 }
 
-BottomNavigationBarThemeData bottomNavigationBarTheme(){
+BottomNavigationBarThemeData bottomNavigationBarTheme() {
   return const BottomNavigationBarThemeData(
-      backgroundColor: Colors.white,
-      selectedItemColor: kPrimaryColor,
-      unselectedItemColor: kSecondaryLightColor,
-      selectedIconTheme: IconThemeData(color: kPrimaryColor),
-      showUnselectedLabels: true,
-    );
+    backgroundColor: Colors.white,
+    selectedItemColor: kPrimaryColor,
+    unselectedItemColor: kSecondaryLightColor,
+    selectedIconTheme: IconThemeData(color: kPrimaryColor),
+    showUnselectedLabels: true,
+  );
 }
 
 InputDecorationTheme inputDecorationTheme() {

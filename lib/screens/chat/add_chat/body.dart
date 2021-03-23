@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:we_trade/widgets/buttons.dart';
+
 import '../../../models/chat/chat.dart';
+import '../../../widgets/buttons.dart';
 import '../components/chat_card_choose_new.dart';
 import '../components/search_bar.dart';
 
@@ -20,16 +21,19 @@ class _BodyState extends State<Body> {
         children: [
           const SearchBar(),
           Expanded(
-             child: ListView.builder(
+            child: ListView.builder(
               itemCount: chatsData.length,
               itemBuilder: (context, index) => ChatCardAddNew(
                 chat: chatsData[index],
-                press: (){}, 
+                press: () {},
                 isSelected: false,
-                ),
               ),
+            ),
           ),
-          ButtonWidget(press: (){}, text: 'OK', width: MediaQuery.of(context).size.width-40)
+          ButtonWidget(
+              press: () {},
+              text: 'OK',
+              width: MediaQuery.of(context).size.width - 40),
         ],
       ),
     );

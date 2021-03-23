@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../configs/constants/color.dart';
-import '../../../widgets/bottomNavigationBar.dart';
+import '../../../widgets/bottom_navigation_bar.dart';
 import 'body.dart';
 
 class ChatScreen extends StatefulWidget {
