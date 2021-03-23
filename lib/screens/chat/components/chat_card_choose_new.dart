@@ -7,16 +7,26 @@ import '../../../models/chat/chat.dart';
 class ChatCardAddNew extends StatefulWidget {
   const ChatCardAddNew({
     Key? key,
+    required this.chat,
+    required this.press,
   }) : super(key: key);
+
+  final Chat chat;
+  final VoidCallback press;
 
   @override
   _ChatCardAddNewState createState() => _ChatCardAddNewState();
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(DiagnosticsProperty<Chat>('chat', chat));
+    properties.add(ObjectFlagProperty<VoidCallback>.has('press', press));
+  }
 }
 
 class _ChatCardAddNewState extends State<ChatCardAddNew> {
-  late Chat chat;
-  late bool isSelected;
-  late VoidCallback press;
+  bool isSelected = false;
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +34,7 @@ class _ChatCardAddNewState extends State<ChatCardAddNew> {
       padding: const EdgeInsets.symmetric(vertical: 10),
       child: CheckboxListTile(
         title: Text(
-          chat.name,
+          widget.chat.name,
           style: const TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.w500,
@@ -40,7 +50,7 @@ class _ChatCardAddNewState extends State<ChatCardAddNew> {
         },
         secondary: CircleAvatar(
           radius: 24,
-          backgroundImage: AssetImage(chat.image),
+          backgroundImage: AssetImage(widget.chat.image),
         ),
         controlAffinity: ListTileControlAffinity.trailing,
       ),
@@ -50,8 +60,6 @@ class _ChatCardAddNewState extends State<ChatCardAddNew> {
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
-    properties.add(DiagnosticsProperty<Chat>('chat', chat));
     properties.add(DiagnosticsProperty<bool>('isSelected', isSelected));
-    properties.add(ObjectFlagProperty<VoidCallback>.has('press', press));
   }
 }

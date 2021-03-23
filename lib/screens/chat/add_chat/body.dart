@@ -26,7 +26,7 @@ class _BodyState extends State<Body> {
               itemBuilder: (context, index) => ChatCardAddNew(
                 chat: chatsData[index],
                 press: () {},
-                isSelected: false,
+                // isSelected: false,
               ),
             ),
           ),

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'configs/Theme/theme.dart';
+import 'configs/theme/theme.dart';
 import 'screens/chat/add_chat/add_chat_screen.dart';
 
 class MyApp extends StatelessWidget {
