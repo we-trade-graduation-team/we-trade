@@ -7,6 +7,8 @@ const kPrimaryGradientColor = LinearGradient(
   end: Alignment.bottomRight,
   colors: [Color(0xFFB877F4), Color(0xFF6F35A5)],
 );
+const kSecondaryLightColor = Color(0xFFCCD2E3);
 const kSecondaryColor = Color(0xFF979797);
 const kTextColor = Color(0xFF757575);
 const kTextLightColor = Color(0xFF787D9A);
+const kUserOnlineDot = Colors.green;

@@ -2,12 +2,12 @@ name: we_trade
 
 description: A new Flutter project.
 
-publish_to: "none"
+publish_to: 'none'
 
 version: 1.0.0+1
 
 environment:
-  sdk: ">=2.12.0-259.16.beta <3.0.0"
+  sdk: '>=2.12.0-259.16.beta <3.0.0'
 
 dependencies:
   flutter:
@@ -26,4 +26,4 @@ flutter:
   assets:
     - assets/icons/
     - assets/images/
-    - assets/logos/
+    - assets/images/Chat_screen_ava_temp/
