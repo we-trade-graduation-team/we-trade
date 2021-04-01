@@ -1,4 +1,4 @@
-import 'package:flutter/foundation.dart';
+simport 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../configs/constants/assets_path.dart';
