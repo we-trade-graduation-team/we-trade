@@ -24,12 +24,146 @@ class _FilterOverlayState extends State<FilterOverlay> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-                ),
+            Table(
+                defaultVerticalAlignment: TableCellVerticalAlignment.middle,
+              children: <TableRow>[
+                TableRow(
+                  children: <Widget>[
+                    Text(
+                      'Loại mặt hàng:',
+                      style: TextStyle(
+                        fontSize: 20.0
                       ),
+                    ),
+                    DropdownButton<ProductKind>(
+                      focusColor: Colors.grey,
+                      isExpanded: true,
+                      iconEnabledColor: Color(0xFF6F35A5),
+                      hint: Text('Tất cả'),
+                      value: chosenKind,
+                      items: productKinds.map((kind){
+                        return DropdownMenuItem<ProductKind>(
+                          value: kind,
+                          child: Text(kind.name),
+                        );
+                      }).toList(),
+                      onChanged: (value) {
+                        setState(() {
+                          chosenKind = value!;
+                        });
+                      },
+                    ),
+                   ],
+                ),
+                TableRow(
+                  children: <Widget>[
+                    SizedBox(height: 10.0,),
+                    SizedBox(height: 10.0,)
+                  ]
+                ),
+                TableRow(
+                  children: <Widget>[
+                    Text(
+                      'Nơi bán:',
+                      style: TextStyle(
+                          fontSize: 20.0
+                      ),
+                    ),
+                    Container(),
+                  ]
+                ),
+                TableRow(
+                  children: <Widget>[
+                    SizedBox(height: 5.0,),
+                    SizedBox(height: 5.0,)
+                  ]
+                ),
+                TableRow(
+                  children: <Widget>[
+                    Row(
+                      children: <Widget>[
+                        SizedBox(width: 20.0,),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Tỉnh/Thành phố:',
+                              style: TextStyle(
+                                  fontSize: 20.0
+                              ),
+                            ),
+                          ],
                         ),
+                      ],
+                    ),
+                    DropdownButton<Province>(
+                      isExpanded: true,
+                      iconEnabledColor: Color(0xFF6F35A5),
+                      hint: Text('Tất cả'),
+                      value: chosenProvince,
+                      items: provinces.map((province){
+                        return DropdownMenuItem<Province>(
+                          value: province,
+                          child: Text(province.name),
+                        );
+                      }).toList(),
+                      onChanged: (value) {
+                        setState(() {
+                          chosenProvince = value!;
+                        });
+                      },
+                    )
+                  ]
+                ),
+                TableRow(
+                  children: <Widget>[
+                    SizedBox(height: 10.0,),
+                    SizedBox(height: 10.0,)
+                  ]
+                ),
+                TableRow(
+                  children: <Widget>[
+                    Row(
+                      children: <Widget>[
+                        SizedBox(width: 20.0,),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Quận/Huyện:',
+                              style: TextStyle(
+                                  fontSize: 20.0
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                    DropdownButton<District>(
+                      isExpanded: true,
+                      iconEnabledColor: Color(0xFF6F35A5),
+                      hint: Text('Tất cả'),
+                      value: chosenDistrict,
+                      items: districts.map((district){
+                        return DropdownMenuItem<District>(
+                          value: district,
+                          child: Text(district.name),
+                        );
+                      }).toList(),
+                      onChanged: (value) {
+                        setState(() {
+                          chosenDistrict = value!;
+                        });
+                      },
+                    )
+                  ]
+                )
+              ]
             ),
             SizedBox(height: 10.0,),
             GroupButton(
+              
+              selectedColor: Color(0xFF6F35A5),
               isRadio: true,
               buttons: costs,
               spacing: 10,
