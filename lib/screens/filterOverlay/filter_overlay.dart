@@ -1,11 +1,20 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:group_button/group_button.dart';
 class FilterOverlay extends StatefulWidget {
+
+  const FilterOverlay({
+    Key? key,
+  }):super(key: key);
+
+  static String routeName = '/filter_overlay';
+
   @override
   _FilterOverlayState createState() => _FilterOverlayState();
 }
 
 class _FilterOverlayState extends State<FilterOverlay> {
+
   ProductKind chosenKind = const ProductKind(name: 'Tất cả');
   Province chosenProvince = const Province(name: 'Tất cả');
   District chosenDistrict = const District(name: 'Tất cả');
@@ -29,7 +38,7 @@ class _FilterOverlayState extends State<FilterOverlay> {
               children: <TableRow>[
                 TableRow(
                   children: <Widget>[
-                    Text(
+                    const Text(
                       'Loại mặt hàng:',
                       style: TextStyle(
                         fontSize: 20.0
@@ -55,7 +64,7 @@ class _FilterOverlayState extends State<FilterOverlay> {
                     ),
                    ],
                 ),
-                TableRow(
+                const TableRow(
                   children: <Widget>[
                     SizedBox(height: 10.0,),
                     SizedBox(height: 10.0,)
@@ -63,7 +72,7 @@ class _FilterOverlayState extends State<FilterOverlay> {
                 ),
                 TableRow(
                   children: <Widget>[
-                    Text(
+                    const Text(
                       'Nơi bán:',
                       style: TextStyle(
                           fontSize: 20.0
@@ -72,7 +81,7 @@ class _FilterOverlayState extends State<FilterOverlay> {
                     Container(),
                   ]
                 ),
-                TableRow(
+                const TableRow(
                   children: <Widget>[
                     SizedBox(height: 5.0,),
                     SizedBox(height: 5.0,)
@@ -88,7 +97,7 @@ class _FilterOverlayState extends State<FilterOverlay> {
                           children: [
                             Text(
                               'Tỉnh/Thành phố:',
-                              style: TextStyle(
+                              style:TextStyle(
                                   fontSize: 20.0
                               ),
                             ),
@@ -99,7 +108,7 @@ class _FilterOverlayState extends State<FilterOverlay> {
                     DropdownButton<Province>(
                       isExpanded: true,
                       iconEnabledColor: Color(0xFF6F35A5),
-                      hint: Text('Tất cả'),
+                      hint: const Text('Tất cả'),
                       value: chosenProvince,
                       items: provinces.map((province){
                         return DropdownMenuItem<Province>(
@@ -115,7 +124,7 @@ class _FilterOverlayState extends State<FilterOverlay> {
                     )
                   ]
                 ),
-                TableRow(
+                const TableRow(
                   children: <Widget>[
                     SizedBox(height: 10.0,),
                     SizedBox(height: 10.0,)
@@ -142,7 +151,7 @@ class _FilterOverlayState extends State<FilterOverlay> {
                     DropdownButton<District>(
                       isExpanded: true,
                       iconEnabledColor: Color(0xFF6F35A5),
-                      hint: Text('Tất cả'),
+                      hint: const Text('Tất cả'),
                       value: chosenDistrict,
                       items: districts.map((district){
                         return DropdownMenuItem<District>(
@@ -160,11 +169,10 @@ class _FilterOverlayState extends State<FilterOverlay> {
                 )
               ]
             ),
-            SizedBox(height: 10.0,),
+            const SizedBox(height: 10.0,),
             GroupButton(
               
-              selectedColor: Color(0xFF6F35A5),
-              isRadio: true,
+              selectedColor: const Color(0xFF6F35A5),
               buttons: costs,
               spacing: 10,
               onSelected: (index,isSelected){}
@@ -173,6 +181,17 @@ class _FilterOverlayState extends State<FilterOverlay> {
         ),
       ),
     );
+  }
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(DiagnosticsProperty<ProductKind>('chosenKind', chosenKind));
+    properties.add(DiagnosticsProperty<Province>('chosenProvince', chosenProvince));
+    properties.add(DiagnosticsProperty<District>('chosenDistrict', chosenDistrict));
+    properties.add(IterableProperty<ProductKind>('productKinds', productKinds));
+    properties.add(IterableProperty<Province>('provinces', provinces));
+    properties.add(IterableProperty<District>('districts', districts));
+    properties.add(IterableProperty<String>('costs', costs));
   }
 }
 

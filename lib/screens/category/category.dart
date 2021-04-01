@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:we_trade/screens/filterOverlay/filter_overlay.dart';
+import 'package:we_trade/widgets/bottom_navigation_bar.dart';
 
 const ProductKind productKind= ProductKind(name: 'Flash Deal');
 const List<ProductCard> list=[
@@ -14,56 +15,73 @@ const List<ProductCard> list=[
   const ProductCard(name: 'Product 6', image: 'image'),
 ];
 class Category extends StatelessWidget {
+
+  static String routeName = '/categories';
+
+  const Category({
+    Key? key,
+  }) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
-    return LayoutBuilder(
-      builder: (BuildContext context, BoxConstraints viewportConstraints) {
-        return SingleChildScrollView(
-          child: ConstrainedBox(
-            constraints: BoxConstraints(
-              minHeight: viewportConstraints.maxHeight,
-            ),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: <Widget>[
-                Text(
-                  'Sản phẩm mới',
-                  style: TextStyle(
-                      fontSize: 20.0,
-                      fontWeight: FontWeight.bold
-                  ),
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('We Trade'),
+        centerTitle: true,
+        backgroundColor: Colors.lightBlue,
+      ),
+      body: SafeArea(
+        child: LayoutBuilder(
+          builder: (BuildContext context, BoxConstraints viewportConstraints) {
+            return SingleChildScrollView(
+              child: ConstrainedBox(
+                constraints: BoxConstraints(
+                  minHeight: viewportConstraints.maxHeight,
                 ),
-                Container(
-                  margin: EdgeInsets.symmetric(vertical: 20.0),
-                  height: 100.0,
-                  child: ListView(
-                      scrollDirection: Axis.horizontal,
-                      children: list
-                  ),
-                ),
-                Text(
-                  productKind.name,
-                  style: TextStyle(
-                      fontSize: 20.0,
-                      fontWeight: FontWeight.bold
-                  ),
-                ),
-                Container(
-                  margin: EdgeInsets.all(10.0),
-                  height: 600.0,
-                  child: GridView.count(
-                    //scrollDirection: Axis.vertical,
-                    crossAxisCount: 2,
-                    children: list,
-                  ),
-                )
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: <Widget>[
+                    Text(
+                      'Sản phẩm mới',
+                      style: TextStyle(
+                          fontSize: 20.0,
+                          fontWeight: FontWeight.bold
+                      ),
+                    ),
+                    Container(
+                      margin: EdgeInsets.symmetric(vertical: 20.0),
+                      height: 100.0,
+                      child: ListView(
+                          scrollDirection: Axis.horizontal,
+                          children: list
+                      ),
+                    ),
+                    Text(
+                      productKind.name,
+                      style: TextStyle(
+                          fontSize: 20.0,
+                          fontWeight: FontWeight.bold
+                      ),
+                    ),
+                    Container(
+                      margin: EdgeInsets.all(10.0),
+                      height: 600.0,
+                      child: GridView.count(
+                        //scrollDirection: Axis.vertical,
+                        crossAxisCount: 2,
+                        children: list,
+                      ),
+                    )
 
-              ],
-            ),
-          ),
-        );
-      }
+                  ],
+                ),
+              ),
+            );
+          }
+        ),
+      ),
+      bottomNavigationBar: const BuildBottomNavigationBar(selectedIndex: 0,),
     );
   }
 }

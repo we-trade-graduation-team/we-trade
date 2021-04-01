@@ -8,11 +8,11 @@ class ReportBloc extends ChangeNotifier{
   bool get unlockTextField =>_unlockTextField;
   bool get confirmed => _confirmed;
 
-  set UnlockTextField (bool val){
+  set unlockTextField (bool val){
     _unlockTextField=val;
     notifyListeners();
   }
-  set Confirmed(bool val){
+  set confirmed(bool val){
     _confirmed=val;
     notifyListeners();
   }

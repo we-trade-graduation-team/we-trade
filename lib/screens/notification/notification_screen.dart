@@ -1,31 +1,56 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:we_trade/screens/notification/notification.dart';
+import 'package:we_trade/widgets/bottom_navigation_bar.dart';
+import 'notification.dart';
 
 class NotificationScreen extends StatelessWidget {
-  List<NotificationData> notes=[const NotificationData(title: 'Đơn hàng đang trong quá trình vận chuyển', content: 'Đơn hàng của quí khách đã được tiếp nhận bởi bộ phận vận chuyển'),
-    NotificationData(title: 'Đơn hàng đang trong quá trình vận chuyển', content: 'Đơn hàng của quí khách đã được tiếp nhận bởi bộ phận vận chuyển')];
 
+  const NotificationScreen({
+    Key? key,
+    this.notes=const [NotificationData(title: 'Đơn hàng đang trong quá trình vận chuyển', content: 'Đơn hàng của quí khách đã được tiếp nhận bởi bộ phận vận chuyển'),
+      NotificationData(title: 'Đơn hàng đang trong quá trình vận chuyển', content: 'Đơn hàng của quí khách đã được tiếp nhận bởi bộ phận vận chuyển')]
+
+  }) : super(key: key);
+
+  static String routeName = '/notification';
+
+  final List<NotificationData> notes;
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(10.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Text(
-            'Thông Báo',
-            style: TextStyle(
-                fontSize: 22.0,
-                fontWeight: FontWeight.bold
-            ),
-          ),
-          Column(
-            children: notes.map((note)=>NotificationCard(note: note)).toList(),
-          )
-        ],
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('We Trade'),
+        centerTitle: true,
+        backgroundColor: Colors.lightBlue,
       ),
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.all(10.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              const Text(
+                'Thông Báo',
+                style: TextStyle(
+                    fontSize: 22.0,
+                    fontWeight: FontWeight.bold
+                ),
+              ),
+              Column(
+                children: notes.map((note)=>NotificationCard(note: note)).toList(),
+              )
+            ],
+          ),
+        ),
+      ),
+      bottomNavigationBar: const BuildBottomNavigationBar(selectedIndex: 0,),
     );
+  }
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(IterableProperty<NotificationData>('notes', notes));
   }
 }
 class NotificationCard extends StatelessWidget {
@@ -33,18 +58,24 @@ class NotificationCard extends StatelessWidget {
   const NotificationCard({required this.note});
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
     return Card(
-      margin: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
+      margin: EdgeInsets.fromLTRB(size.width*0.02, size.height*0.01, size.width*0.02, size.height*0.01),
       child: Padding(
-        padding: const EdgeInsets.all(8.0),
+        padding: EdgeInsets.all(size.width*0.05),
         child: Text(
           note.title,
-          style: TextStyle(
-              fontSize: 20.0,
+          style: const TextStyle(
+              fontSize: 18,
               fontWeight: FontWeight.bold
           ),
         ),
       ),
     );
+  }
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(DiagnosticsProperty<NotificationData>('note', note));
   }
 }
