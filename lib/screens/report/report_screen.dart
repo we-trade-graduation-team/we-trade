@@ -74,6 +74,7 @@ class _ReportScreenState extends State<ReportScreen> {
               }
             },
             buttons: lyDo,
+            selectedColor: Color(0xFF6F35A5),
           ),
           TextField(
             enabled: reportBloc.unlockTextField? true: false,
@@ -100,11 +101,31 @@ class _ReportScreenState extends State<ReportScreen> {
                 )
               ]
           ),
-          Center(
-            child: RaisedButton(
+          Container(
+            alignment: Alignment.centerRight,
+            child: TextButton(
                 onPressed: (){},
-                color: reportBloc.confirmed? Colors.lightBlue: Colors.grey,
-                child: Text('Báo cáo')
+
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(10.0,2.0,10.0,2.0),
+                  child: Text(
+                    'Báo cáo',
+                    style: TextStyle(
+                      fontSize: 22.0,
+                      color: Colors.white
+                    ),
+                  ),
+                ),
+                style: ButtonStyle(
+                    backgroundColor: reportBloc.confirmed?
+                              MaterialStateProperty.all<Color>(Color(0xFF6F35A5)):
+                              MaterialStateProperty.all<Color>(Colors.grey),
+                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                        RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(18.0),
+                        )
+                    )
+                )
             ),
           )
         ],

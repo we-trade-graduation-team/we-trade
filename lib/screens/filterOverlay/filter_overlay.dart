@@ -24,99 +24,9 @@ class _FilterOverlayState extends State<FilterOverlay> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            Row(
-              children: <Widget>[
-                Text(
-                  'Loại mặt hàng:',
-                  style: TextStyle(
-                    fontSize: 20.0
-                  ),
                 ),
-                SizedBox(width: 10.0,),
-                DropdownButton<ProductKind>(
-                  hint: Text('Tất cả'),
-                  value: chosenKind,
-                  items: productKinds.map((kind){
-                    return DropdownMenuItem<ProductKind>(
-                      value: kind,
-                      child: Text(kind.name),
-                    );
-                  }).toList(),
-                  onChanged: (value) {
-                    setState(() {
-                      chosenKind = value!;
-                    });
-                  },
-                )
-              ],
-            ),
-            SizedBox(height: 10.0,),
-            Text(
-              'Nơi bán:',
-              style: TextStyle(
-                fontSize: 20.0
-              ),
-            ),
-
-            Padding(
-              padding: const EdgeInsets.all(10.0),
-              child: Column(
-                children: [
-                  Row(
-                    children: <Widget>[
-                      Text(
-                        'Tỉnh/Thành phố:',
-                        style: TextStyle(
-                            fontSize: 20.0
-                        ),
                       ),
-                      SizedBox(width: 10.0,),
-                      DropdownButton<Province>(
-                        hint: Text('Tất cả'),
-                        value: chosenProvince,
-                        items: provinces.map((province){
-                          return DropdownMenuItem<Province>(
-                            value: province,
-                            child: Text(province.name),
-                          );
-                        }).toList(),
-                        onChanged: (value) {
-                          setState(() {
-                            chosenProvince = value!;
-                          });
-                        },
-                      )
-                    ],
-                  ),
-                  SizedBox(height: 10.0,),
-                  Row(
-                    children: <Widget>[
-                      Text(
-                        'Quận/Huyện:',
-                        style: TextStyle(
-                            fontSize: 20.0
                         ),
-                      ),
-                      SizedBox(width: 10.0,),
-                      DropdownButton<District>(
-                        hint: Text('Tất cả'),
-                        value: chosenDistrict,
-                        items: districts.map((district){
-                          return DropdownMenuItem<District>(
-                            value: district,
-                            child: Text(district.name),
-                          );
-                        }).toList(),
-                        onChanged: (value) {
-                          setState(() {
-                            chosenDistrict = value!;
-                          });
-                        },
-                      )
-                    ],
-                  ),
-                ],
-              ),
             ),
             SizedBox(height: 10.0,),
             GroupButton(
