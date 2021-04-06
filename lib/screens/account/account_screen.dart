@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:we_trade/screens/following/following_screen.dart';
 
 import '../../configs/constants/color.dart';
 
@@ -11,7 +12,7 @@ class AccountScreen extends StatelessWidget {
   Widget profileNavigationLabel(
       Widget topWid, Widget botWid, Function navigateToScreen) {
     return GestureDetector(
-      onTap: () => navigateToScreen,
+      onTap: () => navigateToScreen(),
       // ignore: sort_child_properties_last
       child: Column(
         children: <Widget>[
@@ -56,7 +57,6 @@ class AccountScreen extends StatelessWidget {
                       children: <Widget>[
                         Row(
                           mainAxisAlignment: MainAxisAlignment.end,
-                          
                           children: <Widget>[
                             IconButton(
                                 color: kPrimaryLightColor,
@@ -144,11 +144,18 @@ class AccountScreen extends StatelessWidget {
                               profileNavigationLabel(
                                 const Text('0'),
                                 const Text('Theo dõi'),
-                                () {},
+                                () {
+                                  // print('theo doi click');
+                                  Navigator.of(context)
+                                      .pushNamed(FollowingScreen.routeName);
+                                },
                               ),
                               profileNavigationLabel(
                                 const Text('1'),
-                                const Text('Người theo dõi'),
+                                const Text(
+                                  'Người theo \n dõi',
+                                  textAlign: TextAlign.center,
+                                ),
                                 () {},
                               ),
                             ],
