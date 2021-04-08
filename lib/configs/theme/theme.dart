@@ -10,6 +10,7 @@ ThemeData theme() {
     inputDecorationTheme: inputDecorationTheme(),
     bottomNavigationBarTheme: bottomNavigationBarTheme(),
     visualDensity: VisualDensity.adaptivePlatformDensity,
+    tabBarTheme: tabBarTheme(),
   );
 }
 
@@ -62,6 +63,33 @@ AppBarTheme appBarTheme() {
     iconTheme: IconThemeData(color: kPrimaryColor),
     textTheme: TextTheme(
       headline6: TextStyle(color: Color(0xff8b8b8b), fontSize: 15),
+    ),
+  );
+}
+
+TabBarTheme tabBarTheme() {
+  return const TabBarTheme(
+    labelColor: kPrimaryColor,
+    unselectedLabelColor: kTextLightV2Color,
+    unselectedLabelStyle: TextStyle(
+      fontSize: 14,
+      fontWeight: FontWeight.normal,
+    ),
+    labelStyle: TextStyle(
+      fontSize: 14,
+      fontWeight: FontWeight.bold,
+    ),
+    indicator: BoxDecoration(
+      border: Border(
+        bottom: BorderSide(
+          color: kPrimaryColor,
+          width: 2.5,
+        ),
+        // top: BorderSide(
+        //   color: kTextLightV2Color,
+        //   width: 0.5,
+        // ),
+      ),
     ),
   );
 }
