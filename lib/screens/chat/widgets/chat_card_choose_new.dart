@@ -6,7 +6,7 @@ import '../../../models/chat/temp_class.dart';
 
 // ignore: must_be_immutable
 class ChatCardAddNew extends StatefulWidget {
-  const ChatCardAddNew({
+  ChatCardAddNew({
     Key? key,
     required this.user,
     required this.isSelected,

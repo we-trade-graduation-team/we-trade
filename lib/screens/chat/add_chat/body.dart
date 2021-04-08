@@ -21,17 +21,21 @@ class _BodyState extends State<Body> {
         children: [
           const SearchBar(),
           Expanded(
-             child: ListView.builder(
+            child: ListView.builder(
               itemCount: usersData.length,
               itemBuilder: (context, index) => ChatCardAddNew(
                 user: usersData[index],
-                press: (){}, 
+                press: () {},
                 isSelected: false,
-                ),
               ),
             ),
           ),
-          ButtonWidget(press: (){}, text: 'OK', width: MediaQuery.of(context).size.width-40, height: 30,)
+          ButtonWidget(
+            press: () {},
+            text: 'OK',
+            width: MediaQuery.of(context).size.width - 40,
+            height: 30,
+          )
         ],
       ),
     );
