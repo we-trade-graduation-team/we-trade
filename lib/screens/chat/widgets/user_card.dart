@@ -1,24 +1,23 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import '../../../configs/constants/color.dart';
-import '../../../models/chat/chat.dart';
+import '../../../models/chat/temp_class.dart';
 
+class UserCard extends StatelessWidget {
 
-class ChatCard extends StatelessWidget {
-
-   const ChatCard({
+  const UserCard({
     Key? key,
-    required this.chat,
+    required this.user,
     required this.press,
   }) : super(key: key);
+  
 
-  // ignore: diagnostic_describe_all_properties
-  final Chat chat;
-  // ignore: diagnostic_describe_all_properties
+  final User user;
   final VoidCallback press;
 
   @override
   Widget build(BuildContext context) {
-     return InkWell(
+    return InkWell(
       onTap: press,
       child: Padding(
         padding: const EdgeInsets.symmetric(
@@ -29,10 +28,9 @@ class ChatCard extends StatelessWidget {
               children: [
                 CircleAvatar(
                   radius: 24,
-                  //backgroundImage: Image.asset(chat.image),
-                  backgroundImage: AssetImage(chat.image),
+                  backgroundImage: AssetImage(user.image),
                 ),
-                if (chat.isActive)
+                if (user.isActive)
                   Positioned(
                     right: 0,
                     bottom: 0,
@@ -58,30 +56,23 @@ class ChatCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      chat.name,
+                      user.name,
                       style:
                           const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
-                    ),
-                    const SizedBox(height: 8),
-                    Opacity(
-                      opacity: 0.64,
-                      child: Text(
-                        chat.lastMessage,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                      ),
                     ),
                   ],
                 ),
               ),
             ),
-            Opacity(
-              opacity: 0.64,
-              child: Text(chat.time),
-            ),
           ],
         ),
       ),
     );
+  }
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(DiagnosticsProperty<User>('user', user));
+    properties.add(ObjectFlagProperty<VoidCallback>.has('press', press));
   }
 }

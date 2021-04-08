@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:we_trade/widgets/buttons.dart';
-import '../../../models/chat/chat.dart';
-import '../components/chat_card_choose_new.dart';
-import '../components/search_bar.dart';
+
+import '../../../models/chat/temp_class.dart';
+import '../../../widgets/buttons.dart';
+import '../widgets/chat_card_choose_new.dart';
+import '../widgets/search_bar.dart';
 
 class Body extends StatefulWidget {
   const Body({Key? key}) : super(key: key);
@@ -21,15 +22,15 @@ class _BodyState extends State<Body> {
           const SearchBar(),
           Expanded(
              child: ListView.builder(
-              itemCount: chatsData.length,
+              itemCount: usersData.length,
               itemBuilder: (context, index) => ChatCardAddNew(
-                chat: chatsData[index],
+                user: usersData[index],
                 press: (){}, 
                 isSelected: false,
                 ),
               ),
           ),
-          ButtonWidget(press: (){}, text: 'OK', width: MediaQuery.of(context).size.width-40)
+          ButtonWidget(press: (){}, text: 'OK', width: MediaQuery.of(context).size.width-40, height: 30,)
         ],
       ),
     );
