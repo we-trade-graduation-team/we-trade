@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'configs/constants/routes.dart';
 import 'configs/constants/strings.dart';
 import 'configs/theme/theme.dart';
-import 'screens/onboarding/onboarding.dart';
+import 'screens/home/home_screen.dart';
 
 class MyApp extends StatelessWidget {
   const MyApp({
@@ -16,7 +16,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: kAppTitle,
       theme: theme(),
-      initialRoute: OnboardingScreen.routeName,
+      initialRoute: HomeScreen.routeName,
       routes: routes,
     );
   }
