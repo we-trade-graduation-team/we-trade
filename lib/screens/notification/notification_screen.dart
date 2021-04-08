@@ -1,22 +1,26 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:we_trade/screens/notification/notification.dart';
+import 'notification.dart';
 
 class NotificationScreen extends StatelessWidget {
-  List<NotificationData> notes=[const NotificationData(title: 'Đơn hàng đang trong quá trình vận chuyển', content: 'Đơn hàng của quí khách đã được tiếp nhận bởi bộ phận vận chuyển'),
-    NotificationData(title: 'Đơn hàng đang trong quá trình vận chuyển', content: 'Đơn hàng của quí khách đã được tiếp nhận bởi bộ phận vận chuyển')];
+
+  NotificationScreen({Key? key}):super(key:key);
+
+  final List<NotificationData> notes=[const NotificationData(title: 'Đơn hàng đang trong quá trình vận chuyển', content: 'Đơn hàng của quí khách đã được tiếp nhận bởi bộ phận vận chuyển'),
+    const NotificationData(title: 'Đơn hàng đang trong quá trình vận chuyển', content: 'Đơn hàng của quí khách đã được tiếp nhận bởi bộ phận vận chuyển')];
 
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(10.0),
+      padding: const EdgeInsets.all(10),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          Text(
+          const Text(
             'Thông Báo',
             style: TextStyle(
-                fontSize: 22.0,
+                fontSize: 22,
                 fontWeight: FontWeight.bold
             ),
           ),
@@ -27,24 +31,37 @@ class NotificationScreen extends StatelessWidget {
       ),
     );
   }
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(IterableProperty<NotificationData>('notes', notes));
+  }
 }
 class NotificationCard extends StatelessWidget {
+  const NotificationCard({
+    Key? key,
+    required this.note
+  }):super(key: key);
   final NotificationData note;
-  const NotificationCard({required this.note});
   @override
   Widget build(BuildContext context) {
     return Card(
-      margin: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
+      margin: const EdgeInsets.fromLTRB(20, 10, 20, 10),
       child: Padding(
-        padding: const EdgeInsets.all(8.0),
+        padding: const EdgeInsets.all(8),
         child: Text(
           note.title,
-          style: TextStyle(
-              fontSize: 20.0,
+          style: const TextStyle(
+              fontSize: 20,
               fontWeight: FontWeight.bold
           ),
         ),
       ),
     );
+  }
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(DiagnosticsProperty<NotificationData>('note', note));
   }
 }

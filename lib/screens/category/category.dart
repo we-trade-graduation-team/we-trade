@@ -1,23 +1,25 @@
 import 'dart:ui';
 
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:we_trade/screens/filterOverlay/filter_overlay.dart';
+import '../filterOverlay/filter_overlay.dart';
 
 const ProductKind productKind= ProductKind(name: 'Flash Deal');
 const List<ProductCard> list=[
-  const ProductCard(name: 'Product 1', image: 'image'),
-  const ProductCard(name: 'Product 2', image: 'image'),
-  const ProductCard(name: 'Product 3', image: 'image'),
-  const ProductCard(name: 'Product 4', image: 'image'),
-  const ProductCard(name: 'Product 5', image: 'image'),
-  const ProductCard(name: 'Product 6', image: 'image'),
+  ProductCard(name: 'Product 1', image: 'image'),
+  ProductCard(name: 'Product 2', image: 'image'),
+  ProductCard(name: 'Product 3', image: 'image'),
+  ProductCard(name: 'Product 4', image: 'image'),
+  ProductCard(name: 'Product 5', image: 'image'),
+  ProductCard(name: 'Product 6', image: 'image'),
 ];
 class Category extends StatelessWidget {
+  const Category({Key? key}):super(key:key);
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(
-      builder: (BuildContext context, BoxConstraints viewportConstraints) {
+      builder: (context, viewportConstraints) {
         return SingleChildScrollView(
           child: ConstrainedBox(
             constraints: BoxConstraints(
@@ -27,16 +29,16 @@ class Category extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: <Widget>[
-                Text(
+                const Text(
                   'Sản phẩm mới',
                   style: TextStyle(
-                      fontSize: 20.0,
+                      fontSize: 20,
                       fontWeight: FontWeight.bold
                   ),
                 ),
                 Container(
-                  margin: EdgeInsets.symmetric(vertical: 20.0),
-                  height: 100.0,
+                  margin: const EdgeInsets.symmetric(vertical: 20),
+                  height: 100,
                   child: ListView(
                       scrollDirection: Axis.horizontal,
                       children: list
@@ -44,14 +46,14 @@ class Category extends StatelessWidget {
                 ),
                 Text(
                   productKind.name,
-                  style: TextStyle(
-                      fontSize: 20.0,
+                  style: const TextStyle(
+                      fontSize: 20,
                       fontWeight: FontWeight.bold
                   ),
                 ),
                 Container(
-                  margin: EdgeInsets.all(10.0),
-                  height: 600.0,
+                  margin: const EdgeInsets.all(10),
+                  height: 600,
                   child: GridView.count(
                     //scrollDirection: Axis.vertical,
                     crossAxisCount: 2,
@@ -69,21 +71,22 @@ class Category extends StatelessWidget {
 }
 
 class ProductCard extends StatelessWidget {
-  final String image;
-  final String name;
-  
   const ProductCard({
+    Key? key,
     required this.name,
     required this.image
-  });
+  }):super(key:key);
+
+  final String image;
+  final String name;
   
   @override
   Widget build(BuildContext context) {
     return Card(
       child: Container(
-        margin: EdgeInsets.all(10.0),
-        height: 100.0,
-        width: 100.0,
+        margin: const EdgeInsets.all(10),
+        height: 100,
+        width: 100,
         child: Column(
           children: <Widget>[
             Image(
@@ -92,8 +95,8 @@ class ProductCard extends StatelessWidget {
             Center(
               child: Text(
                 name,
-                style: TextStyle(
-                  fontSize: 20.0
+                style: const TextStyle(
+                  fontSize: 20
                 ),
               ),
             )
@@ -101,6 +104,12 @@ class ProductCard extends StatelessWidget {
         ),
       ),
     );
+  }
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(StringProperty('image', image));
+    properties.add(StringProperty('name', name));
   }
 }
   

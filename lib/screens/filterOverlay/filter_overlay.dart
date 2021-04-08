@@ -1,6 +1,9 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+// ignore: import_of_legacy_library_into_null_safe
 import 'package:group_button/group_button.dart';
 class FilterOverlay extends StatefulWidget {
+  const FilterOverlay({Key? key}):super(key:key);
   @override
   _FilterOverlayState createState() => _FilterOverlayState();
 }
@@ -20,7 +23,7 @@ class _FilterOverlayState extends State<FilterOverlay> {
   Widget build(BuildContext context) {
     return Card(
       child: Padding(
-        padding: const EdgeInsets.all(10.0),
+        padding: const EdgeInsets.all(10),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
@@ -29,17 +32,17 @@ class _FilterOverlayState extends State<FilterOverlay> {
               children: <TableRow>[
                 TableRow(
                   children: <Widget>[
-                    Text(
+                    const Text(
                       'Loại mặt hàng:',
                       style: TextStyle(
-                        fontSize: 20.0
+                        fontSize: 20
                       ),
                     ),
                     DropdownButton<ProductKind>(
                       focusColor: Colors.grey,
                       isExpanded: true,
-                      iconEnabledColor: Color(0xFF6F35A5),
-                      hint: Text('Tất cả'),
+                      iconEnabledColor: const Color(0xFF6F35A5),
+                      hint: const Text('Tất cả'),
                       value: chosenKind,
                       items: productKinds.map((kind){
                         return DropdownMenuItem<ProductKind>(
@@ -55,41 +58,42 @@ class _FilterOverlayState extends State<FilterOverlay> {
                     ),
                    ],
                 ),
-                TableRow(
+                const TableRow(
                   children: <Widget>[
-                    SizedBox(height: 10.0,),
-                    SizedBox(height: 10.0,)
+                    SizedBox(height: 10,),
+                    SizedBox(height: 10,)
                   ]
                 ),
                 TableRow(
                   children: <Widget>[
-                    Text(
+                    const Text(
                       'Nơi bán:',
                       style: TextStyle(
-                          fontSize: 20.0
+                          fontSize: 20
                       ),
                     ),
                     Container(),
                   ]
                 ),
-                TableRow(
+                const TableRow(
                   children: <Widget>[
-                    SizedBox(height: 5.0,),
-                    SizedBox(height: 5.0,)
+                    SizedBox(height: 5,),
+                    SizedBox(height: 5,)
                   ]
                 ),
                 TableRow(
                   children: <Widget>[
                     Row(
                       children: <Widget>[
-                        SizedBox(width: 20.0,),
+                        const SizedBox(width: 20,),
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
+                          // ignore: prefer_const_literals_to_create_immutables
+                          children: <Widget>[
+                            const Text(
                               'Tỉnh/Thành phố:',
                               style: TextStyle(
-                                  fontSize: 20.0
+                                  fontSize: 20
                               ),
                             ),
                           ],
@@ -98,8 +102,8 @@ class _FilterOverlayState extends State<FilterOverlay> {
                     ),
                     DropdownButton<Province>(
                       isExpanded: true,
-                      iconEnabledColor: Color(0xFF6F35A5),
-                      hint: Text('Tất cả'),
+                      iconEnabledColor: const Color(0xFF6F35A5),
+                      hint: const Text('Tất cả'),
                       value: chosenProvince,
                       items: provinces.map((province){
                         return DropdownMenuItem<Province>(
@@ -115,24 +119,25 @@ class _FilterOverlayState extends State<FilterOverlay> {
                     )
                   ]
                 ),
-                TableRow(
+                const TableRow(
                   children: <Widget>[
-                    SizedBox(height: 10.0,),
-                    SizedBox(height: 10.0,)
+                    SizedBox(height: 10,),
+                    SizedBox(height: 10,)
                   ]
                 ),
                 TableRow(
                   children: <Widget>[
                     Row(
                       children: <Widget>[
-                        SizedBox(width: 20.0,),
+                        const SizedBox(width: 20,),
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
+                          // ignore: prefer_const_literals_to_create_immutables
                           children: [
-                            Text(
+                            const Text(
                               'Quận/Huyện:',
                               style: TextStyle(
-                                  fontSize: 20.0
+                                  fontSize: 20
                               ),
                             ),
                           ],
@@ -141,8 +146,8 @@ class _FilterOverlayState extends State<FilterOverlay> {
                     ),
                     DropdownButton<District>(
                       isExpanded: true,
-                      iconEnabledColor: Color(0xFF6F35A5),
-                      hint: Text('Tất cả'),
+                      iconEnabledColor: const Color(0xFF6F35A5),
+                      hint: const Text('Tất cả'),
                       value: chosenDistrict,
                       items: districts.map((district){
                         return DropdownMenuItem<District>(
@@ -160,11 +165,10 @@ class _FilterOverlayState extends State<FilterOverlay> {
                 )
               ]
             ),
-            SizedBox(height: 10.0,),
+            const SizedBox(height: 10,),
             GroupButton(
               
-              selectedColor: Color(0xFF6F35A5),
-              isRadio: true,
+              selectedColor: const Color(0xFF6F35A5),
               buttons: costs,
               spacing: 10,
               onSelected: (index,isSelected){}
@@ -174,17 +178,34 @@ class _FilterOverlayState extends State<FilterOverlay> {
       ),
     );
   }
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(IterableProperty<String>('costs', costs));
+    properties.add(IterableProperty<Province>('provinces', provinces));
+    properties.add(IterableProperty<ProductKind>('productKinds', productKinds));
+    properties.add(IterableProperty<District>('districts', districts));
+    properties.add(DiagnosticsProperty<District>('chosenDistrict', chosenDistrict));
+    properties.add(DiagnosticsProperty<ProductKind>('chosenKind', chosenKind));
+    properties.add(DiagnosticsProperty<Province>('chosenProvince', chosenProvince));
+  }
 }
 
 class ProductKind{
+  const ProductKind({
+    required this.name
+  });
   final String name;
-  const ProductKind({required this.name});
 }
 class Province{
+  const Province({
+    required this.name
+  });
   final String name;
-  const Province({required this.name});
 }
 class District{
+  const District({
+    required this.name
+  });
   final String name;
-  const District({required this.name});
 }

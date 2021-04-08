@@ -1,9 +1,13 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+// ignore: import_of_legacy_library_into_null_safe
 import 'package:group_button/group_button.dart';
+// ignore: import_of_legacy_library_into_null_safe
 import 'package:provider/provider.dart';
-import 'package:we_trade/bloc/report_bloc.dart';
+import '../../bloc/report_bloc.dart';
 
 class ReportScreen extends StatefulWidget {
+  const ReportScreen({Key? key}):super(key: key);
   @override
   _ReportScreenState createState() => _ReportScreenState();
 }
@@ -17,39 +21,40 @@ class _ReportScreenState extends State<ReportScreen> {
     final ReportBloc reportBloc = Provider.of<ReportBloc>(context);
 
     return Padding(
-      padding: const EdgeInsets.all(10.0),
+      padding: const EdgeInsets.all(10),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Row(
               children: <Widget>[
-                Icon(
+                const Icon(
                   Icons.broken_image,
-                  size: 100.0,
+                  size: 100,
                 ),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    Text(
+                    const Text(
                       'Tên Sản Phẩm',
                       style: TextStyle(
-                          fontSize: 24.0,
+                          fontSize: 24,
                           fontWeight: FontWeight.bold
                       ),
                     ),
-                    Text(
+                    const Text(
                       'tên người bán',
                       style: TextStyle(
-                          fontSize: 18.0
+                          fontSize: 18
                       ),
                     ),
                     Row(
+                      // ignore: prefer_const_literals_to_create_immutables
                       children: <Widget>[
-                        Icon(Icons.edit_location),
-                        Text(
+                        const Icon(Icons.edit_location),
+                        const Text(
                           'Nơi bán',
                           style: TextStyle(
-                              fontSize: 18.0
+                              fontSize: 18
                           ),
                         )
                       ],
@@ -58,11 +63,11 @@ class _ReportScreenState extends State<ReportScreen> {
                 )
               ]
           ),
-          SizedBox(height: 10.0),
-          Text(
+          const SizedBox(height: 10),
+          const Text(
             'Lý do:',
             style: TextStyle(
-                fontSize: 22.0
+                fontSize: 22
             ),
           ),
           GroupButton(
@@ -74,29 +79,29 @@ class _ReportScreenState extends State<ReportScreen> {
               }
             },
             buttons: lyDo,
-            selectedColor: Color(0xFF6F35A5),
+            selectedColor: const Color(0xFF6F35A5),
           ),
           TextField(
+            // ignore: avoid_bool_literals_in_conditional_expressions
             enabled: reportBloc.unlockTextField? true: false,
             obscureText: true,
             decoration: InputDecoration(
+              // ignore: avoid_bool_literals_in_conditional_expressions
               filled: reportBloc.unlockTextField? false: true,
               fillColor: Colors.grey,
-              border: OutlineInputBorder(),
+              border: const OutlineInputBorder(),
             ),
           ),
           Row(
               children: <Widget>[
                 IconButton(
-                    icon: reportBloc.confirmed? Icon(Icons.check_box):Icon(Icons.crop_square),
-                    onPressed: (){
-                      reportBloc.ChangeStateConfirmed();
-                    }
+                    icon: reportBloc.confirmed? const Icon(Icons.check_box):const Icon(Icons.crop_square),
+                    onPressed: reportBloc.ChangeStateConfirmed
                 ),
-                Text(
+                const Text(
                   'Tôi chắc chắn muốn báo cáo sản phẩm này',
                   style: TextStyle(
-                      fontSize: 14.0
+                      fontSize: 14
                   ),
                 )
               ]
@@ -105,31 +110,37 @@ class _ReportScreenState extends State<ReportScreen> {
             alignment: Alignment.centerRight,
             child: TextButton(
                 onPressed: (){},
+                style: ButtonStyle(
+                    backgroundColor: reportBloc.confirmed?
+                              MaterialStateProperty.all<Color>(const Color(0xFF6F35A5)):
+                              MaterialStateProperty.all<Color>(Colors.grey),
+                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                        RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(18),
+                        )
+                    )
+                ),
 
-                child: Padding(
-                  padding: const EdgeInsets.fromLTRB(10.0,2.0,10.0,2.0),
+
+                child:  const Padding(
+                  padding: EdgeInsets.fromLTRB(10,2,10,2),
                   child: Text(
                     'Báo cáo',
                     style: TextStyle(
-                      fontSize: 22.0,
+                      fontSize: 22,
                       color: Colors.white
                     ),
                   ),
                 ),
-                style: ButtonStyle(
-                    backgroundColor: reportBloc.confirmed?
-                              MaterialStateProperty.all<Color>(Color(0xFF6F35A5)):
-                              MaterialStateProperty.all<Color>(Colors.grey),
-                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                        RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(18.0),
-                        )
-                    )
-                )
             ),
           )
         ],
       ),
     );
+  }
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(IterableProperty<String>('lyDo', lyDo));
   }
 }

@@ -1,34 +1,43 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:we_trade/screens/notification/notification.dart';
+import 'notification.dart';
 
 class DetailedNotificationScreen extends StatelessWidget {
-  NotificationData note =NotificationData(title: 'Đơn hàng đang trong quá trình vận chuyển', content: 'Đơn hàng của quí khách đã được tiếp nhận bởi bộ phận vận chuyển');
+
+  const DetailedNotificationScreen({Key? key}):super(key: key);
+  // ignore: avoid_field_initializers_in_const_classes
+  final NotificationData note = const NotificationData(title: 'Đơn hàng đang trong quá trình vận chuyển', content: 'Đơn hàng của quí khách đã được tiếp nhận bởi bộ phận vận chuyển');
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(8.0),
+      padding: const EdgeInsets.all(8),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Text(
             note.title,
-            style: TextStyle(
-                fontSize: 24.0,
+            style: const TextStyle(
+                fontSize: 24,
                 fontWeight: FontWeight.bold
             ),
           ),
           Padding(
-            padding: const EdgeInsets.all(8.0),
+            padding: const EdgeInsets.all(8),
             child: Text(
               note.content,
-              style: TextStyle(
-                  fontSize: 18.0
+              style: const TextStyle(
+                  fontSize: 18
               ),
             ),
           )
         ],
       ),
     );
+  }
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(DiagnosticsProperty<NotificationData>('note', note));
   }
 }
