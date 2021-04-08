@@ -5,6 +5,7 @@ import 'notification.dart';
 class NotificationScreen extends StatelessWidget {
 
   NotificationScreen({Key? key}):super(key:key);
+  static String routeName='/notificationScreen';
 
   final List<NotificationData> notes=[const NotificationData(title: 'Đơn hàng đang trong quá trình vận chuyển', content: 'Đơn hàng của quí khách đã được tiếp nhận bởi bộ phận vận chuyển'),
     const NotificationData(title: 'Đơn hàng đang trong quá trình vận chuyển', content: 'Đơn hàng của quí khách đã được tiếp nhận bởi bộ phận vận chuyển')];

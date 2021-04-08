@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:group_button/group_button.dart';
 class FilterOverlay extends StatefulWidget {
   const FilterOverlay({Key? key}):super(key:key);
+  static String routeName='/filterOverlay';
   @override
   _FilterOverlayState createState() => _FilterOverlayState();
 }

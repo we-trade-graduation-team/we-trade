@@ -1,4 +1,9 @@
 import 'package:flutter/widgets.dart';
+import 'package:we_trade/screens/category/category.dart';
+import 'package:we_trade/screens/filterOverlay/filter_overlay.dart';
+import 'package:we_trade/screens/notification/detailed_notification_screen.dart';
+import 'package:we_trade/screens/notification/notification_screen.dart';
+import 'package:we_trade/screens/report/report_screen.dart';
 
 import '../../screens/auth/complete_profile/complete_profile_screen.dart';
 import '../../screens/auth/forgot_password/forgot_password_screen.dart';
@@ -26,4 +31,9 @@ final Map<String, WidgetBuilder> routes = {
   HomeScreen.routeName: (context) => const HomeScreen(),
   DetailScreen.routeName: (context) => const DetailScreen(),
   ProfileScreen.routeName: (context) => const ProfileScreen(),
+  Category.routeName:(context)=>const Category(),
+  ReportScreen.routeName:(context)=>const ReportScreen(),
+  NotificationScreen.routeName: (context) => NotificationScreen(),
+  DetailedNotificationScreen.routeName:(context)=>DetailedNotificationScreen(),
+  FilterOverlay.routeName: (context)=>FilterOverlay()
 };
