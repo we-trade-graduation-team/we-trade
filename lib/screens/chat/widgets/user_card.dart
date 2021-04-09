@@ -1,16 +1,18 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import '../../../configs/constants/color.dart';
-import '../../../models/chat/chat.dart';
+import '../../../models/chat/temp_class.dart';
 
-class ChatCard extends StatelessWidget {
-  const ChatCard({
+class UserCard extends StatelessWidget {
+
+  const UserCard({
     Key? key,
-    required this.chat,
+    required this.user,
     required this.press,
   }) : super(key: key);
+  
 
-  final Chat chat;
+  final User user;
   final VoidCallback press;
 
   @override
@@ -18,17 +20,17 @@ class ChatCard extends StatelessWidget {
     return InkWell(
       onTap: press,
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+        padding: const EdgeInsets.symmetric(
+            horizontal: 20, vertical: 15),
         child: Row(
           children: [
             Stack(
               children: [
                 CircleAvatar(
                   radius: 24,
-                  //backgroundImage: Image.asset(chat.image),
-                  backgroundImage: AssetImage(chat.image),
+                  backgroundImage: AssetImage(user.image),
                 ),
-                if (chat.isActive)
+                if (user.isActive)
                   Positioned(
                     right: 0,
                     bottom: 0,
@@ -38,7 +40,9 @@ class ChatCard extends StatelessWidget {
                       decoration: BoxDecoration(
                         color: kUserOnlineDot,
                         shape: BoxShape.circle,
-                        border: Border.all(color: Colors.white, width: 3),
+                        border: Border.all(
+                            color: Colors.white,
+                            width: 3),
                       ),
                     ),
                   )
@@ -46,42 +50,29 @@ class ChatCard extends StatelessWidget {
             ),
             Expanded(
               child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 20),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      chat.name,
-                      style: const TextStyle(
-                          fontSize: 16, fontWeight: FontWeight.w500),
-                    ),
-                    const SizedBox(height: 8),
-                    Opacity(
-                      opacity: 0.64,
-                      child: Text(
-                        chat.lastMessage,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                      ),
+                      user.name,
+                      style:
+                          const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
                     ),
                   ],
                 ),
               ),
-            ),
-            Opacity(
-              opacity: 0.64,
-              child: Text(chat.time),
             ),
           ],
         ),
       ),
     );
   }
-
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
-    properties.add(DiagnosticsProperty<Chat>('chat', chat));
+    properties.add(DiagnosticsProperty<User>('user', user));
     properties.add(ObjectFlagProperty<VoidCallback>.has('press', press));
   }
 }

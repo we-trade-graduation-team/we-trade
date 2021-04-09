@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-import '../../../models/chat/chat.dart';
-import '../components/chat_card.dart';
-import '../components/search_bar.dart';
+import '../../../models/chat/temp_class.dart';
+import '../widgets/chat_card.dart';
+import '../widgets/search_bar.dart';
 
 class Body extends StatelessWidget {
 
