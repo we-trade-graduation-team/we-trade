@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:we_trade/screens/category/category.dart';
+import 'package:we_trade/screens/follow/follow_screen.dart';
 import 'package:we_trade/screens/notification/notification_screen.dart';
 import 'package:we_trade/screens/report/build_report_screen.dart';
 import 'package:we_trade/screens/report/report_screen.dart';
+import 'package:we_trade/screens/account/account_screen.dart';
+import 'package:we_trade/screens/userinfo/changepassword_screen.dart';
+import 'package:we_trade/screens/userinfo/userinfo_screen.dart';
 
 import 'configs/constants/routes.dart';
 import 'configs/constants/strings.dart';
@@ -20,8 +24,14 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: kAppTitle,
       theme: theme(),
-      initialRoute: BuildReportScreen.routeName,
-      routes: routes,
+      initialRoute: AccountScreen.routeName,
+      routes: {
+        '/account': (ctx) => AccountScreen(),
+        '/userinfo': (ctx) => UserInfoScreen(),
+        '/follow': (ctx) => FollowScreen(),
+        '/changepassword': (ctx) => ChangePasswordScreen(),
+
+      },
     );
   }
 }
