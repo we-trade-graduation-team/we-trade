@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:we_trade/screens/follow/follow_screen.dart';
+import 'package:we_trade/screens/userinfo/userinfo_screen.dart';
 
 import '../../configs/constants/color.dart';
 
@@ -107,7 +108,8 @@ class AccountScreen extends StatelessWidget {
                                   ),
                                   child: GestureDetector(
                                     onTap: () {
-                                      print('thing tin ca nhan tapped');
+                                      Navigator.of(context)
+                                          .pushNamed(UserInfoScreen.routeName);
                                     },
                                     child: const Text(
                                       'Thông tin tài khoản',
