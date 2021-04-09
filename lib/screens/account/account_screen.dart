@@ -1,10 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:we_trade/screens/following/following_screen.dart';
+import 'package:we_trade/screens/follow/follow_screen.dart';
 
 import '../../configs/constants/color.dart';
 
+enum Follow_Screen {
+  Following,
+  Follower,
+}
+
 class AccountScreen extends StatelessWidget {
   static const routeName = '/account';
+
   const AccountScreen({
     Key? key,
   }) : super(key: key);
@@ -146,8 +152,10 @@ class AccountScreen extends StatelessWidget {
                                 const Text('Theo dõi'),
                                 () {
                                   // print('theo doi click');
-                                  Navigator.of(context)
-                                      .pushNamed(FollowingScreen.routeName);
+                                  Navigator.of(context).pushNamed(
+                                    FollowScreen.routeName,
+                                    arguments: Follow_Screen.Following,
+                                  );
                                 },
                               ),
                               profileNavigationLabel(
@@ -156,7 +164,12 @@ class AccountScreen extends StatelessWidget {
                                   'Người theo \n dõi',
                                   textAlign: TextAlign.center,
                                 ),
-                                () {},
+                                () {
+                                  Navigator.of(context).pushNamed(
+                                    FollowScreen.routeName,
+                                    arguments: Follow_Screen.Follower,
+                                  );
+                                },
                               ),
                             ],
                           ),

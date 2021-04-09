@@ -1,14 +1,22 @@
 import 'package:flutter/material.dart';
-import 'package:we_trade/configs/constants/color.dart';
 
-class FollowingScreen extends StatelessWidget {
-  static const routeName = '/following';
+import '../../configs/constants/color.dart';
+import '../account/account_screen.dart';
+
+class FollowScreen extends StatelessWidget {
+  static const routeName = '/follow';
+  const FollowScreen({
+    Key? key,
+  });
 
   @override
   Widget build(BuildContext context) {
+    final screen = ModalRoute.of(context)!.settings.arguments as Follow_Screen;
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Theo dõi'),
+        title: screen == Follow_Screen.Follower
+            ? const Text('Theo dõi bởi')
+            : const Text('Theo  dõi'),
       ),
       body: Container(
         child: ListView.builder(
