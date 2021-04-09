@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:we_trade/configs/constants/color.dart';
+import 'package:we_trade/screens/userinfo/changepassword_screen.dart';
 
 class UserInfoScreen extends StatefulWidget {
   static const routeName = '/userinfo';
@@ -37,10 +38,10 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
       ),
       body: GestureDetector(
         onTap: () {
-          FocusScope.of(context).requestFocus(new FocusNode());
+          FocusScope.of(context).requestFocus(FocusNode());
         },
         child: ListView(
-          padding: EdgeInsets.symmetric(
+          padding: const EdgeInsets.symmetric(
             horizontal: 15,
             vertical: 30,
           ),
@@ -48,43 +49,43 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
             Column(
               children: <Widget>[
                 TextField(
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     icon: Icon(Icons.person),
                     labelText: 'Họ và tên',
                     hintText: 'Nhập họ tên',
                   ),
                   controller: _nameController,
                 ),
-                SizedBox(height: 15),
+                const SizedBox(height: 15),
                 TextField(
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     icon: Icon(Icons.phone),
                     labelText: 'Số điện thoại',
                     hintText: 'Nhập số điện thoại',
                   ),
                   controller: _phoneNumController,
-                  keyboardType: TextInputType.number,
+                  keyboardType: TextInputType.phone,
                 ),
-                SizedBox(height: 15),
+                const SizedBox(height: 15),
                 TextField(
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     icon: Icon(Icons.email),
                     labelText: 'Email',
                     hintText: 'Nhập Email',
                   ),
                   controller: _emailController,
                 ),
-                SizedBox(height: 15),
+                const SizedBox(height: 15),
                 TextField(
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     icon: Icon(Icons.location_on),
                     labelText: 'Địa chỉ',
                     hintText: 'Chọn địa chỉ',
                   ),
                   controller: _locationController,
                 ),
-                SizedBox(height: 30),
-                TextField(
+                const SizedBox(height: 30),
+                const TextField(
                   decoration: InputDecoration(
                     labelText: 'Giới thiệu bản thân',
                     hintText: 'Nhập lời giới thiệu...',
@@ -104,22 +105,25 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
             Expanded(
               child: ElevatedButton(
                 onPressed: () {},
-                child: Text('Lưu'),
                 style: ElevatedButton.styleFrom(
                   primary: kPrimaryColor,
                 ),
+                child: const Text('Lưu'),
               ),
             ),
-            SizedBox(width: 10),
+            const SizedBox(width: 10),
             Expanded(
               child: ElevatedButton(
-                onPressed: () {},
-                child: Text(
-                  'Đổi mật khẩu',
-                  style: TextStyle(color: kTextColor),
-                ),
+                onPressed: () {
+                  Navigator.of(context)
+                      .pushNamed(ChangePasswordScreen.routeName);
+                },
                 style: ElevatedButton.styleFrom(
                   primary: kPrimaryLightColor,
+                ),
+                child: const Text(
+                  'Đổi mật khẩu',
+                  style: TextStyle(color: kTextColor),
                 ),
               ),
             ),
