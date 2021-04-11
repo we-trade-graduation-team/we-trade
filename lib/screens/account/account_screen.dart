@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:we_trade/screens/follow/follow_screen.dart';
+import 'package:we_trade/screens/myrate/my_rate_screen.dart';
 import 'package:we_trade/screens/userinfo/userinfo_screen.dart';
 
 import '../../configs/constants/color.dart';
@@ -219,7 +220,9 @@ class AccountScreen extends StatelessWidget {
                       color: Colors.green,
                     ),
                     'Đánh giá của tôi',
-                    () {},
+                    () {
+                      Navigator.of(context).pushNamed(MyRateScreen.routeName);
+                    },
                   ),
                   buildListTile(
                     const Icon(
