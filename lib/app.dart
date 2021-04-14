@@ -3,6 +3,7 @@ import 'package:we_trade/screens/category/category.dart';
 import 'package:we_trade/screens/follow/follow_screen.dart';
 import 'package:we_trade/screens/myrate/my_rate_screen.dart';
 import 'package:we_trade/screens/notification/notification_screen.dart';
+import 'package:we_trade/screens/post_management/hide_post_screen.dart';
 import 'package:we_trade/screens/post_management/post_management_screen.dart';
 import 'package:we_trade/screens/report/build_report_screen.dart';
 import 'package:we_trade/screens/report/report_screen.dart';
@@ -36,6 +37,7 @@ class MyApp extends StatelessWidget {
         MyRateScreen.routeName: (ctx) => MyRateScreen(),
         PostManagementScreen.routeName: (ctx) => PostManagementScreen(),
         TradingHistoryScreen.routeName: (ctx)=>TradingHistoryScreen(),
+        HidePostScreen.routeName: (ctx)=> HidePostScreen(),
       },
     );
   }
