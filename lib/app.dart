@@ -1,11 +1,13 @@
-
 import 'package:flutter/material.dart';
 import 'package:we_trade/screens/category/category.dart';
 import 'package:we_trade/screens/follow/follow_screen.dart';
+import 'package:we_trade/screens/myrate/my_rate_screen.dart';
 import 'package:we_trade/screens/notification/notification_screen.dart';
+import 'package:we_trade/screens/post_management/post_management_screen.dart';
 import 'package:we_trade/screens/report/build_report_screen.dart';
 import 'package:we_trade/screens/report/report_screen.dart';
 import 'package:we_trade/screens/account/account_screen.dart';
+import 'package:we_trade/screens/trading_history/trading_history_screen.dart';
 import 'package:we_trade/screens/userinfo/changepassword_screen.dart';
 import 'package:we_trade/screens/userinfo/userinfo_screen.dart';
 
@@ -27,11 +29,13 @@ class MyApp extends StatelessWidget {
       theme: theme(),
       initialRoute: AccountScreen.routeName,
       routes: {
-        '/account': (ctx) => AccountScreen(),
-        '/userinfo': (ctx) => UserInfoScreen(),
-        '/follow': (ctx) => FollowScreen(),
-        '/changepassword': (ctx) => ChangePasswordScreen(),
-
+        AccountScreen.routeName: (ctx) => const AccountScreen(),
+        UserInfoScreen.routeName: (ctx) => UserInfoScreen(),
+        FollowScreen.routeName: (ctx) => const FollowScreen(),
+        ChangePasswordScreen.routeName: (ctx) => ChangePasswordScreen(),
+        MyRateScreen.routeName: (ctx) => MyRateScreen(),
+        PostManagementScreen.routeName: (ctx) => PostManagementScreen(),
+        TradingHistoryScreen.routeName: (ctx)=>TradingHistoryScreen(),
       },
     );
   }
