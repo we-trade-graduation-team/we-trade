@@ -64,12 +64,12 @@ class ButtonWidget extends StatelessWidget {
     properties.add(DoubleProperty('height', height));
   }
 
-  @override
-  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
-    super.debugFillProperties(properties);
-    properties.add(DiagnosticsProperty<bool>('isFilled', isFilled));
-    properties.add(ObjectFlagProperty<VoidCallback>.has('press', press));
-    properties.add(StringProperty('text', text));
-    properties.add(DoubleProperty('width', width));
-  }
+  // @override
+  // void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+  //   super.debugFillProperties(properties);
+  //   properties.add(DiagnosticsProperty<bool>('isFilled', isFilled));
+  //   properties.add(ObjectFlagProperty<VoidCallback>.has('press', press));
+  //   properties.add(StringProperty('text', text));
+  //   properties.add(DoubleProperty('width', width));
+  // }
 }

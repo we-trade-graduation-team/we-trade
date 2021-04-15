@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:we_trade/screens/post_management/hide_post_screen.dart';
 import '../configs/constants/color.dart';
 import '../models/review/temp_class.dart';
 
@@ -22,7 +23,7 @@ class TradingProductCard extends StatelessWidget {
       },
       child: Container(
         margin: const EdgeInsets.fromLTRB(15, 3, 15, 3),
-        padding: const EdgeInsets.all(20),
+        padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 10),
         decoration: const BoxDecoration(
           //color: Colors.white,
           border: Border(
@@ -80,10 +81,11 @@ class TradingProductCard extends StatelessWidget {
                 Expanded(
                   child: GestureDetector(
                     onTap: () {
-                      print('3 ... taped');
+                      Navigator.of(context).pushNamed(HidePostScreen.routeName);
                     },
                     child: Container(
-                      alignment: const Alignment(4, 0),
+                      width: 25,
+                      alignment: Alignment.centerRight,
                       child: const Icon(Icons.more_vert),
                     ),
                   ),

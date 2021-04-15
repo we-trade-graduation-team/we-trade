@@ -1,13 +1,12 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-
 import '../../../configs/constants/color.dart';
 import '../../../models/chat/temp_class.dart';
 
 
 // ignore: must_be_immutable
 class ChatCardAddNew extends StatefulWidget {
-  const ChatCardAddNew({
+  ChatCardAddNew({
     Key? key,
     required this.user,
     required this.isSelected,
@@ -17,7 +16,6 @@ class ChatCardAddNew extends StatefulWidget {
   final User user;
   bool isSelected;
   final VoidCallback press;
-
   @override
   _ChatCardAddNewState createState() => _ChatCardAddNewState();
   @override
@@ -30,12 +28,10 @@ class ChatCardAddNew extends StatefulWidget {
 }
 
 class _ChatCardAddNewState extends State<ChatCardAddNew> {
-  bool isSelected = false;
-
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 10),
+      padding: const EdgeInsets.symmetric( vertical: 10),
       child: CheckboxListTile(
       title:Text(
         widget.user.name,
@@ -55,11 +51,6 @@ class _ChatCardAddNewState extends State<ChatCardAddNew> {
       controlAffinity: ListTileControlAffinity.trailing,
     )
     );
-  }
-
-  @override
-  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
-    super.debugFillProperties(properties);
-    properties.add(DiagnosticsProperty<bool>('isSelected', isSelected));
+      
   }
 }

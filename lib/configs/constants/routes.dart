@@ -36,5 +36,6 @@ final Map<String, WidgetBuilder> routes = {
   NotificationScreen.routeName:(context)=>const NotificationScreen(),
   DetailedNotificationScreen.routeName:(context)=>const DetailedNotificationScreen(),
   Category.routeName:(context)=>const Category(),
-  BuildReportScreen.routeName:(context)=>const BuildReportScreen()
+  BuildReportScreen.routeName:(context)=>const BuildReportScreen(),
+  
 };

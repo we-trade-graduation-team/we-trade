@@ -152,7 +152,7 @@ class MainInfo extends StatelessWidget {
                 const SizedBox(height: 10),
             
                 RatingBar.builder(
-                    initialRating: 3.8,
+                    initialRating: 3.5,
                     allowHalfRating: true,
                     //itemCount: 5,
                     glowRadius: 10,

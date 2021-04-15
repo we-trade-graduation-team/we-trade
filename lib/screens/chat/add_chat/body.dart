@@ -29,7 +29,6 @@ class _BodyState extends State<Body> {
                 isSelected: false,
                 ),
               ),
-            ),
           ),
           ButtonWidget(press: (){}, text: 'OK', width: MediaQuery.of(context).size.width-40, height: 30,)
         ],
