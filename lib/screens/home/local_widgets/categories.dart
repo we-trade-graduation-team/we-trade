@@ -2,6 +2,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 // import 'package:line_icons/line_icon.dart';
 import 'package:line_icons/line_icons.dart';
+import 'package:we_trade/screens/category/category.dart';
+import 'package:we_trade/screens/report/report_screen.dart';
 
 import '../../../configs/constants/color.dart';
 
@@ -41,7 +43,8 @@ class Categories extends StatelessWidget {
             (index) => CategoryCard(
               icon: categories[index]['icon']!,
               text: categories[index]['text']!,
-              press: () {},
+              press: () =>
+                  Navigator.pushNamed(context,ReportScreen.routeName),
             ),
           ),
         ),

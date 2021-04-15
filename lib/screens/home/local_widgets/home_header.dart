@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:we_trade/screens/notification/notification_screen.dart';
 
 import 'icon_btn_with_counter.dart';
 import 'search_field.dart';
@@ -25,7 +26,7 @@ class HomeHeader extends StatelessWidget {
               icon: 'bell',
               // icon: bellIcon,
               numOfitem: 4,
-              press: () {},
+              press: () =>Navigator.pushNamed(context, NotificationScreen.routeName),
             ),
           ],
         ),

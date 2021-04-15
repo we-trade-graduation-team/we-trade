@@ -1,5 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import '../report/local_widgets/pop_header.dart';
+import '../../widgets/custom_bottom_navigation_bar.dart';
 import 'notification.dart';
 
 class DetailedNotificationScreen extends StatelessWidget {
@@ -11,29 +13,36 @@ class DetailedNotificationScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(8),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Text(
-            note.title,
-            style: const TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(8),
-            child: Text(
-              note.content,
+    return Scaffold(
+        appBar: PreferredSize(
+          preferredSize: Size.fromHeight(AppBar().preferredSize.height + 20),
+          child: const PopHeader(),
+        ),
+      body: Padding(
+        padding: const EdgeInsets.all(8),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Text(
+              note.title,
               style: const TextStyle(
-                  fontSize: 18
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold
               ),
             ),
-          )
-        ],
+            Padding(
+              padding: const EdgeInsets.all(8),
+              child: Text(
+                note.content,
+                style: const TextStyle(
+                    fontSize: 18
+                ),
+              ),
+            )
+          ],
+        ),
       ),
+      bottomNavigationBar: const CustomBottomNavigationBar(),
     );
   }
   @override

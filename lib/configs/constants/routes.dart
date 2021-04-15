@@ -31,9 +31,9 @@ final Map<String, WidgetBuilder> routes = {
   HomeScreen.routeName: (context) => const HomeScreen(),
   DetailScreen.routeName: (context) => const DetailScreen(),
   ProfileScreen.routeName: (context) => const ProfileScreen(),
-  Category.routeName:(context)=>const Category(),
+  CategoryKind.routeName:(context)=>const CategoryKind(),
   ReportScreen.routeName:(context)=>const ReportScreen(),
   NotificationScreen.routeName: (context) => NotificationScreen(),
-  DetailedNotificationScreen.routeName:(context)=>DetailedNotificationScreen(),
-  FilterOverlay.routeName: (context)=>FilterOverlay()
+  DetailedNotificationScreen.routeName:(context)=>const DetailedNotificationScreen(),
+  FilterOverlay.routeName: (context)=>const FilterOverlay()
 };

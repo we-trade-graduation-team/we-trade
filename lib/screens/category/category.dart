@@ -11,8 +11,8 @@ import 'package:we_trade/widgets/product_card.dart';
 import '../filterOverlay/filter_overlay.dart';
 
 const ProductKind productKind= ProductKind(name: 'Flash Deal');
-class Category extends StatelessWidget {
-  const Category({Key? key}):super(key:key);
+class CategoryKind extends StatelessWidget {
+  const CategoryKind({Key? key}):super(key:key);
 
   static String routeName = '/categories';
   @override
@@ -79,7 +79,7 @@ class Category extends StatelessWidget {
                       crossAxisCount: 2,
                       // padding: EdgeInsets.symmetric(horizontal: size.width * 0.05),
                       // crossAxisSpacing: 10,
-                      mainAxisSpacing: size.height * 0.02,
+                      mainAxisSpacing: size.height * 0.01,
                       children: [
                         ...List.generate(
                           recommendedProducts.length,

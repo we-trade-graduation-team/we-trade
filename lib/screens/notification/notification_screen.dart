@@ -1,5 +1,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import '../home/local_widgets/home_header.dart';
+import 'detailed_notification_screen.dart';
+import '../../widgets/custom_bottom_navigation_bar.dart';
 import 'notification.dart';
 
 class NotificationScreen extends StatelessWidget {
@@ -13,23 +16,32 @@ class NotificationScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(10),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          const Text(
-            'Thông Báo',
-            style: TextStyle(
-                fontSize: 22,
-                fontWeight: FontWeight.bold
-            ),
-          ),
-          Column(
-            children: notes.map((note)=>NotificationCard(note: note)).toList(),
-          )
-        ],
+    return Scaffold(
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(AppBar().preferredSize.height + 20),
+        child: const HomeHeader(),
       ),
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.all(10),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              const Text(
+                'Thông Báo',
+                style: TextStyle(
+                    fontSize: 22,
+                    fontWeight: FontWeight.bold
+                ),
+              ),
+              Column(
+                children: notes.map((note)=>NotificationCard(note: note)).toList(),
+              )
+            ],
+          ),
+        ),
+      ),
+      bottomNavigationBar: const CustomBottomNavigationBar(),
     );
   }
   @override
@@ -50,11 +62,14 @@ class NotificationCard extends StatelessWidget {
       margin: const EdgeInsets.fromLTRB(20, 10, 20, 10),
       child: Padding(
         padding: const EdgeInsets.all(8),
-        child: Text(
-          note.title,
-          style: const TextStyle(
-              fontSize: 20,
-              fontWeight: FontWeight.bold
+        child: TextButton(
+          onPressed: ()=>Navigator.pushNamed(context, DetailedNotificationScreen.routeName),
+          child: Text(
+            note.title,
+            style: const TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold
+            ),
           ),
         ),
       ),

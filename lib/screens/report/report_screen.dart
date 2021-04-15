@@ -1,17 +1,15 @@
 import 'package:auto_size_text/auto_size_text.dart';
-import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:group_button/group_button.dart';
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:provider/provider.dart';
-import '../../models/optionalOverlay/user_option_overlay.dart';
 
 import '../../bloc/report_bloc.dart';
 import '../../models/product_model.dart';
 import '../../widgets/custom_bottom_navigation_bar.dart';
-import '../home/local_widgets/home_header.dart';
+import 'local_widgets/pop_header.dart';
 
 class ReportScreenBody extends StatefulWidget {
   const ReportScreenBody({Key? key}) : super(key: key);
@@ -28,14 +26,6 @@ class _ReportScreenState extends State<ReportScreenBody> {
     'Sản phẩm kém chất lượng',
     'Khác'
   ];
-
-  void showOverlay({required BuildContext context}) {
-    BotToast.showAttachedWidget(
-      attachedBuilder: (_) => const UserOpTionOverlay(),
-      duration: const Duration(seconds: 2),
-      targetContext: context,
-    );
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -125,7 +115,6 @@ class _ReportScreenState extends State<ReportScreenBody> {
                     // ignore: avoid_bool_literals_in_conditional_expressions
                     enabled: reportBloc.unlockTextField ? true : false,
                     maxLines: null,
-                    minLines: null,
                     decoration: InputDecoration(
                       // ignore: avoid_bool_literals_in_conditional_expressions
                       filled: reportBloc.unlockTextField ? false : true,
@@ -145,11 +134,10 @@ class _ReportScreenState extends State<ReportScreenBody> {
                     )
                   ]),
                   Container(
-                    alignment: Alignment.center,
-                    child: Builder(builder: (context) {
-                      return Card(
+                    alignment: Alignment.centerRight,
+                    child: Card(
                         child: TextButton(
-                          onPressed: () => showOverlay(context: context),
+                          onPressed: (){},
                           style: ButtonStyle(
                               backgroundColor: reportBloc.confirmed
                                   ? MaterialStateProperty.all<Color>(
@@ -170,9 +158,8 @@ class _ReportScreenState extends State<ReportScreenBody> {
                             ),
                           ),
                         ),
-                      );
-                    }),
-                  )
+                      )
+                    ),
                 ],
               ),
             ),
@@ -194,23 +181,18 @@ class ReportScreen extends StatelessWidget {
   static String routeName = '/reportScreen';
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      builder: BotToastInit(),
-      title: 'BotToast Demo',
-      navigatorObservers: [BotToastNavigatorObserver()],
-      home: Scaffold(
-        appBar: PreferredSize(
-          preferredSize: Size.fromHeight(AppBar().preferredSize.height + 20),
-          child: const HomeHeader(),
-        ),
-        body: MultiProvider(
-          providers: [
-            ChangeNotifierProvider(create: (context) => ReportBloc())
-          ],
-          child: const ReportScreenBody(),
-        ),
-        bottomNavigationBar: const CustomBottomNavigationBar(),
+    return Scaffold(
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(AppBar().preferredSize.height + 20),
+        child: const PopHeader(),
       ),
+      body: MultiProvider(
+        providers: [
+          ChangeNotifierProvider(create: (context) => ReportBloc())
+        ],
+        child: const ReportScreenBody(),
+      ),
+      bottomNavigationBar: const CustomBottomNavigationBar(),
     );
   }
 }

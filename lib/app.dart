@@ -1,6 +1,5 @@
 
 import 'package:flutter/material.dart';
-import 'package:we_trade/screens/report/report_screen.dart';
 
 import 'configs/constants/routes.dart';
 import 'configs/constants/strings.dart';
@@ -18,7 +17,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: kAppTitle,
       theme: theme(),
-      initialRoute: ReportScreen.routeName,
+      initialRoute: OnboardingScreen.routeName,
       routes: routes,
     );
   }
