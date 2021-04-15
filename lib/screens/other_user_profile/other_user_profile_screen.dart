@@ -84,26 +84,6 @@ class _OtherUserProfileScreenState extends State<OtherUserProfileScreen> {
     ];
   }
 
-  Widget tabContent(
-    String title,
-    int length,
-  ) {
-    return SingleChildScrollView(
-      child: Column(
-        key: ValueKey<int>(length),
-        children: [
-          ...List.generate(
-            length,
-            (index) => ListTile(
-              title: Text('$title item $index'),
-              trailing: const Icon(Icons.access_alarm),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);

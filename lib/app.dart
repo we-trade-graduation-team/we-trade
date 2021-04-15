@@ -26,9 +26,13 @@
 //   }
 // }
 import 'package:flutter/material.dart';
+import 'package:we_trade/models/product_model.dart';
+import 'package:we_trade/screens/home/home_screen.dart';
+import 'package:we_trade/screens/match_post/match_post_screen.dart';
+import 'package:we_trade/screens/other_user_profile/other_user_profile_screen.dart';
+import 'package:we_trade/screens/temp_create_offer/make_offer_screen.dart';
 
 import 'configs/Theme/theme.dart';
-import 'screens/other_user_profile/other_user_profile_screen.dart';
 
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
@@ -38,7 +42,9 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: theme(),
-      home: OtherUserProfileScreen(),
+      home: MatchPostsScreen(
+        product: allProduct[0],
+      ),
     );
   }
 }

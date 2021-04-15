@@ -37,6 +37,7 @@ class ButtonWidget extends StatelessWidget {
         color: isFilled ? kPrimaryColor : Colors.white,
         onPressed: press,
         child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Container(
               margin: const EdgeInsets.fromLTRB(0, 0, 5, 0),
