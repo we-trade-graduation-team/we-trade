@@ -1,10 +1,4 @@
 import 'package:flutter/widgets.dart';
-import 'package:we_trade/screens/category/category.dart';
-import 'package:we_trade/screens/filterOverlay/filter_overlay.dart';
-import 'package:we_trade/screens/notification/detailed_notification_screen.dart';
-import 'package:we_trade/screens/notification/notification_screen.dart';
-import 'package:we_trade/screens/report/build_report_screen.dart';
-import 'package:we_trade/screens/report/report_screen.dart';
 
 import '../../screens/auth/complete_profile/complete_profile_screen.dart';
 import '../../screens/auth/forgot_password/forgot_password_screen.dart';
@@ -12,10 +6,15 @@ import '../../screens/auth/login_success/login_success_screen.dart';
 import '../../screens/auth/otp/otp_screen.dart';
 import '../../screens/auth/sign_in/sign_in.dart';
 import '../../screens/auth/sign_up/sign_up.dart';
+import '../../screens/category/category.dart';
 import '../../screens/detail/detail.dart';
+import '../../screens/filterOverlay/filter_overlay.dart';
 import '../../screens/home/home_screen.dart';
+import '../../screens/notification/detailed_notification_screen.dart';
+import '../../screens/notification/notification_screen.dart';
 import '../../screens/onboarding/onboarding.dart';
 import '../../screens/profile/profile.dart';
+import '../../screens/report/build_report_screen.dart';
 import '../../screens/welcome/welcome.dart';
 
 // We use name route
@@ -32,9 +31,10 @@ final Map<String, WidgetBuilder> routes = {
   HomeScreen.routeName: (context) => const HomeScreen(),
   DetailScreen.routeName: (context) => const DetailScreen(),
   ProfileScreen.routeName: (context) => const ProfileScreen(),
-  FilterOverlay.routeName:(context)=> const FilterOverlay(),
-  NotificationScreen.routeName:(context)=>const NotificationScreen(),
-  DetailedNotificationScreen.routeName:(context)=>const DetailedNotificationScreen(),
-  Category.routeName:(context)=>const Category(),
-  BuildReportScreen.routeName:(context)=>const BuildReportScreen()
+  FilterOverlay.routeName: (context) => const FilterOverlay(),
+  NotificationScreen.routeName: (context) => const NotificationScreen(),
+  DetailedNotificationScreen.routeName: (context) =>
+      const DetailedNotificationScreen(),
+  Category.routeName: (context) => const Category(),
+  BuildReportScreen.routeName: (context) => const BuildReportScreen()
 };

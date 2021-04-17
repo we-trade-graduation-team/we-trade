@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import '../configs/constants/assets_path.dart';
 
 class Product {
   Product({

@@ -26,13 +26,11 @@
 //   }
 // }
 import 'package:flutter/material.dart';
-import 'package:we_trade/models/product_model.dart';
-import 'package:we_trade/screens/home/home_screen.dart';
-import 'package:we_trade/screens/match_post/match_post_screen.dart';
-import 'package:we_trade/screens/other_user_profile/other_user_profile_screen.dart';
-import 'package:we_trade/screens/temp_create_offer/make_offer_screen.dart';
+import 'package:we_trade/screens/chat/dialogs/group_chat_dialog.dart';
+import 'package:we_trade/screens/detail/local_widgets/popup_dialog.dart';
 
 import 'configs/Theme/theme.dart';
+import 'screens/chat/dialogs/chat_dialog.dart';
 
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
@@ -40,11 +38,17 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
-      theme: theme(),
-      home: MatchPostsScreen(
-        product: allProduct[0],
-      ),
-    );
+        title: 'Flutter Demo',
+        theme: theme(),
+        //home: OtherUserProfileScreen(),
+        home: Scaffold(
+          appBar: AppBar(
+            title: Text('temp'),
+          ),
+          body: Padding(
+            padding: const EdgeInsets.all(20),
+            child: PopupDialog(),
+          ),
+        ));
   }
 }

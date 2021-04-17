@@ -24,11 +24,71 @@ class OtherUserProfileScreen extends StatefulWidget {
 
 class _OtherUserProfileScreenState extends State<OtherUserProfileScreen> {
   final tabData = ['ABOUT', 'POSTS', 'REVIEW'];
+  final mainInfoKey = GlobalKey();
+  late Size sizeFlexibleSpaceBar;
+  bool _visible = true;
+
+  Future<void> getSizeAndPosition() async {
+    final _cardBox =
+        mainInfoKey.currentContext!.findRenderObject() as RenderBox;
+    sizeFlexibleSpaceBar = _cardBox.size;
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance!
+        .addPostFrameCallback((_) => getSizeAndPosition().whenComplete(() => {
+              Future<void>.delayed(const Duration(microseconds: 1))
+                  .then((value) {
+                setState(() {
+                  _visible = false;
+                });
+              })
+            }));
+  }
+
+  Widget getHeight(double width) {
+    return Visibility(
+      visible: _visible,
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(10, 15, 10, 10),
+        key: mainInfoKey,
+        child: Column(
+          children: [
+            CircleAvatar(
+              radius: width / 7,
+              backgroundColor: kPrimaryColor,
+              child: CircleAvatar(
+                radius: width / 7 - 2.5,
+                backgroundColor: Colors.white,
+                child: CircleAvatar(
+                  backgroundColor: Colors.red,
+                  radius: width / 7 - 5,
+                ),
+              ),
+            ),
+            ReviewProperty(
+              press: () {},
+              tittle: 'Leggit',
+              content: Text(
+                widget.userDetail.leggit.toString(),
+                style: const TextStyle(
+                  color: Colors.black,
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
-    final height = MediaQuery.of(context).size.height;
 
     return Scaffold(
       appBar: AppBar(
@@ -40,38 +100,47 @@ class _OtherUserProfileScreenState extends State<OtherUserProfileScreen> {
         ],
         title: const Text('PROFILE NGƯỜI DÙNG'),
       ),
-      body: DefaultTabController(
-        length: tabData.length,
-        child: NestedScrollView(
-            physics: const NeverScrollableScrollPhysics(),
-            headerSliverBuilder: (context, isScolled) {
-              return [
-                SliverAppBar(
-                  backgroundColor: Colors.white,
-                  collapsedHeight: height * 0.36,
-                  expandedHeight: height * 0.36,
-                  flexibleSpace: MainInfo(width: width, widget: widget),
-                ),
-                SliverPersistentHeader(
-                  delegate: MyDelegate(
-                    TabBar(
-                      tabs: [
-                        ...tabData.map(
-                          (item) => Tab(
-                            child: Text(item),
+      body: Column(
+        children: [
+          getHeight(width),
+          if (!_visible)
+            Expanded(
+              child: DefaultTabController(
+                length: tabData.length,
+                child: NestedScrollView(
+                  physics: const NeverScrollableScrollPhysics(),
+                  headerSliverBuilder: (context, isScolled) {
+                    return [
+                      SliverAppBar(
+                        backgroundColor: Colors.white,
+                        collapsedHeight: sizeFlexibleSpaceBar.height,
+                        expandedHeight: sizeFlexibleSpaceBar.height,
+                        flexibleSpace: buildMainInfoWidget(widget, width),
+                      ),
+                      SliverPersistentHeader(
+                        delegate: MyDelegate(
+                          TabBar(
+                            tabs: [
+                              ...tabData.map(
+                                (item) => Tab(
+                                  child: Text(item),
+                                ),
+                              ),
+                            ],
                           ),
                         ),
-                      ],
-                    ),
+                        floating: true,
+                        pinned: true,
+                      )
+                    ];
+                  },
+                  body: TabBarView(
+                    children: getTabContent(),
                   ),
-                  floating: true,
-                  pinned: true,
-                )
-              ];
-            },
-            body: TabBarView(
-              children: getTabContent(),
-            )),
+                ),
+              ),
+            ),
+        ],
       ),
     );
   }
@@ -84,60 +153,12 @@ class _OtherUserProfileScreenState extends State<OtherUserProfileScreen> {
     ];
   }
 
-  @override
-  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
-    super.debugFillProperties(properties);
-    properties.add(IterableProperty<String>('tabData', tabData));
-  }
-}
-
-class MyDelegate extends SliverPersistentHeaderDelegate {
-  MyDelegate(this.tabBar);
-  final TabBar tabBar;
-
-  @override
-  Widget build(
-      BuildContext context, double shrinkOffset, bool overlapsContent) {
-    return Container(
-      decoration: const BoxDecoration(
-        color: Colors.white,
-        border: Border(
-          top: BorderSide(
-            color: kTextLightV2Color,
-            width: 0.2,
-          ),
-          bottom: BorderSide(
-            color: kTextLightV2Color,
-            width: 0.2,
-          ),
-        ),
-      ),
-      child: tabBar,
-    );
-  }
-
-  @override
-  double get maxExtent => tabBar.preferredSize.height;
-
-  @override
-  double get minExtent => tabBar.preferredSize.height;
-
-  @override
-  bool shouldRebuild(SliverPersistentHeaderDelegate oldDelegate) {
-    return false;
-  }
-}
-
-class MainInfo extends StatelessWidget {
-  const MainInfo({Key? key, required this.width, required this.widget})
-      : super(key: key);
-
-  final double width;
-  final OtherUserProfileScreen widget;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
+  Widget buildMainInfoWidget(
+    OtherUserProfileScreen widget,
+    double width,
+  ) {
+    return Padding(
+      //color: Colors.red,
       padding: const EdgeInsets.fromLTRB(10, 15, 10, 0),
       child: Column(
         children: [
@@ -276,7 +297,48 @@ class MainInfo extends StatelessWidget {
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
-    properties.add(DoubleProperty('width', width));
+    properties.add(IterableProperty<String>('tabData', tabData));
+    properties.add(DiagnosticsProperty<GlobalKey<State<StatefulWidget>>>(
+        'mainInfoKey', mainInfoKey));
+    properties.add(DiagnosticsProperty<Size>(
+        'sizeFlexibleSpaceBar', sizeFlexibleSpaceBar));
+  }
+}
+
+class MyDelegate extends SliverPersistentHeaderDelegate {
+  MyDelegate(this.tabBar);
+  final TabBar tabBar;
+
+  @override
+  Widget build(
+      BuildContext context, double shrinkOffset, bool overlapsContent) {
+    return Container(
+      decoration: const BoxDecoration(
+        color: Colors.white,
+        border: Border(
+          top: BorderSide(
+            color: kTextLightV2Color,
+            width: 0.2,
+          ),
+          bottom: BorderSide(
+            color: kTextLightV2Color,
+            width: 0.2,
+          ),
+        ),
+      ),
+      child: tabBar,
+    );
+  }
+
+  @override
+  double get maxExtent => tabBar.preferredSize.height;
+
+  @override
+  double get minExtent => tabBar.preferredSize.height;
+
+  @override
+  bool shouldRebuild(SliverPersistentHeaderDelegate oldDelegate) {
+    return false;
   }
 }
 

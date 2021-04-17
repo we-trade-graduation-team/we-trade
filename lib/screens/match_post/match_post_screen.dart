@@ -1,10 +1,10 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:we_trade/widgets/product_card_small.dart';
 
 import '../../models/product_model.dart';
 import '../../widgets/bottom_navigation_bar.dart';
 import '../../widgets/product_card.dart';
+import '../../widgets/product_card_small.dart';
 
 class MatchPostsScreen extends StatefulWidget {
   const MatchPostsScreen({Key? key, required this.product}) : super(key: key);
