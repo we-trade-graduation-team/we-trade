@@ -25,7 +25,7 @@ class ButtonWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialButton(
-        height: height,
+        //height: height,
         minWidth: width,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(5),

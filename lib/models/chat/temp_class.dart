@@ -16,9 +16,10 @@ class User {
     required this.name,
     required this.image,
     required this.isActive,
+    required this.activeAt,
   });
 
-  final String name, image;
+  final String name, image, activeAt;
   final bool isActive;
 }
 
@@ -66,51 +67,61 @@ List<User> usersData = [
     image: 'assets/images/Chat_screen_ava_temp/user.png',
     name: 'Jenny Wilson',
     isActive: false,
+    activeAt: 'active 3 mins ago',
   ),
   User(
     image: 'assets/images/Chat_screen_ava_temp/user_2.png',
     name: 'Esther Howard',
     isActive: true,
+    activeAt: '',
   ),
   User(
     image: 'assets/images/Chat_screen_ava_temp/user_3.png',
     name: 'Ralph Edwards',
     isActive: true,
+    activeAt: '',
   ),
   User(
     image: 'assets/images/Chat_screen_ava_temp/user_4.png',
     name: 'Jacob Jones',
     isActive: false,
+    activeAt: 'active 3 mins ago',
   ),
   User(
     name: 'Albert Flores',
     image: 'assets/images/Chat_screen_ava_temp/user_5.png',
     isActive: false,
+    activeAt: 'active 3 mins ago',
   ),
   User(
     image: 'assets/images/Chat_screen_ava_temp/user.png',
     name: 'Jenny Wilson',
     isActive: true,
+    activeAt: '',
   ),
   User(
     image: 'assets/images/Chat_screen_ava_temp/user_2.png',
     name: 'Esther Howard',
     isActive: true,
+    activeAt: '',
   ),
   User(
     image: 'assets/images/Chat_screen_ava_temp/user_3.png',
     name: 'Ralph Edwards',
     isActive: false,
+    activeAt: 'active 3 mins ago',
   ),
   User(
     image: 'assets/images/Chat_screen_ava_temp/user_4.png',
     name: 'Jacob Jones',
     isActive: true,
+    activeAt: '',
   ),
   User(
     name: 'Albert Flores',
     image: 'assets/images/Chat_screen_ava_temp/user_5.png',
     isActive: false,
+    activeAt: 'active 3 mins ago',
   ),
 ];
 

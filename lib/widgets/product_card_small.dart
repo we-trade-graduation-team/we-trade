@@ -1,7 +1,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:we_trade/configs/constants/color.dart';
-import 'package:we_trade/models/product_model.dart';
+
+import '../configs/constants/color.dart';
+import '../models/product_model.dart';
 
 class ProductCardSmall extends StatelessWidget {
   const ProductCardSmall({Key? key, required this.product}) : super(key: key);
@@ -11,12 +12,10 @@ class ProductCardSmall extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
-    const height = 80.0;
 
     return Align(
       child: Container(
         width: width * 0.8,
-        //height: height,
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: const BorderRadius.all(Radius.circular(5)),
@@ -55,7 +54,7 @@ class ProductCardSmall extends StatelessWidget {
                   children: [
                     Text(product.title,
                         maxLines: 2, overflow: TextOverflow.ellipsis),
-                    SizedBox(height: 10),
+                    const SizedBox(height: 10),
                     Text(
                       '\$${product.price} - \$${product.price + 2}',
                       style: const TextStyle(
@@ -63,7 +62,7 @@ class ProductCardSmall extends StatelessWidget {
                         color: kPrimaryColor,
                       ),
                     ),
-                    SizedBox(height: 10),
+                    const SizedBox(height: 10),
                     Align(
                       alignment: Alignment.bottomRight,
                       child: Container(

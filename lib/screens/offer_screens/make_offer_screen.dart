@@ -46,7 +46,7 @@ class _MakeOfferScreenState extends State<MakeOfferScreen> {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    const SizedBox(height: 10),
+                    const SizedBox(height: 20),
                     SingleChildScrollView(
                       scrollDirection: Axis.horizontal,
                       child: Row(
@@ -54,44 +54,51 @@ class _MakeOfferScreenState extends State<MakeOfferScreen> {
                           ...List.generate(
                             demoProducts.length,
                             (index) {
-                              return Stack(children: [
-                                ProductCard(product: demoProducts[index]),
-                                Positioned(
-                                  top: 10,
-                                  right: 10,
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                        color: Colors.white,
-                                        borderRadius: BorderRadius.circular(3),
-                                        border:
-                                            Border.all(color: kTextLightColor)),
-                                    child: SizedBox(
-                                      height: 20,
-                                      width: 20,
-                                      child: Checkbox(
-                                        checkColor: Colors.white,
-                                        activeColor: kPrimaryColor,
-                                        side: BorderSide(
-                                          color: Colors.white,
+                              return Row(
+                                children: [
+                                  Stack(
+                                    children: [
+                                      ProductCard(product: demoProducts[index]),
+                                      Positioned(
+                                        top: 10,
+                                        right: 10,
+                                        child: Container(
+                                          decoration: BoxDecoration(
+                                              color: Colors.white,
+                                              borderRadius:
+                                                  BorderRadius.circular(3),
+                                              border: Border.all(
+                                                  color: kTextLightColor)),
+                                          child: SizedBox(
+                                            height: 20,
+                                            width: 20,
+                                            child: Checkbox(
+                                              checkColor: Colors.white,
+                                              activeColor: kPrimaryColor,
+                                              side: BorderSide(
+                                                color: Colors.white,
+                                              ),
+                                              value: widget.isHaveMoney,
+                                              onChanged: (value) {
+                                                setState(() {
+                                                  widget.isHaveMoney = value!;
+                                                });
+                                              },
+                                            ),
+                                          ),
                                         ),
-                                        value: widget.isHaveMoney,
-                                        onChanged: (value) {
-                                          setState(() {
-                                            widget.isHaveMoney = value!;
-                                          });
-                                        },
                                       ),
-                                    ),
+                                    ],
                                   ),
-                                ),
-                              ]);
+                                  const SizedBox(width: 20),
+                                ],
+                              );
                             },
                           ),
-                          const SizedBox(width: 10),
                         ],
                       ),
                     ),
-                    const SizedBox(height: 10),
+                    const SizedBox(height: 20),
                     const Text(
                       'Tất cả sản phẩm',
                       style: TextStyle(
@@ -99,7 +106,7 @@ class _MakeOfferScreenState extends State<MakeOfferScreen> {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    const SizedBox(height: 10),
+                    const SizedBox(height: 20),
                     SingleChildScrollView(
                       scrollDirection: Axis.horizontal,
                       child: Row(
@@ -107,44 +114,51 @@ class _MakeOfferScreenState extends State<MakeOfferScreen> {
                           ...List.generate(
                             demoProducts.length,
                             (index) {
-                              return Stack(children: [
-                                ProductCard(product: demoProducts[index]),
-                                Positioned(
-                                  top: 10,
-                                  right: 10,
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                        color: Colors.white,
-                                        borderRadius: BorderRadius.circular(3),
-                                        border:
-                                            Border.all(color: kTextLightColor)),
-                                    child: SizedBox(
-                                      height: 20,
-                                      width: 20,
-                                      child: Checkbox(
-                                        checkColor: Colors.white,
-                                        activeColor: kPrimaryColor,
-                                        side: BorderSide(
-                                          color: Colors.white,
+                              return Row(
+                                children: [
+                                  Stack(
+                                    children: [
+                                      ProductCard(product: demoProducts[index]),
+                                      Positioned(
+                                        top: 10,
+                                        right: 10,
+                                        child: Container(
+                                          decoration: BoxDecoration(
+                                              color: Colors.white,
+                                              borderRadius:
+                                                  BorderRadius.circular(3),
+                                              border: Border.all(
+                                                  color: kTextLightColor)),
+                                          child: SizedBox(
+                                            height: 20,
+                                            width: 20,
+                                            child: Checkbox(
+                                              checkColor: Colors.white,
+                                              activeColor: kPrimaryColor,
+                                              side: BorderSide(
+                                                color: Colors.white,
+                                              ),
+                                              value: widget.isHaveMoney,
+                                              onChanged: (value) {
+                                                setState(() {
+                                                  widget.isHaveMoney = value!;
+                                                });
+                                              },
+                                            ),
+                                          ),
                                         ),
-                                        value: widget.isHaveMoney,
-                                        onChanged: (value) {
-                                          setState(() {
-                                            widget.isHaveMoney = value!;
-                                          });
-                                        },
                                       ),
-                                    ),
+                                    ],
                                   ),
-                                ),
-                              ]);
+                                  const SizedBox(width: 20),
+                                ],
+                              );
                             },
                           ),
-                          const SizedBox(width: 10),
                         ],
                       ),
                     ),
-                    const SizedBox(height: 10),
+                    const SizedBox(height: 20),
                     Column(
                       children: [
                         Row(
