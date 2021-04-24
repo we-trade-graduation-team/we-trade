@@ -1,8 +1,11 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:we_trade/screens/post_management/hide_post_screen.dart';
+
 import '../configs/constants/color.dart';
 import '../models/review/temp_class.dart';
+import '../screens/post_management/hide_post_screen.dart';
+import 'custom_overlay_iconbutton.dart';
+import '../widgets/trading_prod_overlay.dart';
 
 class TradingProductCard extends StatelessWidget {
   const TradingProductCard({
@@ -10,12 +13,24 @@ class TradingProductCard extends StatelessWidget {
     required this.review,
   }) : super(key: key);
 
+  // ignore: diagnostic_describe_all_properties
   final Review review;
 
   @override
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
     final height = MediaQuery.of(context).size.height;
+
+    final overlayItems = <OverlayItem>[
+      OverlayItem(
+        text: 'Ẩn tin',
+        iconData: Icons.warning,
+        // ignore: avoid_types_on_closure_parameters
+        handleFunction: () {
+          Navigator.of(context).pushNamed(HidePostScreen.routeName);
+        },
+      ),
+    ];
 
     return GestureDetector(
       onTap: () {
@@ -55,7 +70,7 @@ class TradingProductCard extends StatelessWidget {
                   children: [
                     Container(
                       width: width * 0.45,
-                      child: Text(
+                      child: const Text(
                         'LApTop moiw 12 12sqwrqwq eqweqwe qweqt qwrqmua2121212121222121qwq qwxcvf',
                         overflow: TextOverflow.ellipsis,
                         maxLines: 2,
@@ -65,30 +80,21 @@ class TradingProductCard extends StatelessWidget {
                         ),
                       ),
                     ),
-                    SizedBox(height: 10),
-                    Container(
-                      child: Text(
-                        '\$200-\$300',
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.w400,
-                          color: kPrimaryColor,
-                        ),
+                    const SizedBox(height: 10),
+                    const Text(
+                      // ignore: use_raw_strings
+                      '\$200-\$300',
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w400,
+                        color: kPrimaryColor,
                       ),
                     ),
                   ],
                 ),
-                Expanded(
-                  child: GestureDetector(
-                    onTap: () {
-                      Navigator.of(context).pushNamed(HidePostScreen.routeName);
-                    },
-                    child: Container(
-                      width: 25,
-                      alignment: Alignment.centerRight,
-                      child: const Icon(Icons.more_vert),
-                    ),
-                  ),
+                CustomOverlayIconButton(
+                  iconData: Icons.more_vert,
+                  overlayItems: overlayItems,
                 ),
               ],
             ),
@@ -109,11 +115,5 @@ class TradingProductCard extends StatelessWidget {
         ),
       ),
     );
-  }
-
-  @override
-  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
-    super.debugFillProperties(properties);
-    properties.add(DiagnosticsProperty<Review>('review', review));
   }
 }
