@@ -7,22 +7,20 @@ import '../../widgets/product_card.dart';
 import '../../widgets/product_card_small.dart';
 
 class MatchPostsScreen extends StatefulWidget {
-  const MatchPostsScreen({Key? key, required this.product}) : super(key: key);
+  const MatchPostsScreen({Key? key}) : super(key: key);
 
-  final Product product;
+  static String routeName = '/match_posts';
 
   @override
   _MatchPostsScreenState createState() => _MatchPostsScreenState();
-  @override
-  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
-    super.debugFillProperties(properties);
-    properties.add(DiagnosticsProperty<Product>('product', product));
-  }
 }
 
 class _MatchPostsScreenState extends State<MatchPostsScreen> {
   @override
   Widget build(BuildContext context) {
+    final agrs =
+        ModalRoute.of(context)!.settings.arguments as MatchPostsArguments;
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('MATCH VỚI BÀI ĐĂNG'),
@@ -44,7 +42,7 @@ class _MatchPostsScreenState extends State<MatchPostsScreen> {
                   ),
                 ),
                 const SizedBox(height: 10),
-                ProductCardSmall(product: widget.product),
+                ProductCardSmall(product: agrs.product),
                 const SizedBox(height: 10),
                 const Text(
                   'Các sản phẩm phù hợp 2',
@@ -82,4 +80,9 @@ class _MatchPostsScreenState extends State<MatchPostsScreen> {
       bottomNavigationBar: const BuildBottomNavigationBar(selectedIndex: 4),
     );
   }
+}
+
+class MatchPostsArguments {
+  MatchPostsArguments({required this.product});
+  final Product product;
 }

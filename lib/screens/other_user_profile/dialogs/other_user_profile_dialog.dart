@@ -1,9 +1,12 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:line_icons/line_icons.dart';
 import '../../../configs/constants/color.dart';
 
 class OtherUserProfileDialog extends StatelessWidget {
-  const OtherUserProfileDialog({Key? key}) : super(key: key);
+  const OtherUserProfileDialog({Key? key, required this.parentContext})
+      : super(key: key);
+  final BuildContext parentContext;
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -32,7 +35,12 @@ class OtherUserProfileDialog extends StatelessWidget {
                 Column(
                   children: [
                     InkWell(
-                      onTap: () {},
+                      onTap: () {
+                        Navigator.of(parentContext)
+                            .popUntil(ModalRoute.withName('/'));
+
+                        //MainMenu.setindex(0);
+                      },
                       child: Container(
                         margin: const EdgeInsets.fromLTRB(0, 0, 0, 10),
                         padding: const EdgeInsets.fromLTRB(0, 0, 20, 10),
@@ -47,12 +55,12 @@ class OtherUserProfileDialog extends StatelessWidget {
                         child: Row(
                           children: [
                             Icon(
-                              LineIcons.values['home'],
+                              LineIcons.values['comment'],
                               color: kTextLightColor,
                               size: 30,
                             ),
                             const SizedBox(width: 15),
-                            const Text('Quay lại trang chủ'),
+                            const Text('Quay lại trang chat chính'),
                           ],
                         ),
                       ),
@@ -109,5 +117,12 @@ class OtherUserProfileDialog extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+        .add(DiagnosticsProperty<BuildContext>('parentContext', parentContext));
   }
 }

@@ -1,25 +1,24 @@
+import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:line_icons/line_icons.dart';
 
 import '../../configs/constants/color.dart';
 import '../../models/chat/temp_class.dart';
-import '../../widgets/buttons.dart';
+import '../../widgets/custom_material_button.dart';
+import '../chat/personal_chat/personal_chat_screen.dart';
+import 'dialogs/other_user_profile_dialog.dart';
 import 'tabs/about_tab.dart';
 import 'tabs/posts_tab.dart';
 import 'tabs/review_tab.dart';
 
 class OtherUserProfileScreen extends StatefulWidget {
-  OtherUserProfileScreen({Key? key}) : super(key: key);
+  const OtherUserProfileScreen({Key? key}) : super(key: key);
 
-  final UserDetail userDetail = userDetailTemp;
+  static String routeName = '/other_user_profile';
 
   @override
   _OtherUserProfileScreenState createState() => _OtherUserProfileScreenState();
-  @override
-  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
-    super.debugFillProperties(properties);
-    properties.add(DiagnosticsProperty<UserDetail>('userDetail', userDetail));
-  }
 }
 
 class _OtherUserProfileScreenState extends State<OtherUserProfileScreen> {
@@ -71,9 +70,9 @@ class _OtherUserProfileScreenState extends State<OtherUserProfileScreen> {
             ReviewProperty(
               press: () {},
               tittle: 'Leggit',
-              content: Text(
-                widget.userDetail.leggit.toString(),
-                style: const TextStyle(
+              content: const Text(
+                '..',
+                style: TextStyle(
                   color: Colors.black,
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
@@ -89,14 +88,25 @@ class _OtherUserProfileScreenState extends State<OtherUserProfileScreen> {
   @override
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
-
+    final agrs =
+        ModalRoute.of(context)!.settings.arguments as OtherUserProfileArguments;
     return Scaffold(
       appBar: AppBar(
         actions: [
-          IconButton(
-            icon: const Icon(Icons.more_vert),
-            onPressed: () {},
-          ),
+          // IconButton(
+          //   icon: const Icon(Icons.more_vert),
+          //   onPressed: () {
+          //     showOverlay(context: context);
+          //   },
+          // ),
+          Builder(builder: (context) {
+            return IconButton(
+              icon: Icon(LineIcons.values['verticalEllipsis']),
+              onPressed: () {
+                showOverlay(context: context);
+              },
+            );
+          })
         ],
         title: const Text('PROFILE NGƯỜI DÙNG'),
       ),
@@ -112,10 +122,12 @@ class _OtherUserProfileScreenState extends State<OtherUserProfileScreen> {
                   headerSliverBuilder: (context, isScolled) {
                     return [
                       SliverAppBar(
+                        automaticallyImplyLeading: false,
                         backgroundColor: Colors.white,
                         collapsedHeight: sizeFlexibleSpaceBar.height,
                         expandedHeight: sizeFlexibleSpaceBar.height,
-                        flexibleSpace: buildMainInfoWidget(widget, width),
+                        flexibleSpace:
+                            buildMainInfoWidget(agrs.userDetail, width),
                       ),
                       SliverPersistentHeader(
                         delegate: MyDelegate(
@@ -135,7 +147,12 @@ class _OtherUserProfileScreenState extends State<OtherUserProfileScreen> {
                     ];
                   },
                   body: TabBarView(
-                    children: getTabContent(),
+                    //children: getTabContent(),
+                    children: [
+                      AboutTab(userDetail: agrs.userDetail),
+                      PostsTab(userDetail: agrs.userDetail),
+                      ReviewTab(userDetail: agrs.userDetail),
+                    ],
                   ),
                 ),
               ),
@@ -145,20 +162,11 @@ class _OtherUserProfileScreenState extends State<OtherUserProfileScreen> {
     );
   }
 
-  List<Widget> getTabContent() {
-    return [
-      AboutTab(userDetail: widget.userDetail),
-      PostsTab(userDetail: widget.userDetail),
-      ReviewTab(userDetail: widget.userDetail),
-    ];
-  }
-
   Widget buildMainInfoWidget(
-    OtherUserProfileScreen widget,
+    UserDetail userDetail,
     double width,
   ) {
     return Padding(
-      //color: Colors.red,
       padding: const EdgeInsets.fromLTRB(10, 15, 10, 0),
       child: Column(
         children: [
@@ -174,7 +182,7 @@ class _OtherUserProfileScreenState extends State<OtherUserProfileScreen> {
                     radius: width / 7 - 2.5,
                     backgroundColor: Colors.white,
                     child: CircleAvatar(
-                      backgroundImage: AssetImage(widget.userDetail.user.image),
+                      backgroundImage: AssetImage(userDetail.user.image),
                       radius: width / 7 - 5,
                     ),
                   ),
@@ -184,7 +192,7 @@ class _OtherUserProfileScreenState extends State<OtherUserProfileScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(widget.userDetail.user.name,
+                    Text(userDetail.user.name,
                         style: const TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.bold,
@@ -194,7 +202,7 @@ class _OtherUserProfileScreenState extends State<OtherUserProfileScreen> {
                         overflow: TextOverflow.ellipsis),
                     Container(
                       margin: const EdgeInsets.fromLTRB(0, 10, 0, 0),
-                      child: Text(widget.userDetail.userDesciption,
+                      child: Text(userDetail.userDesciption,
                           style: const TextStyle(
                             fontSize: 14,
                             color: kTextLightV2Color,
@@ -207,7 +215,7 @@ class _OtherUserProfileScreenState extends State<OtherUserProfileScreen> {
                       children: [
                         Container(
                             margin: const EdgeInsets.fromLTRB(0, 0, 10, 0),
-                            child: ButtonWidget(
+                            child: CustomMaterialButton(
                                 icon: const Icon(
                                   Icons.add,
                                   color: Colors.white,
@@ -220,13 +228,21 @@ class _OtherUserProfileScreenState extends State<OtherUserProfileScreen> {
                                 height: 25)),
                         Container(
                             margin: const EdgeInsets.fromLTRB(10, 0, 0, 0),
-                            child: ButtonWidget(
+                            child: CustomMaterialButton(
                                 icon: const Icon(
                                   Icons.textsms_outlined,
                                   color: kPrimaryColor,
                                   size: 20,
                                 ),
-                                press: () {},
+                                press: () => Navigator.pushNamed(
+                                    context, PersonalChatScreen.routeName,
+                                    arguments: PersonalChatArguments(
+                                        chat: Chat(
+                                      id: 0,
+                                      lastMessage: '',
+                                      time: '',
+                                      users: [userDetail.user],
+                                    ))),
                                 text: 'Nhắn tin',
                                 width: MediaQuery.of(context).size.width / 3.8,
                                 isFilled: false,
@@ -253,7 +269,7 @@ class _OtherUserProfileScreenState extends State<OtherUserProfileScreen> {
                       color: Colors.yellow,
                     ),
                     Text(
-                      widget.userDetail.leggit.toString(),
+                      userDetail.leggit.toString(),
                       style: const TextStyle(
                         color: Colors.black,
                         fontSize: 20,
@@ -267,7 +283,7 @@ class _OtherUserProfileScreenState extends State<OtherUserProfileScreen> {
                 press: () {},
                 tittle: 'Posts',
                 content: Text(
-                  widget.userDetail.postsNum.toString(),
+                  userDetail.postsNum.toString(),
                   style: const TextStyle(
                     color: Colors.black,
                     fontSize: 20,
@@ -279,7 +295,7 @@ class _OtherUserProfileScreenState extends State<OtherUserProfileScreen> {
                 press: () {},
                 tittle: 'Followers',
                 content: Text(
-                  widget.userDetail.followers.toString(),
+                  userDetail.followers.toString(),
                   style: const TextStyle(
                     color: Colors.black,
                     fontSize: 20,
@@ -291,6 +307,13 @@ class _OtherUserProfileScreenState extends State<OtherUserProfileScreen> {
           )
         ],
       ),
+    );
+  }
+
+  void showOverlay({required BuildContext context}) {
+    BotToast.showAttachedWidget(
+      attachedBuilder: (_) => OtherUserProfileDialog(parentContext: context),
+      targetContext: context,
     );
   }
 
@@ -385,4 +408,9 @@ class ReviewProperty extends StatelessWidget {
     properties.add(StringProperty('tittle', tittle));
     properties.add(ObjectFlagProperty<VoidCallback>.has('press', press));
   }
+}
+
+class OtherUserProfileArguments {
+  OtherUserProfileArguments({required this.userDetail});
+  UserDetail userDetail;
 }

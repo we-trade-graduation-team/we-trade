@@ -1,8 +1,11 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:line_icons/line_icons.dart';
-import 'package:we_trade/configs/constants/color.dart';
-import 'package:we_trade/models/product_model.dart';
+import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
+
+import '../configs/constants/color.dart';
+import '../models/product_model.dart';
+import '../screens/offer_screens/offer_detail_screen.dart';
 
 class OfferCard extends StatelessWidget {
   const OfferCard(
@@ -19,7 +22,7 @@ class OfferCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+      padding: const EdgeInsets.fromLTRB(20, 5, 20, 5),
       margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
       decoration: BoxDecoration(
         color: Colors.white,
@@ -36,19 +39,44 @@ class OfferCard extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           OfferProductsCard(
-              press: () {},
+              press: () => pushNewScreenWithRouteSettings<void>(
+                    context,
+                    settings: RouteSettings(
+                      name: OfferDetailScreen.routeName,
+                      arguments: OfferDetailScreenArguments(
+                          forProduct: forProduct,
+                          isOfferSide: true,
+                          offerSideProducts: offerSideProducts,
+                          offerSideMoney: offerSideMoney),
+                    ),
+                    screen: const OfferDetailScreen(),
+                    withNavBar: false,
+                    pageTransitionAnimation: PageTransitionAnimation.cupertino,
+                  ),
               isOfferSide: true,
               products: offerSideProducts,
               offerSideMoney: offerSideMoney),
           const SizedBox(width: 10),
-          IconButton(
-            onPressed: () {},
-            icon: Icon(LineIcons.values['alternateExchange'],
-                color: kPrimaryColor),
+          Icon(
+            LineIcons.values['alternateExchange'],
+            color: kPrimaryColor,
           ),
           const SizedBox(width: 10),
           OfferProductsCard(
-            press: () {},
+            press: () => pushNewScreenWithRouteSettings<void>(
+              context,
+              settings: RouteSettings(
+                name: OfferDetailScreen.routeName,
+                arguments: OfferDetailScreenArguments(
+                    forProduct: forProduct,
+                    isOfferSide: true,
+                    offerSideProducts: offerSideProducts,
+                    offerSideMoney: offerSideMoney),
+              ),
+              screen: const OfferDetailScreen(),
+              withNavBar: false,
+              pageTransitionAnimation: PageTransitionAnimation.cupertino,
+            ),
             isOfferSide: false,
             products: [forProduct],
             offerSideMoney: null,

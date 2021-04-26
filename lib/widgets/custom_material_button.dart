@@ -2,8 +2,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import '../configs/constants/color.dart';
 
-class ButtonWidget extends StatelessWidget {
-  const ButtonWidget({
+class CustomMaterialButton extends StatelessWidget {
+  const CustomMaterialButton({
     Key? key,
     this.isFilled = true,
     this.fontsize = 14,

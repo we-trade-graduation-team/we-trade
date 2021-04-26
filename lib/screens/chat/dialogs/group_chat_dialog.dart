@@ -1,9 +1,18 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:line_icons/line_icons.dart';
+import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
+
 import '../../../configs/constants/color.dart';
+import '../../../models/chat/temp_class.dart';
+import '../group_chat/members/all_members_screen.dart';
 
 class GroupChatDialog extends StatelessWidget {
-  const GroupChatDialog({Key? key}) : super(key: key);
+  const GroupChatDialog(
+      {Key? key, required this.parentContext, required this.chat})
+      : super(key: key);
+  final BuildContext parentContext;
+  final Chat chat;
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -32,7 +41,19 @@ class GroupChatDialog extends StatelessWidget {
                 Column(
                   children: [
                     InkWell(
-                      onTap: () {},
+                      onTap: () {
+                        pushNewScreenWithRouteSettings<void>(
+                          parentContext,
+                          settings: RouteSettings(
+                            name: AllMemberScreen.routeName,
+                            arguments: AllMemberArguments(chat: chat),
+                          ),
+                          screen: const AllMemberScreen(),
+                          withNavBar: false,
+                          pageTransitionAnimation:
+                              PageTransitionAnimation.cupertino,
+                        );
+                      },
                       child: Container(
                         margin: const EdgeInsets.fromLTRB(0, 0, 0, 10),
                         padding: const EdgeInsets.fromLTRB(0, 0, 20, 10),
@@ -52,7 +73,7 @@ class GroupChatDialog extends StatelessWidget {
                               size: 30,
                             ),
                             const SizedBox(width: 15),
-                            const Text('Thành viên nhón'),
+                            const Text('Thành viên nhóm'),
                           ],
                         ),
                       ),
@@ -161,5 +182,13 @@ class GroupChatDialog extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+        .add(DiagnosticsProperty<BuildContext>('parentContext', parentContext));
+    properties.add(DiagnosticsProperty<Chat>('chat', chat));
   }
 }

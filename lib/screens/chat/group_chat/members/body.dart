@@ -13,8 +13,8 @@ class Body extends StatelessWidget {
       child: Expanded(
         child: ListView.builder(
           itemCount: usersData.length,
-          itemBuilder: (context, index) => UserCard(
-              user: usersData[index], press: () {}, showActiveAt: false),
+          itemBuilder: (context, index) =>
+              UserCard(user: usersData[index], press: () {}),
         ),
       ),
     );

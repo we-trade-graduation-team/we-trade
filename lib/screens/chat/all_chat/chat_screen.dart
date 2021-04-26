@@ -1,37 +1,64 @@
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 
 import '../../../configs/constants/color.dart';
-import '../../../widgets/bottom_navigation_bar.dart';
+import '../add_chat/add_chat_screen.dart';
 import 'body.dart';
 
 class ChatScreen extends StatefulWidget {
-  const ChatScreen({Key? key}) : super(key: key);
+  const ChatScreen({
+    Key? key,
+    required this.menuScreenContext,
+    required this.onScreenHideButtonPressed,
+    required this.hideStatus,
+  }) : super(key: key);
+
+  static String routeName = '/chat';
+  final BuildContext menuScreenContext;
+  final Function onScreenHideButtonPressed;
+  final bool hideStatus;
 
   @override
   _ChatScreenState createState() => _ChatScreenState();
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(DiagnosticsProperty<BuildContext>(
+        'menuScreenContext', menuScreenContext));
+    properties.add(DiagnosticsProperty<Function>(
+        'onScreenHideButtonPressed', onScreenHideButtonPressed));
+    properties.add(DiagnosticsProperty<bool>('hideStatus', hideStatus));
+  }
 }
 
 class _ChatScreenState extends State<ChatScreen> {
-  final int _selectedIndex = 1;
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('CHAT',),
+        title: const Text(
+          'CHAT',
+        ),
+      ),
+      bottomNavigationBar: Container(
+        height: kBottomNavigationBarHeight,
       ),
       body: const Body(),
-          // Container(
-          //   margin: const EdgeInsets.all(20),
-          //   child: ButtonWidget(
-          //     press: (){},
-          //     text: 'Active',
-          //     isFilled: false,
-          //     width: 100,
-          //     ),
-          // ),
-      bottomNavigationBar: BuildBottomNavigationBar(selectedIndex: _selectedIndex,),
-      floatingActionButton: const BuildFloatingActionButton(),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () => pushNewScreen<void>(
+          context,
+          screen: const AddChatScreen(),
+          withNavBar: false, // OPTIONAL VALUE. True by default.
+          pageTransitionAnimation: PageTransitionAnimation.cupertino,
+        ),
+        backgroundColor: kPrimaryColor,
+        child: const Icon(
+          Icons.group_add,
+          color: Colors.white,
+        ),
+      ),
     );
   }
 }
@@ -44,13 +71,17 @@ class BuildFloatingActionButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FloatingActionButton(
-      onPressed: (){},
-      // => Navigator.pushNamed(
-      //   context, ),
+      onPressed: () => pushNewScreen<void>(
+        context,
+        screen: const AddChatScreen(),
+        withNavBar: false,
+        pageTransitionAnimation: PageTransitionAnimation.cupertino,
+      ),
       backgroundColor: kPrimaryColor,
       child: const Icon(
         Icons.group_add,
         color: Colors.white,
-      ),);
+      ),
+    );
   }
 }

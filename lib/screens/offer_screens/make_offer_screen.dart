@@ -3,27 +3,22 @@ import 'package:flutter/material.dart';
 
 import '../../configs/constants/color.dart';
 import '../../models/product_model.dart';
-import '../../widgets/buttons.dart';
+import '../../widgets/custom_material_button.dart';
 import '../../widgets/product_card.dart';
 
 class MakeOfferScreen extends StatefulWidget {
-  MakeOfferScreen({Key? key}) : super(key: key);
+  const MakeOfferScreen({Key? key}) : super(key: key);
 
-  bool isHaveMoney = false;
+  static String routeName = '/make_offer';
 
   @override
   _MakeOfferScreenState createState() => _MakeOfferScreenState();
-  @override
-  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
-    super.debugFillProperties(properties);
-    properties.add(DiagnosticsProperty<bool>('isHaveMoney', isHaveMoney));
-  }
 }
 
 class _MakeOfferScreenState extends State<MakeOfferScreen> {
   final _formKey = GlobalKey<FormState>();
   final _textEditingController = TextEditingController();
-
+  late bool isHaveMoney;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -75,13 +70,13 @@ class _MakeOfferScreenState extends State<MakeOfferScreen> {
                                             child: Checkbox(
                                               checkColor: Colors.white,
                                               activeColor: kPrimaryColor,
-                                              side: BorderSide(
+                                              side: const BorderSide(
                                                 color: Colors.white,
                                               ),
-                                              value: widget.isHaveMoney,
+                                              value: isHaveMoney,
                                               onChanged: (value) {
                                                 setState(() {
-                                                  widget.isHaveMoney = value!;
+                                                  isHaveMoney = value!;
                                                 });
                                               },
                                             ),
@@ -135,13 +130,13 @@ class _MakeOfferScreenState extends State<MakeOfferScreen> {
                                             child: Checkbox(
                                               checkColor: Colors.white,
                                               activeColor: kPrimaryColor,
-                                              side: BorderSide(
+                                              side: const BorderSide(
                                                 color: Colors.white,
                                               ),
-                                              value: widget.isHaveMoney,
+                                              value: isHaveMoney,
                                               onChanged: (value) {
                                                 setState(() {
-                                                  widget.isHaveMoney = value!;
+                                                  isHaveMoney = value!;
                                                 });
                                               },
                                             ),
@@ -166,10 +161,10 @@ class _MakeOfferScreenState extends State<MakeOfferScreen> {
                             Checkbox(
                               activeColor: kPrimaryColor,
                               checkColor: Colors.white,
-                              value: widget.isHaveMoney,
+                              value: isHaveMoney,
                               onChanged: (value) {
                                 setState(() {
-                                  widget.isHaveMoney = value!;
+                                  isHaveMoney = value!;
                                 });
                               },
                             ),
@@ -198,7 +193,7 @@ class _MakeOfferScreenState extends State<MakeOfferScreen> {
                                     : 'Invalid Field';
                               },
                               maxLength: 10,
-                              enabled: widget.isHaveMoney,
+                              enabled: isHaveMoney,
                               decoration: const InputDecoration(
                                 border: UnderlineInputBorder(),
                                 focusedBorder: UnderlineInputBorder(),
@@ -230,7 +225,7 @@ class _MakeOfferScreenState extends State<MakeOfferScreen> {
                 Expanded(
                   child: Padding(
                     padding: const EdgeInsets.all(8),
-                    child: ButtonWidget(
+                    child: CustomMaterialButton(
                         press: () {
                           //Navigator.of(context).pop();
                         },
@@ -244,7 +239,7 @@ class _MakeOfferScreenState extends State<MakeOfferScreen> {
                 Expanded(
                   child: Padding(
                     padding: const EdgeInsets.all(8),
-                    child: ButtonWidget(
+                    child: CustomMaterialButton(
                         press: () {
                           // if (_formKey.currentState!.validate()) {
                           //   Navigator.of(context).pop(_textEditingController.text);
@@ -262,5 +257,11 @@ class _MakeOfferScreenState extends State<MakeOfferScreen> {
         ],
       ),
     );
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(DiagnosticsProperty<bool>('isHaveMoney', isHaveMoney));
   }
 }
