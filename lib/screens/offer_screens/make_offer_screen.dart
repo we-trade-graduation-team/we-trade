@@ -18,7 +18,8 @@ class MakeOfferScreen extends StatefulWidget {
 class _MakeOfferScreenState extends State<MakeOfferScreen> {
   final _formKey = GlobalKey<FormState>();
   final _textEditingController = TextEditingController();
-  late bool isHaveMoney;
+  late bool isHaveMoney = false;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -64,21 +65,23 @@ class _MakeOfferScreenState extends State<MakeOfferScreen> {
                                                   BorderRadius.circular(3),
                                               border: Border.all(
                                                   color: kTextLightColor)),
-                                          child: SizedBox(
-                                            height: 20,
-                                            width: 20,
-                                            child: Checkbox(
-                                              checkColor: Colors.white,
-                                              activeColor: kPrimaryColor,
-                                              side: const BorderSide(
-                                                color: Colors.white,
+                                          child: Theme(
+                                            data: ThemeData(
+                                                unselectedWidgetColor:
+                                                    Colors.white),
+                                            child: SizedBox(
+                                              height: 20,
+                                              width: 20,
+                                              child: Checkbox(
+                                                checkColor: Colors.white,
+                                                activeColor: kPrimaryColor,
+                                                value: isHaveMoney,
+                                                onChanged: (value) {
+                                                  setState(() {
+                                                    isHaveMoney = value!;
+                                                  });
+                                                },
                                               ),
-                                              value: isHaveMoney,
-                                              onChanged: (value) {
-                                                setState(() {
-                                                  isHaveMoney = value!;
-                                                });
-                                              },
                                             ),
                                           ),
                                         ),
@@ -127,18 +130,20 @@ class _MakeOfferScreenState extends State<MakeOfferScreen> {
                                           child: SizedBox(
                                             height: 20,
                                             width: 20,
-                                            child: Checkbox(
-                                              checkColor: Colors.white,
-                                              activeColor: kPrimaryColor,
-                                              side: const BorderSide(
-                                                color: Colors.white,
+                                            child: Theme(
+                                              data: ThemeData(
+                                                  unselectedWidgetColor:
+                                                      Colors.white),
+                                              child: Checkbox(
+                                                checkColor: Colors.white,
+                                                activeColor: kPrimaryColor,
+                                                value: isHaveMoney,
+                                                onChanged: (value) {
+                                                  setState(() {
+                                                    isHaveMoney = value!;
+                                                  });
+                                                },
                                               ),
-                                              value: isHaveMoney,
-                                              onChanged: (value) {
-                                                setState(() {
-                                                  isHaveMoney = value!;
-                                                });
-                                              },
                                             ),
                                           ),
                                         ),
@@ -241,9 +246,10 @@ class _MakeOfferScreenState extends State<MakeOfferScreen> {
                     padding: const EdgeInsets.all(8),
                     child: CustomMaterialButton(
                         press: () {
-                          // if (_formKey.currentState!.validate()) {
-                          //   Navigator.of(context).pop(_textEditingController.text);
-                          // }
+                          if (_formKey.currentState!.validate()) {
+                            Navigator.of(context)
+                                .pop(_textEditingController.text);
+                          }
                         },
                         text: 'Gửi offer',
                         width: MediaQuery.of(context).size.width / 4,
@@ -263,5 +269,7 @@ class _MakeOfferScreenState extends State<MakeOfferScreen> {
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
     properties.add(DiagnosticsProperty<bool>('isHaveMoney', isHaveMoney));
+    properties
+        .add(DiagnosticsProperty<GlobalKey<FormState>>('_formKey', _formKey));
   }
 }
