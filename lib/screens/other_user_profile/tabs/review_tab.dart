@@ -12,7 +12,6 @@ class ReviewTab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Expanded(
-      // child: Text('hello'),
       child: ListView.builder(
         itemCount: userDetail.reviews!.length,
         itemBuilder: (context, index) => ReviewCard(

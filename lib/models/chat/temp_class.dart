@@ -2,13 +2,19 @@ import '../review/temp_class.dart';
 
 class Chat {
   Chat({
-    required this.user,
+    required this.id,
+    required this.users,
     required this.lastMessage,
+    this.lastMessageByUser,
+    this.chatName,
     required this.time,
   });
 
+  int id;
   final String lastMessage, time;
-  final User user;
+  User? lastMessageByUser;
+  String? chatName;
+  final List<User> users;
 }
 
 class User {
@@ -16,9 +22,10 @@ class User {
     required this.name,
     required this.image,
     required this.isActive,
+    required this.activeAt,
   });
 
-  final String name, image;
+  final String name, image, activeAt;
   final bool isActive;
 }
 
@@ -66,117 +73,147 @@ List<User> usersData = [
     image: 'assets/images/Chat_screen_ava_temp/user.png',
     name: 'Jenny Wilson',
     isActive: false,
+    activeAt: 'active 3 mins ago',
   ),
   User(
     image: 'assets/images/Chat_screen_ava_temp/user_2.png',
     name: 'Esther Howard',
     isActive: true,
+    activeAt: '',
   ),
   User(
     image: 'assets/images/Chat_screen_ava_temp/user_3.png',
     name: 'Ralph Edwards',
     isActive: true,
+    activeAt: '',
   ),
   User(
     image: 'assets/images/Chat_screen_ava_temp/user_4.png',
     name: 'Jacob Jones',
     isActive: false,
+    activeAt: 'active 3 mins ago',
   ),
   User(
     name: 'Albert Flores',
     image: 'assets/images/Chat_screen_ava_temp/user_5.png',
     isActive: false,
+    activeAt: 'active 3 mins ago',
   ),
   User(
     image: 'assets/images/Chat_screen_ava_temp/user.png',
     name: 'Jenny Wilson',
     isActive: true,
+    activeAt: '',
   ),
   User(
     image: 'assets/images/Chat_screen_ava_temp/user_2.png',
     name: 'Esther Howard',
     isActive: true,
+    activeAt: '',
   ),
   User(
     image: 'assets/images/Chat_screen_ava_temp/user_3.png',
     name: 'Ralph Edwards',
     isActive: false,
+    activeAt: 'active 3 mins ago',
   ),
   User(
     image: 'assets/images/Chat_screen_ava_temp/user_4.png',
     name: 'Jacob Jones',
     isActive: true,
+    activeAt: '',
   ),
   User(
     name: 'Albert Flores',
     image: 'assets/images/Chat_screen_ava_temp/user_5.png',
     isActive: false,
+    activeAt: 'active 3 mins ago',
   ),
 ];
 
 List<Chat> chatsData = [
   Chat(
-    user: usersData[0],
+    id: 0,
+    users: [usersData[0], usersData[2]],
     lastMessage: 'Hope you are doing well...',
+    lastMessageByUser: usersData[0],
+    chatName: 'Group săn hàng',
     time: '3m ago',
   ),
   Chat(
-    user: usersData[1],
+    id: 1,
+    users: [usersData[1]],
     lastMessage: 'Hello Abdullah! I am...',
     time: '8m ago',
   ),
   Chat(
-    user: usersData[2],
+    id: 2,
+    users: [usersData[2]],
     lastMessage: 'Do you have update...',
     time: '5d ago',
   ),
   Chat(
-    user: usersData[2],
+    id: 3,
+    users: [usersData[3]],
     lastMessage: 'You’re welcome :)',
+    lastMessageByUser: usersData[3],
     time: '5d ago',
   ),
   Chat(
-    user: usersData[4],
+    id: 4,
+    users: [usersData[4]],
     lastMessage: 'Thanks',
     time: '6d ago',
   ),
   Chat(
-    user: usersData[0],
+    id: 5,
+    users: [usersData[8], usersData[9], usersData[4]],
     lastMessage: 'Hope you are doing well...',
+    lastMessageByUser: usersData[5],
     time: '3m ago',
   ),
   Chat(
-    user: usersData[1],
+    id: 6,
+    users: [usersData[1], usersData[2], usersData[3]],
     lastMessage: 'Hello Abdullah! I am...',
+    chatName: 'Sample Group Chat',
     time: '8m ago',
   ),
   Chat(
-    user: usersData[2],
+    id: 7,
+    users: [usersData[2]],
     lastMessage: 'Do you have update...',
     time: '5d ago',
   ),
   Chat(
-    user: usersData[3],
+    id: 8,
+    users: [usersData[3]],
     lastMessage: 'Hope you are doing well...',
+    lastMessageByUser: usersData[3],
     time: '3m ago',
   ),
   Chat(
-    user: usersData[4],
+    id: 9,
+    users: [usersData[4]],
     lastMessage: 'Hello Abdullah! I am...',
+    lastMessageByUser: usersData[4],
     time: '8m ago',
   ),
   Chat(
-    user: usersData[0],
+    id: 10,
+    users: [usersData[0]],
     lastMessage: 'Do you have update...',
     time: '5d ago',
   ),
   Chat(
-    user: usersData[1],
+    id: 11,
+    users: [usersData[1]],
     lastMessage: 'You’re welcome :)',
     time: '5d ago',
   ),
   Chat(
-    user: usersData[2],
+    id: 12,
+    users: [usersData[2]],
     lastMessage: 'Thanks',
     time: '6d ago',
   ),

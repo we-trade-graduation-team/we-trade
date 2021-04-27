@@ -2,8 +2,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import '../configs/constants/color.dart';
 
-class ButtonWidget extends StatelessWidget {
-  const ButtonWidget({
+class CustomMaterialButton extends StatelessWidget {
+  const CustomMaterialButton({
     Key? key,
     this.isFilled = true,
     this.fontsize = 14,
@@ -25,7 +25,7 @@ class ButtonWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialButton(
-        height: height,
+        //height: height,
         minWidth: width,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(5),
@@ -37,6 +37,7 @@ class ButtonWidget extends StatelessWidget {
         color: isFilled ? kPrimaryColor : Colors.white,
         onPressed: press,
         child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Container(
               margin: const EdgeInsets.fromLTRB(0, 0, 5, 0),

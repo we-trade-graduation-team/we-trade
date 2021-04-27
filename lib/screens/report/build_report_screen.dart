@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:we_trade/bloc/report_bloc.dart';
-import 'package:we_trade/screens/report/report_screen.dart';
+import '../../bloc/report_bloc.dart';
+import 'report_screen.dart';
 
 class BuildReportScreen extends StatelessWidget {
   const BuildReportScreen({
@@ -13,10 +13,10 @@ class BuildReportScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
-      providers: [ChangeNotifierProvider<ReportBloc>(
-          create: (context)=> ReportBloc()
-      )],
-      child: ReportScreen(),
+      providers: [
+        ChangeNotifierProvider<ReportBloc>(create: (context) => ReportBloc())
+      ],
+      child: const ReportScreen(),
     );
   }
 }

@@ -23,24 +23,47 @@ class ChatCard extends StatelessWidget {
           children: [
             Stack(
               children: [
-                CircleAvatar(
-                  radius: 24,
-                  backgroundImage: AssetImage(chat.user.image),
-                ),
-                if (chat.user.isActive)
-                  Positioned(
-                    right: 0,
-                    bottom: 0,
-                    child: Container(
-                      height: 16,
-                      width: 16,
-                      decoration: BoxDecoration(
-                        color: kUserOnlineDot,
-                        shape: BoxShape.circle,
-                        border: Border.all(color: Colors.white, width: 3),
+                if (chat.users.length == 1)
+                  CircleAvatar(
+                    radius: 24,
+                    backgroundImage: AssetImage(chat.users[0].image),
+                  ),
+                if (chat.users.length == 1)
+                  if (chat.users[0].isActive)
+                    Positioned(
+                      right: 0,
+                      bottom: 0,
+                      child: Container(
+                        height: 16,
+                        width: 16,
+                        decoration: BoxDecoration(
+                          color: kUserOnlineDot,
+                          shape: BoxShape.circle,
+                          border: Border.all(color: Colors.white, width: 3),
+                        ),
                       ),
                     ),
-                  )
+                if (chat.users.length > 1)
+                  Container(
+                    width: 48,
+                    height: 48,
+                    child: Stack(
+                      children: [
+                        Positioned(
+                          right: 0,
+                          bottom: 0,
+                          child: CircleAvatar(
+                            radius: 16,
+                            backgroundImage: AssetImage(chat.users[0].image),
+                          ),
+                        ),
+                        CircleAvatar(
+                          radius: 16,
+                          backgroundImage: AssetImage(chat.users[1].image),
+                        ),
+                      ],
+                    ),
+                  ),
               ],
             ),
             Expanded(
@@ -50,7 +73,9 @@ class ChatCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      chat.user.name,
+                      finalChatName(chat)!,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                       style: const TextStyle(
                           fontSize: 16, fontWeight: FontWeight.w500),
                     ),
@@ -58,7 +83,7 @@ class ChatCard extends StatelessWidget {
                     Opacity(
                       opacity: 0.64,
                       child: Text(
-                        chat.lastMessage,
+                        '${chat.lastMessageByUser != null ? chat.lastMessageByUser!.name : "Bạn"}: ${chat.lastMessage}',
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                       ),
@@ -75,6 +100,22 @@ class ChatCard extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  static String? finalChatName(Chat chat) {
+    if (chat.users.length == 1) {
+      return chat.users[0].name;
+    }
+    if (chat.chatName == null) {
+      final chatName = StringBuffer();
+      for (final user in chat.users) {
+        chatName.write('${user.name}, ');
+      }
+      final result = chatName.toString();
+      return result.substring(0, result.length - 2);
+    }
+
+    return chat.chatName;
   }
 
   @override
