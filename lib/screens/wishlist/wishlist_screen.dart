@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:we_trade/models/product_model.dart';
-import 'package:we_trade/widgets/product_card.dart';
+import '../../models/product_model.dart';
+import '../../widgets/product_card.dart';
 
 class WishListScreen extends StatelessWidget {
+  const WishListScreen({Key? key}) : super(key: key);
   static const routeName = '/wishlish';
 
   List<Widget> buildProductsList(String title, List<Product> products) {

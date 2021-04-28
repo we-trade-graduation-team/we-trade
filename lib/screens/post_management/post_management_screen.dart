@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_rating_bar/flutter_rating_bar.dart';
-import 'package:we_trade/configs/constants/color.dart';
-import 'package:we_trade/models/chat/temp_class.dart';
-import 'package:we_trade/screens/post_management/tabs/trading_products_tab.dart';
 
+import '../../configs/constants/color.dart';
+import '../../models/chat/temp_class.dart';
+import '../../screens/post_management/tabs/trading_products_tab.dart';
+
+// ignore: use_key_in_widget_constructors
 class PostManagementScreen extends StatefulWidget {
   static const routeName = '/postmanagement';
+  // ignore: diagnostic_describe_all_properties
   final UserDetail userDetail = userDetailTemp;
 
   @override
@@ -13,6 +15,7 @@ class PostManagementScreen extends StatefulWidget {
 }
 
 class _PostManagementScreenState extends State<PostManagementScreen> {
+  // ignore: diagnostic_describe_all_properties
   final tabData = [
     'ĐANG TRAO ĐỔI',
     'HẾT HẠN/ẨN',
@@ -20,9 +23,6 @@ class _PostManagementScreenState extends State<PostManagementScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final width = MediaQuery.of(context).size.width;
-    final height = MediaQuery.of(context).size.height;
-
     return Scaffold(
       appBar: AppBar(
         title: const Text('Quản lí bài đăng'),
@@ -33,7 +33,6 @@ class _PostManagementScreenState extends State<PostManagementScreen> {
             physics: const NeverScrollableScrollPhysics(),
             headerSliverBuilder: (context, isScolled) {
               return [
-               
                 SliverPersistentHeader(
                   delegate: MyDelegate(
                     TabBar(
@@ -46,7 +45,7 @@ class _PostManagementScreenState extends State<PostManagementScreen> {
                       ],
                     ),
                   ),
-                      floating: true,
+                  floating: true,
                   pinned: true,
                 )
               ];
@@ -73,22 +72,24 @@ class MyDelegate extends SliverPersistentHeaderDelegate {
   @override
   Widget build(
       BuildContext context, double shrinkOffset, bool overlapsContent) {
-    return Container(
-      decoration: const BoxDecoration(
-        color: Colors.white,
-        border: Border(
-          top: BorderSide(
-            color: kTextLightV2Color,
-            width: 0.2,
-          ),
-          bottom: BorderSide(
-            color: kTextLightV2Color,
-            width: 0.2,
+    return 
+      Container(
+        decoration: const BoxDecoration(
+          color: Colors.white,
+          border: Border(
+            top: BorderSide(
+              color: kTextLightV2Color,
+              width: 0.2,
+            ),
+            bottom: BorderSide(
+              color: kTextLightV2Color,
+              width: 0.2,
+            ),
           ),
         ),
-      ),
-      child: tabBar,
-    );
+        child: tabBar,
+      );
+    
   }
 
   @override
@@ -103,15 +104,4 @@ class MyDelegate extends SliverPersistentHeaderDelegate {
   }
 }
 
-class MainInfo extends StatelessWidget {
-  const MainInfo({Key? key, required this.width, required this.widget})
-      : super(key: key);
 
-  final double width;
-  final PostManagementScreen widget;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container();
-  }
-}

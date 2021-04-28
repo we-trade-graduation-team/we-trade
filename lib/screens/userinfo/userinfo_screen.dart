@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:we_trade/configs/constants/color.dart';
-import 'package:we_trade/screens/userinfo/changepassword_screen.dart';
+import '../../configs/constants/color.dart';
+import 'changepassword_screen.dart';
 
+// ignore: use_key_in_widget_constructors
 class UserInfoScreen extends StatefulWidget {
   static const routeName = '/userinfo';
 
@@ -15,19 +16,6 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
   final _emailController = TextEditingController();
   final _locationController = TextEditingController();
 
-  Widget _buidlNameTextField() {
-    return TextField(
-      decoration: InputDecoration(
-        icon: const Icon(Icons.person),
-        labelText: 'Nhập họ tên',
-        hintText: 'Tran Duy Quang',
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(30),
-        ),
-      ),
-      controller: _nameController,
-    );
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -98,7 +86,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
         ),
       ),
       bottomNavigationBar: Padding(
-        padding: const EdgeInsets.all(8.0),
+        padding: const EdgeInsets.all(8),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [

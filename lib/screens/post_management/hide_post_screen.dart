@@ -1,15 +1,19 @@
 import 'package:flutter/material.dart';
-import 'package:we_trade/configs/constants/color.dart';
+import '../../configs/constants/color.dart';
 
 enum HidePostReasonValue {
+  // ignore: constant_identifier_names
   StopTrading,
+  // ignore: constant_identifier_names
   TradedViaWeTrade,
+  // ignore: constant_identifier_names
   TradeViaOtherChannel,
 }
 
 class Reason {
   String title;
   HidePostReasonValue value;
+  // ignore: sort_constructors_first
   Reason({
     required this.title,
     required this.value,
@@ -29,6 +33,7 @@ class Reason {
   }
 }
 
+// ignore: use_key_in_widget_constructors
 class HidePostScreen extends StatefulWidget {
   static const routeName = '/hidepost';
 
@@ -37,7 +42,9 @@ class HidePostScreen extends StatefulWidget {
 }
 
 class _HidePostScreenState extends State<HidePostScreen> {
+  // ignore: diagnostic_describe_all_properties
   List<Reason> reasons = [];
+  // ignore: diagnostic_describe_all_properties
   Reason selectedReason =
       Reason(title: 'title', value: HidePostReasonValue.StopTrading);
 
@@ -54,16 +61,17 @@ class _HidePostScreenState extends State<HidePostScreen> {
   }
 
   List<Widget> buildRadioReasonList() {
-    List<Widget> widgets = [];
-    for (Reason reason in reasons) {
+    final widgets = <Widget>[];
+    for (final reason in reasons) {
       widgets.add(
         RadioListTile(
           title: Text(reason.title),
           value: reason,
           groupValue: selectedReason,
+          // ignore: avoid_types_on_closure_parameters
           onChanged: (Reason? currentReason) {
             setState(() {
-              print(currentReason!.title);
+              // print(currentReason!.title);
               setSelectedReason(currentReason!);
             });
           },

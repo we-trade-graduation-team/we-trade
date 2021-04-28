@@ -67,7 +67,7 @@ class OverlayItem extends StatelessWidget {
                   child: Text(
                     text,
                     style: const TextStyle(
-                      fontSize: 16,
+                      fontSize: 14,
                     ),
                     overflow: TextOverflow.ellipsis,
                     maxLines: 1,

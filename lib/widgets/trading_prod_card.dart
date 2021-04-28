@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import '../configs/constants/color.dart';
 import '../models/review/temp_class.dart';
 import '../screens/post_management/hide_post_screen.dart';
-import 'custom_overlay_iconbutton.dart';
 import '../widgets/trading_prod_overlay.dart';
+import './custom_overlay_iconbutton.dart';
 
 class TradingProductCard extends StatelessWidget {
   const TradingProductCard({
@@ -34,6 +34,7 @@ class TradingProductCard extends StatelessWidget {
 
     return GestureDetector(
       onTap: () {
+        // ignore: avoid_print
         print('product tapped');
       },
       child: Container(

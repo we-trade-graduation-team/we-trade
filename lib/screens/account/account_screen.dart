@@ -1,22 +1,25 @@
 import 'package:flutter/material.dart';
-import 'package:we_trade/screens/follow/follow_screen.dart';
-import 'package:we_trade/screens/myrate/my_rate_screen.dart';
-import 'package:we_trade/screens/post_management/post_management_screen.dart';
-import 'package:we_trade/screens/trading_history/trading_history_screen.dart';
-import 'package:we_trade/screens/userinfo/userinfo_screen.dart';
-import 'package:we_trade/screens/wishlist/wishlist_screen.dart';
-import 'package:we_trade/widgets/custom_bottom_navigation_bar.dart';
 
 import '../../configs/constants/color.dart';
+import '../../widgets/custom_bottom_navigation_bar.dart';
+import '../follow/follow_screen.dart';
+import '../myrate/my_rate_screen.dart';
+import '../post_management/post_management_screen.dart';
+import '../trading_history/trading_history_screen.dart';
+import '../userinfo/userinfo_screen.dart';
+import '../wishlist/wishlist_screen.dart';
 
 enum Follow_Screen {
+  // ignore: constant_identifier_names
   Following,
+  // ignore: constant_identifier_names
   Follower,
 }
 
 class AccountScreen extends StatelessWidget {
   static const routeName = '/account';
 
+  // ignore: sort_constructors_first
   const AccountScreen({
     Key? key,
   }) : super(key: key);
@@ -50,7 +53,6 @@ class AccountScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final width = MediaQuery.of(context).size.width;
     final height = MediaQuery.of(context).size.height;
     final bannerHeight = height * 0.28;
     return Scaffold(
@@ -76,6 +78,7 @@ class AccountScreen extends StatelessWidget {
                                 color: kPrimaryLightColor,
                                 icon: const Icon(Icons.settings),
                                 onPressed: () {
+                                  // ignore: avoid_print
                                   print('setting pressed');
                                 })
                           ],

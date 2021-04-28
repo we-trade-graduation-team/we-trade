@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:we_trade/models/chat/temp_class.dart';
-import 'package:we_trade/widgets/history_prod_card.dart';
-import 'package:we_trade/widgets/trading_prod_card.dart';
 
+import '../../models/chat/temp_class.dart';
+import '../../widgets/history_prod_card.dart';
+
+// ignore: use_key_in_widget_constructors
 class TradingHistoryScreen extends StatefulWidget {
   static const routeName = '/tradinghistory';
+  // ignore: diagnostic_describe_all_properties
   final UserDetail userDetail = userDetailTemp;
   @override
   _TradingHistoryScreenState createState() => _TradingHistoryScreenState();
@@ -13,18 +15,16 @@ class TradingHistoryScreen extends StatefulWidget {
 class _TradingHistoryScreenState extends State<TradingHistoryScreen> {
   @override
   Widget build(BuildContext context) {
-    final width = MediaQuery.of(context).size.width;
-    final height = MediaQuery.of(context).size.height;
-
+  
     return Scaffold(
       appBar: AppBar(
         title: const Text('Lịch sử giao dịch'),
       ),
       body: Container(
-        color: Color.fromARGB(2, 3, 4, 2),
+        color: const Color.fromARGB(2, 3, 4, 2),
         child: ListView.builder(
-          itemBuilder: (context, index) => Padding(
-            padding: const EdgeInsets.all(8.0),
+          itemBuilder: (context, index) => const Padding(
+            padding: EdgeInsets.all(8),
             child: HistoryProductCard(
              
             ),

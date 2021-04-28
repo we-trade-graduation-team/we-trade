@@ -1,16 +1,14 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
-import 'package:we_trade/configs/constants/color.dart';
-import 'package:we_trade/models/chat/temp_class.dart';
-import 'package:we_trade/screens/myrate/tabs/rate_tab.dart';
-import 'package:we_trade/screens/other_user_profile/other_user_profile_screen.dart';
-import 'package:we_trade/screens/other_user_profile/tabs/review_tab.dart';
-import 'package:we_trade/screens/userinfo/userinfo_screen.dart';
-import 'package:we_trade/widgets/buttons.dart';
+import '../../configs/constants/color.dart';
+import '../../models/chat/temp_class.dart';
+import '../../screens/myrate/tabs/rate_tab.dart';
 
+// ignore: use_key_in_widget_constructors
 class MyRateScreen extends StatefulWidget {
   static const routeName = '/myrate';
+  // ignore: diagnostic_describe_all_properties
   final UserDetail userDetail = userDetailTemp;
 
   @override
@@ -19,7 +17,10 @@ class MyRateScreen extends StatefulWidget {
 
 class _MyRateScreenState extends State<MyRateScreen> {
   // ignore: diagnostic_describe_all_properties
-  final tabData = ['ĐÁNH GIÁ', 'ĐƯỢC ĐÁNH GIÁ',];
+  final tabData = [
+    'ĐÁNH GIÁ',
+    'ĐƯỢC ĐÁNH GIÁ',
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +29,7 @@ class _MyRateScreenState extends State<MyRateScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title:const Text('Đánh giá của tôi'),
+        title: const Text('Đánh giá của tôi'),
       ),
       body: DefaultTabController(
         length: tabData.length,
@@ -71,7 +72,6 @@ class _MyRateScreenState extends State<MyRateScreen> {
     return [
       RateTab(userDetail: widget.userDetail),
       RateTab(userDetail: widget.userDetail),
-
     ];
   }
 }
@@ -117,6 +117,7 @@ class MainInfo extends StatelessWidget {
   const MainInfo({Key? key, required this.width, required this.widget})
       : super(key: key);
 
+  // ignore: diagnostic_describe_all_properties
   final double width;
   final MyRateScreen widget;
 
@@ -124,7 +125,6 @@ class MainInfo extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       color: kPrimaryColor,
-    
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
@@ -150,24 +150,22 @@ class MainInfo extends StatelessWidget {
                   ],
                 ),
                 const SizedBox(height: 10),
-            
                 RatingBar.builder(
-                    initialRating: 3.5,
-                    allowHalfRating: true,
-                    //itemCount: 5,
-                    glowRadius: 10,
-                    glowColor: Colors.yellow[100],
-                    itemSize: 20,
-                    itemPadding: const EdgeInsets.symmetric(horizontal: 2),
-                    itemBuilder: (context, _) => const Icon(
-                      Icons.star,
-                      color: Colors.amber,
-                    ),
-                    //onRatingUpdate: print,
-                    ignoreGestures: true,
-                    onRatingUpdate: (value) {},
+                  initialRating: 3.5,
+                  allowHalfRating: true,
+                  //itemCount: 5,
+                  glowRadius: 10,
+                  glowColor: Colors.yellow[100],
+                  itemSize: 20,
+                  itemPadding: const EdgeInsets.symmetric(horizontal: 2),
+                  itemBuilder: (context, _) => const Icon(
+                    Icons.star,
+                    color: Colors.amber,
                   ),
-               
+                  //onRatingUpdate: print,
+                  ignoreGestures: true,
+                  onRatingUpdate: (value) {},
+                ),
               ],
             ),
           ),

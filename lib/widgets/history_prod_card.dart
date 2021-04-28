@@ -1,8 +1,11 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:we_trade/models/product/temp_class.dart';
+
 import '../configs/constants/color.dart';
+import '../models/product/temp_class.dart';
 import '../models/review/temp_class.dart';
+import '../widgets/trading_prod_overlay.dart';
+import './custom_overlay_iconbutton.dart';
 
 class HistoryProductCard extends StatelessWidget {
   const HistoryProductCard({
@@ -14,9 +17,20 @@ class HistoryProductCard extends StatelessWidget {
     final width = MediaQuery.of(context).size.width;
     final height = MediaQuery.of(context).size.height;
 
+    final overlayItems = <OverlayItem>[
+      OverlayItem(
+        text: 'Xóa',
+        iconData: Icons.warning,
+        // ignore: avoid_types_on_closure_parameters
+        handleFunction: () {
+         // print('Delete trading history');
+        },
+      ),
+    ];
+
     return GestureDetector(
       onTap: () {
-        print('product tapped');
+       // print('product tapped');
       },
       child: Container(
         margin: const EdgeInsets.fromLTRB(15, 5, 15, 5),
@@ -56,7 +70,7 @@ class HistoryProductCard extends StatelessWidget {
                         productsData[0].name,
                         overflow: TextOverflow.ellipsis,
                         maxLines: 2,
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.w600,
                         ),
@@ -69,69 +83,59 @@ class HistoryProductCard extends StatelessWidget {
                         reviewsData[0].dateTime.toString(),
                         overflow: TextOverflow.ellipsis,
                         maxLines: 2,
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontSize: 12,
                           fontWeight: FontWeight.w400,
                         ),
                       ),
                     ),
                     const SizedBox(height: 7),
-                    Container(
-                      child: Row(
-                        children: [
-                          const Text(
-                            'TK giao dich: ',
-                            style: TextStyle(
-                              fontSize: 13,
-                              fontWeight: FontWeight.w400,
-                            ),
+                    Row(
+                      // ignore: prefer_const_literals_to_create_immutables
+                      children: [
+                        const Text(
+                          'TK giao dich: ',
+                          style:TextStyle(
+                            fontSize: 13,
+                            fontWeight: FontWeight.w400,
                           ),
-                          Text(
-                            'User',
-                            style: TextStyle(
-                              fontSize: 13,
-                              fontWeight: FontWeight.w400,
-                              color: kPrimaryColor,
-                            ),
+                        ),
+                        const Text(
+                          'User',
+                          style: TextStyle(
+                            fontSize: 13,
+                            fontWeight: FontWeight.w400,
+                            color: kPrimaryColor,
                           ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
                     const SizedBox(height: 7),
-                    Container(
-                      child: Row(
-                        children: [
-                          const Text(
-                            'Trạng thái: ',
-                            style: TextStyle(
-                              fontSize: 13,
-                              fontWeight: FontWeight.w400,
-                            ),
+                  
+                    Row(
+                      // ignore: prefer_const_literals_to_create_immutables
+                      children: [
+                        const Text(
+                          'Trạng thái: ',
+                          style: TextStyle(
+                            fontSize: 13,
+                            fontWeight: FontWeight.w400,
                           ),
-                          Text(
-                            'Thành công',
-                            style: TextStyle(
-                              fontSize: 13,
-                              fontWeight: FontWeight.w400,
-                              color: kUserOnlineDot,
-                            ),
+                        ),
+                        const Text(
+                          'Thành công',
+                          style: TextStyle(
+                            fontSize: 13,
+                            fontWeight: FontWeight.w400,
+                            color: kUserOnlineDot,
                           ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
                   ],
                 ),
-                Expanded(
-                  child: GestureDetector(
-                    onTap: () {
-                      print('3 ... taped');
-                    },
-                    child: Container(
-                      alignment: Alignment.topRight,
-                      child: const Icon(Icons.more_vert),
-                    ),
-                  ),
-                ),
+                CustomOverlayIconButton(
+                    iconData: Icons.more_vert, overlayItems: overlayItems),
               ],
             ),
           ],

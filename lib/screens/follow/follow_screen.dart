@@ -3,12 +3,10 @@ import 'package:flutter/material.dart';
 import '../../configs/constants/color.dart';
 import '../account/account_screen.dart';
 
+// ignore: use_key_in_widget_constructors
 class FollowScreen extends StatelessWidget {
   static const routeName = '/follow';
-  const FollowScreen({
-    Key? key,
-  });
-
+  
   @override
   Widget build(BuildContext context) {
     final screen = ModalRoute.of(context)!.settings.arguments as Follow_Screen;
@@ -18,6 +16,7 @@ class FollowScreen extends StatelessWidget {
             ? const Text('Theo dõi bởi')
             : const Text('Theo  dõi'),
       ),
+      // ignore: avoid_unnecessary_containers
       body: Container(
         child: ListView.builder(
           itemBuilder: (ctx, index) => Padding(
@@ -32,7 +31,7 @@ class FollowScreen extends StatelessWidget {
               trailing: index == 0
                   ? OutlinedButton(
                       onPressed: () {
-                        print('Bo theo doi button pressed');
+                      
                       },
                       style: OutlinedButton.styleFrom(
                         side: const BorderSide(
@@ -49,7 +48,7 @@ class FollowScreen extends StatelessWidget {
                     )
                   : ElevatedButton(
                       onPressed: () {
-                        print('theo doi pressed');
+                        
                       },
                       style: ElevatedButton.styleFrom(
                         primary: kPrimaryColor,

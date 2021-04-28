@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:we_trade/configs/constants/color.dart';
+import '../../configs/constants/color.dart';
 
+// ignore: use_key_in_widget_constructors
 class ChangePasswordScreen extends StatefulWidget {
   static const routeName = '/changepassword';
 
@@ -17,11 +18,11 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Đổi mật khẩu'),
+        title: const Text('Đổi mật khẩu'),
       ),
       body: GestureDetector(
         onTap: () {
-          FocusScope.of(context).requestFocus(new FocusNode());
+          FocusScope.of(context).requestFocus(FocusNode());
         },
         child: ListView(
           padding: const EdgeInsets.symmetric(
@@ -64,7 +65,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
         ),
       ),
       bottomNavigationBar: Padding(
-        padding: const EdgeInsets.all(8.0),
+        padding: const EdgeInsets.all(8),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
