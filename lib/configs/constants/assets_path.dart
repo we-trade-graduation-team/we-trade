@@ -23,7 +23,7 @@ const ps4ConsoleWhite_1 = '$imageAssetPath/ps4_console_white_1.png';
 const ps4ConsoleWhite_2 = '$imageAssetPath/ps4_console_white_2.png';
 const ps4ConsoleWhite_3 = '$imageAssetPath/ps4_console_white_3.png';
 const ps4ConsoleWhite_4 = '$imageAssetPath/ps4_console_white_4.png';
-const wirelessHeadset = '$imageAssetPath/wireless headset.png';
+const wirelessHeadset = '$imageAssetPath/wireless_headset.png';
 
 // Login success screen
 const successImage = '$imageAssetPath/success.png';

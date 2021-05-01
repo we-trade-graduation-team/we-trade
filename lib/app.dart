@@ -18,16 +18,13 @@ import 'package:we_trade/screens/userinfo/userinfo_screen.dart';
 import 'package:we_trade/screens/wishlist/wishlist_screen.dart';
 
 import 'configs/constants/routes.dart';
-import 'configs/constants/strings.dart';
 import 'configs/theme/theme.dart';
-import 'screens/onboarding/onboarding.dart';
+import 'main_menu.dart';
 
 final RouteObserver<PageRoute> routeObserver = RouteObserver<PageRoute>();
 
 class MyApp extends StatelessWidget {
-  const MyApp({
-    Key? key,
-  }) : super(key: key);
+  const MyApp({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import '../../../configs/constants/color.dart';
 import '../../../models/chat/temp_class.dart';
 
-
 // ignore: must_be_immutable
 class ChatCardAddNew extends StatefulWidget {
   ChatCardAddNew({
@@ -12,7 +11,7 @@ class ChatCardAddNew extends StatefulWidget {
     required this.isSelected,
     required this.press,
   }) : super(key: key);
-  
+
   final User user;
   bool isSelected;
   final VoidCallback press;
@@ -31,26 +30,25 @@ class _ChatCardAddNewState extends State<ChatCardAddNew> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric( vertical: 10),
-      child: CheckboxListTile(
-      title:Text(
-        widget.user.name,
-        style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),),
-      value: widget.isSelected,
-      activeColor: kPrimaryColor,
-      checkColor: Colors.white,
-      onChanged: (value) {
-        setState(() {
-          widget.isSelected = value!;
-        });
-      },
-      secondary: CircleAvatar(
-                  radius: 24,
-                  backgroundImage: AssetImage(widget.user.image),
-                ),
-      controlAffinity: ListTileControlAffinity.trailing,
-    )
-    );
-      
+        padding: const EdgeInsets.symmetric(vertical: 10),
+        child: CheckboxListTile(
+          title: Text(
+            widget.user.name,
+            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+          ),
+          value: widget.isSelected,
+          activeColor: kPrimaryColor,
+          checkColor: Colors.white,
+          onChanged: (value) {
+            setState(() {
+              widget.isSelected = value!;
+            });
+          },
+          secondary: CircleAvatar(
+            radius: 24,
+            backgroundImage: AssetImage(widget.user.image),
+          ),
+          controlAffinity: ListTileControlAffinity.trailing,
+        ));
   }
 }

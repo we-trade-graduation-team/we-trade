@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import '../configs/constants/assets_path.dart';
 
 class Product {
   Product({
@@ -93,7 +92,7 @@ List<Product> demoProducts = [
   Product(
     id: 4,
     images: [
-      wirelessHeadset,
+      'https://images.unsplash.com/photo-1535043205849-513fe27db33e?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80',
     ],
     colors: [
       const Color(0xFFF6625E),
@@ -247,3 +246,5 @@ const location = 'District 5';
 const condition = 'Like new';
 const description =
     'Wireless Controller for PS4™ whole new level gives you what you want in your gaming from over precision control your games to sharing …';
+
+List<Product> allProduct = demoProducts + recommendedProducts;
