@@ -1,4 +1,6 @@
+import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/material.dart';
+import 'package:we_trade/main.dart';
 import 'package:we_trade/screens/category/category.dart';
 import 'package:we_trade/screens/detail/detail.dart';
 import 'package:we_trade/screens/follow/follow_screen.dart';
@@ -9,6 +11,7 @@ import 'package:we_trade/screens/post_management/post_management_screen.dart';
 import 'package:we_trade/screens/report/build_report_screen.dart';
 import 'package:we_trade/screens/report/report_screen.dart';
 import 'package:we_trade/screens/account/account_screen.dart';
+import 'package:we_trade/screens/trading_history/rate_for_trading.dart';
 import 'package:we_trade/screens/trading_history/trading_history_screen.dart';
 import 'package:we_trade/screens/userinfo/changepassword_screen.dart';
 import 'package:we_trade/screens/userinfo/userinfo_screen.dart';
@@ -19,6 +22,8 @@ import 'configs/constants/strings.dart';
 import 'configs/theme/theme.dart';
 import 'screens/onboarding/onboarding.dart';
 
+final RouteObserver<PageRoute> routeObserver = RouteObserver<PageRoute>();
+
 class MyApp extends StatelessWidget {
   const MyApp({
     Key? key,
@@ -27,6 +32,9 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      builder: BotToastInit(),
+
+      navigatorObservers: [routeObserver,BotToastNavigatorObserver()],
       debugShowCheckedModeBanner: false,
       title: kAppTitle,
       theme: theme(),
@@ -34,14 +42,15 @@ class MyApp extends StatelessWidget {
       routes: {
         AccountScreen.routeName: (ctx) => const AccountScreen(),
         UserInfoScreen.routeName: (ctx) => UserInfoScreen(),
-        FollowScreen.routeName: (ctx) => const FollowScreen(),
+        FollowScreen.routeName: (ctx) => FollowScreen(),
         ChangePasswordScreen.routeName: (ctx) => ChangePasswordScreen(),
         MyRateScreen.routeName: (ctx) => MyRateScreen(),
         PostManagementScreen.routeName: (ctx) => PostManagementScreen(),
         TradingHistoryScreen.routeName: (ctx) => TradingHistoryScreen(),
         HidePostScreen.routeName: (ctx) => HidePostScreen(),
-        WishListScreen.routeName: (ctx) => WishListScreen(),
+        WishListScreen.routeName: (ctx) => const WishListScreen(),
         DetailScreen.routeName: (ctx) => const DetailScreen(),
+        RateForTrading.routeName: (ctx) => RateForTrading(),
       },
     );
   }

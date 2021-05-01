@@ -22,6 +22,7 @@ dependencies:
   line_icons: ^2.0.1
   auto_size_text: ^3.0.0-nullsafety.0
   flutter_svg: ^0.21.0-nullsafety.0
+  bot_toast: ^3.0.5
 
 dev_dependencies:
   flutter_test:
@@ -35,4 +36,3 @@ flutter:
     - assets/images/
     - assets/images/Chat_screen_ava_temp/
     - assets/images/products_images_temp/
-    - assets/logos/

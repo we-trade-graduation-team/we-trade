@@ -24,7 +24,7 @@ class TradingProductCard extends StatelessWidget {
     final overlayItems = <OverlayItem>[
       OverlayItem(
         text: 'Ẩn tin',
-        iconData: Icons.warning,
+        iconData: Icons.visibility_off,
         // ignore: avoid_types_on_closure_parameters
         handleFunction: () {
           Navigator.of(context).pushNamed(HidePostScreen.routeName);

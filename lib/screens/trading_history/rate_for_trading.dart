@@ -67,7 +67,7 @@ class _RateForTradingState extends State<RateForTrading> {
         title: const Text('Đánh giá giao dịch'),
       ),
       bottomNavigationBar: Padding(
-        padding: const EdgeInsets.all(13),
+        padding: const EdgeInsets.all(11),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [

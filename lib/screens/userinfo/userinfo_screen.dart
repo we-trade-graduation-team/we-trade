@@ -16,7 +16,6 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
   final _emailController = TextEditingController();
   final _locationController = TextEditingController();
 
-
   @override
   Widget build(BuildContext context) {
     // _nameController.value = TextEditingValue(text: '1212312313');
@@ -86,7 +85,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
         ),
       ),
       bottomNavigationBar: Padding(
-        padding: const EdgeInsets.all(8),
+        padding: const EdgeInsets.all(10),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [

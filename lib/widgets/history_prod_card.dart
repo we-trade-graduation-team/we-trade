@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:we_trade/screens/trading_history/rate_for_trading.dart';
 
 import '../configs/constants/color.dart';
 import '../models/product/temp_class.dart';
@@ -19,18 +20,26 @@ class HistoryProductCard extends StatelessWidget {
 
     final overlayItems = <OverlayItem>[
       OverlayItem(
-        text: 'Xóa',
-        iconData: Icons.warning,
+        text: 'Đánh giá',
+        iconData: Icons.star,
         // ignore: avoid_types_on_closure_parameters
         handleFunction: () {
-         // print('Delete trading history');
+          Navigator.of(context).pushNamed(RateForTrading.routeName);
+        },
+      ),
+      OverlayItem(
+        text: 'Xóa',
+        iconData: Icons.delete,
+        // ignore: avoid_types_on_closure_parameters
+        handleFunction: () {
+          // print('Delete trading history');
         },
       ),
     ];
 
     return GestureDetector(
       onTap: () {
-       // print('product tapped');
+        // print('product tapped');
       },
       child: Container(
         margin: const EdgeInsets.fromLTRB(15, 5, 15, 5),
@@ -47,6 +56,7 @@ class HistoryProductCard extends StatelessWidget {
         child: Column(
           children: [
             Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Container(
@@ -95,7 +105,7 @@ class HistoryProductCard extends StatelessWidget {
                       children: [
                         const Text(
                           'TK giao dich: ',
-                          style:TextStyle(
+                          style: TextStyle(
                             fontSize: 13,
                             fontWeight: FontWeight.w400,
                           ),
@@ -111,7 +121,6 @@ class HistoryProductCard extends StatelessWidget {
                       ],
                     ),
                     const SizedBox(height: 7),
-                  
                     Row(
                       // ignore: prefer_const_literals_to_create_immutables
                       children: [
