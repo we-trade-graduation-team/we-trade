@@ -11,18 +11,19 @@ class ReviewTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-      child: ListView.builder(
-        itemCount: userDetail.reviews!.length,
-        itemBuilder: (context, index) => ReviewCard(
-          review: userDetail.reviews![index],
-          //press: () {},
-          // press: () => Navigator.push(
-          //   context,
-          //   MaterialPageRoute(
-          //     builder: (context) => MessagesScreen(),
-          //   ),
-        ),
+    // final size = MediaQuery.of(context).size;
+    return ListView.builder(
+      // shrinkWrap: true,
+      // physics: const NeverScrollableScrollPhysics(),
+      itemCount: userDetail.reviews!.length,
+      itemBuilder: (context, index) => ReviewCard(
+        review: userDetail.reviews![index],
+        //press: () {},
+        // press: () => Navigator.push(
+        //   context,
+        //   MaterialPageRoute(
+        //     builder: (context) => MessagesScreen(),
+        //   ),
       ),
     );
   }

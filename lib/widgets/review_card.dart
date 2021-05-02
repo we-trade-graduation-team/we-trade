@@ -121,25 +121,23 @@ class ReviewCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(5),
       ),
       margin: const EdgeInsets.symmetric(vertical: 10),
-      child: Expanded(
-        child: TextFormField(
-          decoration: const InputDecoration(
-            border: InputBorder.none,
-            labelText: 'Phản hồi',
-            contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-            hintText: '\n',
-            hintStyle: TextStyle(height: 2),
-            labelStyle: TextStyle(
-              color: kRiviewTextLabel,
-              fontSize: 16,
-              fontWeight: FontWeight.normal,
-            ),
+      child: TextFormField(
+        decoration: const InputDecoration(
+          border: InputBorder.none,
+          labelText: 'Phản hồi',
+          contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+          hintText: '\n',
+          hintStyle: TextStyle(height: 2),
+          labelStyle: TextStyle(
+            color: kRiviewTextLabel,
+            fontSize: 16,
+            fontWeight: FontWeight.normal,
           ),
-          initialValue: replie,
-          maxLines: null,
-          style: const TextStyle(fontSize: 14),
-          enabled: false,
         ),
+        initialValue: replie,
+        maxLines: null,
+        style: const TextStyle(fontSize: 14),
+        enabled: false,
       ),
     );
   }

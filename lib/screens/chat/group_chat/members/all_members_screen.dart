@@ -36,17 +36,15 @@ class AllMemberScreen extends StatelessWidget {
       ),
       body: Container(
         margin: const EdgeInsets.symmetric(vertical: 10),
-        child: Expanded(
-          child: ListView.builder(
-            itemCount: agrs.chat.users.length,
-            itemBuilder: (context, index) => UserCard(
-                user: agrs.chat.users[index],
-                press: () {
-                  Navigator.pushNamed(context, OtherUserProfileScreen.routeName,
-                      arguments: OtherUserProfileArguments(
-                          userDetail: userDetailTemp));
-                }),
-          ),
+        child: ListView.builder(
+          itemCount: agrs.chat.users.length,
+          itemBuilder: (context, index) => UserCard(
+              user: agrs.chat.users[index],
+              press: () {
+                Navigator.pushNamed(context, OtherUserProfileScreen.routeName,
+                    arguments:
+                        OtherUserProfileArguments(userDetail: userDetailTemp));
+              }),
         ),
       ),
     );
