@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "431182534302",
+    "project_id": "we-trade-temp",
+    "storage_bucket": "we-trade-temp.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:431182534302:android:8fb3d7ff06dd1c60ee8d8f",
+        "android_client_info": {
+          "package_name": "com.example.we_trade"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "431182534302-rub0delgl5o9b9l7vd8ltvom57b3ecl3.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCNE12kx5KA1kwcS4CVbsNEVqc-c4T89Lg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "431182534302-rub0delgl5o9b9l7vd8ltvom57b3ecl3.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
