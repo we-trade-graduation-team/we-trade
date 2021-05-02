@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../configs/constants/color.dart';
 import '../../models/product/temp_class.dart';
-import '../../widgets/rating.dart';
+import '../../widgets/rating_bar.dart';
 
 // ignore: use_key_in_widget_constructors
 class RateForTrading extends StatefulWidget {
@@ -204,13 +204,15 @@ class _RateForTradingState extends State<RateForTrading> {
                         ),
                       ),
                       // const SizedBox(width: 10),
-                      RatingBar(onRatingSelected: (rating) {
-                        setState(() {
-                          _rating = rating;
-                        });
-                        // ignore: avoid_print
-                        print('rating $_rating');
-                      }),
+                      RatingBar(
+                        onRatingSelected: (rating) {
+                          setState(() {
+                            _rating = rating;
+                          });
+                          // ignore: avoid_print
+                          print('rating $_rating');
+                        },
+                      ),
                     ],
                   ),
                 ),

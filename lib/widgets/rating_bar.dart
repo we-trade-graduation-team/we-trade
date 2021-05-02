@@ -1,15 +1,27 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 class RatingBar extends StatefulWidget {
-  // ignore: diagnostic_describe_all_properties
-  final int maximumRating;
-  // ignore: diagnostic_describe_all_properties
   final Function(int) onRatingSelected;
+  final int maximumRating;
 
-  RatingBar({required this.onRatingSelected, this.maximumRating = 5});
+  // ignore: sort_constructors_first
+  const RatingBar({
+    Key? key,
+    required this.onRatingSelected,
+    this.maximumRating = 5,
+  }) : super(key: key);
 
   @override
   _RatingBarState createState() => _RatingBarState();
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(DiagnosticsProperty<Function(int p1)>(
+        'onRatingSelected', onRatingSelected));
+    properties.add(IntProperty('maximumRating', maximumRating));
+  }
 }
 
 class _RatingBarState extends State<RatingBar> {
