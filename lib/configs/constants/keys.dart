@@ -1,30 +1,33 @@
 import 'package:flutter/material.dart';
 
-import 'color.dart';
+const highRatingLevel = 80;
+const mediumRatingLevel = 50;
 
-const double kDefaultPadding = 20;
+final bottomNavigationBarItems = <String, IconData>{
+  'Home': Icons.home,
+  'Chat': Icons.chat,
+  'New item': Icons.add_circle_rounded,
+  'Favourite': Icons.favorite,
+  'Account': Icons.person,
+};
 
-const kAnimationDuration = Duration(milliseconds: 200);
+final categories = <Map<String, String>>[
+  {'icon': 'lightningBolt', 'text': 'Flash Deal'},
+  {'icon': 'television', 'text': 'Electronic devices'},
+  {'icon': 'laptop', 'text': 'Laptop'},
+  {'icon': 'mobilePhone', 'text': 'Mobile'},
+  {'icon': 'warehouse', 'text': 'Household devices'},
+  {'icon': 'child', 'text': 'Toy'},
+  {'icon': 'stopwatch', 'text': 'Watch'},
+  {'icon': 'book', 'text': 'Book'},
+  {'icon': 'bone', 'text': 'Pet'},
+  {'icon': 'dotCircle', 'text': 'More'},
+];
 
-const headingStyle = TextStyle(
-  fontSize: 28,
-  fontWeight: FontWeight.bold,
-  color: Colors.black,
-  height: 1.5,
-);
+const kDetailHorizontalPaddingPercent = 0.05;
+const kDetailVerticalPaddingPercent = 0.02;
 
-const defaultDuration = Duration(milliseconds: 250);
+const kDefaultBottomNavigationBarHeight = 56.0;
+const kHomeScreenFlexibleSpaceExpandedHeight = 180.0;
 
-final otpInputDecoration = InputDecoration(
-  contentPadding: const EdgeInsets.symmetric(vertical: 15),
-  border: outlineInputBorder(),
-  focusedBorder: outlineInputBorder(),
-  enabledBorder: outlineInputBorder(),
-);
-
-OutlineInputBorder outlineInputBorder() {
-  return OutlineInputBorder(
-    borderRadius: BorderRadius.circular(15),
-    borderSide: const BorderSide(color: kTextColor),
-  );
-}
+const kFlutterStaggeredAnimationsDuration = 1000;
