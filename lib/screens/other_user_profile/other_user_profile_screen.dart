@@ -1,6 +1,9 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import '../post_items/step1.dart';
+import '../post_items/step2.dart';
 
+// ignore: directives_ordering
 import '../../configs/constants/color.dart';
 import '../../models/chat/temp_class.dart';
 import '../../widgets/buttons.dart';
@@ -337,6 +340,7 @@ class ReviewProperty extends StatelessWidget {
     );
   }
 
+  // This trailing comma makes auto-formatting nicer for build methods.
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);

@@ -29,6 +29,8 @@ import 'package:flutter/material.dart';
 
 import 'configs/Theme/theme.dart';
 import 'screens/other_user_profile/other_user_profile_screen.dart';
+import 'screens/post_items/step1.dart';
+import 'screens/post_items/step2.dart';
 
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
@@ -39,6 +41,10 @@ class MyApp extends StatelessWidget {
       title: 'Flutter Demo',
       theme: theme(),
       home: OtherUserProfileScreen(),
+      routes: {
+        PostItems1.routeName: (ctx) => const PostItems1(),
+        PostItems2.routeName: (ctx) => const PostItems2(),
+      },
     );
   }
 }
