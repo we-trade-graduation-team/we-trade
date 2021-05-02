@@ -1,18 +1,19 @@
 import 'package:flutter/material.dart';
 
 import '../../configs/constants/color.dart';
-import '../account/account_screen.dart';
 
 // ignore: use_key_in_widget_constructors
 class FollowScreen extends StatelessWidget {
   static const routeName = '/follow';
-  
+
   @override
   Widget build(BuildContext context) {
-    final screen = ModalRoute.of(context)!.settings.arguments as Follow_Screen;
+    final screen =
+        ModalRoute.of(context)!.settings.arguments as FollowScreenArguments;
+
     return Scaffold(
       appBar: AppBar(
-        title: screen == Follow_Screen.Follower
+        title: screen.screenName == Follow_Screen_Name.follower
             ? const Text('Theo dõi bởi')
             : const Text('Theo  dõi'),
       ),
@@ -30,9 +31,7 @@ class FollowScreen extends StatelessWidget {
               title: const Text('Duy Quang'),
               trailing: index == 0
                   ? OutlinedButton(
-                      onPressed: () {
-                      
-                      },
+                      onPressed: () {},
                       style: OutlinedButton.styleFrom(
                         side: const BorderSide(
                           color: kPrimaryColor,
@@ -47,9 +46,7 @@ class FollowScreen extends StatelessWidget {
                       ),
                     )
                   : ElevatedButton(
-                      onPressed: () {
-                        
-                      },
+                      onPressed: () {},
                       style: ElevatedButton.styleFrom(
                         primary: kPrimaryColor,
                         elevation: 4,
@@ -64,4 +61,14 @@ class FollowScreen extends StatelessWidget {
       ),
     );
   }
+}
+
+enum Follow_Screen_Name {
+  following,
+  follower,
+}
+
+class FollowScreenArguments {
+  FollowScreenArguments({required this.screenName});
+  final Follow_Screen_Name screenName;
 }
