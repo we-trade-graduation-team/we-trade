@@ -2,11 +2,7 @@ import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-import '../post_items/step1.dart';
-import '../post_items/step2.dart';
-
 import 'package:line_icons/line_icons.dart';
-
 
 // ignore: directives_ordering
 import '../../configs/constants/color.dart';

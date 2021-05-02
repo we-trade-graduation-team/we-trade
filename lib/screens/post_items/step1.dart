@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 
 import 'step2.dart';
-// Navigator.of(context).pushNamed(PostItems1.routeName);
 
+// Navigator.of(context).pushNamed(PostItems1.routeName);
+//import '../post_items/step1.dart';
+//import '../post_items/step2.dart';
 class PostItems1 extends StatefulWidget {
   const PostItems1({Key? key}) : super(key: key);
   static const routeName = '/postitem1';
