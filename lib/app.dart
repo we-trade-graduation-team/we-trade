@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-
+// import 'package:flutter/services.dart';
+import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'configs/constants/routes.dart';
-import 'configs/constants/strings.dart';
 import 'configs/theme/theme.dart';
-import 'screens/home/home_screen.dart';
+import 'screens/secondary_splash_screen/secondary_splash_screen.dart';
 
 class MyApp extends StatelessWidget {
   const MyApp({
@@ -12,12 +13,32 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // SystemChrome.setSystemUIOverlayStyle(
+    //   const SystemUiOverlayStyle(
+    //     systemNavigationBarColor: Colors.white,
+    //     statusBarColor: Colors.transparent,
+    //   ),
+    // );
+    // SystemChrome.setSystemUIOverlayStyle(
+    //   SystemUiOverlayStyle.dark.copyWith(statusBarColor: Colors.transparent),
+    // );
+
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: kAppTitle,
-      theme: theme(),
-      initialRoute: HomeScreen.routeName,
+      theme: themeData(),
+      home: const SecondarySplashScreen(),
       routes: routes,
+      supportedLocales: const [
+        Locale('en'),
+        // Locale('it'),
+        // Locale('fr'),
+        // Locale('es'),
+      ],
+      localizationsDelegates: const [
+        FormBuilderLocalizations.delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+      ],
     );
   }
 }
