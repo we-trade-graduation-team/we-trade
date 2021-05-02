@@ -1,16 +1,11 @@
+// ignore: import_of_legacy_library_into_null_safe
 import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/material.dart';
-import 'package:we_trade/main.dart';
-import 'package:we_trade/screens/category/category.dart';
 import 'package:we_trade/screens/detail/detail.dart';
 import 'package:we_trade/screens/follow/follow_screen.dart';
 import 'package:we_trade/screens/myrate/my_rate_screen.dart';
-import 'package:we_trade/screens/notification/notification_screen.dart';
 import 'package:we_trade/screens/post_management/hide_post_screen.dart';
 import 'package:we_trade/screens/post_management/post_management_screen.dart';
-import 'package:we_trade/screens/report/build_report_screen.dart';
-import 'package:we_trade/screens/report/report_screen.dart';
-import 'package:we_trade/screens/account/account_screen.dart';
 import 'package:we_trade/screens/trading_history/rate_for_trading.dart';
 import 'package:we_trade/screens/trading_history/trading_history_screen.dart';
 import 'package:we_trade/screens/userinfo/changepassword_screen.dart';
@@ -18,8 +13,9 @@ import 'package:we_trade/screens/userinfo/userinfo_screen.dart';
 import 'package:we_trade/screens/wishlist/wishlist_screen.dart';
 
 import 'configs/constants/routes.dart';
+import 'configs/constants/strings.dart';
 import 'configs/theme/theme.dart';
-import 'main_menu.dart';
+import 'screens/account/account_screen.dart';
 
 final RouteObserver<PageRoute> routeObserver = RouteObserver<PageRoute>();
 
@@ -30,8 +26,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       builder: BotToastInit(),
-
-      navigatorObservers: [routeObserver,BotToastNavigatorObserver()],
+      navigatorObservers: [routeObserver, BotToastNavigatorObserver()],
       debugShowCheckedModeBanner: false,
       title: kAppTitle,
       theme: theme(),

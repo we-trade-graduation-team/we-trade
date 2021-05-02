@@ -1,4 +1,14 @@
 import 'package:flutter/widgets.dart';
+import 'package:we_trade/screens/account/account_screen.dart';
+import 'package:we_trade/screens/follow/follow_screen.dart';
+import 'package:we_trade/screens/myrate/my_rate_screen.dart';
+import 'package:we_trade/screens/post_management/hide_post_screen.dart';
+import 'package:we_trade/screens/post_management/post_management_screen.dart';
+import 'package:we_trade/screens/trading_history/rate_for_trading.dart';
+import 'package:we_trade/screens/trading_history/trading_history_screen.dart';
+import 'package:we_trade/screens/userinfo/changepassword_screen.dart';
+import 'package:we_trade/screens/userinfo/userinfo_screen.dart';
+import 'package:we_trade/screens/wishlist/wishlist_screen.dart';
 
 import '../../screens/auth/complete_profile/complete_profile_screen.dart';
 import '../../screens/auth/forgot_password/forgot_password_screen.dart';
@@ -51,4 +61,15 @@ final Map<String, WidgetBuilder> routes = {
   MatchPostsScreen.routeName: (context) => const MatchPostsScreen(),
   MakeOfferScreen.routeName: (context) => const MakeOfferScreen(),
   OtherUserProfileScreen.routeName: (context) => const OtherUserProfileScreen(),
+ // AccountScreen.routeName: (ctx) => const AccountScreen(),
+  UserInfoScreen.routeName: (ctx) => UserInfoScreen(),
+  FollowScreen.routeName: (ctx) => FollowScreen(),
+  ChangePasswordScreen.routeName: (ctx) => ChangePasswordScreen(),
+  MyRateScreen.routeName: (ctx) => MyRateScreen(),
+  PostManagementScreen.routeName: (ctx) => PostManagementScreen(),
+  TradingHistoryScreen.routeName: (ctx) => TradingHistoryScreen(),
+  HidePostScreen.routeName: (ctx) => HidePostScreen(),
+  WishListScreen.routeName: (ctx) => const WishListScreen(),
+  DetailScreen.routeName: (ctx) => const DetailScreen(),
+  RateForTrading.routeName: (ctx) => RateForTrading(),
 };
