@@ -1,8 +1,10 @@
 import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+
 import 'package:line_icons/line_icons.dart';
 
+// ignore: directives_ordering
 import '../../configs/constants/color.dart';
 import '../../models/chat/temp_class.dart';
 import '../../widgets/custom_material_button.dart';
@@ -402,6 +404,7 @@ class ReviewProperty extends StatelessWidget {
     );
   }
 
+  // This trailing comma makes auto-formatting nicer for build methods.
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
