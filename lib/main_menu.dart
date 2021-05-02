@@ -1,12 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 
 import 'configs/constants/color.dart';
 import 'configs/constants/routes.dart';
 import 'screens/chat/all_chat/chat_screen.dart';
-import 'screens/home/home_screen.dart';
+import 'screens/home_screen/home_screen.dart';
 
 // Thêm file này vào folder lib
 late BuildContext testContext;
@@ -23,13 +24,11 @@ class BottomNavigationBarItemSource {
   final RouteAndNavigatorSettings routeAndNavigatorSettings;
 }
 
-// Các nav item (có thể custom tùy trang của mỗi người )
 //
 List<BottomNavigationBarItemSource> navBarItemSourceList = [
   BottomNavigationBarItemSource(
     title: 'Home',
     iconData: Icons.home,
-    // Mỗi người thêm routes của screen mình ở chỗ này
     routeAndNavigatorSettings: RouteAndNavigatorSettings(
       initialRoute: '/',
       routes: routes,
@@ -46,7 +45,6 @@ List<BottomNavigationBarItemSource> navBarItemSourceList = [
   BottomNavigationBarItemSource(
     title: 'Add',
     iconData: Icons.add,
-    // Mỗi người thêm routes của screen mình ở chỗ này
     routeAndNavigatorSettings: RouteAndNavigatorSettings(
       initialRoute: '/',
       routes: routes,
@@ -55,7 +53,6 @@ List<BottomNavigationBarItemSource> navBarItemSourceList = [
   BottomNavigationBarItemSource(
     title: 'Favourite',
     iconData: Icons.favorite,
-    // Mỗi người thêm routes của screen mình ở chỗ này
     routeAndNavigatorSettings: RouteAndNavigatorSettings(
       initialRoute: '/',
       routes: routes,
@@ -64,20 +61,12 @@ List<BottomNavigationBarItemSource> navBarItemSourceList = [
   BottomNavigationBarItemSource(
     title: 'Account',
     iconData: Icons.person,
-    // Mỗi người thêm routes của screen mình ở chỗ này
     routeAndNavigatorSettings: RouteAndNavigatorSettings(
       initialRoute: '/',
       routes: routes,
     ),
   ),
 ];
-// Map<String, IconData> navBarItemSource = {
-//   'Home': Icons.home,
-//   'Chat': Icons.search,
-//   'Add': Icons.add,
-//   'Favourite': Icons.favorite,
-//   'Account': Icons.person,
-// };
 
 class MainMenu extends StatefulWidget {
   const MainMenu({
@@ -86,7 +75,6 @@ class MainMenu extends StatefulWidget {
   }) : super(key: key);
 
   final BuildContext menuScreenContext;
-  static final gkBottomNavigation = GlobalKey(debugLabel: 'btm_app_bar');
 
   @override
   _MainMenuState createState() => _MainMenuState();
@@ -95,8 +83,6 @@ class MainMenu extends StatefulWidget {
     super.debugFillProperties(properties);
     properties.add(DiagnosticsProperty<BuildContext>(
         'menuScreenContext', menuScreenContext));
-    properties.add(DiagnosticsProperty<GlobalKey<State<StatefulWidget>>>(
-        'gkBottomNavigation', gkBottomNavigation));
   }
 }
 
@@ -111,21 +97,9 @@ class _MainMenuState extends State<MainMenu> {
     _hideNavBar = false;
   }
 
-  // void setIndex(int index) {
-  //   final temp =
-  //       MainMenu.gkBottomNavigation.currentWidget as PersistentTabView?;
-  //   setState(() {
-  //     temp!.controller!.index = index;
-  //   });
-  // }
-
-  // Đây là mà các nav item theo thứ tự tương ứng sẽ hiện lên khi
-  // navitem được press nha
   List<Widget> _buildScreens() {
     return [
-      // For ex: homescreen của t nè
       HomeScreen(
-        // Chú ý: Phải thêm các property này vào screen
         menuScreenContext: widget.menuScreenContext,
         hideStatus: _hideNavBar,
         onScreenHideButtonPressed: () {
@@ -178,13 +152,10 @@ class _MainMenuState extends State<MainMenu> {
       required String title,
       required RouteAndNavigatorSettings routeAndNavigatorSettings}) {
     return PersistentBottomNavBarItem(
-      // Phần này chỉnh style cho icon, có thể không quan tâm
       icon: Icon(iconData),
       title: title,
       activeColorPrimary: kPrimaryColor,
       inactiveColorPrimary: Colors.grey,
-      // chú ý này: tựa như routes ở file app.dart
-
       routeAndNavigatorSettings: routeAndNavigatorSettings,
     );
   }
@@ -203,12 +174,21 @@ class _MainMenuState extends State<MainMenu> {
 
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setSystemUIOverlayStyle(
+      const SystemUiOverlayStyle(
+        systemNavigationBarColor: Colors.white,
+        statusBarColor: Colors.transparent,
+      ),
+    );
     return PersistentTabView(
       context,
-      key: MainMenu.gkBottomNavigation,
       controller: _controller,
       screens: _buildScreens(),
       items: _navBarsItems(),
+      // confineInSafeArea: true,
+      // backgroundColor: Colors.white,
+      // handleAndroidBackButtonPress: true,
+      resizeToAvoidBottomInset: true,
       // stateManagement: true,
       navBarHeight: MediaQuery.of(context).viewInsets.bottom > 0
           ? 0.0
@@ -250,13 +230,7 @@ class _MainMenuState extends State<MainMenu> {
         // duration: Duration(milliseconds: 200),
       ),
       navBarStyle:
-          NavBarStyle.style3, // Choose the nav bar style with this property
+          NavBarStyle.style13, // Choose the nav bar style with this property
     );
-  }
-
-  void setNewScreen(int index) {
-    setState(() {
-      _controller.index = index; // NOTE: THIS IS CRITICAL!! Don't miss it!
-    });
   }
 }

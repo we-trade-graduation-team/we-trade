@@ -1,6 +1,5 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import '../../widgets/bottom_navigation_bar.dart';
 import 'notification.dart';
 
 class NotificationScreen extends StatelessWidget {
@@ -48,9 +47,9 @@ class NotificationScreen extends StatelessWidget {
           ),
         ),
       ),
-      bottomNavigationBar: const BuildBottomNavigationBar(
-        selectedIndex: 0,
-      ),
+      // bottomNavigationBar: const BuildBottomNavigationBar(
+      //   selectedIndex: 0,
+      // ),
     );
   }
 

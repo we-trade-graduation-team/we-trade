@@ -1,49 +1,47 @@
-// ignore: import_of_legacy_library_into_null_safe
-import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/material.dart';
-import 'package:we_trade/screens/detail/detail.dart';
-import 'package:we_trade/screens/follow/follow_screen.dart';
-import 'package:we_trade/screens/myrate/my_rate_screen.dart';
-import 'package:we_trade/screens/post_management/hide_post_screen.dart';
-import 'package:we_trade/screens/post_management/post_management_screen.dart';
-import 'package:we_trade/screens/trading_history/rate_for_trading.dart';
-import 'package:we_trade/screens/trading_history/trading_history_screen.dart';
-import 'package:we_trade/screens/userinfo/changepassword_screen.dart';
-import 'package:we_trade/screens/userinfo/userinfo_screen.dart';
-import 'package:we_trade/screens/wishlist/wishlist_screen.dart';
-
+import 'package:bot_toast/bot_toast.dart';
+// import 'package:flutter/services.dart';
+import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'configs/constants/routes.dart';
-import 'configs/constants/strings.dart';
 import 'configs/theme/theme.dart';
-import 'screens/account/account_screen.dart';
-
-final RouteObserver<PageRoute> routeObserver = RouteObserver<PageRoute>();
+import 'screens/secondary_splash_screen/secondary_splash_screen.dart';
 
 class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
+  const MyApp({
+    Key? key,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    // SystemChrome.setSystemUIOverlayStyle(
+    //   const SystemUiOverlayStyle(
+    //     systemNavigationBarColor: Colors.white,
+    //     statusBarColor: Colors.transparent,
+    //   ),
+    // );
+    // SystemChrome.setSystemUIOverlayStyle(
+    //   SystemUiOverlayStyle.dark.copyWith(statusBarColor: Colors.transparent),
+    // );
+
     return MaterialApp(
-      builder: BotToastInit(),
-      navigatorObservers: [routeObserver, BotToastNavigatorObserver()],
       debugShowCheckedModeBanner: false,
-      title: kAppTitle,
-      theme: theme(),
-      initialRoute: AccountScreen.routeName,
-      routes: {
-        AccountScreen.routeName: (ctx) => const AccountScreen(),
-        UserInfoScreen.routeName: (ctx) => UserInfoScreen(),
-        FollowScreen.routeName: (ctx) => FollowScreen(),
-        ChangePasswordScreen.routeName: (ctx) => ChangePasswordScreen(),
-        MyRateScreen.routeName: (ctx) => MyRateScreen(),
-        PostManagementScreen.routeName: (ctx) => PostManagementScreen(),
-        TradingHistoryScreen.routeName: (ctx) => TradingHistoryScreen(),
-        HidePostScreen.routeName: (ctx) => HidePostScreen(),
-        WishListScreen.routeName: (ctx) => const WishListScreen(),
-        DetailScreen.routeName: (ctx) => const DetailScreen(),
-        RateForTrading.routeName: (ctx) => RateForTrading(),
-      },
+      builder: BotToastInit(),
+      navigatorObservers: [BotToastNavigatorObserver()],
+      theme: themeData(),
+      home: const SecondarySplashScreen(),
+      routes: routes,
+      supportedLocales: const [
+        Locale('en'),
+        // Locale('it'),
+        // Locale('fr'),
+        // Locale('es'),
+      ],
+      localizationsDelegates: const [
+        FormBuilderLocalizations.delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+      ],
     );
   }
 }

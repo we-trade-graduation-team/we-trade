@@ -38,8 +38,6 @@ class OtherUserProfileDialog extends StatelessWidget {
                       onTap: () {
                         Navigator.of(parentContext)
                             .popUntil(ModalRoute.withName('/'));
-
-                        //MainMenu.setindex(0);
                       },
                       child: Container(
                         margin: const EdgeInsets.fromLTRB(0, 0, 0, 10),

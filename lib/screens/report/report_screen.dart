@@ -4,7 +4,6 @@ import 'package:group_button/group_button.dart';
 import 'package:provider/provider.dart';
 
 import '../../bloc/report_bloc.dart';
-import '../../widgets/bottom_navigation_bar.dart';
 
 class ReportScreen extends StatefulWidget {
   const ReportScreen({Key? key}) : super(key: key);
@@ -147,9 +146,9 @@ class _ReportScreenState extends State<ReportScreen> {
           );
         }),
       ),
-      bottomNavigationBar: const BuildBottomNavigationBar(
-        selectedIndex: 0,
-      ),
+      // bottomNavigationBar: const BuildBottomNavigationBar(
+      //   selectedIndex: 0,
+      // ),
     );
   }
 
