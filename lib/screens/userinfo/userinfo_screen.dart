@@ -18,7 +18,6 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // _nameController.value = TextEditingValue(text: '1212312313');
     return Scaffold(
       appBar: AppBar(
         title: const Text('Thông tin tài khoản'),
@@ -67,13 +66,14 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                   decoration: const InputDecoration(
                     icon: Icon(Icons.location_on),
                     labelText: 'Địa chỉ',
-                    hintText: 'Chọn địa chỉ',
+                    hintText: 'Nhập địa chỉ',
                   ),
                   controller: _locationController,
                 ),
                 const SizedBox(height: 30),
                 const TextField(
                   decoration: InputDecoration(
+                    icon: Icon(Icons.badge),
                     labelText: 'Giới thiệu bản thân',
                     hintText: 'Nhập lời giới thiệu...',
                   ),

@@ -7,9 +7,10 @@ class CustomOverlayIconButton extends StatelessWidget {
   // ignore: diagnostic_describe_all_properties
   final IconData iconData;
   final List<OverlayItem> overlayItems;
-  
+
   // ignore: sort_constructors_first
-  const CustomOverlayIconButton({Key? key, required this.iconData,  required this.overlayItems})
+  const CustomOverlayIconButton(
+      {Key? key, required this.iconData, required this.overlayItems})
       : super(key: key);
 
   void showOverlay({required BuildContext context}) {

@@ -15,7 +15,6 @@ class TradingHistoryScreen extends StatefulWidget {
 class _TradingHistoryScreenState extends State<TradingHistoryScreen> {
   @override
   Widget build(BuildContext context) {
-  
     return Scaffold(
       appBar: AppBar(
         title: const Text('Lịch sử giao dịch'),
@@ -25,9 +24,7 @@ class _TradingHistoryScreenState extends State<TradingHistoryScreen> {
         child: ListView.builder(
           itemBuilder: (context, index) => const Padding(
             padding: EdgeInsets.all(8),
-            child: HistoryProductCard(
-             
-            ),
+            child: HistoryProductCard(),
           ),
           itemCount: 2,
         ),

@@ -36,8 +36,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                   decoration: const InputDecoration(
                     labelText: 'Mật khẩu cũ',
                   ),
-                    obscureText: true,
-
+                  obscureText: true,
                   controller: _oldPasswordController,
                 ),
                 const SizedBox(height: 15),
@@ -45,8 +44,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                   decoration: const InputDecoration(
                     labelText: 'Mật khẩu mới',
                   ),
-                    obscureText: true,
-
+                  obscureText: true,
                   controller: _newPasswordController,
                 ),
                 const SizedBox(height: 15),
@@ -54,8 +52,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                   decoration: const InputDecoration(
                     labelText: 'Xác nhận mật khẩu mới',
                   ),
-                    obscureText: true,
-
+                  obscureText: true,
                   controller: _confirmPasswordController,
                 ),
                 const SizedBox(height: 15),

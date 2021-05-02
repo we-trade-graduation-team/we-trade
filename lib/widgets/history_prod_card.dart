@@ -1,12 +1,13 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:we_trade/screens/trading_history/rate_for_trading.dart';
 
+import './custom_overlay_iconbutton.dart';
+// ignore: directives_ordering
 import '../configs/constants/color.dart';
 import '../models/product/temp_class.dart';
 import '../models/review/temp_class.dart';
+import '../screens/trading_history/rate_for_trading.dart';
 import '../widgets/trading_prod_overlay.dart';
-import './custom_overlay_iconbutton.dart';
 
 class HistoryProductCard extends StatelessWidget {
   const HistoryProductCard({

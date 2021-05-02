@@ -1,12 +1,12 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:we_trade/widgets/trading_prod_card.dart';
 
 import '../../../models/chat/temp_class.dart';
-import '../../../widgets/review_card.dart';
+import '../../../widgets/trading_prod_card.dart';
 
 class TradingProductsTab extends StatelessWidget {
-  const TradingProductsTab({Key? key, required this.userDetail}) : super(key: key);
+  const TradingProductsTab({Key? key, required this.userDetail})
+      : super(key: key);
 
   final UserDetail userDetail;
 
