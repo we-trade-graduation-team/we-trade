@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
+import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 
 import '../../configs/constants/color.dart';
-import '../../widgets/custom_bottom_navigation_bar.dart';
 import '../follow/follow_screen.dart';
 import '../myrate/my_rate_screen.dart';
 import '../post_management/post_management_screen.dart';
@@ -9,20 +10,29 @@ import '../trading_history/trading_history_screen.dart';
 import '../userinfo/userinfo_screen.dart';
 import '../wishlist/wishlist_screen.dart';
 
-enum Follow_Screen {
-  // ignore: constant_identifier_names
-  Following,
-  // ignore: constant_identifier_names
-  Follower,
-}
-
 class AccountScreen extends StatelessWidget {
   static const routeName = '/account';
+  final BuildContext menuScreenContext;
+  final Function onScreenHideButtonPressed;
+  final bool hideStatus;
 
   // ignore: sort_constructors_first
   const AccountScreen({
     Key? key,
+    required this.menuScreenContext,
+    required this.onScreenHideButtonPressed,
+    required this.hideStatus,
   }) : super(key: key);
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(DiagnosticsProperty<BuildContext>(
+        'menuScreenContext', menuScreenContext));
+    properties.add(DiagnosticsProperty<Function>(
+        'onScreenHideButtonPressed', onScreenHideButtonPressed));
+    properties.add(DiagnosticsProperty<bool>('hideStatus', hideStatus));
+  }
 
   Widget profileNavigationLabel(
       Widget topWid, Widget botWid, Function navigateToScreen) {
@@ -117,8 +127,16 @@ class AccountScreen extends StatelessWidget {
                                   ),
                                   child: GestureDetector(
                                     onTap: () {
-                                      Navigator.of(context)
-                                          .pushNamed(UserInfoScreen.routeName);
+                                      pushNewScreenWithRouteSettings<void>(
+                                        context,
+                                        settings: const RouteSettings(
+                                          name: UserInfoScreen.routeName,
+                                        ),
+                                        screen: UserInfoScreen(),
+                                        withNavBar: false,
+                                        pageTransitionAnimation:
+                                            PageTransitionAnimation.cupertino,
+                                      );
                                     },
                                     child: const Text(
                                       'Thông tin tài khoản',
@@ -157,18 +175,34 @@ class AccountScreen extends StatelessWidget {
                                 ),
                                 const Text('Leggit'),
                                 () {
-                                  Navigator.of(context)
-                                      .pushNamed(MyRateScreen.routeName);
+                                  pushNewScreenWithRouteSettings<void>(
+                                    context,
+                                    settings: const RouteSettings(
+                                      name: MyRateScreen.routeName,
+                                    ),
+                                    screen: MyRateScreen(),
+                                    withNavBar: false,
+                                    pageTransitionAnimation:
+                                        PageTransitionAnimation.cupertino,
+                                  );
                                 },
                               ),
                               profileNavigationLabel(
                                 const Text('0'),
                                 const Text('Theo dõi'),
                                 () {
-                                  // print('theo doi click');
-                                  Navigator.of(context).pushNamed(
-                                    FollowScreen.routeName,
-                                    arguments: Follow_Screen.Following,
+                                  pushNewScreenWithRouteSettings<void>(
+                                    context,
+                                    settings: RouteSettings(
+                                      name: FollowScreen.routeName,
+                                      arguments: FollowScreenArguments(
+                                          screenName:
+                                              Follow_Screen_Name.following),
+                                    ),
+                                    screen: FollowScreen(),
+                                    withNavBar: false,
+                                    pageTransitionAnimation:
+                                        PageTransitionAnimation.cupertino,
                                   );
                                 },
                               ),
@@ -179,9 +213,18 @@ class AccountScreen extends StatelessWidget {
                                   textAlign: TextAlign.center,
                                 ),
                                 () {
-                                  Navigator.of(context).pushNamed(
-                                    FollowScreen.routeName,
-                                    arguments: Follow_Screen.Follower,
+                                  pushNewScreenWithRouteSettings<void>(
+                                    context,
+                                    settings: RouteSettings(
+                                      name: FollowScreen.routeName,
+                                      arguments: FollowScreenArguments(
+                                          screenName:
+                                              Follow_Screen_Name.follower),
+                                    ),
+                                    screen: FollowScreen(),
+                                    withNavBar: false,
+                                    pageTransitionAnimation:
+                                        PageTransitionAnimation.cupertino,
                                   );
                                 },
                               ),
@@ -205,8 +248,16 @@ class AccountScreen extends StatelessWidget {
                     ),
                     'Quản lí bài đăng',
                     () {
-                      Navigator.of(context)
-                          .pushNamed(PostManagementScreen.routeName);
+                      pushNewScreenWithRouteSettings<void>(
+                        context,
+                        settings: const RouteSettings(
+                          name: PostManagementScreen.routeName,
+                        ),
+                        screen: PostManagementScreen(),
+                        withNavBar: false,
+                        pageTransitionAnimation:
+                            PageTransitionAnimation.cupertino,
+                      );
                     },
                   ),
                   buildListTile(
@@ -216,7 +267,16 @@ class AccountScreen extends StatelessWidget {
                     ),
                     'Đã thích',
                     () {
-                      Navigator.of(context).pushNamed(WishListScreen.routeName);
+                      pushNewScreenWithRouteSettings<void>(
+                        context,
+                        settings: const RouteSettings(
+                          name: WishListScreen.routeName,
+                        ),
+                        screen: const WishListScreen(),
+                        withNavBar: false,
+                        pageTransitionAnimation:
+                            PageTransitionAnimation.cupertino,
+                      );
                     },
                   ),
                   buildListTile(
@@ -226,8 +286,16 @@ class AccountScreen extends StatelessWidget {
                     ),
                     'Lịch sử giao dịch',
                     () {
-                      Navigator.of(context)
-                          .pushNamed(TradingHistoryScreen.routeName);
+                      pushNewScreenWithRouteSettings<void>(
+                        context,
+                        settings: const RouteSettings(
+                          name: TradingHistoryScreen.routeName,
+                        ),
+                        screen: TradingHistoryScreen(),
+                        withNavBar: false,
+                        pageTransitionAnimation:
+                            PageTransitionAnimation.cupertino,
+                      );
                     },
                   ),
                   buildListTile(
@@ -237,7 +305,16 @@ class AccountScreen extends StatelessWidget {
                     ),
                     'Đánh giá của tôi',
                     () {
-                      Navigator.of(context).pushNamed(MyRateScreen.routeName);
+                      pushNewScreenWithRouteSettings<void>(
+                        context,
+                        settings: const RouteSettings(
+                          name: MyRateScreen.routeName,
+                        ),
+                        screen: MyRateScreen(),
+                        withNavBar: false,
+                        pageTransitionAnimation:
+                            PageTransitionAnimation.cupertino,
+                      );
                     },
                   ),
                   buildListTile(
@@ -262,7 +339,6 @@ class AccountScreen extends StatelessWidget {
           ],
         ),
       ),
-      bottomNavigationBar: const CustomBottomNavigationBar(),
     );
   }
 }

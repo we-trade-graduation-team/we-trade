@@ -1,14 +1,4 @@
 import 'package:flutter/widgets.dart';
-import 'package:we_trade/screens/account/account_screen.dart';
-import 'package:we_trade/screens/follow/follow_screen.dart';
-import 'package:we_trade/screens/myrate/my_rate_screen.dart';
-import 'package:we_trade/screens/post_management/hide_post_screen.dart';
-import 'package:we_trade/screens/post_management/post_management_screen.dart';
-import 'package:we_trade/screens/trading_history/rate_for_trading.dart';
-import 'package:we_trade/screens/trading_history/trading_history_screen.dart';
-import 'package:we_trade/screens/userinfo/changepassword_screen.dart';
-import 'package:we_trade/screens/userinfo/userinfo_screen.dart';
-import 'package:we_trade/screens/wishlist/wishlist_screen.dart';
 
 import '../../screens/auth/complete_profile_screen/complete_profile_screen.dart';
 import '../../screens/auth/forgot_password_screen/forgot_password_screen.dart';
@@ -22,14 +12,23 @@ import '../../screens/chat/group_chat/members/all_members_screen.dart';
 import '../../screens/chat/personal_chat/personal_chat_screen.dart';
 import '../../screens/detail_screen/detail.dart';
 import '../../screens/filterOverlay/filter_overlay.dart';
+import '../../screens/follow/follow_screen.dart';
 import '../../screens/match_post/match_post_screen.dart';
+import '../../screens/myrate/my_rate_screen.dart';
 import '../../screens/notification/detailed_notification_screen.dart';
 import '../../screens/notification/notification_screen.dart';
 // import '../../screens/profile_screen/profile.dart';
 import '../../screens/offer_screens/make_offer_screen.dart';
 import '../../screens/other_user_profile/other_user_profile_screen.dart';
+import '../../screens/post_management/hide_post_screen.dart';
+import '../../screens/post_management/post_management_screen.dart';
 import '../../screens/report/build_report_screen.dart';
+import '../../screens/trading_history/rate_for_trading.dart';
+import '../../screens/trading_history/trading_history_screen.dart';
+import '../../screens/userinfo/changepassword_screen.dart';
+import '../../screens/userinfo/userinfo_screen.dart';
 import '../../screens/welcome_screen/welcome.dart';
+import '../../screens/wishlist/wishlist_screen.dart';
 
 // We use name route
 // All our routes will be available here
@@ -56,15 +55,15 @@ final Map<String, WidgetBuilder> routes = {
   MatchPostsScreen.routeName: (context) => const MatchPostsScreen(),
   MakeOfferScreen.routeName: (context) => const MakeOfferScreen(),
   OtherUserProfileScreen.routeName: (context) => const OtherUserProfileScreen(),
- // AccountScreen.routeName: (ctx) => const AccountScreen(),
-  UserInfoScreen.routeName: (ctx) => UserInfoScreen(),
-  FollowScreen.routeName: (ctx) => FollowScreen(),
-  ChangePasswordScreen.routeName: (ctx) => ChangePasswordScreen(),
-  MyRateScreen.routeName: (ctx) => MyRateScreen(),
-  PostManagementScreen.routeName: (ctx) => PostManagementScreen(),
-  TradingHistoryScreen.routeName: (ctx) => TradingHistoryScreen(),
-  HidePostScreen.routeName: (ctx) => HidePostScreen(),
-  WishListScreen.routeName: (ctx) => const WishListScreen(),
-  DetailScreen.routeName: (ctx) => const DetailScreen(),
-  RateForTrading.routeName: (ctx) => RateForTrading(),
+  //AccountScreen.routeName: (context) => const AccountScreen(),
+  UserInfoScreen.routeName: (context) => UserInfoScreen(),
+  FollowScreen.routeName: (context) => FollowScreen(),
+  ChangePasswordScreen.routeName: (context) => ChangePasswordScreen(),
+  MyRateScreen.routeName: (context) => MyRateScreen(),
+  PostManagementScreen.routeName: (context) => PostManagementScreen(),
+  TradingHistoryScreen.routeName: (context) => TradingHistoryScreen(),
+  HidePostScreen.routeName: (context) => HidePostScreen(),
+  WishListScreen.routeName: (context) => const WishListScreen(),
+  DetailScreen.routeName: (context) => const DetailScreen(),
+  RateForTrading.routeName: (context) => RateForTrading(),
 };
