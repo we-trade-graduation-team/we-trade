@@ -1,109 +1,325 @@
+import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+
 import '../post_items/step1.dart';
 import '../post_items/step2.dart';
+
+import 'package:line_icons/line_icons.dart';
+
 
 // ignore: directives_ordering
 import '../../configs/constants/color.dart';
 import '../../models/chat/temp_class.dart';
-import '../../widgets/buttons.dart';
+import '../../widgets/custom_material_button.dart';
+import '../chat/personal_chat/personal_chat_screen.dart';
+import 'dialogs/other_user_profile_dialog.dart';
 import 'tabs/about_tab.dart';
 import 'tabs/posts_tab.dart';
 import 'tabs/review_tab.dart';
 
 class OtherUserProfileScreen extends StatefulWidget {
-  OtherUserProfileScreen({Key? key}) : super(key: key);
+  const OtherUserProfileScreen({Key? key}) : super(key: key);
 
-  final UserDetail userDetail = userDetailTemp;
+  static String routeName = '/other_user_profile';
 
   @override
   _OtherUserProfileScreenState createState() => _OtherUserProfileScreenState();
-  @override
-  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
-    super.debugFillProperties(properties);
-    properties.add(DiagnosticsProperty<UserDetail>('userDetail', userDetail));
-  }
 }
 
 class _OtherUserProfileScreenState extends State<OtherUserProfileScreen> {
   final tabData = ['ABOUT', 'POSTS', 'REVIEW'];
+  final mainInfoKey = GlobalKey();
+  late Size sizeFlexibleSpaceBar;
+  bool _visible = true;
+
+  Future<void> getSizeAndPosition() async {
+    final _cardBox =
+        mainInfoKey.currentContext!.findRenderObject() as RenderBox;
+    sizeFlexibleSpaceBar = _cardBox.size;
+  }
 
   @override
-  Widget build(BuildContext context) {
-    final width = MediaQuery.of(context).size.width;
-    final height = MediaQuery.of(context).size.height;
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance!
+        .addPostFrameCallback((_) => getSizeAndPosition().whenComplete(() => {
+              Future<void>.delayed(const Duration(microseconds: 1))
+                  .then((value) {
+                setState(() {
+                  _visible = false;
+                });
+              })
+            }));
+  }
 
-    return Scaffold(
-      appBar: AppBar(
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.more_vert),
-            onPressed: () {},
-          ),
-        ],
-        title: const Text('PROFILE NGƯỜI DÙNG'),
-      ),
-      body: DefaultTabController(
-        length: tabData.length,
-        child: NestedScrollView(
-            physics: const NeverScrollableScrollPhysics(),
-            headerSliverBuilder: (context, isScolled) {
-              return [
-                SliverAppBar(
-                  backgroundColor: Colors.white,
-                  collapsedHeight: height * 0.36,
-                  expandedHeight: height * 0.36,
-                  flexibleSpace: MainInfo(width: width, widget: widget),
+  Widget getHeight(double width) {
+    return Visibility(
+      visible: _visible,
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(10, 15, 10, 10),
+        key: mainInfoKey,
+        child: Column(
+          children: [
+            CircleAvatar(
+              radius: width / 7,
+              backgroundColor: kPrimaryColor,
+              child: CircleAvatar(
+                radius: width / 7 - 2.5,
+                backgroundColor: Colors.white,
+                child: CircleAvatar(
+                  backgroundColor: Colors.red,
+                  radius: width / 7 - 5,
                 ),
-                SliverPersistentHeader(
-                  delegate: MyDelegate(
-                    TabBar(
-                      tabs: [
-                        ...tabData.map(
-                          (item) => Tab(
-                            child: Text(item),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  floating: true,
-                  pinned: true,
-                )
-              ];
-            },
-            body: TabBarView(
-              children: getTabContent(),
-            )),
+              ),
+            ),
+            ReviewProperty(
+              press: () {},
+              tittle: 'Leggit',
+              content: const Text(
+                '..',
+                style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
 
-  List<Widget> getTabContent() {
-    return [
-      AboutTab(userDetail: widget.userDetail),
-      PostsTab(userDetail: widget.userDetail),
-      ReviewTab(userDetail: widget.userDetail),
-    ];
-  }
-
-  Widget tabContent(
-    String title,
-    int length,
-  ) {
-    return SingleChildScrollView(
-      child: Column(
-        key: ValueKey<int>(length),
+  @override
+  Widget build(BuildContext context) {
+    final width = MediaQuery.of(context).size.width;
+    final agrs =
+        ModalRoute.of(context)!.settings.arguments as OtherUserProfileArguments;
+    return Scaffold(
+      appBar: AppBar(
+        actions: [
+          // IconButton(
+          //   icon: const Icon(Icons.more_vert),
+          //   onPressed: () {
+          //     showOverlay(context: context);
+          //   },
+          // ),
+          Builder(builder: (context) {
+            return IconButton(
+              icon: Icon(LineIcons.values['verticalEllipsis']),
+              onPressed: () {
+                showOverlay(context: context);
+              },
+            );
+          })
+        ],
+        title: const Text('PROFILE NGƯỜI DÙNG'),
+      ),
+      body: Column(
         children: [
-          ...List.generate(
-            length,
-            (index) => ListTile(
-              title: Text('$title item $index'),
-              trailing: const Icon(Icons.access_alarm),
+          getHeight(width),
+          if (!_visible)
+            Expanded(
+              child: DefaultTabController(
+                length: tabData.length,
+                child: NestedScrollView(
+                  physics: const NeverScrollableScrollPhysics(),
+                  headerSliverBuilder: (context, isScolled) {
+                    return [
+                      SliverAppBar(
+                        automaticallyImplyLeading: false,
+                        backgroundColor: Colors.white,
+                        collapsedHeight: sizeFlexibleSpaceBar.height,
+                        expandedHeight: sizeFlexibleSpaceBar.height,
+                        flexibleSpace:
+                            buildMainInfoWidget(agrs.userDetail, width),
+                      ),
+                      SliverPersistentHeader(
+                        delegate: MyDelegate(
+                          TabBar(
+                            tabs: [
+                              ...tabData.map(
+                                (item) => Tab(
+                                  child: Text(item),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        floating: true,
+                        pinned: true,
+                      )
+                    ];
+                  },
+                  body: TabBarView(
+                    //children: getTabContent(),
+                    children: [
+                      AboutTab(userDetail: agrs.userDetail),
+                      PostsTab(userDetail: agrs.userDetail),
+                      ReviewTab(userDetail: agrs.userDetail),
+                    ],
+                  ),
+                ),
+              ),
             ),
-          ),
         ],
       ),
+    );
+  }
+
+  Widget buildMainInfoWidget(
+    UserDetail userDetail,
+    double width,
+  ) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(10, 15, 10, 0),
+      child: Column(
+        children: [
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                margin: const EdgeInsets.fromLTRB(0, 0, 15, 0),
+                child: CircleAvatar(
+                  radius: width / 7,
+                  backgroundColor: kPrimaryColor,
+                  child: CircleAvatar(
+                    radius: width / 7 - 2.5,
+                    backgroundColor: Colors.white,
+                    child: CircleAvatar(
+                      backgroundImage: AssetImage(userDetail.user.image),
+                      radius: width / 7 - 5,
+                    ),
+                  ),
+                ),
+              ),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(userDetail.user.name,
+                        style: const TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                          color: kTextLightV2Color,
+                        ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis),
+                    Container(
+                      margin: const EdgeInsets.fromLTRB(0, 10, 0, 0),
+                      child: Text(userDetail.userDesciption,
+                          style: const TextStyle(
+                            fontSize: 14,
+                            color: kTextLightV2Color,
+                            fontWeight: FontWeight.w300,
+                          ),
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis),
+                    ),
+                    Row(
+                      children: [
+                        Container(
+                            margin: const EdgeInsets.fromLTRB(0, 0, 10, 0),
+                            child: CustomMaterialButton(
+                                icon: const Icon(
+                                  Icons.add,
+                                  color: Colors.white,
+                                  size: 20,
+                                ),
+                                press: () {},
+                                text: 'Theo dõi',
+                                width: MediaQuery.of(context).size.width / 3.8,
+                                fontsize: 10,
+                                height: 25)),
+                        Container(
+                            margin: const EdgeInsets.fromLTRB(10, 0, 0, 0),
+                            child: CustomMaterialButton(
+                                icon: const Icon(
+                                  Icons.textsms_outlined,
+                                  color: kPrimaryColor,
+                                  size: 20,
+                                ),
+                                press: () => Navigator.pushNamed(
+                                    context, PersonalChatScreen.routeName,
+                                    arguments: PersonalChatArguments(
+                                        chat: Chat(
+                                      id: 0,
+                                      lastMessage: '',
+                                      time: '',
+                                      users: [userDetail.user],
+                                    ))),
+                                text: 'Nhắn tin',
+                                width: MediaQuery.of(context).size.width / 3.8,
+                                isFilled: false,
+                                fontsize: 10,
+                                height: 25)),
+                      ],
+                    ),
+                  ],
+                ),
+              )
+            ],
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              ReviewProperty(
+                press: () {},
+                tittle: 'Leggit',
+                content: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Icon(
+                      Icons.star_rate_rounded,
+                      color: Colors.yellow,
+                    ),
+                    Text(
+                      userDetail.leggit.toString(),
+                      style: const TextStyle(
+                        color: Colors.black,
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              ReviewProperty(
+                press: () {},
+                tittle: 'Posts',
+                content: Text(
+                  userDetail.postsNum.toString(),
+                  style: const TextStyle(
+                    color: Colors.black,
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+              ReviewProperty(
+                press: () {},
+                tittle: 'Followers',
+                content: Text(
+                  userDetail.followers.toString(),
+                  style: const TextStyle(
+                    color: Colors.black,
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            ],
+          )
+        ],
+      ),
+    );
+  }
+
+  void showOverlay({required BuildContext context}) {
+    BotToast.showAttachedWidget(
+      attachedBuilder: (_) => OtherUserProfileDialog(parentContext: context),
+      targetContext: context,
     );
   }
 
@@ -111,6 +327,10 @@ class _OtherUserProfileScreenState extends State<OtherUserProfileScreen> {
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
     properties.add(IterableProperty<String>('tabData', tabData));
+    properties.add(DiagnosticsProperty<GlobalKey<State<StatefulWidget>>>(
+        'mainInfoKey', mainInfoKey));
+    properties.add(DiagnosticsProperty<Size>(
+        'sizeFlexibleSpaceBar', sizeFlexibleSpaceBar));
   }
 }
 
@@ -148,158 +368,6 @@ class MyDelegate extends SliverPersistentHeaderDelegate {
   @override
   bool shouldRebuild(SliverPersistentHeaderDelegate oldDelegate) {
     return false;
-  }
-}
-
-class MainInfo extends StatelessWidget {
-  const MainInfo({Key? key, required this.width, required this.widget})
-      : super(key: key);
-
-  final double width;
-  final OtherUserProfileScreen widget;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.fromLTRB(10, 15, 10, 0),
-      child: Column(
-        children: [
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Container(
-                margin: const EdgeInsets.fromLTRB(0, 0, 15, 0),
-                child: CircleAvatar(
-                  radius: width / 7,
-                  backgroundColor: kPrimaryColor,
-                  child: CircleAvatar(
-                    radius: width / 7 - 2.5,
-                    backgroundColor: Colors.white,
-                    child: CircleAvatar(
-                      backgroundImage: AssetImage(widget.userDetail.user.image),
-                      radius: width / 7 - 5,
-                    ),
-                  ),
-                ),
-              ),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(widget.userDetail.user.name,
-                        style: const TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                          color: kTextLightV2Color,
-                        ),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis),
-                    Container(
-                      margin: const EdgeInsets.fromLTRB(0, 10, 0, 0),
-                      child: Text(widget.userDetail.userDesciption,
-                          style: const TextStyle(
-                            fontSize: 14,
-                            color: kTextLightV2Color,
-                            fontWeight: FontWeight.w300,
-                          ),
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis),
-                    ),
-                    Row(
-                      children: [
-                        Container(
-                            margin: const EdgeInsets.fromLTRB(0, 0, 10, 0),
-                            child: ButtonWidget(
-                                icon: const Icon(
-                                  Icons.add,
-                                  color: Colors.white,
-                                  size: 20,
-                                ),
-                                press: () {},
-                                text: 'Theo dõi',
-                                width: MediaQuery.of(context).size.width / 3.8,
-                                fontsize: 10,
-                                height: 25)),
-                        Container(
-                            margin: const EdgeInsets.fromLTRB(10, 0, 0, 0),
-                            child: ButtonWidget(
-                                icon: const Icon(
-                                  Icons.textsms_outlined,
-                                  color: kPrimaryColor,
-                                  size: 20,
-                                ),
-                                press: () {},
-                                text: 'Nhắn tin',
-                                width: MediaQuery.of(context).size.width / 3.8,
-                                isFilled: false,
-                                fontsize: 10,
-                                height: 25)),
-                      ],
-                    ),
-                  ],
-                ),
-              )
-            ],
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              ReviewProperty(
-                press: () {},
-                tittle: 'Leggit',
-                content: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Icon(
-                      Icons.star_rate_rounded,
-                      color: Colors.yellow,
-                    ),
-                    Text(
-                      widget.userDetail.leggit.toString(),
-                      style: const TextStyle(
-                        color: Colors.black,
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              ReviewProperty(
-                press: () {},
-                tittle: 'Posts',
-                content: Text(
-                  widget.userDetail.postsNum.toString(),
-                  style: const TextStyle(
-                    color: Colors.black,
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-              ReviewProperty(
-                press: () {},
-                tittle: 'Followers',
-                content: Text(
-                  widget.userDetail.followers.toString(),
-                  style: const TextStyle(
-                    color: Colors.black,
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-            ],
-          )
-        ],
-      ),
-    );
-  }
-
-  @override
-  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
-    super.debugFillProperties(properties);
-    properties.add(DoubleProperty('width', width));
   }
 }
 
@@ -347,4 +415,9 @@ class ReviewProperty extends StatelessWidget {
     properties.add(StringProperty('tittle', tittle));
     properties.add(ObjectFlagProperty<VoidCallback>.has('press', press));
   }
+}
+
+class OtherUserProfileArguments {
+  OtherUserProfileArguments({required this.userDetail});
+  UserDetail userDetail;
 }
