@@ -101,11 +101,11 @@ class _OtherUserProfileScreenState extends State<OtherUserProfileScreen> {
           //     showOverlay(context: context);
           //   },
           // ),
-          Builder(builder: (context) {
+          Builder(builder: (thisContext) {
             return IconButton(
               icon: Icon(LineIcons.values['verticalEllipsis']),
               onPressed: () {
-                showOverlay(context: context);
+                showOverlay(context: thisContext);
               },
             );
           })
@@ -121,7 +121,7 @@ class _OtherUserProfileScreenState extends State<OtherUserProfileScreen> {
                 length: tabData.length,
                 child: NestedScrollView(
                   physics: const NeverScrollableScrollPhysics(),
-                  headerSliverBuilder: (context, isScolled) {
+                  headerSliverBuilder: (context, isScrolled) {
                     return [
                       SliverAppBar(
                         automaticallyImplyLeading: false,

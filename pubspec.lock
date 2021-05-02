@@ -36,13 +36,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.5.0"
-  auto_size_text:
-    dependency: "direct main"
-    description:
-      name: auto_size_text
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "3.0.0-nullsafety.0"
   boolean_selector:
     dependency: transitive
     description:
@@ -307,13 +300,6 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
-  flutter_rating_bar:
-    dependency: "direct main"
-    description:
-      name: flutter_rating_bar
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "4.0.0"
   flutter_card_swipper:
     dependency: "direct main"
     description:
@@ -347,6 +333,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.1.8+4"
+  flutter_rating_bar:
+    dependency: "direct main"
+    description:
+      name: flutter_rating_bar
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "4.0.0"
   flutter_staggered_animations:
     dependency: "direct main"
     description:
@@ -366,13 +359,6 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
-  group_button:
-    dependency: "direct main"
-    description:
-      name: group_button
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "2.1.0"
   flutter_web_plugins:
     dependency: transitive
     description: flutter
@@ -406,6 +392,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.0.0"
+  group_button:
+    dependency: "direct main"
+    description:
+      name: group_button
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.1.0"
   http:
     dependency: "direct main"
     description:

@@ -11,13 +11,13 @@ import '../../screens/chat/group_chat/chat_screen/group_chat_screen.dart';
 import '../../screens/chat/group_chat/members/all_members_screen.dart';
 import '../../screens/chat/personal_chat/personal_chat_screen.dart';
 import '../../screens/detail_screen/detail.dart';
-// import '../../screens/profile_screen/profile.dart';
-import '../../screens/offer_screens/make_offer_screen.dart';
 import '../../screens/filterOverlay/filter_overlay.dart';
 import '../../screens/match_post/match_post_screen.dart';
-import '../../screens/other_user_profile/other_user_profile_screen.dart';
 import '../../screens/notification/detailed_notification_screen.dart';
 import '../../screens/notification/notification_screen.dart';
+// import '../../screens/profile_screen/profile.dart';
+import '../../screens/offer_screens/make_offer_screen.dart';
+import '../../screens/other_user_profile/other_user_profile_screen.dart';
 import '../../screens/report/build_report_screen.dart';
 import '../../screens/welcome_screen/welcome.dart';
 

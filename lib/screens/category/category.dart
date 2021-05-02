@@ -3,7 +3,6 @@ import 'dart:ui';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import '../../widgets/bottom_navigation_bar.dart';
 
 import '../filterOverlay/filter_overlay.dart';
 
@@ -73,9 +72,9 @@ class Category extends StatelessWidget {
           );
         }),
       ),
-      bottomNavigationBar: const BuildBottomNavigationBar(
-        selectedIndex: 0,
-      ),
+      // bottomNavigationBar: const BuildBottomNavigationBar(
+      //   selectedIndex: 0,
+      // ),
     );
   }
 }

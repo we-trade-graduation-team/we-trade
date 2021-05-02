@@ -2,7 +2,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import '../../models/product_model.dart';
-import '../../widgets/bottom_navigation_bar.dart';
 import '../../widgets/product_card.dart';
 import '../../widgets/product_card_small.dart';
 
@@ -77,7 +76,7 @@ class _MatchPostsScreenState extends State<MatchPostsScreen> {
           )
         ],
       ),
-      bottomNavigationBar: const BuildBottomNavigationBar(selectedIndex: 4),
+      // bottomNavigationBar: const BuildBottomNavigationBar(selectedIndex: 4),
     );
   }
 }

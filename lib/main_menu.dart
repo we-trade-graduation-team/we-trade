@@ -3,8 +3,10 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
+
 import 'configs/constants/color.dart';
 import 'configs/constants/routes.dart';
+import 'screens/chat/all_chat/chat_screen.dart';
 import 'screens/home_screen/home_screen.dart';
 
 // Thêm file này vào folder lib
