@@ -18,6 +18,7 @@ import 'package:we_trade/screens/userinfo/userinfo_screen.dart';
 import 'package:we_trade/screens/wishlist/wishlist_screen.dart';
 
 import 'configs/constants/routes.dart';
+import 'configs/constants/strings.dart';
 import 'configs/theme/theme.dart';
 import 'main_menu.dart';
 
