@@ -29,7 +29,8 @@ class _ReportScreenState extends State<ReportScreenBody> {
 
   @override
   Widget build(BuildContext context) {
-    final ReportBloc reportBloc = Provider.of<ReportBloc>(context);
+    final reportBloc = Provider.of<ReportBloc>(context);
+    final size = MediaQuery.of(context).size;
 
     final size = MediaQuery.of(context).size;
     return LayoutBuilder(
@@ -194,5 +195,11 @@ class ReportScreen extends StatelessWidget {
       ),
       bottomNavigationBar: const CustomBottomNavigationBar(),
     );
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(IterableProperty<String>('lyDo', lyDo));
   }
 }
