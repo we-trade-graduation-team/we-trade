@@ -25,14 +25,14 @@ class CustomDropdown extends StatefulWidget {
 }
 
 late OverlayEntry globalFloatingDropdown;
-bool globalIsDropdowOpened = false;
+bool globalIsDropdownOpened = false;
 
 mixin RouteAware {}
 
 class _CustomDropdownState extends State<CustomDropdown> with RouteAware {
   GlobalKey actionKey = GlobalKey();
 
-  bool isDropdowOpened = false;
+  bool isDropdownOpened = false;
 
   late double height, width, xPosition, yPosition;
 
@@ -84,7 +84,7 @@ class _CustomDropdownState extends State<CustomDropdown> with RouteAware {
       key: actionKey,
       onTap: () {
         setState(() {
-          if (globalIsDropdowOpened) {
+          if (globalIsDropdownOpened) {
             floatingDropdown.remove();
           } else {
             findDropdownData();
@@ -93,8 +93,8 @@ class _CustomDropdownState extends State<CustomDropdown> with RouteAware {
             Overlay.of(context)!.insert(floatingDropdown);
           }
 
-          // isDropdowOpened = !isDropdowOpened;
-          globalIsDropdowOpened = !globalIsDropdowOpened;
+          // isDropdownOpened = !isDropdownOpened;
+          globalIsDropdownOpened = !globalIsDropdownOpened;
         });
       },
       child: Container(
@@ -109,13 +109,15 @@ class _CustomDropdownState extends State<CustomDropdown> with RouteAware {
     properties.add(DiagnosticsProperty<GlobalKey<State<StatefulWidget>>>(
         'actionKey', actionKey));
     properties
-        .add(DiagnosticsProperty<bool>('isDropdowOpened', isDropdowOpened));
+        .add(DiagnosticsProperty<bool>('isDropdownOpened', isDropdownOpened));
     properties.add(DoubleProperty('height', height));
     properties.add(DoubleProperty('width', width));
     properties.add(DoubleProperty('xPosition', xPosition));
     properties.add(DoubleProperty('yPosition', yPosition));
     properties.add(DiagnosticsProperty<OverlayEntry>(
         'floatingDropdown', floatingDropdown));
+    properties
+        .add(DiagnosticsProperty<bool>('isDropdownOpened', isDropdownOpened));
   }
 }
 
@@ -179,7 +181,7 @@ class DropdownItem extends StatelessWidget {
     return GestureDetector(
       onTap: () {
         globalFloatingDropdown.remove();
-        globalIsDropdowOpened = !globalIsDropdowOpened;
+        globalIsDropdownOpened = !globalIsDropdownOpened;
 
         handleFunction();
       },
