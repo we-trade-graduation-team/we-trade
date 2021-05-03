@@ -125,12 +125,15 @@ class _BodyState extends State<Body> {
                                   if (_formKey.currentState
                                           ?.saveAndValidate() ??
                                       false) {
-                                    Navigator.of(context).push<void>(
-                                      MaterialPageRoute(
-                                        builder: (context) => MainMenu(
-                                            menuScreenContext: context),
-                                      ),
-                                    );
+                                    Navigator.of(context)
+                                        .pushAndRemoveUntil<void>(
+                                            MaterialPageRoute(
+                                              settings: const RouteSettings(
+                                                  name: '/'),
+                                              builder: (context) => MainMenu(
+                                                  menuScreenContext: context),
+                                            ),
+                                            (route) => false);
                                   }
                                 },
                                 elevation: 4,

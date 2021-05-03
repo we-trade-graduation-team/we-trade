@@ -64,17 +64,15 @@ class ChatInput extends StatelessWidget {
                 color: kBackGroundColor,
                 borderRadius: BorderRadius.circular(5),
               ),
-              child: const Flexible(
-                child: TextField(
-                  maxLines: null,
-                  decoration: InputDecoration(
-                    hintText: 'Write message...',
-                    hintStyle: TextStyle(color: Colors.black54),
-                    contentPadding: EdgeInsets.fromLTRB(10, 0, 10, 0),
-                    border: InputBorder.none,
-                    enabledBorder: InputBorder.none,
-                    focusedBorder: InputBorder.none,
-                  ),
+              child: const TextField(
+                maxLines: null,
+                decoration: InputDecoration(
+                  hintText: 'Write message...',
+                  hintStyle: TextStyle(color: Colors.black54),
+                  contentPadding: EdgeInsets.fromLTRB(10, 0, 10, 0),
+                  border: InputBorder.none,
+                  enabledBorder: InputBorder.none,
+                  focusedBorder: InputBorder.none,
                 ),
               ),
             ),

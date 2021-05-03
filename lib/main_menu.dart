@@ -94,6 +94,7 @@ class _MainMenuState extends State<MainMenu> {
   @override
   void initState() {
     super.initState();
+
     _controller = PersistentTabController();
     _hideNavBar = false;
   }

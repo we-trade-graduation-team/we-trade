@@ -71,7 +71,7 @@ class _OtherUserProfileScreenState extends State<OtherUserProfileScreen> {
             ),
             ReviewProperty(
               press: () {},
-              tittle: 'Leggit',
+              tittle: 'Legit',
               content: const Text(
                 '..',
                 style: TextStyle(
@@ -101,11 +101,11 @@ class _OtherUserProfileScreenState extends State<OtherUserProfileScreen> {
           //     showOverlay(context: context);
           //   },
           // ),
-          Builder(builder: (thisContext) {
+          Builder(builder: (builderContext) {
             return IconButton(
               icon: Icon(LineIcons.values['verticalEllipsis']),
               onPressed: () {
-                showOverlay(context: thisContext);
+                showOverlay(context: builderContext);
               },
             );
           })
@@ -204,7 +204,7 @@ class _OtherUserProfileScreenState extends State<OtherUserProfileScreen> {
                         overflow: TextOverflow.ellipsis),
                     Container(
                       margin: const EdgeInsets.fromLTRB(0, 10, 0, 0),
-                      child: Text(userDetail.userDesciption,
+                      child: Text(userDetail.userDescription,
                           style: const TextStyle(
                             fontSize: 14,
                             color: kTextLightV2Color,
@@ -226,7 +226,7 @@ class _OtherUserProfileScreenState extends State<OtherUserProfileScreen> {
                                 press: () {},
                                 text: 'Theo dõi',
                                 width: MediaQuery.of(context).size.width / 3.8,
-                                fontsize: 10,
+                                fontSize: 10,
                                 height: 25)),
                         Container(
                             margin: const EdgeInsets.fromLTRB(10, 0, 0, 0),
@@ -248,7 +248,7 @@ class _OtherUserProfileScreenState extends State<OtherUserProfileScreen> {
                                 text: 'Nhắn tin',
                                 width: MediaQuery.of(context).size.width / 3.8,
                                 isFilled: false,
-                                fontsize: 10,
+                                fontSize: 10,
                                 height: 25)),
                       ],
                     ),
@@ -262,7 +262,7 @@ class _OtherUserProfileScreenState extends State<OtherUserProfileScreen> {
             children: [
               ReviewProperty(
                 press: () {},
-                tittle: 'Leggit',
+                tittle: 'Legit',
                 content: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -271,7 +271,7 @@ class _OtherUserProfileScreenState extends State<OtherUserProfileScreen> {
                       color: Colors.yellow,
                     ),
                     Text(
-                      userDetail.leggit.toString(),
+                      userDetail.legit.toString(),
                       style: const TextStyle(
                         color: Colors.black,
                         fontSize: 20,

@@ -71,24 +71,22 @@ class AboutTab extends StatelessWidget {
           ),
           Container(
             margin: const EdgeInsets.symmetric(horizontal: 20),
-            child: Expanded(
-              child: TextFormField(
-                decoration: const InputDecoration(
-                  border: UnderlineInputBorder(),
-                  labelText: 'Địa chỉ',
-                  contentPadding:
-                      EdgeInsets.symmetric(horizontal: 10, vertical: 20),
-                  hintText: '\n',
-                  hintStyle: TextStyle(height: 2),
-                  labelStyle: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                  ),
+            child: TextFormField(
+              decoration: const InputDecoration(
+                border: UnderlineInputBorder(),
+                labelText: 'Địa chỉ',
+                contentPadding:
+                    EdgeInsets.symmetric(horizontal: 10, vertical: 20),
+                hintText: '\n',
+                hintStyle: TextStyle(height: 2),
+                labelStyle: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
                 ),
-                maxLines: 3,
-                initialValue: userDetail.address,
-                enabled: false,
               ),
+              maxLines: 3,
+              initialValue: userDetail.address,
+              enabled: false,
             ),
           ),
         ],
