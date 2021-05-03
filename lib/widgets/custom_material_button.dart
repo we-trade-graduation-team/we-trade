@@ -6,7 +6,7 @@ class CustomMaterialButton extends StatelessWidget {
   const CustomMaterialButton({
     Key? key,
     this.isFilled = true,
-    this.fontsize = 14,
+    this.fontSize = 14,
     required this.height,
     required this.press,
     required this.text,
@@ -17,7 +17,7 @@ class CustomMaterialButton extends StatelessWidget {
   final bool isFilled;
   final VoidCallback press;
   final String text;
-  final double fontsize;
+  final double fontSize;
   final double width;
   final double height;
   final Icon? icon;
@@ -47,7 +47,7 @@ class CustomMaterialButton extends StatelessWidget {
               text,
               style: TextStyle(
                 color: isFilled ? Colors.white : kPrimaryColor,
-                fontSize: fontsize,
+                fontSize: fontSize,
               ),
             ),
           ],
@@ -61,7 +61,7 @@ class CustomMaterialButton extends StatelessWidget {
     properties.add(ObjectFlagProperty<VoidCallback>.has('press', press));
     properties.add(StringProperty('text', text));
     properties.add(DoubleProperty('width', width));
-    properties.add(DoubleProperty('fontsize', fontsize));
+    properties.add(DoubleProperty('fontSize', fontSize));
     properties.add(DoubleProperty('height', height));
   }
 }

@@ -35,20 +35,20 @@ class UserDetail {
       required this.phone,
       required this.email,
       required this.address,
-      required this.leggit,
+      required this.legit,
       required this.postsNum,
       required this.followers,
-      required this.userDesciption,
+      required this.userDescription,
       this.reviews});
 
   final User user;
   final String phone;
   final String email;
   final String address;
-  final double leggit;
+  final double legit;
   final int postsNum;
   final int followers;
-  final String userDesciption;
+  final String userDescription;
   final List<Review>? reviews;
 
   //final List<Post> posts;
@@ -60,10 +60,10 @@ UserDetail userDetailTemp = UserDetail(
   phone: '0332087063',
   email: 'ngonhatrang99@gmail.com',
   address: '1xx nguyễn văn cừ, phường 5, quận 5, TP HCM ',
-  leggit: 4.8,
+  legit: 4.8,
   postsNum: 10,
   followers: 20,
-  userDesciption:
+  userDescription:
       'hello mọi người, mong rằng chúng ta sẽ có giao dịch tốt , aloooooooooooooooooooooooooooooooooo ne :3',
   reviews: reviewsData,
 );

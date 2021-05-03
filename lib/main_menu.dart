@@ -38,7 +38,7 @@ List<BottomNavigationBarItemSource> navBarItemSourceList = [
     title: 'Chat',
     iconData: Icons.chat,
     routeAndNavigatorSettings: RouteAndNavigatorSettings(
-      initialRoute: '/chat',
+      initialRoute: '/',
       routes: routes,
     ),
   ),
@@ -93,6 +93,7 @@ class _MainMenuState extends State<MainMenu> {
   @override
   void initState() {
     super.initState();
+
     _controller = PersistentTabController();
     _hideNavBar = false;
   }
