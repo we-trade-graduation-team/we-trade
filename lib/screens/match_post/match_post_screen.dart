@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-import '../../models/product_model.dart';
+import '../../models/shared_models/product_model.dart';
 import '../../widgets/product_card.dart';
 import '../../widgets/product_card_small.dart';
 

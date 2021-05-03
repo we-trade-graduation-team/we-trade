@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../models/product_model.dart';
+import '../../../models/shared_models/product_model.dart';
 import '../../../widgets/horizontal_scroll_product_listview.dart';
 import 'home_section_with_list_view_child.dart';
 

@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 
 import '../../../configs/constants/color.dart';
 import '../../../configs/constants/keys.dart';
-import '../../../models/product_model.dart';
+import '../../../models/shared_models/product_model.dart';
 import 'detail_section_container.dart';
 import 'detail_separator.dart';
 

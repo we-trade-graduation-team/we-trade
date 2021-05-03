@@ -6,15 +6,15 @@ import '../../screens/auth/otp_screen/otp_screen.dart';
 import '../../screens/auth/sign_in_screen/sign_in.dart';
 import '../../screens/auth/sign_up_screen/sign_up.dart';
 import '../../screens/category/category.dart';
-import '../../screens/chat/add_chat/add_chat_screen.dart';
-import '../../screens/chat/group_chat/chat_screen/group_chat_screen.dart';
-import '../../screens/chat/group_chat/members/all_members_screen.dart';
-import '../../screens/chat/personal_chat/personal_chat_screen.dart';
+import '../../screens/chat_screen/add_chat/add_chat_screen.dart';
+import '../../screens/chat_screen/group_chat/chat_screen/group_chat_screen.dart';
+import '../../screens/chat_screen/group_chat/members/all_members_screen.dart';
+import '../../screens/chat_screen/personal_chat/personal_chat_screen.dart';
 import '../../screens/detail_screen/detail.dart';
 import '../../screens/filterOverlay/filter_overlay.dart';
 import '../../screens/follow/follow_screen.dart';
 import '../../screens/match_post/match_post_screen.dart';
-import '../../screens/myrate/my_rate_screen.dart';
+import '../../screens/my_rate/my_rate_screen.dart';
 import '../../screens/notification/detailed_notification_screen.dart';
 import '../../screens/notification/notification_screen.dart';
 // import '../../screens/profile_screen/profile.dart';
@@ -25,10 +25,10 @@ import '../../screens/post_management/post_management_screen.dart';
 import '../../screens/report/build_report_screen.dart';
 import '../../screens/trading_history/rate_for_trading.dart';
 import '../../screens/trading_history/trading_history_screen.dart';
-import '../../screens/userinfo/changepassword_screen.dart';
-import '../../screens/userinfo/userinfo_screen.dart';
+import '../../screens/user_info/change_password_screen.dart';
+import '../../screens/user_info/user_info_screen.dart';
 import '../../screens/welcome_screen/welcome.dart';
-import '../../screens/wishlist/wishlist_screen.dart';
+import '../../screens/wish_list/wish_list_screen.dart';
 
 // We use name route
 // All our routes will be available here

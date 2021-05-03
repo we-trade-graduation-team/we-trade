@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-import '../../../models/product_model.dart';
+import '../../../models/shared_models/product_model.dart';
 import '../../../widgets/carousel_related_widgets/custom_carousel_slider.dart';
 
 class ProductCarouselSlider extends StatelessWidget {

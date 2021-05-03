@@ -3,7 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import '../../../configs/constants/color.dart';
-import '../../../models/question_model.dart';
+import '../../../models/detail_screen/question_model.dart';
 import '../../../widgets/rounded_outline_button.dart';
 import 'answer_column.dart';
 import 'no_items_section.dart';

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import '../../../configs/constants/keys.dart';
 
-import '../../../models/product_model.dart';
+import '../../../models/shared_models/product_model.dart';
 import '../../../widgets/rounded_outline_button.dart';
 import 'detail_section_container.dart';
 import 'follow_toggle_button.dart';

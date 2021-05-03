@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:line_icons/line_icons.dart';
 
 import '../../../configs/constants/color.dart';
-import '../../../models/product_model.dart';
+import '../../../models/shared_models/product_model.dart';
 import 'product_carousel_slider.dart';
 
 class DetailAppBar extends StatelessWidget {

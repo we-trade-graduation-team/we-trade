@@ -8,7 +8,7 @@ import 'package:line_icons/line_icons.dart';
 import '../../configs/constants/color.dart';
 import '../../models/chat/temp_class.dart';
 import '../../widgets/custom_material_button.dart';
-import '../chat/personal_chat/personal_chat_screen.dart';
+import '../chat_screen/personal_chat/personal_chat_screen.dart';
 import 'dialogs/other_user_profile_dialog.dart';
 import 'tabs/about_tab.dart';
 import 'tabs/posts_tab.dart';

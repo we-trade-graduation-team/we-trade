@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-import '../../../models/product_model.dart';
+import '../../../models/shared_models/product_model.dart';
 import 'detail_app_bar.dart';
 import 'detail_sections_box.dart';
 

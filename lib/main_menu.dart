@@ -5,9 +5,10 @@ import 'package:flutter/services.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 
 import 'configs/constants/color.dart';
+import 'configs/constants/keys.dart';
 import 'configs/constants/routes.dart';
 import 'screens/account/account_screen.dart';
-import 'screens/chat/all_chat/chat_screen.dart';
+import 'screens/chat_screen/all_chat/chat_screen.dart';
 import 'screens/home_screen/home_screen.dart';
 
 // Thêm file này vào folder lib
@@ -37,7 +38,7 @@ List<BottomNavigationBarItemSource> navBarItemSourceList = [
   ),
   BottomNavigationBarItemSource(
     title: 'Chat',
-    iconData: Icons.chat,
+    iconData: Icons.message,
     routeAndNavigatorSettings: RouteAndNavigatorSettings(
       initialRoute: '/',
       routes: routes,
@@ -149,10 +150,11 @@ class _MainMenuState extends State<MainMenu> {
     ];
   }
 
-  PersistentBottomNavBarItem buildNavBarItem(
-      {required IconData iconData,
-      required String title,
-      required RouteAndNavigatorSettings routeAndNavigatorSettings}) {
+  PersistentBottomNavBarItem buildNavBarItem({
+    required IconData iconData,
+    required String title,
+    required RouteAndNavigatorSettings routeAndNavigatorSettings,
+  }) {
     return PersistentBottomNavBarItem(
       icon: Icon(iconData),
       title: title,
@@ -187,52 +189,21 @@ class _MainMenuState extends State<MainMenu> {
       controller: _controller,
       screens: _buildScreens(),
       items: _navBarsItems(),
-      // confineInSafeArea: true,
-      // backgroundColor: Colors.white,
-      // handleAndroidBackButtonPress: true,
       resizeToAvoidBottomInset: true,
-      // stateManagement: true,
       navBarHeight: MediaQuery.of(context).viewInsets.bottom > 0
           ? 0.0
           : kBottomNavigationBarHeight,
-      // hideNavigationBarWhenKeyboardShows: true,
-      // margin: const EdgeInsets.all(0),
-      // popActionScreens: PopActionScreensType.all,
-      bottomScreenMargin: 0,
-      onWillPop: (context) async {
-        await showDialog<void>(
-          context: context!,
-          useSafeArea: true,
-          builder: (context) => Container(
-            height: 50,
-            width: 50,
-            color: Colors.white,
-            child: ElevatedButton(
-              onPressed: () => Navigator.pop(context),
-              child: const Text('Close'),
-            ),
-          ),
-        );
-        return false;
-      },
+      bottomScreenMargin: kDefaultBottomNavigationBarHeight,
       selectedTabScreenContext: (context) => testContext = context!,
       hideNavigationBar: _hideNavBar,
-      decoration: NavBarDecoration(
-        colorBehindNavBar: Colors.indigo,
-        borderRadius: BorderRadius.circular(20),
-      ),
-      // popAllScreensOnTapOfSelectedTab: true,
       itemAnimationProperties: const ItemAnimationProperties(
         duration: Duration(milliseconds: 400),
         curve: Curves.ease,
       ),
       screenTransitionAnimation: const ScreenTransitionAnimation(
         animateTabTransition: true,
-        // curve: Curves.ease,
-        // duration: Duration(milliseconds: 200),
       ),
-      navBarStyle:
-          NavBarStyle.style13, // Choose the nav bar style with this property
+      navBarStyle: NavBarStyle.style13,
     );
   }
 }

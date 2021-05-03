@@ -1,6 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import '../../../models/special_offer_model.dart';
+import '../../../models/home_screen/special_offer_model.dart';
 
 class SpecialOfferCard extends StatelessWidget {
   const SpecialOfferCard({

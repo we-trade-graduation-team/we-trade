@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:material_floating_search_bar/material_floating_search_bar.dart';
 import 'package:toggle_switch/toggle_switch.dart';
 import '../../../configs/constants/color.dart';
-import '../../../models/product_model.dart';
+import '../../../models/shared_models/product_model.dart';
 import '../../../widgets/product_card.dart';
 
 class SearchResultsListView extends StatefulWidget {

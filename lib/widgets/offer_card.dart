@@ -4,7 +4,7 @@ import 'package:line_icons/line_icons.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 
 import '../configs/constants/color.dart';
-import '../models/product_model.dart';
+import '../models/shared_models/product_model.dart';
 import '../screens/offer_screens/offer_detail_screen.dart';
 
 class OfferCard extends StatelessWidget {

@@ -1,8 +1,9 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+
 import '../../../configs/constants/color.dart';
-import '../../../models/product_model.dart';
-import '../../../models/user_followed_product.dart';
+import '../../../models/detail_screen/user_followed_product.dart';
+import '../../../models/shared_models/product_model.dart';
 
 class FollowToggleButton extends StatefulWidget {
   const FollowToggleButton({
@@ -14,6 +15,7 @@ class FollowToggleButton extends StatefulWidget {
 
   @override
   _FollowToggleButtonState createState() => _FollowToggleButtonState();
+
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);

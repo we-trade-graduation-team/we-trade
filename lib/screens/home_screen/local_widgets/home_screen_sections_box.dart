@@ -27,11 +27,8 @@ class HomeScreenSectionsBox extends StatelessWidget {
           shrinkWrap: true,
           physics: const NeverScrollableScrollPhysics(),
           padding: EdgeInsets.zero,
-          itemCount: homeSections.length + 1,
+          itemCount: homeSections.length,
           itemBuilder: (_, index) {
-            if (index == homeSections.length) {
-              return const SizedBox(height: kDefaultBottomNavigationBarHeight);
-            }
             return AnimationConfiguration.staggeredList(
               position: index,
               duration: const Duration(

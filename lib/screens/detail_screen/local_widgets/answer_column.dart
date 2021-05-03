@@ -1,8 +1,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import '../../../models/answer_model.dart';
-import '../../../models/user_model.dart';
+import '../../../models/detail_screen/answer_model.dart';
+import '../../../models/shared_models/user_model.dart';
 
 class AnswerColumn extends StatelessWidget {
   const AnswerColumn({

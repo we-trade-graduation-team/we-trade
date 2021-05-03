@@ -2,7 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import '../configs/constants/color.dart';
-import '../models/product_model.dart';
+import '../models/shared_models/product_model.dart';
 
 class ProductCardSmall extends StatelessWidget {
   const ProductCardSmall({Key? key, required this.product}) : super(key: key);

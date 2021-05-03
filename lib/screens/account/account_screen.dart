@@ -4,11 +4,11 @@ import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 
 import '../../configs/constants/color.dart';
 import '../follow/follow_screen.dart';
-import '../myrate/my_rate_screen.dart';
+import '../my_rate/my_rate_screen.dart';
 import '../post_management/post_management_screen.dart';
 import '../trading_history/trading_history_screen.dart';
-import '../userinfo/userinfo_screen.dart';
-import '../wishlist/wishlist_screen.dart';
+import '../user_info/user_info_screen.dart';
+import '../wish_list/wish_list_screen.dart';
 
 class AccountScreen extends StatelessWidget {
   const AccountScreen({

@@ -2,7 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:line_icons/line_icons.dart';
 import '../../../configs/constants/color.dart';
-import '../../../models/product_model.dart';
+import '../../../models/shared_models/product_model.dart';
 import 'detail_section_container.dart';
 import 'detail_separator.dart';
 import 'favourite_toggle_button.dart';

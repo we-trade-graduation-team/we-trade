@@ -2,8 +2,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import '../../../configs/constants/keys.dart';
-import '../../../models/rating_thumbnail_model.dart';
-import '../../../models/user_rating_model.dart';
+import '../../../models/detail_screen/rating_thumbnail_model.dart';
+import '../../../models/detail_screen/user_rating_model.dart';
 import 'rating_level.dart';
 
 class SmallRatingThumbnail extends StatelessWidget {

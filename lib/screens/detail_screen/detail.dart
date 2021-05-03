@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import '../../configs/constants/color.dart';
 
 // import '../../configs/constants/color.dart';
-import '../../models/product_model.dart';
+import '../../models/shared_models/product_model.dart';
 import 'local_widgets/body.dart';
 
 class DetailScreen extends StatelessWidget {

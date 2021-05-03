@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import '../../../configs/constants/keys.dart';
 
-import '../../../models/special_offer_model.dart';
+import '../../../models/home_screen/special_offer_model.dart';
 import 'home_section_with_list_view_child.dart';
 import 'special_offer_card.dart';
 
