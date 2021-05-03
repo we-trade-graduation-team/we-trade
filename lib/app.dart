@@ -25,7 +25,7 @@ class MyApp extends StatelessWidget {
     // );
 
     return MaterialApp(
-      // debugShowCheckedModeBanner: false,
+      debugShowCheckedModeBanner: false,
       builder: BotToastInit(),
       navigatorObservers: [BotToastNavigatorObserver()],
       theme: themeData(),
