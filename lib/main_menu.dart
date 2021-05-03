@@ -38,7 +38,7 @@ List<BottomNavigationBarItemSource> navBarItemSourceList = [
     title: 'Chat',
     iconData: Icons.chat,
     routeAndNavigatorSettings: RouteAndNavigatorSettings(
-      initialRoute: '/',
+      initialRoute: '/chat',
       routes: routes,
     ),
   ),

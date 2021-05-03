@@ -1,6 +1,7 @@
 import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 
 import 'package:line_icons/line_icons.dart';
 
@@ -101,11 +102,12 @@ class _OtherUserProfileScreenState extends State<OtherUserProfileScreen> {
           //     showOverlay(context: context);
           //   },
           // ),
-          Builder(builder: (thisContext) {
+          Builder(builder: (builderContext) {
             return IconButton(
               icon: Icon(LineIcons.values['verticalEllipsis']),
               onPressed: () {
-                showOverlay(context: thisContext);
+                print(ModalRoute.of(context)!.settings.name);
+                showOverlay(context: builderContext);
               },
             );
           })
