@@ -8,6 +8,6 @@ const kTextColor = Color(0xFF3C4046);
 const kTextLightColor = Color(0xFF787D9A);
 const kTextLightV2Color = Color(0xFF3C4046);
 const kUserOnlineDot = Colors.green;
-const kRiviewTextLabel = Color(0xFF814C45);
+const kReviewTextLabel = Color(0xFF814C45);
 const kBackGroundColor = Color(0xFFEFEFEF);
 const kScreenBackgroundColor = Color(0xFFF9F8FD);

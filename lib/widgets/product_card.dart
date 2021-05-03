@@ -4,7 +4,7 @@ import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 
 import '../configs/constants/color.dart';
 import '../models/shared_models/product_model.dart';
-import '../screens/detail_screen/detail.dart';
+import '../screens/home_features/detail_screen/detail_screen.dart';
 
 class ProductCard extends StatelessWidget {
   const ProductCard({

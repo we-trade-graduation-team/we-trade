@@ -6,10 +6,13 @@ import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 
 import 'configs/constants/color.dart';
 import 'configs/constants/keys.dart';
-import 'configs/constants/routes.dart';
-import 'screens/account/account_screen.dart';
-import 'screens/chat_screen/all_chat/chat_screen.dart';
-import 'screens/home_screen/home_screen.dart';
+import 'routing/account_features_routes.dart';
+import 'routing/home_features_routes.dart';
+import 'routing/message_features_routes.dart';
+import 'routing/wish_list_features_routes.dart';
+import 'screens/account_features/account/account_screen.dart';
+import 'screens/home_features/home_screen/home_screen.dart';
+import 'screens/message_features/chat_screen/all_chat/chat_screen.dart';
 
 // Thêm file này vào folder lib
 late BuildContext testContext;
@@ -33,23 +36,23 @@ List<BottomNavigationBarItemSource> navBarItemSourceList = [
     iconData: Icons.home,
     routeAndNavigatorSettings: RouteAndNavigatorSettings(
       initialRoute: '/',
-      routes: routes,
+      routes: homeFeaturesRoutes,
     ),
   ),
   BottomNavigationBarItemSource(
-    title: 'Chat',
+    title: 'Message',
     iconData: Icons.message,
     routeAndNavigatorSettings: RouteAndNavigatorSettings(
       initialRoute: '/',
-      routes: routes,
+      routes: messageFeaturesRoutes,
     ),
   ),
   BottomNavigationBarItemSource(
     title: 'Add',
     iconData: Icons.add,
-    routeAndNavigatorSettings: RouteAndNavigatorSettings(
+    routeAndNavigatorSettings: const RouteAndNavigatorSettings(
       initialRoute: '/',
-      routes: routes,
+      // routes: postingFeaturesRoutes,
     ),
   ),
   BottomNavigationBarItemSource(
@@ -57,7 +60,7 @@ List<BottomNavigationBarItemSource> navBarItemSourceList = [
     iconData: Icons.favorite,
     routeAndNavigatorSettings: RouteAndNavigatorSettings(
       initialRoute: '/',
-      routes: routes,
+      routes: wishListFeaturesRoutes,
     ),
   ),
   BottomNavigationBarItemSource(
@@ -65,7 +68,7 @@ List<BottomNavigationBarItemSource> navBarItemSourceList = [
     iconData: Icons.person,
     routeAndNavigatorSettings: RouteAndNavigatorSettings(
       initialRoute: '/',
-      routes: routes,
+      routes: accountFeaturesRoutes,
     ),
   ),
 ];
