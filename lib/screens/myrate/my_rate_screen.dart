@@ -5,18 +5,24 @@ import '../../configs/constants/color.dart';
 import '../../models/chat/temp_class.dart';
 import '../../screens/myrate/tabs/rate_tab.dart';
 
-// ignore: use_key_in_widget_constructors
 class MyRateScreen extends StatefulWidget {
+  MyRateScreen({
+    Key? key,
+  }) : super(key: key);
+
   static const routeName = '/myrate';
-  // ignore: diagnostic_describe_all_properties
   final UserDetail userDetail = userDetailTemp;
 
   @override
   _MyRateScreenState createState() => _MyRateScreenState();
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(DiagnosticsProperty<UserDetail>('userDetail', userDetail));
+  }
 }
 
 class _MyRateScreenState extends State<MyRateScreen> {
-  // ignore: diagnostic_describe_all_properties
   final tabData = [
     'ĐÁNH GIÁ',
     'ĐƯỢC ĐÁNH GIÁ',
@@ -74,6 +80,12 @@ class _MyRateScreenState extends State<MyRateScreen> {
       RateTab(userDetail: widget.userDetail),
     ];
   }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(IterableProperty<String>('tabData', tabData));
+  }
 }
 
 class MyDelegate extends SliverPersistentHeaderDelegate {
@@ -117,7 +129,6 @@ class MainInfo extends StatelessWidget {
   const MainInfo({Key? key, required this.width, required this.widget})
       : super(key: key);
 
-  // ignore: diagnostic_describe_all_properties
   final double width;
   final MyRateScreen widget;
 
@@ -172,5 +183,11 @@ class MainInfo extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(DoubleProperty('width', width));
   }
 }

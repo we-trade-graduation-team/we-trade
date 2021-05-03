@@ -11,18 +11,17 @@ import '../userinfo/userinfo_screen.dart';
 import '../wishlist/wishlist_screen.dart';
 
 class AccountScreen extends StatelessWidget {
-  static const routeName = '/account';
-  final BuildContext menuScreenContext;
-  final Function onScreenHideButtonPressed;
-  final bool hideStatus;
-
-  // ignore: sort_constructors_first
   const AccountScreen({
     Key? key,
     required this.menuScreenContext,
     required this.onScreenHideButtonPressed,
     required this.hideStatus,
   }) : super(key: key);
+
+  static const routeName = '/account';
+  final BuildContext menuScreenContext;
+  final Function onScreenHideButtonPressed;
+  final bool hideStatus;
 
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
@@ -38,7 +37,6 @@ class AccountScreen extends StatelessWidget {
       Widget topWid, Widget botWid, Function navigateToScreen) {
     return GestureDetector(
       onTap: () => navigateToScreen(),
-      // ignore: sort_child_properties_last
       child: Column(
         children: <Widget>[
           topWid,
@@ -87,10 +85,7 @@ class AccountScreen extends StatelessWidget {
                             IconButton(
                                 color: kPrimaryLightColor,
                                 icon: const Icon(Icons.settings),
-                                onPressed: () {
-                                  // ignore: avoid_print
-                                  print('setting pressed');
-                                })
+                                onPressed: () {}),
                           ],
                         ),
                         Row(
@@ -162,13 +157,12 @@ class AccountScreen extends StatelessWidget {
                             children: <Widget>[
                               profileNavigationLabel(
                                 Row(
-                                  // ignore: prefer_const_literals_to_create_immutables
-                                  children: <Widget>[
-                                    const Icon(
+                                  children: const [
+                                    Icon(
                                       Icons.star_rate_rounded,
                                       color: Colors.yellow,
                                     ),
-                                    const Text(
+                                    Text(
                                       '3',
                                     )
                                   ],
@@ -199,7 +193,7 @@ class AccountScreen extends StatelessWidget {
                                           screenName:
                                               Follow_Screen_Name.following),
                                     ),
-                                    screen: FollowScreen(),
+                                    screen: const FollowScreen(),
                                     withNavBar: false,
                                     pageTransitionAnimation:
                                         PageTransitionAnimation.cupertino,
@@ -221,7 +215,7 @@ class AccountScreen extends StatelessWidget {
                                           screenName:
                                               Follow_Screen_Name.follower),
                                     ),
-                                    screen: FollowScreen(),
+                                    screen: const FollowScreen(),
                                     withNavBar: false,
                                     pageTransitionAnimation:
                                         PageTransitionAnimation.cupertino,
@@ -239,7 +233,6 @@ class AccountScreen extends StatelessWidget {
             ),
             Expanded(
               child: ListView(
-                // ignore: prefer_const_literals_to_create_immutables
                 children: <Widget>[
                   buildListTile(
                     const Icon(

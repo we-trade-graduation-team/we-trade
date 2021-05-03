@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import '../configs/constants/color.dart';
 
@@ -33,20 +34,18 @@ class TradingProdOverlay extends StatelessWidget {
 }
 
 class OverlayItem extends StatelessWidget {
-  // ignore: diagnostic_describe_all_properties
-  final String text;
-  // ignore: diagnostic_describe_all_properties
-  final IconData iconData;
-  // ignore: diagnostic_describe_all_properties
-  final Function handleFunction;
-
-  // ignore: sort_constructors_first
   const OverlayItem({
     Key? key,
     required this.text,
     required this.iconData,
     required this.handleFunction,
   }) : super(key: key);
+
+  final String text;
+
+  final IconData iconData;
+
+  final Function handleFunction;
 
   @override
   Widget build(BuildContext context) {
@@ -87,5 +86,14 @@ class OverlayItem extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(StringProperty('text', text));
+    properties.add(DiagnosticsProperty<IconData>('iconData', iconData));
+    properties
+        .add(DiagnosticsProperty<Function>('handleFunction', handleFunction));
   }
 }

@@ -1,40 +1,44 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import '../../configs/constants/color.dart';
 
 enum HidePostReasonValue {
-  // ignore: constant_identifier_names
-  StopTrading,
-  // ignore: constant_identifier_names
-  TradedViaWeTrade,
-  // ignore: constant_identifier_names
-  TradeViaOtherChannel,
+  stopTrading,
+
+  tradedViaWeTrade,
+
+  tradeViaOtherChannel,
 }
 
 class Reason {
-  String title;
-  HidePostReasonValue value;
-  // ignore: sort_constructors_first
   Reason({
     required this.title,
     required this.value,
   });
+
+  String title;
+  HidePostReasonValue value;
+
   static List<Reason> getReasons() {
     return <Reason>[
       Reason(
           title: 'Tôi không muốn bán nữa.',
-          value: HidePostReasonValue.StopTrading),
+          value: HidePostReasonValue.stopTrading),
       Reason(
           title: 'Đã bán qua WeTrade.',
-          value: HidePostReasonValue.TradedViaWeTrade),
+          value: HidePostReasonValue.tradedViaWeTrade),
       Reason(
           title: 'Đã bán qua kênh khác.',
-          value: HidePostReasonValue.TradeViaOtherChannel),
+          value: HidePostReasonValue.tradeViaOtherChannel),
     ];
   }
 }
 
-// ignore: use_key_in_widget_constructors
 class HidePostScreen extends StatefulWidget {
+  const HidePostScreen({
+    Key? key,
+  }) : super(key: key);
+
   static const routeName = '/hidepost';
 
   @override
@@ -42,11 +46,10 @@ class HidePostScreen extends StatefulWidget {
 }
 
 class _HidePostScreenState extends State<HidePostScreen> {
-  // ignore: diagnostic_describe_all_properties
   List<Reason> reasons = [];
-  // ignore: diagnostic_describe_all_properties
+
   Reason selectedReason =
-      Reason(title: 'title', value: HidePostReasonValue.StopTrading);
+      Reason(title: 'title', value: HidePostReasonValue.stopTrading);
 
   @override
   void initState() {
@@ -68,11 +71,10 @@ class _HidePostScreenState extends State<HidePostScreen> {
           title: Text(reason.title),
           value: reason,
           groupValue: selectedReason,
-          // ignore: avoid_types_on_closure_parameters
-          onChanged: (Reason? currentReason) {
+          onChanged: (currentReason) {
             setState(() {
               // print(currentReason!.title);
-              setSelectedReason(currentReason!);
+              setSelectedReason(currentReason as Reason);
             });
           },
           selected: selectedReason == reason,
@@ -122,5 +124,13 @@ class _HidePostScreenState extends State<HidePostScreen> {
         ),
       ),
     );
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(IterableProperty<Reason>('reasons', reasons));
+    properties
+        .add(DiagnosticsProperty<Reason>('selectedReason', selectedReason));
   }
 }

@@ -1,13 +1,12 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-import './custom_overlay_iconbutton.dart';
-// ignore: directives_ordering
 import '../configs/constants/color.dart';
 import '../models/product/temp_class.dart';
 import '../models/review/temp_class.dart';
 import '../screens/trading_history/rate_for_trading.dart';
 import '../widgets/trading_prod_overlay.dart';
+import './custom_overlay_iconbutton.dart';
 
 class HistoryProductCard extends StatelessWidget {
   const HistoryProductCard({
@@ -23,7 +22,6 @@ class HistoryProductCard extends StatelessWidget {
       OverlayItem(
         text: 'Đánh giá',
         iconData: Icons.star,
-        // ignore: avoid_types_on_closure_parameters
         handleFunction: () {
           Navigator.of(context).pushNamed(RateForTrading.routeName);
         },
@@ -31,7 +29,6 @@ class HistoryProductCard extends StatelessWidget {
       OverlayItem(
         text: 'Xóa',
         iconData: Icons.delete,
-        // ignore: avoid_types_on_closure_parameters
         handleFunction: () {
           // print('Delete trading history');
         },
@@ -102,16 +99,15 @@ class HistoryProductCard extends StatelessWidget {
                     ),
                     const SizedBox(height: 7),
                     Row(
-                      // ignore: prefer_const_literals_to_create_immutables
-                      children: [
-                        const Text(
+                      children: const [
+                        Text(
                           'TK giao dich: ',
                           style: TextStyle(
                             fontSize: 13,
                             fontWeight: FontWeight.w400,
                           ),
                         ),
-                        const Text(
+                        Text(
                           'User',
                           style: TextStyle(
                             fontSize: 13,
@@ -123,16 +119,15 @@ class HistoryProductCard extends StatelessWidget {
                     ),
                     const SizedBox(height: 7),
                     Row(
-                      // ignore: prefer_const_literals_to_create_immutables
-                      children: [
-                        const Text(
+                      children: const [
+                        Text(
                           'Trạng thái: ',
                           style: TextStyle(
                             fontSize: 13,
                             fontWeight: FontWeight.w400,
                           ),
                         ),
-                        const Text(
+                        Text(
                           'Thành công',
                           style: TextStyle(
                             fontSize: 13,

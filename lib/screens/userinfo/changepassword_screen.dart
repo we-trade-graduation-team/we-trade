@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import '../../configs/constants/color.dart';
 
-// ignore: use_key_in_widget_constructors
 class ChangePasswordScreen extends StatefulWidget {
+  const ChangePasswordScreen({
+    Key? key,
+  }) : super(key: key);
+
   static const routeName = '/changepassword';
 
   @override

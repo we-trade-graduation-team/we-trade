@@ -13,7 +13,6 @@ class TradingProductCard extends StatelessWidget {
     required this.review,
   }) : super(key: key);
 
-  // ignore: diagnostic_describe_all_properties
   final Review review;
 
   @override
@@ -25,7 +24,6 @@ class TradingProductCard extends StatelessWidget {
       OverlayItem(
         text: 'Ẩn tin',
         iconData: Icons.visibility_off,
-        // ignore: avoid_types_on_closure_parameters
         handleFunction: () {
           Navigator.of(context).pushNamed(HidePostScreen.routeName);
         },
@@ -116,5 +114,11 @@ class TradingProductCard extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(DiagnosticsProperty<Review>('review', review));
   }
 }
