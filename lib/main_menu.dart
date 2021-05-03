@@ -6,9 +6,11 @@ import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 
 import 'configs/constants/color.dart';
 import 'configs/constants/routes.dart';
+import 'routing/add_new_screen_routes.dart';
 import 'screens/account/account_screen.dart';
 import 'screens/chat/all_chat/chat_screen.dart';
 import 'screens/home_screen/home_screen.dart';
+import 'screens/post_items/step1.dart';
 
 // Thêm file này vào folder lib
 late BuildContext testContext;
@@ -48,7 +50,7 @@ List<BottomNavigationBarItemSource> navBarItemSourceList = [
     iconData: Icons.add,
     routeAndNavigatorSettings: RouteAndNavigatorSettings(
       initialRoute: '/',
-      routes: routes,
+      routes: routes_postitem,
     ),
   ),
   BottomNavigationBarItemSource(
@@ -118,7 +120,7 @@ class _MainMenuState extends State<MainMenu> {
         },
         hideStatus: _hideNavBar,
       ),
-      HomeScreen(
+      PostItems1(
         menuScreenContext: widget.menuScreenContext,
         hideStatus: _hideNavBar,
         onScreenHideButtonPressed: () {

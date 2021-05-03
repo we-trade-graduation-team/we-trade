@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
+
 import '../../configs/constants/color.dart';
+import 'step4.dart';
 
-import 'step3.dart';
-
-class PostItems2 extends StatefulWidget {
-  const PostItems2({Key? key}) : super(key: key);
-  static const routeName = '/postitem2';
+class PostItems3 extends StatefulWidget {
+  const PostItems3({Key? key}) : super(key: key);
+  static const routeName = '/postitem3';
 
   @override
-  _PostItems2State createState() => _PostItems2State();
+  _PostItems3State createState() => _PostItems3State();
 }
 
 class TypeofGoods {
@@ -19,11 +19,12 @@ class TypeofGoods {
   TypeofGoods({required this.id, required this.name, this.selected = false});
 }
 
-class _PostItems2State extends State<PostItems2> {
+class _PostItems3State extends State<PostItems3> {
   // ignore: unused_element
   void _reset() {
     setState(() {
       //gọi khi có thay đổi
+      FocusScope.of(context).requestFocus(FocusNode()); // tắt bàn phím
     });
   }
 
@@ -138,7 +139,7 @@ class _PostItems2State extends State<PostItems2> {
       backgroundColor: kScreenBackgroundColor,
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
-        title: const Text('Đăng sản phẩm mới - 2',
+        title: const Text('Đăng sản phẩm mới - 3',
             style: TextStyle(color: kTextColor)),
       ),
       body: Container(
@@ -147,12 +148,12 @@ class _PostItems2State extends State<PostItems2> {
             children: [
               const Align(
                   alignment: Alignment.topLeft,
-                  child: Text('Phân loại sản phẩm',
+                  child: Text('Chọn loại sản phẩm muốn đổi',
                       style: TextStyle(fontWeight: FontWeight.bold))),
               buildChips(),
               const Align(
                   alignment: Alignment.topLeft,
-                  child: Text('Loại sản phẩm',
+                  child: Text('Loại sản phẩm đã chọn',
                       style: TextStyle(fontWeight: FontWeight.bold))),
               const SizedBox(
                 height: 5,
@@ -175,7 +176,7 @@ class _PostItems2State extends State<PostItems2> {
                       backgroundColor:
                           MaterialStateProperty.all<Color>(kPrimaryColor)),
                   onPressed: () {
-                    Navigator.of(context).pushNamed(PostItems3.routeName);
+                    Navigator.of(context).pushNamed(PostItems4.routeName);
                   },
                   child: const Text('Tiếp theo'),
                 ),
