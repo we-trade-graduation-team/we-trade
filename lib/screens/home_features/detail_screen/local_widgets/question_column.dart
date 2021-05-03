@@ -46,16 +46,12 @@ class _QuestionColumnState extends State<QuestionColumn> {
           crossAxisAlignment: CrossAxisAlignment.start,
           // mainAxisSize: MainAxisSize.min,
           children: [
-            Expanded(
-              flex: 3,
-              child: ToVoteColumn(vote: vote),
-            ),
+            ToVoteColumn(vote: vote),
             const Expanded(child: SizedBox()),
             Expanded(
               flex: 18,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
-                // mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   Text(
                     widget.question.question,
@@ -63,7 +59,7 @@ class _QuestionColumnState extends State<QuestionColumn> {
                   ),
                   SizedBox(height: size.height * 0.02),
                   if (answerList != null && answerList.isNotEmpty)
-                    buildAnswerColumn(size)
+                    buildAnswerColumn()
                   else
                     const NoItemsSection(text: 'No answers')
                 ],
@@ -77,8 +73,9 @@ class _QuestionColumnState extends State<QuestionColumn> {
     );
   }
 
-  Widget buildAnswerColumn(Size size) {
+  Widget buildAnswerColumn() {
     final answerList = widget.question.answers!;
+    final size = MediaQuery.of(context).size;
     final spacingHeight = size.height * 0.02;
     const numberItemToShow = 1;
     return Column(
@@ -91,12 +88,12 @@ class _QuestionColumnState extends State<QuestionColumn> {
         SizedBox(height: spacingHeight),
         if (answerList.length > numberItemToShow)
           ExpandChild(
-            collapsedHint: 'Show more answers',
-            expandedHint: 'Collapse all answers',
+            collapsedHint: 'Show more',
+            expandedHint: 'Collapse all',
             hintTextStyle: const TextStyle(color: kPrimaryColor),
             arrowColor: kPrimaryColor,
             arrowSize: 24,
-            arrowPadding: const EdgeInsets.only(right: 120),
+            arrowPadding: EdgeInsets.only(right: size.width * 0.32),
             expandArrowStyle: ExpandArrowStyle.both,
             capitalArrowtext: false,
             child: Column(

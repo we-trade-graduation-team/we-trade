@@ -25,13 +25,13 @@ class OtherUserProfileScreen extends StatefulWidget {
 class _OtherUserProfileScreenState extends State<OtherUserProfileScreen> {
   final tabData = ['ABOUT', 'POSTS', 'REVIEW'];
   final mainInfoKey = GlobalKey();
-  late Size sizeFlexibleSpaceBar;
+  late Size flexibleSpaceBarSize;
   bool _visible = true;
 
   Future<void> getSizeAndPosition() async {
     final _cardBox =
         mainInfoKey.currentContext!.findRenderObject() as RenderBox;
-    sizeFlexibleSpaceBar = _cardBox.size;
+    flexibleSpaceBarSize = _cardBox.size;
   }
 
   @override
@@ -56,17 +56,55 @@ class _OtherUserProfileScreenState extends State<OtherUserProfileScreen> {
         key: mainInfoKey,
         child: Column(
           children: [
-            CircleAvatar(
-              radius: width / 7,
-              backgroundColor: kPrimaryColor,
-              child: CircleAvatar(
-                radius: width / 7 - 2.5,
-                backgroundColor: Colors.white,
-                child: CircleAvatar(
-                  backgroundColor: Colors.red,
-                  radius: width / 7 - 5,
+            Row(
+              children: [
+                CircleAvatar(
+                  radius: width / 7,
+                  backgroundColor: kPrimaryColor,
+                  child: CircleAvatar(
+                    radius: width / 7 - 2.5,
+                    backgroundColor: Colors.white,
+                    child: CircleAvatar(
+                      backgroundColor: Colors.red,
+                      radius: width / 7 - 5,
+                    ),
+                  ),
                 ),
-              ),
+                Column(
+                  children: [
+                    const Text(
+                      'hi',
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    Container(
+                      margin: const EdgeInsets.fromLTRB(0, 10, 0, 0),
+                      child: const Text('hi\nhi',
+                          style: TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w300,
+                          ),
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis),
+                    ),
+                    Container(
+                        margin: const EdgeInsets.fromLTRB(0, 0, 10, 0),
+                        child: CustomMaterialButton(
+                            icon: const Icon(
+                              Icons.add,
+                              color: Colors.white,
+                              size: 20,
+                            ),
+                            press: () {},
+                            text: 'Theo dõi',
+                            width: MediaQuery.of(context).size.width / 3.8,
+                            fontSize: 10,
+                            height: 25)),
+                  ],
+                ),
+              ],
             ),
             ReviewProperty(
               press: () {},
@@ -94,12 +132,6 @@ class _OtherUserProfileScreenState extends State<OtherUserProfileScreen> {
     return Scaffold(
       appBar: AppBar(
         actions: [
-          // IconButton(
-          //   icon: const Icon(Icons.more_vert),
-          //   onPressed: () {
-          //     showOverlay(context: context);
-          //   },
-          // ),
           Builder(builder: (builderContext) {
             return IconButton(
               icon: Icon(LineIcons.values['verticalEllipsis']),
@@ -125,8 +157,8 @@ class _OtherUserProfileScreenState extends State<OtherUserProfileScreen> {
                       SliverAppBar(
                         automaticallyImplyLeading: false,
                         backgroundColor: Colors.white,
-                        collapsedHeight: sizeFlexibleSpaceBar.height,
-                        expandedHeight: sizeFlexibleSpaceBar.height,
+                        collapsedHeight: flexibleSpaceBarSize.height,
+                        expandedHeight: flexibleSpaceBarSize.height,
                         flexibleSpace:
                             buildMainInfoWidget(agrs.userDetail, width),
                       ),
@@ -344,7 +376,7 @@ class _OtherUserProfileScreenState extends State<OtherUserProfileScreen> {
     properties.add(DiagnosticsProperty<GlobalKey<State<StatefulWidget>>>(
         'mainInfoKey', mainInfoKey));
     properties.add(DiagnosticsProperty<Size>(
-        'sizeFlexibleSpaceBar', sizeFlexibleSpaceBar));
+        'flexibleSpaceBarSize', flexibleSpaceBarSize));
   }
 }
 

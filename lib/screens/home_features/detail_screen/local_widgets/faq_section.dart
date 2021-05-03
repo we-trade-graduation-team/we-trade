@@ -39,7 +39,7 @@ class FaqSection extends StatelessWidget {
           const QuestionInputTextFormField(),
           SizedBox(height: size.height * 0.025),
           if (questionList != null && questionList.isNotEmpty)
-            buildQuestionColumn(size)
+            buildQuestionColumn(context)
           else
             const NoItemsSection(text: 'No questions')
         ],
@@ -47,13 +47,14 @@ class FaqSection extends StatelessWidget {
     );
   }
 
-  Widget buildQuestionColumn(Size size) {
+  Widget buildQuestionColumn(BuildContext context) {
     final questionList = product.questions!;
     questionList.sort((a, b) => b.voteNumber.compareTo(a.voteNumber));
+    final size = MediaQuery.of(context).size;
 
     final spacingHeight = size.height * 0.025;
     const numberItemToShow = 2;
-    
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
