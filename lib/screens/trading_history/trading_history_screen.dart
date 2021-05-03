@@ -1,15 +1,25 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import '../../models/chat/temp_class.dart';
 import '../../widgets/history_prod_card.dart';
 
-// ignore: use_key_in_widget_constructors
 class TradingHistoryScreen extends StatefulWidget {
+  TradingHistoryScreen({
+    Key? key,
+  }) : super(key: key);
+
   static const routeName = '/tradinghistory';
-  // ignore: diagnostic_describe_all_properties
+
   final UserDetail userDetail = userDetailTemp;
   @override
   _TradingHistoryScreenState createState() => _TradingHistoryScreenState();
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(DiagnosticsProperty<UserDetail>('userDetail', userDetail));
+  }
 }
 
 class _TradingHistoryScreenState extends State<TradingHistoryScreen> {

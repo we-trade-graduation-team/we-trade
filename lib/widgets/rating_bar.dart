@@ -2,15 +2,14 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 class RatingBar extends StatefulWidget {
-  final Function(int) onRatingSelected;
-  final int maximumRating;
-
-  // ignore: sort_constructors_first
   const RatingBar({
     Key? key,
     required this.onRatingSelected,
     this.maximumRating = 5,
   }) : super(key: key);
+
+  final Function(int) onRatingSelected;
+  final int maximumRating;
 
   @override
   _RatingBarState createState() => _RatingBarState();

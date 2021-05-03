@@ -2,8 +2,11 @@ import 'package:flutter/material.dart';
 import '../../configs/constants/color.dart';
 import 'changepassword_screen.dart';
 
-// ignore: use_key_in_widget_constructors
 class UserInfoScreen extends StatefulWidget {
+  const UserInfoScreen({
+    Key? key,
+  }) : super(key: key);
+
   static const routeName = '/userinfo';
 
   @override

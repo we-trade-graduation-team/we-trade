@@ -1,21 +1,29 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import '../../configs/constants/color.dart';
 import '../../models/chat/temp_class.dart';
 import '../../screens/post_management/tabs/trading_products_tab.dart';
 
-// ignore: use_key_in_widget_constructors
 class PostManagementScreen extends StatefulWidget {
+  PostManagementScreen({
+    Key? key,
+  }) : super(key: key);
+
   static const routeName = '/postmanagement';
-  // ignore: diagnostic_describe_all_properties
   final UserDetail userDetail = userDetailTemp;
 
   @override
   _PostManagementScreenState createState() => _PostManagementScreenState();
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(DiagnosticsProperty<UserDetail>('userDetail', userDetail));
+  }
 }
 
 class _PostManagementScreenState extends State<PostManagementScreen> {
-  // ignore: diagnostic_describe_all_properties
   final tabData = [
     'ĐANG TRAO ĐỔI',
     'HẾT HẠN/ẨN',
@@ -30,29 +38,30 @@ class _PostManagementScreenState extends State<PostManagementScreen> {
       body: DefaultTabController(
         length: tabData.length,
         child: NestedScrollView(
-            physics: const NeverScrollableScrollPhysics(),
-            headerSliverBuilder: (context, isScolled) {
-              return [
-                SliverPersistentHeader(
-                  delegate: MyDelegate(
-                    TabBar(
-                      tabs: [
-                        ...tabData.map(
-                          (item) => Tab(
-                            child: Text(item),
-                          ),
+          physics: const NeverScrollableScrollPhysics(),
+          headerSliverBuilder: (context, isScolled) {
+            return [
+              SliverPersistentHeader(
+                delegate: MyDelegate(
+                  TabBar(
+                    tabs: [
+                      ...tabData.map(
+                        (item) => Tab(
+                          child: Text(item),
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
-                  floating: true,
-                  pinned: true,
-                )
-              ];
-            },
-            body: TabBarView(
-              children: getTabContent(),
-            )),
+                ),
+                floating: true,
+                pinned: true,
+              )
+            ];
+          },
+          body: TabBarView(
+            children: getTabContent(),
+          ),
+        ),
       ),
     );
   }
@@ -63,6 +72,12 @@ class _PostManagementScreenState extends State<PostManagementScreen> {
       TradingProductsTab(userDetail: widget.userDetail),
     ];
   }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(IterableProperty<String>('tabData', tabData));
+  }
 }
 
 class MyDelegate extends SliverPersistentHeaderDelegate {
@@ -72,24 +87,22 @@ class MyDelegate extends SliverPersistentHeaderDelegate {
   @override
   Widget build(
       BuildContext context, double shrinkOffset, bool overlapsContent) {
-    return 
-      Container(
-        decoration: const BoxDecoration(
-          color: Colors.white,
-          border: Border(
-            top: BorderSide(
-              color: kTextLightV2Color,
-              width: 0.2,
-            ),
-            bottom: BorderSide(
-              color: kTextLightV2Color,
-              width: 0.2,
-            ),
+    return Container(
+      decoration: const BoxDecoration(
+        color: Colors.white,
+        border: Border(
+          top: BorderSide(
+            color: kTextLightV2Color,
+            width: 0.2,
+          ),
+          bottom: BorderSide(
+            color: kTextLightV2Color,
+            width: 0.2,
           ),
         ),
-        child: tabBar,
-      );
-    
+      ),
+      child: tabBar,
+    );
   }
 
   @override
@@ -103,5 +116,3 @@ class MyDelegate extends SliverPersistentHeaderDelegate {
     return false;
   }
 }
-
-

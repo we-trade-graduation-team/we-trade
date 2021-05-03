@@ -4,8 +4,11 @@ import '../../configs/constants/color.dart';
 import '../../models/product/temp_class.dart';
 import '../../widgets/rating_bar.dart';
 
-// ignore: use_key_in_widget_constructors
 class RateForTrading extends StatefulWidget {
+  const RateForTrading({
+    Key? key,
+  }) : super(key: key);
+
   static const routeName = '/ratefortrading';
 
   @override
@@ -103,7 +106,6 @@ class _RateForTradingState extends State<RateForTrading> {
                     ),
                   ),
                   child: Column(
-                    // ignore: prefer_const_literals_to_create_immutables
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Container(
@@ -156,7 +158,6 @@ class _RateForTradingState extends State<RateForTrading> {
                     ),
                   ),
                   child: Column(
-                    // ignore: prefer_const_literals_to_create_immutables
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Container(
@@ -180,7 +181,6 @@ class _RateForTradingState extends State<RateForTrading> {
                   ),
                 ),
                 const SizedBox(height: 20),
-                // ignore: avoid_unnecessary_containers
                 Container(
                   padding: const EdgeInsets.only(bottom: 10),
                   decoration: const BoxDecoration(
@@ -227,7 +227,6 @@ class _RateForTradingState extends State<RateForTrading> {
                     ),
                   ),
                   child: Column(
-                    // ignore: prefer_const_literals_to_create_immutables
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Container(

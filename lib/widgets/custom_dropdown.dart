@@ -1,12 +1,7 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 class CustomDropdown extends StatefulWidget {
-  final Widget dropdownLabel;
-  // ignore: diagnostic_describe_all_properties
-  final String labeledKey;
-  final List<DropdownItem> dropdownItems;
-
-  // ignore: sort_constructors_first
   const CustomDropdown(
       {Key? key,
       required this.labeledKey,
@@ -14,23 +9,33 @@ class CustomDropdown extends StatefulWidget {
       required this.dropdownItems})
       : super(key: key);
 
+  final Widget dropdownLabel;
+
+  final String labeledKey;
+  final List<DropdownItem> dropdownItems;
+
   @override
   _CustomDropdownState createState() => _CustomDropdownState();
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(StringProperty('labeledKey', labeledKey));
+  }
 }
 
 late OverlayEntry globalFloatingDropdown;
 bool globalIsDropdowOpened = false;
 
-// ignore: prefer_mixin
+mixin RouteAware {}
+
 class _CustomDropdownState extends State<CustomDropdown> with RouteAware {
-  // ignore: diagnostic_describe_all_properties
   GlobalKey actionKey = GlobalKey();
-  // ignore: diagnostic_describe_all_properties
+
   bool isDropdowOpened = false;
 
-  // ignore: diagnostic_describe_all_properties
   late double height, width, xPosition, yPosition;
-  // ignore: diagnostic_describe_all_properties
+
   late OverlayEntry floatingDropdown;
 
   @override
@@ -97,17 +102,30 @@ class _CustomDropdownState extends State<CustomDropdown> with RouteAware {
       ),
     );
   }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(DiagnosticsProperty<GlobalKey<State<StatefulWidget>>>(
+        'actionKey', actionKey));
+    properties
+        .add(DiagnosticsProperty<bool>('isDropdowOpened', isDropdowOpened));
+    properties.add(DoubleProperty('height', height));
+    properties.add(DoubleProperty('width', width));
+    properties.add(DoubleProperty('xPosition', xPosition));
+    properties.add(DoubleProperty('yPosition', yPosition));
+    properties.add(DiagnosticsProperty<OverlayEntry>(
+        'floatingDropdown', floatingDropdown));
+  }
 }
 
 class Dropdown extends StatelessWidget {
-  // ignore: diagnostic_describe_all_properties
-  final double itemHeight;
-  final List<DropdownItem> dropdownItems;
-
-  // ignore: sort_constructors_first
   const Dropdown(
       {Key? key, required this.itemHeight, required this.dropdownItems})
       : super(key: key);
+
+  final double itemHeight;
+  final List<DropdownItem> dropdownItems;
 
   @override
   Widget build(BuildContext context) {
@@ -131,19 +149,15 @@ class Dropdown extends StatelessWidget {
       ],
     );
   }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(DoubleProperty('itemHeight', itemHeight));
+  }
 }
 
 class DropdownItem extends StatelessWidget {
-  // ignore: diagnostic_describe_all_properties
-  final String text;
-  // ignore: diagnostic_describe_all_properties
-  final IconData iconData;
-  // ignore: diagnostic_describe_all_properties
-  final bool isSelected;
-  // ignore: diagnostic_describe_all_properties
-  final Function handleFunction;
-
-  // ignore: sort_constructors_first
   const DropdownItem({
     Key? key,
     required this.text,
@@ -152,10 +166,17 @@ class DropdownItem extends StatelessWidget {
     required this.handleFunction,
   }) : super(key: key);
 
+  final String text;
+
+  final IconData iconData;
+
+  final bool isSelected;
+
+  final Function handleFunction;
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      // ignore: unnecessary_lambdas
       onTap: () {
         globalFloatingDropdown.remove();
         globalIsDropdowOpened = !globalIsDropdowOpened;
@@ -184,5 +205,15 @@ class DropdownItem extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(StringProperty('text', text));
+    properties.add(DiagnosticsProperty<IconData>('iconData', iconData));
+    properties.add(DiagnosticsProperty<bool>('isSelected', isSelected));
+    properties
+        .add(DiagnosticsProperty<Function>('handleFunction', handleFunction));
   }
 }
