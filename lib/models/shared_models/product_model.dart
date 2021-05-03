@@ -1,5 +1,5 @@
 // import 'package:json_annotation/json_annotation.dart';
-import 'question_model.dart';
+import '../detail_screen/question_model.dart';
 import 'user_model.dart';
 
 // @JsonSerializable()

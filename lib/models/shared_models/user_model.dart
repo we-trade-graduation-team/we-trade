@@ -1,4 +1,4 @@
-import 'user_rating_model.dart';
+import '../detail_screen/user_rating_model.dart';
 
 class User {
   User({
