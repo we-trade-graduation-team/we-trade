@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import '../../configs/constants/color.dart';
 import '../../models/chat/temp_class.dart';
-import '../../screens/myrate/tabs/rate_tab.dart';
+import '../../screens/my_rate/tabs/rate_tab.dart';
 
 class MyRateScreen extends StatefulWidget {
   MyRateScreen({

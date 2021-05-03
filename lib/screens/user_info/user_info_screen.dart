@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../configs/constants/color.dart';
-import 'changepassword_screen.dart';
+import 'change_password_screen.dart';
 
 class UserInfoScreen extends StatefulWidget {
   const UserInfoScreen({

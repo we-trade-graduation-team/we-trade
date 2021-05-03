@@ -42,9 +42,6 @@ class _ChatScreenState extends State<ChatScreen> {
           'CHAT',
         ),
       ),
-      bottomNavigationBar: Container(
-        height: kBottomNavigationBarHeight,
-      ),
       body: const Body(),
       floatingActionButton: FloatingActionButton(
         onPressed: () => pushNewScreen<void>(
