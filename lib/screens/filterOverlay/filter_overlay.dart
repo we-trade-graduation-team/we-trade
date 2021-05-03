@@ -4,8 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:group_button/group_button.dart';
 
 class FilterOverlay extends StatefulWidget {
-  const FilterOverlay({Key? key}):super(key:key);
-  static String routeName='/filterOverlay';
+  const FilterOverlay({Key? key}) : super(key: key);
   @override
   _FilterOverlayState createState() => _FilterOverlayState();
 }
@@ -44,185 +43,177 @@ class _FilterOverlayState extends State<FilterOverlay> {
   Widget build(BuildContext context) {
     return Card(
       child: Padding(
-        padding: const EdgeInsets.all(10),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Table(
-                defaultVerticalAlignment: TableCellVerticalAlignment.middle,
-              children: <TableRow>[
-                TableRow(
-                  children: <Widget>[
-                    const Text(
-                      'Loại mặt hàng:',
-                      style: TextStyle(
-                        fontSize: 20
+        padding: const EdgeInsets.all(12.5),
+        child: Table(
+          children: <TableRow>[
+            TableRow(children: <Widget>[
+              Table(
+                  defaultVerticalAlignment: TableCellVerticalAlignment.middle,
+                  children: <TableRow>[
+                    TableRow(
+                      children: <Widget>[
+                        const Text(
+                          'Loại mặt hàng:',
+                          style: TextStyle(fontSize: 20),
+                        ),
+                        DropdownButton<ProductKind>(
+                          focusColor: Colors.grey,
+                          isExpanded: true,
+                          iconEnabledColor: const Color(0xFF6F35A5),
+                          hint: const Text('Tất cả'),
+                          value: chosenKind,
+                          items: productKinds.map((kind) {
+                            return DropdownMenuItem<ProductKind>(
+                              value: kind,
+                              child: Text(kind.name),
+                            );
+                          }).toList(),
+                          onChanged: (value) {
+                            setState(() {
+                              chosenKind = value!;
+                            });
+                          },
+                        ),
+                      ],
+                    ),
+                    const TableRow(
+                      children: <Widget>[
+                        SizedBox(
+                          height: 10,
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                      ],
+                    ),
+                    const TableRow(children: <Widget>[
+                      SizedBox(
+                        height: 10,
                       ),
-                      DropdownButton<ProductKind>(
-                        focusColor: Colors.grey,
+                      SizedBox(
+                        height: 10,
+                      )
+                    ]),
+                    TableRow(children: <Widget>[
+                      const Text(
+                        'Nơi bán:',
+                        style: TextStyle(fontSize: 20),
+                      ),
+                      Container(),
+                    ]),
+                    const TableRow(children: <Widget>[
+                      SizedBox(
+                        height: 5,
+                      ),
+                      SizedBox(
+                        height: 5,
+                      )
+                    ]),
+                    TableRow(children: <Widget>[
+                      Row(
+                        children: <Widget>[
+                          const SizedBox(
+                            width: 20,
+                          ),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            // ignore: prefer_const_literals_to_create_immutables
+                            children: <Widget>[
+                              const Text(
+                                'Tỉnh/Thành phố:',
+                                style: TextStyle(fontSize: 20),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                      DropdownButton<Province>(
                         isExpanded: true,
                         iconEnabledColor: const Color(0xFF6F35A5),
                         hint: const Text('Tất cả'),
-                        value: chosenKind,
-                        items: productKinds.map((kind) {
-                          return DropdownMenuItem<ProductKind>(
-                            value: kind,
-                            child: Text(kind.name),
+                        value: chosenProvince,
+                        items: provinces.map((province) {
+                          return DropdownMenuItem<Province>(
+                            value: province,
+                            child: Text(province.name),
                           );
                         }).toList(),
                         onChanged: (value) {
                           setState(() {
-                            chosenKind = value!;
+                            chosenProvince = value!;
                           });
                         },
+                      )
+                    ]),
+                    const TableRow(children: <Widget>[
+                      SizedBox(
+                        height: 10,
                       ),
-                    ],
-                  ),
-                  const TableRow(children: <Widget>[
-                    SizedBox(
-                      height: 10,
-                    ),
-                    DropdownButton<ProductKind>(
-                      focusColor: Colors.grey,
-                      isExpanded: true,
-                      iconEnabledColor: const Color(0xFF6F35A5),
-                      hint: const Text('Tất cả'),
-                      value: chosenKind,
-                      items: productKinds.map((kind){
-                        return DropdownMenuItem<ProductKind>(
-                          value: kind,
-                          child: Text(kind.name),
-                        );
-                      }).toList(),
-                      onChanged: (value) {
-                        setState(() {
-                          chosenKind = value!;
-                        });
-                      },
-                    ),
-                   ],
-                ),
-                const TableRow(
-                  children: <Widget>[
-                    SizedBox(height: 10,),
-                    SizedBox(height: 10,)
-                  ]
-                ),
-                TableRow(
-                  children: <Widget>[
-                    const Text(
-                      'Nơi bán:',
-                      style: TextStyle(
-                          fontSize: 20
+                      SizedBox(
+                        height: 10,
+                      )
+                    ]),
+                    TableRow(children: <Widget>[
+                      Row(
+                        children: <Widget>[
+                          const SizedBox(
+                            width: 20,
+                          ),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            // ignore: prefer_const_literals_to_create_immutables
+                            children: [
+                              const Text(
+                                'Quận/Huyện:',
+                                style: TextStyle(fontSize: 20),
+                              ),
+                            ],
+                          ),
+                        ],
                       ),
-                    ),
-                    Container(),
-                  ]
-                ),
-                const TableRow(
-                  children: <Widget>[
-                    SizedBox(height: 5,),
-                    SizedBox(height: 5,)
-                  ]
-                ),
-                TableRow(
-                  children: <Widget>[
-                    Row(
-                      children: <Widget>[
-                        const SizedBox(width: 20,),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          // ignore: prefer_const_literals_to_create_immutables
-                          children: <Widget>[
-                            const Text(
-                              'Tỉnh/Thành phố:',
-                              style: TextStyle(
-                                  fontSize: 20
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                    DropdownButton<Province>(
-                      isExpanded: true,
-                      iconEnabledColor: const Color(0xFF6F35A5),
-                      hint: const Text('Tất cả'),
-                      value: chosenProvince,
-                      items: provinces.map((province) {
-                        return DropdownMenuItem<Province>(
-                          value: province,
-                          child: Text(province.name),
-                        );
-                      }).toList(),
-                      onChanged: (value) {
-                        setState(() {
-                          chosenProvince = value!;
-                        });
-                      },
-                    )
-                  ]
-                ),
-                const TableRow(
-                  children: <Widget>[
-                    SizedBox(height: 10,),
-                    SizedBox(height: 10,)
-                  ]
-                ),
-                TableRow(
-                  children: <Widget>[
-                    Row(
-                      children: <Widget>[
-                        const SizedBox(width: 20,),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          // ignore: prefer_const_literals_to_create_immutables
-                          children: [
-                            const Text(
-                              'Quận/Huyện:',
-                              style: TextStyle(
-                                  fontSize: 20
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                    DropdownButton<District>(
-                      isExpanded: true,
-                      iconEnabledColor: const Color(0xFF6F35A5),
-                      hint: const Text('Tất cả'),
-                      value: chosenDistrict,
-                      items: districts.map((district) {
-                        return DropdownMenuItem<District>(
-                          value: district,
-                          child: Text(district.name),
-                        );
-                      }).toList(),
-                      onChanged: (value) {
-                        setState(() {
-                          chosenDistrict = value!;
-                        });
-                      },
-                    )
-                  ])
-                ]),
-            const SizedBox(
-              height: 10,
-            ),
-            const SizedBox(height: 10,),
-            GroupButton(
-              
-              selectedColor: const Color(0xFF6F35A5),
-              buttons: costs,
-              spacing: 10,
-              onSelected: (index,isSelected){}
-            )
+                      DropdownButton<District>(
+                        isExpanded: true,
+                        iconEnabledColor: const Color(0xFF6F35A5),
+                        hint: const Text('Tất cả'),
+                        value: chosenDistrict,
+                        items: districts.map((district) {
+                          return DropdownMenuItem<District>(
+                            value: district,
+                            child: Text(district.name),
+                          );
+                        }).toList(),
+                        onChanged: (value) {
+                          setState(() {
+                            chosenDistrict = value!;
+                          });
+                        },
+                      )
+                    ])
+                  ]),
+            ]),
+            const TableRow(children: <Widget>[
+              SizedBox(
+                height: 10,
+              ),
+            ]),
+            const TableRow(children: <Widget>[
+              SizedBox(
+                height: 10,
+              ),
+            ]),
+            TableRow(children: <Widget>[
+              GroupButton(
+                  selectedColor: const Color(0xFF6F35A5),
+                  buttons: costs,
+                  spacing: 10,
+                  onSelected: (index, isSelected) {}),
+            ])
           ],
         ),
       ),
     );
   }
+
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
@@ -230,27 +221,25 @@ class _FilterOverlayState extends State<FilterOverlay> {
     properties.add(IterableProperty<Province>('provinces', provinces));
     properties.add(IterableProperty<ProductKind>('productKinds', productKinds));
     properties.add(IterableProperty<District>('districts', districts));
-    properties.add(DiagnosticsProperty<District>('chosenDistrict', chosenDistrict));
+    properties
+        .add(DiagnosticsProperty<District>('chosenDistrict', chosenDistrict));
     properties.add(DiagnosticsProperty<ProductKind>('chosenKind', chosenKind));
-    properties.add(DiagnosticsProperty<Province>('chosenProvince', chosenProvince));
+    properties
+        .add(DiagnosticsProperty<Province>('chosenProvince', chosenProvince));
   }
 }
 
-class ProductKind{
-  const ProductKind({
-    required this.name
-  });
+class ProductKind {
+  const ProductKind({required this.name});
   final String name;
 }
-class Province{
-  const Province({
-    required this.name
-  });
+
+class Province {
+  const Province({required this.name});
   final String name;
 }
-class District{
-  const District({
-    required this.name
-  });
+
+class District {
+  const District({required this.name});
   final String name;
 }

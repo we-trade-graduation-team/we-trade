@@ -1,9 +1,4 @@
 import 'package:flutter/widgets.dart';
-import 'package:we_trade/screens/category/category.dart';
-import 'package:we_trade/screens/filterOverlay/filter_overlay.dart';
-import 'package:we_trade/screens/notification/detailed_notification_screen.dart';
-import 'package:we_trade/screens/notification/notification_screen.dart';
-import 'package:we_trade/screens/report/report_screen.dart';
 
 import '../../screens/auth/complete_profile_screen/complete_profile_screen.dart';
 import '../../screens/auth/forgot_password_screen/forgot_password_screen.dart';
@@ -28,6 +23,7 @@ import '../../screens/other_user_profile/other_user_profile_screen.dart';
 import '../../screens/post_management/hide_post_screen.dart';
 import '../../screens/post_management/post_management_screen.dart';
 import '../../screens/report/build_report_screen.dart';
+import '../../screens/report/report_screen.dart';
 import '../../screens/trading_history/rate_for_trading.dart';
 import '../../screens/trading_history/trading_history_screen.dart';
 import '../../screens/userinfo/changepassword_screen.dart';
@@ -46,11 +42,10 @@ final Map<String, WidgetBuilder> routes = {
   OtpScreen.routeName: (_) => const OtpScreen(phoneNumber: '+8801376221100'),
   DetailScreen.routeName: (_) => const DetailScreen(),
   // ProfileScreen.routeName: (_) => const ProfileScreen(),
-  FilterOverlay.routeName: (context) => const FilterOverlay(),
-  NotificationScreen.routeName: (context) => const NotificationScreen(),
+  NotificationScreen.routeName: (context) => NotificationScreen(),
   DetailedNotificationScreen.routeName: (context) =>
       const DetailedNotificationScreen(),
-  Category.routeName: (context) => const Category(),
+  CategoryKind.routeName: (context) => const CategoryKind(),
   BuildReportScreen.routeName: (context) => const BuildReportScreen(),
   AddChatScreen.routeName: (context) => const AddChatScreen(),
   //ChatScreen.routeName: (context) => const ChatScreen(),
@@ -70,11 +65,9 @@ final Map<String, WidgetBuilder> routes = {
   HidePostScreen.routeName: (context) => HidePostScreen(),
   WishListScreen.routeName: (context) => const WishListScreen(),
   DetailScreen.routeName: (context) => const DetailScreen(),
-  ProfileScreen.routeName: (context) => const ProfileScreen(),
   CategoryKind.routeName:(context)=>const CategoryKind(),
   ReportScreen.routeName:(context)=>const ReportScreen(),
   NotificationScreen.routeName: (context) => NotificationScreen(),
   DetailedNotificationScreen.routeName:(context)=>const DetailedNotificationScreen(),
-  FilterOverlay.routeName: (context)=>const FilterOverlay()
   RateForTrading.routeName: (context) => RateForTrading(),
 };

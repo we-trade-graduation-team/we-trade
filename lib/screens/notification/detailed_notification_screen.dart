@@ -1,7 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import '../report/local_widgets/pop_header.dart';
-import '../../widgets/custom_bottom_navigation_bar.dart';
 import 'notification.dart';
 
 class DetailedNotificationScreen extends StatelessWidget {
@@ -42,7 +41,7 @@ class DetailedNotificationScreen extends StatelessWidget {
           ],
         ),
       ),
-      bottomNavigationBar: const CustomBottomNavigationBar(),
+      //bottomNavigationBar: const CustomBottomNavigationBar(),
     );
   }
   @override

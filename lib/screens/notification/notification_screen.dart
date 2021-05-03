@@ -1,8 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import '../home/local_widgets/home_header.dart';
 import 'detailed_notification_screen.dart';
-import '../../widgets/custom_bottom_navigation_bar.dart';
 import 'notification.dart';
 
 class NotificationScreen extends StatelessWidget {
@@ -13,17 +11,13 @@ class NotificationScreen extends StatelessWidget {
   final List<NotificationData> notes=[const NotificationData(title: 'Đơn hàng đang trong quá trình vận chuyển', content: 'Đơn hàng của quí khách đã được tiếp nhận bởi bộ phận vận chuyển'),
     const NotificationData(title: 'Đơn hàng đang trong quá trình vận chuyển', content: 'Đơn hàng của quí khách đã được tiếp nhận bởi bộ phận vận chuyển')];
 
-  static String routeName = '/notification';
-
-  final List<NotificationData> notes;
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: PreferredSize(
+      /*appBar: PreferredSize(
         preferredSize: Size.fromHeight(AppBar().preferredSize.height + 20),
         child: const HomeHeader(),
-      ),
+      ),*/
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(10),
@@ -44,7 +38,7 @@ class NotificationScreen extends StatelessWidget {
           ),
         ),
       ),
-      bottomNavigationBar: const CustomBottomNavigationBar(),
+      //bottomNavigationBar: const CustomBottomNavigationBar(),
     );
   }
   @override
@@ -62,7 +56,6 @@ class NotificationCard extends StatelessWidget {
   final NotificationData note;
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
     return Card(
       margin: const EdgeInsets.fromLTRB(20, 10, 20, 10),
       child: Padding(

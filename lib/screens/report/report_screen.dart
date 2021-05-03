@@ -8,7 +8,6 @@ import 'package:provider/provider.dart';
 
 import '../../bloc/report_bloc.dart';
 import '../../models/product_model.dart';
-import '../../widgets/custom_bottom_navigation_bar.dart';
 import 'local_widgets/pop_header.dart';
 
 class ReportScreenBody extends StatefulWidget {
@@ -32,7 +31,6 @@ class _ReportScreenState extends State<ReportScreenBody> {
     final reportBloc = Provider.of<ReportBloc>(context);
     final size = MediaQuery.of(context).size;
 
-    final size = MediaQuery.of(context).size;
     return LayoutBuilder(
       builder: (context, viewportConstraints) {
         return SingleChildScrollView(
@@ -106,7 +104,7 @@ class _ReportScreenState extends State<ReportScreenBody> {
                     spacing: 10,
                     onSelected: (index, isSelected) {
                       if (lyDo[index] == 'Khác') {
-                        reportBloc.ChangeStateTextField();
+                        reportBloc.changeStateTextField();
                       }
                     },
                     buttons: lyDo,
@@ -128,7 +126,7 @@ class _ReportScreenState extends State<ReportScreenBody> {
                         icon: reportBloc.confirmed
                             ? const Icon(Icons.check_box)
                             : const Icon(Icons.crop_square),
-                        onPressed: reportBloc.ChangeStateConfirmed),
+                        onPressed: reportBloc.changeStateConfirmed),
                     const Text(
                       'Tôi chắc chắn muốn báo cáo sản phẩm này',
                       style: TextStyle(fontSize: 14),
@@ -193,13 +191,7 @@ class ReportScreen extends StatelessWidget {
         ],
         child: const ReportScreenBody(),
       ),
-      bottomNavigationBar: const CustomBottomNavigationBar(),
+      //bottomNavigationBar: const CustomBottomNavigationBar(),
     );
-  }
-
-  @override
-  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
-    super.debugFillProperties(properties);
-    properties.add(IterableProperty<String>('lyDo', lyDo));
   }
 }
