@@ -1,16 +1,35 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
+import '../../configs/constants/color.dart';
 import 'step2.dart';
 
 // Navigator.of(context).pushNamed(PostItems1.routeName);
 //import '../post_items/step1.dart';
 //import '../post_items/step2.dart';
 class PostItems1 extends StatefulWidget {
-  const PostItems1({Key? key}) : super(key: key);
+  const PostItems1({
+    Key? key,
+    required this.menuScreenContext,
+    required this.onScreenHideButtonPressed,
+    required this.hideStatus,
+  }) : super(key: key);
   static const routeName = '/postitem1';
+  final BuildContext menuScreenContext;
+  final Function onScreenHideButtonPressed;
+  final bool hideStatus;
 
   @override
   _PostItems1State createState() => _PostItems1State();
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(DiagnosticsProperty<BuildContext>(
+        'menuScreenContext', menuScreenContext));
+    properties.add(DiagnosticsProperty<Function>(
+        'onScreenHideButtonPressed', onScreenHideButtonPressed));
+    properties.add(DiagnosticsProperty<bool>('hideStatus', hideStatus));
+  }
 }
 
 class _PostItems1State extends State<PostItems1> {
@@ -21,18 +40,23 @@ class _PostItems1State extends State<PostItems1> {
     });
   }
 
+  late FocusScopeNode node;
+
   @override
   Widget build(BuildContext context) {
+    node = FocusScope.of(context);
     return Scaffold(
+      backgroundColor: kScreenBackgroundColor,
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
         // Here we take the value from the PostItems1 object that was created by
         // the App.build method, and use it to set our appbar title.
-        title: const Text('Đăng sản phẩm mới'),
+        title: const Text('Đăng sản phẩm mới',
+            style: TextStyle(color: kTextColor)),
       ),
       body: GestureDetector(
         onTap: () {
-          FocusScope.of(context).requestFocus(FocusNode());
+          node.unfocus();
         },
         child: Container(
           margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
@@ -170,9 +194,9 @@ class _PostItems1State extends State<PostItems1> {
               TextButton(
                 style: ButtonStyle(
                     foregroundColor:
-                        MaterialStateProperty.all<Color>(Colors.white),
+                        MaterialStateProperty.all<Color>(kPrimaryLightColor),
                     backgroundColor:
-                        MaterialStateProperty.all<Color>(Colors.purpleAccent)),
+                        MaterialStateProperty.all<Color>(kPrimaryColor)),
                 onPressed: () {
                   Navigator.of(context).pushNamed(PostItems2.routeName);
                 },
@@ -183,5 +207,11 @@ class _PostItems1State extends State<PostItems1> {
         ),
       ),
     );
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(DiagnosticsProperty<FocusScopeNode>('node', node));
   }
 }
