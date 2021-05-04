@@ -34,7 +34,7 @@ class ProductCard extends StatelessWidget {
       child: Container(
         // color: Colors.blue,
         width: size.width * 0.4,
-        height: size.height * 0.32,
+        height: 260,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [

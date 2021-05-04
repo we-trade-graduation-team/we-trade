@@ -51,10 +51,9 @@ class _MainMenuState extends State<MainMenu> {
     return [
       const HomeScreen(),
       const ChatScreen(),
-      const PostItems1Screen(),
+      const PostItem_1(),
       const WishListScreen(),
       const AccountScreen(),
-
     ];
   }
 
