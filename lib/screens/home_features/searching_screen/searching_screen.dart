@@ -1,16 +1,12 @@
 import 'dart:async';
 
-import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:material_floating_search_bar/material_floating_search_bar.dart';
 
-import '../../configs/constants/color.dart';
-import '../filterOverlay/filter_overlay.dart';
-// import 'package:provider/provider.dart';
-
 import '../../../configs/constants/color.dart';
 import '../../../configs/constants/strings.dart';
+import '../filter_overlay/filter_overlay.dart';
 import 'local_widgets/initial_content.dart';
 import 'local_widgets/search_results_list_view.dart';
 

@@ -5,54 +5,51 @@ class UserOpTionOverlay extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      child: Container(
-        child: Table(
-          defaultColumnWidth: IntrinsicColumnWidth(),
-          border: TableBorder.all(),
-          defaultVerticalAlignment: TableCellVerticalAlignment.middle,
-          // ignore: prefer_const_literals_to_create_immutables
-          children: <TableRow>[
-            TableRow(
+      child: Table(
+        defaultColumnWidth: const IntrinsicColumnWidth(),
+        border: TableBorder.all(),
+        defaultVerticalAlignment: TableCellVerticalAlignment.middle,
+        children: <TableRow>[
+          TableRow(
+            children: <Widget>[
+              ElevatedButton(
+                onPressed: (){},
+                child: Row(
+                  children: const[
+                    Icon(Icons.home_outlined),
+                    Text('Quay lại trang chủ'),
+                  ],
+                ),
+              )
+            ]
+          ),
+          TableRow(
+            children: <Widget>[
+              ElevatedButton(
+                onPressed: (){},
+                child: Row(
+                  children: const[
+                    Icon(Icons.block),
+                    Text('Chặn người dùng'),
+                  ],
+                ),
+              )
+            ]
+          ),
+          TableRow(
               children: <Widget>[
-                RaisedButton(
+                ElevatedButton(
                   onPressed: (){},
                   child: Row(
-                    children: <Widget>[
-                      Icon(Icons.home_outlined),
-                      Text('Quay lại trang chủ'),
+                    children: const[
+                      Icon(Icons.report_gmailerrorred_rounded),
+                      Text('Báo cáo người dùng'),
                     ],
                   ),
                 )
               ]
-            ),
-            TableRow(
-              children: <Widget>[
-                RaisedButton(
-                  onPressed: (){},
-                  child: Row(
-                    children: <Widget>[
-                      const Icon(Icons.block),
-                      const Text('Chặn người dùng'),
-                    ],
-                  ),
-                )
-              ]
-            ),
-            TableRow(
-                children: <Widget>[
-                  RaisedButton(
-                    onPressed: (){},
-                    child: Row(
-                      children: <Widget>[
-                        const Icon(Icons.report_gmailerrorred_rounded),
-                        const Text('Báo cáo người dùng'),
-                      ],
-                    ),
-                  )
-                ]
-            )
-          ],
-        ),
+          )
+        ],
       ),
     );
   }

@@ -4,7 +4,7 @@ class PopHeader extends StatelessWidget {
   const PopHeader({Key? key}):super(key:key);
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
+    //final size = MediaQuery.of(context).size;
     return SafeArea(
       child: Padding(
         padding: const EdgeInsets.all(10),

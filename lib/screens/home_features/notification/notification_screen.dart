@@ -1,9 +1,9 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
+import '../../notification/local_widgets/notification_appbar.dart';
 
 import 'detailed_notification_screen.dart';
-import 'local_widgets/notification_appbar.dart';
 import 'notification.dart';
 
 class NotificationScreen extends StatelessWidget {

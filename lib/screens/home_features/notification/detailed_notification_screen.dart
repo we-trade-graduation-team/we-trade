@@ -1,6 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import '../report/local_widgets/pop_header.dart';
+import '../../report/local_widgets/pop_header.dart';
 import 'notification.dart';
 
 class DetailedNotificationScreen extends StatelessWidget {

@@ -7,7 +7,7 @@ import 'package:group_button/group_button.dart';
 import 'package:provider/provider.dart';
 
 import '../../bloc/report_bloc.dart';
-import '../../models/product_model.dart';
+import '../../models/shared_models/product_model.dart';
 import 'local_widgets/pop_header.dart';
 
 class ReportScreenBody extends StatefulWidget {

@@ -3,13 +3,13 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 
-import '../../models/product_model.dart';
-import '../../widgets/horizontal_scroll_product_listview.dart';
-import '../../widgets/product_card.dart';
-import '../filterOverlay/filter_overlay.dart';
+import '../../../models/shared_models/product_model.dart';
+import '../../../widgets/product_card.dart';
+import '../filter_overlay/filter_overlay.dart';
 import '../home_screen/local_widgets/home_screen_search_bar.dart';
 import '../home_screen/local_widgets/icon_button_with_counter.dart';
 import '../notification/notification_screen.dart';
+import '../shared_widgets/horizontal_scroll_product_listview.dart';
 
 const ProductKind productKind = ProductKind(name: 'Flash Deal');
 
