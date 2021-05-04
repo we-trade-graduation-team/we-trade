@@ -1,9 +1,14 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:line_icons/line_icons.dart';
+import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
+
 import '../../../../configs/constants/color.dart';
+import '../../../shared_features/report/report_screen.dart';
 
 class PopupDialog extends StatelessWidget {
-  const PopupDialog({Key? key}) : super(key: key);
+  const PopupDialog({Key? key, required this.parentContext}) : super(key: key);
+  final BuildContext parentContext;
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -32,7 +37,10 @@ class PopupDialog extends StatelessWidget {
                 Column(
                   children: [
                     InkWell(
-                      onTap: () {},
+                      onTap: () {
+                        Navigator.of(parentContext)
+                            .popUntil(ModalRoute.withName('/'));
+                      },
                       child: Container(
                         margin: const EdgeInsets.fromLTRB(0, 0, 0, 10),
                         padding: const EdgeInsets.fromLTRB(0, 0, 20, 10),
@@ -58,7 +66,15 @@ class PopupDialog extends StatelessWidget {
                       ),
                     ),
                     InkWell(
-                      onTap: () {},
+                      onTap: () {
+                        pushNewScreen<void>(
+                          parentContext,
+                          screen: const ReportScreenBloc(),
+                          withNavBar: true, // OPTIONAL VALUE. True by default.
+                          pageTransitionAnimation:
+                              PageTransitionAnimation.cupertino,
+                        );
+                      },
                       child: Container(
                         margin: const EdgeInsets.fromLTRB(0, 0, 0, 0),
                         padding: const EdgeInsets.fromLTRB(0, 0, 20, 10),
@@ -83,5 +99,12 @@ class PopupDialog extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+        .add(DiagnosticsProperty<BuildContext>('parentContext', parentContext));
   }
 }

@@ -5,6 +5,7 @@ import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 
 import '../../../../configs/constants/color.dart';
 import '../../../../models/chat/temp_class.dart';
+import '../../../shared_features/report/report_screen.dart';
 import '../group_chat/members/all_members_screen.dart';
 
 class GroupChatDialog extends StatelessWidget {
@@ -157,7 +158,15 @@ class GroupChatDialog extends StatelessWidget {
                       ),
                     ),
                     InkWell(
-                      onTap: () {},
+                      onTap: () {
+                        pushNewScreen<void>(
+                          parentContext,
+                          screen: const ReportScreenBloc(),
+                          withNavBar: true, // OPTIONAL VALUE. True by default.
+                          pageTransitionAnimation:
+                              PageTransitionAnimation.cupertino,
+                        );
+                      },
                       child: Container(
                         margin: const EdgeInsets.fromLTRB(0, 0, 0, 0),
                         padding: const EdgeInsets.fromLTRB(0, 0, 20, 10),

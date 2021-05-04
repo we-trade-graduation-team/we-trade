@@ -164,3 +164,24 @@ class _ReportScreenState extends State<ReportScreen> {
     properties.add(IterableProperty<String>('lyDo', lyDo));
   }
 }
+
+class ReportScreenBloc extends StatefulWidget {
+  const ReportScreenBloc({Key? key}) : super(key: key);
+
+  @override
+  _ReportScreenBlocState createState() => _ReportScreenBlocState();
+}
+
+class _ReportScreenBlocState extends State<ReportScreenBloc> {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: MultiProvider(
+        providers: [
+          ChangeNotifierProvider<ReportBloc>(create: (context) => ReportBloc()),
+        ],
+        child: const ReportScreen(),
+      ),
+    );
+  }
+}
