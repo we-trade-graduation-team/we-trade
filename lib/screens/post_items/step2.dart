@@ -3,12 +3,13 @@ import '../../configs/constants/color.dart';
 
 import 'step3.dart';
 
-class PostItems2 extends StatefulWidget {
-  const PostItems2({Key? key}) : super(key: key);
+// ignore: camel_case_types
+class PostItem_2 extends StatefulWidget {
+  const PostItem_2({Key? key}) : super(key: key);
   static const routeName = '/postitem2';
 
   @override
-  _PostItems2State createState() => _PostItems2State();
+  _PostItem_2_State createState() => _PostItem_2_State();
 }
 
 class TypeofGoods {
@@ -19,7 +20,8 @@ class TypeofGoods {
   TypeofGoods({required this.id, required this.name, this.selected = false});
 }
 
-class _PostItems2State extends State<PostItems2> {
+// ignore: camel_case_types
+class _PostItem_2_State extends State<PostItem_2> {
   // ignore: unused_element
   void _reset() {
     setState(() {
@@ -175,7 +177,7 @@ class _PostItems2State extends State<PostItems2> {
                       backgroundColor:
                           MaterialStateProperty.all<Color>(kPrimaryColor)),
                   onPressed: () {
-                    Navigator.of(context).pushNamed(PostItems3.routeName);
+                    Navigator.of(context).pushNamed(PostItem_3.routeName);
                   },
                   child: const Text('Tiếp theo'),
                 ),

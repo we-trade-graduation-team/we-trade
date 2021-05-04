@@ -120,7 +120,7 @@ class _MainMenuState extends State<MainMenu> {
         },
         hideStatus: _hideNavBar,
       ),
-      PostItems1(
+      PostItem_1(
         menuScreenContext: widget.menuScreenContext,
         hideStatus: _hideNavBar,
         onScreenHideButtonPressed: () {
