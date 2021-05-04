@@ -31,7 +31,7 @@ class UserMayAlsoLikeSection extends StatelessWidget {
           width: size.width,
           color: Colors.white,
           padding: EdgeInsets.symmetric(
-            horizontal: size.width * kDetailHorizontalPaddingPercent,
+            // horizontal: size.width * kDetailHorizontalPaddingPercent,
             vertical: size.height * kDetailVerticalPaddingPercent,
           ),
           child: Column(

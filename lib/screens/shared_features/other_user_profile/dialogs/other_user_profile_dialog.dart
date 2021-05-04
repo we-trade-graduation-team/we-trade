@@ -1,7 +1,10 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:line_icons/line_icons.dart';
+import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
+
 import '../../../../configs/constants/color.dart';
+import '../../report/report_screen.dart';
 
 class OtherUserProfileDialog extends StatelessWidget {
   const OtherUserProfileDialog({
@@ -92,7 +95,15 @@ class OtherUserProfileDialog extends StatelessWidget {
                       ),
                     ),
                     InkWell(
-                      onTap: () {},
+                      onTap: () {
+                        pushNewScreen<void>(
+                          parentContext,
+                          screen: const ReportScreen(),
+                          withNavBar: true, // OPTIONAL VALUE. True by default.
+                          pageTransitionAnimation:
+                              PageTransitionAnimation.cupertino,
+                        );
+                      },
                       child: Container(
                         margin: const EdgeInsets.fromLTRB(0, 0, 0, 0),
                         padding: const EdgeInsets.fromLTRB(0, 0, 20, 10),
