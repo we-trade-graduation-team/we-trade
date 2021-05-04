@@ -1,19 +1,20 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-// import 'package:flutter_svg/flutter_svg.dart';
 import 'package:line_icons/line_icons.dart';
 
 class IconButtonWithCounter extends StatelessWidget {
   const IconButtonWithCounter({
     Key? key,
     required this.icon,
-    this.numOfItems = 0,
     required this.press,
+    this.numOfItems = 0,
+    this.iconColor = Colors.white,
   }) : super(key: key);
 
   final String icon;
   final int numOfItems;
   final GestureTapCallback press;
+  final Color? iconColor;
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +34,7 @@ class IconButtonWithCounter extends StatelessWidget {
               ),
               child: Icon(
                 LineIcons.values[icon],
-                color: Colors.white,
+                color: iconColor,
               ),
             ),
           ),
@@ -76,5 +77,6 @@ class IconButtonWithCounter extends StatelessWidget {
     properties.add(StringProperty('icon', icon));
     properties.add(IntProperty('numOfItems', numOfItems));
     properties.add(ObjectFlagProperty<GestureTapCallback>.has('press', press));
+    properties.add(DiagnosticsProperty<Color?>('iconColor', iconColor));
   }
 }
