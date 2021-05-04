@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 
 import '../../../../configs/constants/color.dart';
 import '../../../../configs/constants/keys.dart';
+import '../../notification/notification_screen.dart';
 import 'home_screen_search_bar.dart';
 import 'icon_button_with_counter.dart';
 import 'special_event_carousel_slider.dart';
@@ -32,7 +34,12 @@ class HomeScreenAppBar extends StatelessWidget {
           child: IconButtonWithCounter(
             icon: 'bell',
             numOfItems: 4,
-            press: () {},
+            press: () => pushNewScreenWithRouteSettings<void>(
+              context,
+              screen: NotificationScreen(),
+              settings: const RouteSettings(name: '/notificationScreen'),
+              withNavBar: true,
+            ),
           ),
         ),
       ],
