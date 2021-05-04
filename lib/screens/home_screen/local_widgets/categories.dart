@@ -1,6 +1,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_card_swipper/flutter_card_swiper.dart';
+import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
+import 'package:we_trade/screens/category/category.dart';
 
 import '../../../configs/constants/keys.dart';
 import 'category_card.dart';
@@ -27,7 +29,12 @@ class Categories extends StatelessWidget {
                       (category) => CategoryCard(
                         icon: category['icon']!,
                         text: category['text']!,
-                        press: () {},
+                        press: () => pushNewScreenWithRouteSettings<void>(
+                          context,
+                          screen: const CategoryKind(),
+                          settings: const RouteSettings(name: '/categories'),
+                          withNavBar: true,
+                        ),
                       ),
                     )
                     .toList()),

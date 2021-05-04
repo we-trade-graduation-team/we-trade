@@ -8,7 +8,7 @@ class DetailedNotificationScreen extends StatelessWidget {
   const DetailedNotificationScreen({Key? key}):super(key: key);
   static String routeName='/detailedNotificationScreen';
   // ignore: avoid_field_initializers_in_const_classes
-  final NotificationData note = const NotificationData(title: 'Đơn hàng đang trong quá trình vận chuyển', content: 'Đơn hàng của quí khách đã được tiếp nhận bởi bộ phận vận chuyển');
+  final NotificationData note = const NotificationData(title: 'Đơn hàng đang trong quá trình vận chuyển', content: 'Đơn hàng của quí khách đã được tiếp nhận bởi bộ phận vận chuyển',seen: true);
 
   @override
   Widget build(BuildContext context) {

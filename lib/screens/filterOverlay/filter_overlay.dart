@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 // ignore: import_of_legacy_library_into_null_safe
@@ -41,7 +42,7 @@ class _FilterOverlayState extends State<FilterOverlay> {
   ];
   @override
   Widget build(BuildContext context) {
-    return Card(
+    return Dialog(
       child: Padding(
         padding: const EdgeInsets.all(12.5),
         child: Table(
@@ -119,9 +120,10 @@ class _FilterOverlayState extends State<FilterOverlay> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             // ignore: prefer_const_literals_to_create_immutables
                             children: <Widget>[
-                              const Text(
+                              const AutoSizeText(
                                 'Tỉnh/Thành phố:',
-                                style: TextStyle(fontSize: 20),
+                                style: TextStyle(fontSize: 14),
+                                maxLines: 1,
                               ),
                             ],
                           ),
@@ -163,9 +165,9 @@ class _FilterOverlayState extends State<FilterOverlay> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             // ignore: prefer_const_literals_to_create_immutables
                             children: [
-                              const Text(
+                              const AutoSizeText(
                                 'Quận/Huyện:',
-                                style: TextStyle(fontSize: 20),
+                                style: TextStyle(fontSize: 14),
                               ),
                             ],
                           ),

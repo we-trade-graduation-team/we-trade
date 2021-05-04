@@ -94,9 +94,11 @@ class _SearchingScreenState extends State<SearchingScreen> {
   }
 
   void showFilterOverlay({required BuildContext context}) {
-    BotToast.showAttachedWidget(
-      attachedBuilder: (_) => const FilterOverlay(),
-      targetContext: context,
+    showDialog<FilterOverlay>(
+        context: context,
+        builder: (context){
+          return const FilterOverlay();
+        }
     );
   }
 
