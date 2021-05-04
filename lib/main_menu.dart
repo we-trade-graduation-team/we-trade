@@ -1,3 +1,4 @@
+import 'package:double_back_to_close_app/double_back_to_close_app.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -6,11 +7,7 @@ import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 
 import 'configs/constants/color.dart';
 import 'configs/constants/keys.dart';
-import 'routing/account_features_routes.dart';
-import 'routing/home_features_routes.dart';
-import 'routing/message_features_routes.dart';
-import 'routing/posting_features_routes.dart';
-import 'routing/wish_list_features_routes.dart';
+import 'models/main_menu/bottom_navigation_bar_item_model.dart';
 import 'screens/account_features/account/account_screen.dart';
 import 'screens/home_features/home_screen/home_screen.dart';
 import 'screens/message_features/chat_screen/all_chat/chat_screen.dart';
@@ -18,61 +15,6 @@ import 'screens/posting_features/post_items/step1.dart';
 import 'screens/wish_list_features/wish_list/wish_list_screen.dart';
 
 // late BuildContext testContext;
-
-class BottomNavigationBarItemSource {
-  BottomNavigationBarItemSource({
-    required this.title,
-    required this.iconData,
-    required this.routeAndNavigatorSettings,
-  });
-
-  final String title;
-  final IconData iconData;
-  final RouteAndNavigatorSettings routeAndNavigatorSettings;
-}
-
-List<BottomNavigationBarItemSource> navBarItemSourceList = [
-  BottomNavigationBarItemSource(
-    title: 'Home',
-    iconData: Icons.home,
-    routeAndNavigatorSettings: RouteAndNavigatorSettings(
-      initialRoute: '/',
-      routes: homeFeaturesRoutes,
-    ),
-  ),
-  BottomNavigationBarItemSource(
-    title: 'Message',
-    iconData: Icons.message,
-    routeAndNavigatorSettings: RouteAndNavigatorSettings(
-      initialRoute: '/',
-      routes: messageFeaturesRoutes,
-    ),
-  ),
-  BottomNavigationBarItemSource(
-    title: 'Add',
-    iconData: Icons.add,
-    routeAndNavigatorSettings: RouteAndNavigatorSettings(
-      initialRoute: '/',
-      routes: postingFeaturesRoutes,
-    ),
-  ),
-  BottomNavigationBarItemSource(
-    title: 'Favourite',
-    iconData: Icons.favorite,
-    routeAndNavigatorSettings: RouteAndNavigatorSettings(
-      initialRoute: '/',
-      routes: wishListFeaturesRoutes,
-    ),
-  ),
-  BottomNavigationBarItemSource(
-    title: 'Account',
-    iconData: Icons.person,
-    routeAndNavigatorSettings: RouteAndNavigatorSettings(
-      initialRoute: '/',
-      routes: accountFeaturesRoutes,
-    ),
-  ),
-];
 
 class MainMenu extends StatefulWidget {
   const MainMenu({
@@ -149,26 +91,33 @@ class _MainMenuState extends State<MainMenu> {
         statusBarColor: Colors.transparent,
       ),
     );
-    return PersistentTabView(
-      context,
-      controller: _controller,
-      screens: _buildScreens(),
-      items: _navBarsItems(),
-      resizeToAvoidBottomInset: true,
-      navBarHeight: MediaQuery.of(context).viewInsets.bottom > 0
-          ? 0.0
-          : kBottomNavigationBarHeight,
-      bottomScreenMargin: kDefaultBottomNavigationBarHeight,
-      // selectedTabScreenContext: (context) => testContext = context!,
-      hideNavigationBar: _hideNavBar,
-      itemAnimationProperties: const ItemAnimationProperties(
-        duration: Duration(milliseconds: 400),
-        curve: Curves.ease,
+    return Scaffold(
+      body: DoubleBackToCloseApp(
+        snackBar: const SnackBar(
+          content: Text('Tap back again to leave'),
+        ),
+        child: PersistentTabView(
+          context,
+          controller: _controller,
+          screens: _buildScreens(),
+          items: _navBarsItems(),
+          resizeToAvoidBottomInset: true,
+          navBarHeight: MediaQuery.of(context).viewInsets.bottom > 0
+              ? 0.0
+              : kBottomNavigationBarHeight,
+          bottomScreenMargin: kDefaultBottomNavigationBarHeight,
+          // selectedTabScreenContext: (context) => testContext = context!,
+          hideNavigationBar: _hideNavBar,
+          itemAnimationProperties: const ItemAnimationProperties(
+            duration: Duration(milliseconds: 400),
+            curve: Curves.ease,
+          ),
+          screenTransitionAnimation: const ScreenTransitionAnimation(
+            animateTabTransition: true,
+          ),
+          navBarStyle: NavBarStyle.style13,
+        ),
       ),
-      screenTransitionAnimation: const ScreenTransitionAnimation(
-        animateTabTransition: true,
-      ),
-      navBarStyle: NavBarStyle.style13,
     );
   }
 }
