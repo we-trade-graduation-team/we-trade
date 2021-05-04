@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
-import '../../configs/constants/color.dart';
+import '../../../configs/constants/color.dart';
 
 class PostItems4 extends StatefulWidget {
   const PostItems4({Key? key}) : super(key: key);

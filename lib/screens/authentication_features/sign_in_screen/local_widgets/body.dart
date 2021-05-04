@@ -57,14 +57,18 @@ class _BodyState extends State<Body> {
                   ),
                 ),
                 children: [
-                  Align(
+                  Container(
+                    height: size.height * 0.15,
                     alignment: Alignment.centerLeft,
-                    child: Text(
-                      'Welcome\nBack',
-                      style: TextStyle(
-                        fontSize: 38,
-                        fontWeight: FontWeight.bold,
-                        color: kTextColor.withOpacity(0.9),
+                    child: FittedBox(
+                      fit: BoxFit.fitWidth,
+                      child: Text(
+                        'Welcome\nBack',
+                        style: TextStyle(
+                          fontSize: 38,
+                          fontWeight: FontWeight.bold,
+                          color: kTextColor.withOpacity(0.9),
+                        ),
                       ),
                     ),
                   ),

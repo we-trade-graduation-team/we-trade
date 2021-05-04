@@ -54,13 +54,13 @@ class _MyRateScreenState extends State<MyRateScreen> {
                 SliverPersistentHeader(
                   delegate: MyDelegate(
                     TabBar(
-                      tabs: [
-                        ...tabData.map(
-                          (item) => Tab(
-                            child: Text(item),
-                          ),
-                        ),
-                      ],
+                      tabs: tabData
+                          .map(
+                            (item) => Tab(
+                              child: Text(item),
+                            ),
+                          )
+                          .toList(),
                     ),
                   ),
                   floating: true,

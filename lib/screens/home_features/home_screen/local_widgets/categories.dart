@@ -20,17 +20,18 @@ class Categories extends StatelessWidget {
         itemBuilder: (_, index) {
           return Center(
             child: Wrap(
-                spacing: 5,
-                runSpacing: 15,
-                children: categories
-                    .map(
-                      (category) => CategoryCard(
-                        icon: category['icon']!,
-                        text: category['text']!,
-                        press: () {},
-                      ),
-                    )
-                    .toList()),
+              spacing: 5,
+              runSpacing: 15,
+              children: categories
+                  .map(
+                    (category) => CategoryCard(
+                      icon: category['icon']!,
+                      text: category['text']!,
+                      press: () {},
+                    ),
+                  )
+                  .toList(),
+            ),
           );
         },
         pagination: const SwiperPagination(

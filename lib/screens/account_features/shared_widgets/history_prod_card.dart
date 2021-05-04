@@ -48,7 +48,8 @@ class HistoryProductCard extends StatelessWidget {
         // print('product tapped');
       },
       child: Container(
-        margin: const EdgeInsets.fromLTRB(15, 5, 15, 5),
+        // margin: const EdgeInsets.fromLTRB(15, 5, 15, 5),
+        margin: const EdgeInsets.fromLTRB(15, 5, 0, 5),
         padding: const EdgeInsets.symmetric(vertical: 10),
         decoration: const BoxDecoration(
           //color: Colors.white,

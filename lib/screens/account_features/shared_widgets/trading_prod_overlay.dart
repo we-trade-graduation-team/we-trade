@@ -45,12 +45,12 @@ class OverlayItem extends StatelessWidget {
 
   final IconData iconData;
 
-  final Function handleFunction;
+  final VoidCallback handleFunction;
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => handleFunction,
+      onTap: handleFunction,
       child: Padding(
         padding: const EdgeInsets.fromLTRB(8, 6, 8, 0),
         child: Column(
@@ -90,7 +90,7 @@ class OverlayItem extends StatelessWidget {
     super.debugFillProperties(properties);
     properties.add(StringProperty('text', text));
     properties.add(DiagnosticsProperty<IconData>('iconData', iconData));
-    properties
-        .add(DiagnosticsProperty<Function>('handleFunction', handleFunction));
+    properties.add(
+        DiagnosticsProperty<VoidCallback>('handleFunction', handleFunction));
   }
 }

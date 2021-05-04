@@ -45,14 +45,12 @@ class _ChatCardAddNewState extends State<ChatCardAddNew> {
             widget.user.name,
             style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
           ),
-          value: widget.isSelected,
+          value: isSelected,
           activeColor: kPrimaryColor,
           checkColor: Colors.white,
-          onChanged: (value) {
-            setState(() {
-              isSelected = value!;
-            });
-          },
+          onChanged: (value) => setState(() {
+            isSelected = value!;
+          }),
           secondary: CircleAvatar(
             radius: 24,
             backgroundImage: AssetImage(widget.user.image),

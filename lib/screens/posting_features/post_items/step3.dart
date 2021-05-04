@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import '../../../configs/constants/color.dart';
 
-import '../../configs/constants/color.dart';
 import 'step4.dart';
 
 class PostItems3 extends StatefulWidget {

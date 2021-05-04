@@ -7,9 +7,9 @@ import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 import 'configs/constants/color.dart';
 import 'configs/constants/keys.dart';
 import 'routing/account_features_routes.dart';
-import 'routing/add_new_screen_routes.dart';
 import 'routing/home_features_routes.dart';
 import 'routing/message_features_routes.dart';
+import 'routing/posting_features_routes.dart';
 import 'routing/wish_list_features_routes.dart';
 import 'screens/account_features/account/account_screen.dart';
 import 'screens/home_features/home_screen/home_screen.dart';
@@ -52,9 +52,9 @@ List<BottomNavigationBarItemSource> navBarItemSourceList = [
   BottomNavigationBarItemSource(
     title: 'Add',
     iconData: Icons.add,
-    routeAndNavigatorSettings: const RouteAndNavigatorSettings(
+    routeAndNavigatorSettings: RouteAndNavigatorSettings(
       initialRoute: '/',
-      routes: routes_postitem,
+      routes: postingFeaturesRoutes,
     ),
   ),
   BottomNavigationBarItemSource(

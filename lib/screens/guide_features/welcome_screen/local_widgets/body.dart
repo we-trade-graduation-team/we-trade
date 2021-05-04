@@ -42,7 +42,7 @@ class Body extends StatelessWidget {
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.symmetric(vertical: 50),
+                padding: EdgeInsets.symmetric(vertical: size.height * 0.06),
                 child: Lottie.network(
                   lottieUrl,
                   width: 300,

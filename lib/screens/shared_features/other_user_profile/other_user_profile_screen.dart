@@ -165,13 +165,13 @@ class _OtherUserProfileScreenState extends State<OtherUserProfileScreen> {
                       SliverPersistentHeader(
                         delegate: MyDelegate(
                           TabBar(
-                            tabs: [
-                              ...tabData.map(
-                                (item) => Tab(
-                                  child: Text(item),
-                                ),
-                              ),
-                            ],
+                            tabs: tabData
+                                .map(
+                                  (item) => Tab(
+                                    child: Text(item),
+                                  ),
+                                )
+                                .toList(),
                           ),
                         ),
                         floating: true,

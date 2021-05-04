@@ -99,7 +99,9 @@ class _SearchResultsListViewState extends State<SearchResultsListView> {
                         spacing: 20,
                         runSpacing: 15,
                         children: toShowProducts
-                            .map((product) => ProductCard(product: product))
+                            .map(
+                              (product) => ProductCard(product: product),
+                            )
                             .toList(),
                       ),
                     ),

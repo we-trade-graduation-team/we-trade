@@ -49,18 +49,25 @@ class _BodyState extends State<Body> {
                   ),
                 ),
                 children: [
-                  Align(
+                  Container(
+                    height: size.height * 0.15,
                     alignment: Alignment.centerLeft,
-                    child: Text(
-                      'Sign up and\nstarting trading',
-                      style: TextStyle(
-                        fontSize: 38,
-                        fontWeight: FontWeight.bold,
-                        color: kTextColor.withOpacity(0.9),
+                    // padding:
+                    //     EdgeInsets.symmetric(horizontal: size.width * 0.15),
+                    // alignment: Alignment.centerLeft,
+                    child: FittedBox(
+                      fit: BoxFit.fitWidth,
+                      child: Text(
+                        'Sign up and\nstarting trading',
+                        style: TextStyle(
+                          fontSize: 38,
+                          fontWeight: FontWeight.bold,
+                          color: kTextColor.withOpacity(0.9),
+                        ),
                       ),
                     ),
                   ),
-                  SizedBox(height: size.height * 0.06),
+                  // const Expanded(flex: 2, child: SizedBox()),
                   FormBuilder(
                     key: _formKey,
                     onChanged: () {},
@@ -140,9 +147,9 @@ class _BodyState extends State<Body> {
                           ),
                         ),
                         Padding(
-                          padding: const EdgeInsets.only(
-                            top: 20,
-                            bottom: 60,
+                          padding: EdgeInsets.only(
+                            top: size.height * 0.02,
+                            bottom: size.height * 0.06,
                           ),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,

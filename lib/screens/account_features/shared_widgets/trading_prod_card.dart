@@ -43,7 +43,8 @@ class TradingProductCard extends StatelessWidget {
         // print('product tapped');
       },
       child: Container(
-        margin: const EdgeInsets.fromLTRB(15, 3, 15, 3),
+        // margin: const EdgeInsets.fromLTRB(15, 3, 15, 3),
+        margin: const EdgeInsets.fromLTRB(15, 3, 0, 3),
         padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 10),
         decoration: const BoxDecoration(
           //color: Colors.white,

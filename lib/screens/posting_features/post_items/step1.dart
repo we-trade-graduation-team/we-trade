@@ -2,7 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 
-import '../../configs/constants/color.dart';
+import '../../../configs/constants/color.dart';
 import 'step2.dart';
 
 // Navigator.of(context).pushNamed(PostItems1.routeName);
