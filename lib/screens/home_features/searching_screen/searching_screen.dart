@@ -3,8 +3,9 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:material_floating_search_bar/material_floating_search_bar.dart';
-import '../../../configs/constants/color.dart';
 
+import '../../../configs/constants/color.dart';
+import '../../../configs/constants/strings.dart';
 import 'local_widgets/initial_content.dart';
 import 'local_widgets/search_results_list_view.dart';
 
@@ -140,7 +141,6 @@ class _SearchingScreenState extends State<SearchingScreen> {
         showIfClosed: false,
       ),
     ];
-    const title = 'We Trade';
     final isPortrait =
         MediaQuery.of(context).orientation == Orientation.portrait;
 
@@ -153,7 +153,7 @@ class _SearchingScreenState extends State<SearchingScreen> {
       physics: const BouncingScrollPhysics(),
       axisAlignment: isPortrait ? 0.0 : -1.0,
       openAxisAlignment: 0,
-      title: buildTitle(title),
+      title: buildTitle(kAppTitle),
       actions: actions,
       // progress: model.isLoading,
       onQueryChanged: onQueryChanged,

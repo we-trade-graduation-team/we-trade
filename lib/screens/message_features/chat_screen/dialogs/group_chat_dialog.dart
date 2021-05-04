@@ -60,7 +60,7 @@ class GroupChatDialog extends StatelessWidget {
                         decoration: const BoxDecoration(
                           border: Border(
                             bottom: BorderSide(
-                              color: kTextLightV2Color,
+                              color: kTextColor,
                               width: 0.2,
                             ),
                           ),
@@ -86,7 +86,7 @@ class GroupChatDialog extends StatelessWidget {
                         decoration: const BoxDecoration(
                           border: Border(
                             bottom: BorderSide(
-                              color: kTextLightV2Color,
+                              color: kTextColor,
                               width: 0.2,
                             ),
                           ),
@@ -112,7 +112,7 @@ class GroupChatDialog extends StatelessWidget {
                         decoration: const BoxDecoration(
                           border: Border(
                             bottom: BorderSide(
-                              color: kTextLightV2Color,
+                              color: kTextColor,
                               width: 0.2,
                             ),
                           ),
@@ -138,7 +138,7 @@ class GroupChatDialog extends StatelessWidget {
                         decoration: const BoxDecoration(
                           border: Border(
                             bottom: BorderSide(
-                              color: kTextLightV2Color,
+                              color: kTextColor,
                               width: 0.2,
                             ),
                           ),

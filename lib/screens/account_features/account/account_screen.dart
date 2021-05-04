@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
+import '../../../configs/constants/assets_paths/shared_assets_root.dart';
 
 import '../../../configs/constants/color.dart';
 import '../../wish_list_features/wish_list/wish_list_screen.dart';
@@ -96,7 +97,7 @@ class AccountScreen extends StatelessWidget {
                               width: 55,
                               child: CircleAvatar(
                                 child: Image.asset(
-                                  'assets/images/Chat_screen_ava_temp/user.png',
+                                  '$chatScreenAvaFolder/user.png',
                                   fit: BoxFit.cover,
                                 ),
                               ),

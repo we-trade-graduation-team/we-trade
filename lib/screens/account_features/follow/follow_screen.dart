@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import '../../../configs/constants/assets_paths/shared_assets_root.dart';
 import '../../../configs/constants/color.dart';
-
 
 class FollowScreen extends StatelessWidget {
   const FollowScreen({
@@ -25,7 +25,7 @@ class FollowScreen extends StatelessWidget {
           padding: const EdgeInsets.symmetric(vertical: 5),
           child: ListTile(
             leading: Image.asset(
-              'assets/images/Chat_screen_ava_temp/user.png',
+              '$chatScreenAvaFolder/user.png',
               height: 60,
               fit: BoxFit.cover,
             ),

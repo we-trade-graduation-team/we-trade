@@ -37,7 +37,7 @@ class UserCard extends StatelessWidget {
                       height: 16,
                       width: 16,
                       decoration: BoxDecoration(
-                        color: kUserOnlineDot,
+                        color: Colors.green,
                         shape: BoxShape.circle,
                         border: Border.all(color: Colors.white, width: 3),
                       ),
@@ -65,7 +65,7 @@ class UserCard extends StatelessWidget {
                           style: const TextStyle(
                             fontSize: 12,
                             fontWeight: FontWeight.w200,
-                            color: kTextLightV2Color,
+                            color: kTextColor,
                           ),
                         ),
                       ),

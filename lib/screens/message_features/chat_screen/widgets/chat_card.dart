@@ -1,6 +1,5 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import '../../../../configs/constants/color.dart';
 import '../../../../models/chat/temp_class.dart';
 
 class ChatCard extends StatelessWidget {
@@ -37,7 +36,7 @@ class ChatCard extends StatelessWidget {
                         height: 16,
                         width: 16,
                         decoration: BoxDecoration(
-                          color: kUserOnlineDot,
+                          color: Colors.green,
                           shape: BoxShape.circle,
                           border: Border.all(color: Colors.white, width: 3),
                         ),

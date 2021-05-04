@@ -3,9 +3,8 @@ import 'package:flutter/material.dart';
 import '../../../../configs/constants/color.dart';
 import '../../../../models/chat/temp_class.dart';
 
-// ignore: must_be_immutable
 class ChatCardAddNew extends StatefulWidget {
-  ChatCardAddNew({
+  const ChatCardAddNew({
     Key? key,
     required this.user,
     required this.isSelected,
@@ -13,10 +12,12 @@ class ChatCardAddNew extends StatefulWidget {
   }) : super(key: key);
 
   final User user;
-  bool isSelected;
+  final bool isSelected;
   final VoidCallback press;
+
   @override
   _ChatCardAddNewState createState() => _ChatCardAddNewState();
+
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
@@ -27,6 +28,14 @@ class ChatCardAddNew extends StatefulWidget {
 }
 
 class _ChatCardAddNewState extends State<ChatCardAddNew> {
+  late bool isSelected;
+
+  @override
+  void initState() {
+    isSelected = widget.isSelected;
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -41,7 +50,7 @@ class _ChatCardAddNewState extends State<ChatCardAddNew> {
           checkColor: Colors.white,
           onChanged: (value) {
             setState(() {
-              widget.isSelected = value!;
+              isSelected = value!;
             });
           },
           secondary: CircleAvatar(
@@ -50,5 +59,11 @@ class _ChatCardAddNewState extends State<ChatCardAddNew> {
           ),
           controlAffinity: ListTileControlAffinity.trailing,
         ));
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(DiagnosticsProperty<bool>('isSelected', isSelected));
   }
 }

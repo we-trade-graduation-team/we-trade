@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 
 import '../../../configs/constants/color.dart';
 import '../../../models/product/temp_class.dart';
@@ -23,7 +24,14 @@ class HistoryProductCard extends StatelessWidget {
         text: 'Đánh giá',
         iconData: Icons.star,
         handleFunction: () {
-          Navigator.of(context).pushNamed(RateForTrading.routeName);
+          pushNewScreenWithRouteSettings<void>(
+            context,
+            settings: const RouteSettings(name: RateForTrading.routeName),
+            screen: const RateForTrading(),
+            // withNavBar: true,
+            pageTransitionAnimation: PageTransitionAnimation.cupertino,
+          );
+          // Navigator.of(context).pushNamed(RateForTrading.routeName);
         },
       ),
       OverlayItem(
@@ -46,7 +54,7 @@ class HistoryProductCard extends StatelessWidget {
           //color: Colors.white,
           border: Border(
             bottom: BorderSide(
-              color: kTextLightV2Color,
+              color: kTextColor,
               width: 0.2,
             ),
           ),
@@ -132,7 +140,7 @@ class HistoryProductCard extends StatelessWidget {
                           style: TextStyle(
                             fontSize: 13,
                             fontWeight: FontWeight.w400,
-                            color: kUserOnlineDot,
+                            color: Colors.green,
                           ),
                         ),
                       ],

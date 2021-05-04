@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import '../../../configs/constants/strings.dart';
 
 import 'notification.dart';
 
@@ -20,7 +21,7 @@ class DetailedNotificationScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('We Trade'),
+        title: const Text(kAppTitle),
         centerTitle: true,
         backgroundColor: Colors.lightBlue,
       ),

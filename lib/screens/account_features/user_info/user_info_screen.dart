@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 import '../../../configs/constants/color.dart';
 import 'change_password_screen.dart';
 
@@ -105,8 +106,16 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
             Expanded(
               child: ElevatedButton(
                 onPressed: () {
-                  Navigator.of(context)
-                      .pushNamed(ChangePasswordScreen.routeName);
+                  pushNewScreenWithRouteSettings<void>(
+                    context,
+                    settings: const RouteSettings(
+                        name: ChangePasswordScreen.routeName),
+                    screen: const ChangePasswordScreen(),
+                    // withNavBar: true,
+                    pageTransitionAnimation: PageTransitionAnimation.cupertino,
+                  );
+                  // Navigator.of(context)
+                  //     .pushNamed(ChangePasswordScreen.routeName);
                 },
                 style: ElevatedButton.styleFrom(
                   primary: kPrimaryLightColor,

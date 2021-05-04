@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 
 import '../../../configs/constants/color.dart';
 import '../../../models/review/temp_class.dart';
@@ -25,15 +26,21 @@ class TradingProductCard extends StatelessWidget {
         text: 'Ẩn tin',
         iconData: Icons.visibility_off,
         handleFunction: () {
-          Navigator.of(context).pushNamed(HidePostScreen.routeName);
+          pushNewScreenWithRouteSettings<void>(
+            context,
+            settings: const RouteSettings(name: HidePostScreen.routeName),
+            screen: const HidePostScreen(),
+            // withNavBar: true,
+            pageTransitionAnimation: PageTransitionAnimation.cupertino,
+          );
+          // Navigator.of(context).pushNamed(HidePostScreen.routeName);
         },
       ),
     ];
 
     return GestureDetector(
       onTap: () {
-        // ignore: avoid_print
-        print('product tapped');
+        // print('product tapped');
       },
       child: Container(
         margin: const EdgeInsets.fromLTRB(15, 3, 15, 3),
@@ -42,7 +49,7 @@ class TradingProductCard extends StatelessWidget {
           //color: Colors.white,
           border: Border(
             bottom: BorderSide(
-              color: kTextLightV2Color,
+              color: kTextColor,
               width: 0.2,
             ),
           ),
@@ -81,8 +88,7 @@ class TradingProductCard extends StatelessWidget {
                     ),
                     const SizedBox(height: 10),
                     const Text(
-                      // ignore: use_raw_strings
-                      '\$200-\$300',
+                      r'$200-$300',
                       style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.w400,

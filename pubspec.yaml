@@ -54,7 +54,7 @@ dev_dependencies:
 flutter_icons:
   android: 'launcher_icon'
   ios: true
-  image_path: 'assets/images/logo/logo.png'
+  image_path: 'assets/images/logos/logo.png'
 
 flutter:
   uses-material-design: true
@@ -64,7 +64,7 @@ flutter:
     - assets/icons/
     - assets/icons/auth/
     - assets/images/
-    - assets/images/logo/
+    - assets/images/logos/
     - assets/images/chat_screen_ava/
     - assets/images/products_images_temp/
     - assets/images/on_boarding_screen/

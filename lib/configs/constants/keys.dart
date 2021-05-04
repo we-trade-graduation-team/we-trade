@@ -1,15 +1,5 @@
-import 'package:flutter/material.dart';
-
 const highRatingLevel = 80;
 const mediumRatingLevel = 50;
-
-final bottomNavigationBarItems = <String, IconData>{
-  'Home': Icons.home,
-  'Chat': Icons.chat,
-  'New item': Icons.add_circle_rounded,
-  'Favourite': Icons.favorite,
-  'Account': Icons.person,
-};
 
 final categories = <Map<String, String>>[
   {'icon': 'lightningBolt', 'text': 'Flash Deal'},

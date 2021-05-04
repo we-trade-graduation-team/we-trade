@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import '../../../configs/constants/strings.dart';
 
 import '../filter_overlay/filter_overlay.dart';
 
@@ -27,7 +28,7 @@ class Category extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('We Trade'),
+        title: const Text(kAppTitle),
         centerTitle: true,
         backgroundColor: Colors.lightBlue,
       ),

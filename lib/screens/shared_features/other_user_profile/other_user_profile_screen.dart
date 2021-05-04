@@ -229,7 +229,7 @@ class _OtherUserProfileScreenState extends State<OtherUserProfileScreen> {
                         style: const TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.bold,
-                          color: kTextLightV2Color,
+                          color: kTextColor,
                         ),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis),
@@ -238,7 +238,7 @@ class _OtherUserProfileScreenState extends State<OtherUserProfileScreen> {
                       child: Text(userDetail.userDescription,
                           style: const TextStyle(
                             fontSize: 14,
-                            color: kTextLightV2Color,
+                            color: kTextColor,
                             fontWeight: FontWeight.w300,
                           ),
                           maxLines: 2,
@@ -392,11 +392,11 @@ class MyDelegate extends SliverPersistentHeaderDelegate {
         color: Colors.white,
         border: Border(
           top: BorderSide(
-            color: kTextLightV2Color,
+            color: kTextColor,
             width: 0.2,
           ),
           bottom: BorderSide(
-            color: kTextLightV2Color,
+            color: kTextColor,
             width: 0.2,
           ),
         ),

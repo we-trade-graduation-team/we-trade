@@ -34,7 +34,7 @@ class Body extends StatelessWidget {
             ),
             children: [
               Text(
-                'Welcome to $kAppTitle app'.toUpperCase(),
+                'Welcome to $kAppTitle'.toUpperCase(),
                 style: const TextStyle(
                   color: kTextLightColor,
                   fontSize: 18,

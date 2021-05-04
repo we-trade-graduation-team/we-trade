@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 
 import 'step2.dart';
 
@@ -175,7 +176,14 @@ class _PostItems1State extends State<PostItems1> {
                     backgroundColor:
                         MaterialStateProperty.all<Color>(Colors.purpleAccent)),
                 onPressed: () {
-                  Navigator.of(context).pushNamed(PostItems2.routeName);
+                  pushNewScreenWithRouteSettings<void>(
+                    context,
+                    settings: const RouteSettings(name: PostItems2.routeName),
+                    screen: const PostItems2(),
+                    // withNavBar: true,
+                    pageTransitionAnimation: PageTransitionAnimation.cupertino,
+                  );
+                  // Navigator.of(context).pushNamed(PostItems2.routeName);
                 },
                 child: const Text('Tiếp theo'),
               ),

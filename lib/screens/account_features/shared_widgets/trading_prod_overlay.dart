@@ -50,10 +50,7 @@ class OverlayItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      // ignore: unnecessary_lambdas
-      onTap: () {
-        handleFunction();
-      },
+      onTap: () => handleFunction,
       child: Padding(
         padding: const EdgeInsets.fromLTRB(8, 6, 8, 0),
         child: Column(

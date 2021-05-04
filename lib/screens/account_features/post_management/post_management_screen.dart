@@ -4,7 +4,6 @@ import '../../../configs/constants/color.dart';
 import '../../../models/chat/temp_class.dart';
 import 'tabs/trading_products_tab.dart';
 
-
 class PostManagementScreen extends StatefulWidget {
   PostManagementScreen({
     Key? key,
@@ -92,11 +91,11 @@ class MyDelegate extends SliverPersistentHeaderDelegate {
         color: Colors.white,
         border: Border(
           top: BorderSide(
-            color: kTextLightV2Color,
+            color: kTextColor,
             width: 0.2,
           ),
           bottom: BorderSide(
-            color: kTextLightV2Color,
+            color: kTextColor,
             width: 0.2,
           ),
         ),

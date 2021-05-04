@@ -21,7 +21,7 @@ class ReviewCard extends StatelessWidget {
         //color: Colors.white,
         border: Border(
           bottom: BorderSide(
-            color: kTextLightV2Color,
+            color: kTextColor,
             width: 0.2,
           ),
         ),

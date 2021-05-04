@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import '../../../configs/constants/assets_paths/shared_assets_root.dart';
 import '../../../configs/constants/color.dart';
 import '../../../models/product/temp_class.dart';
 import '../shared_widgets/rating_bar.dart';
-
 
 class RateForTrading extends StatefulWidget {
   const RateForTrading({
@@ -16,7 +16,7 @@ class RateForTrading extends StatefulWidget {
 }
 
 class _RateForTradingState extends State<RateForTrading> {
-  late int _rating;
+  // late int _rating;
 
   List<Widget> _buildProductsList(List<Product> products) {
     final widget = <Widget>[];
@@ -100,7 +100,7 @@ class _RateForTradingState extends State<RateForTrading> {
                     //color: Colors.white,
                     border: Border(
                       bottom: BorderSide(
-                        color: kTextLightV2Color,
+                        color: kTextColor,
                         width: 0.2,
                       ),
                     ),
@@ -127,7 +127,7 @@ class _RateForTradingState extends State<RateForTrading> {
                             height: 80,
                             width: 80,
                             child: Image.asset(
-                              'assets/images/Chat_screen_ava_temp/user.png',
+                              '$chatScreenAvaFolder/user.png',
                               fit: BoxFit.cover,
                             ),
                           ),
@@ -152,7 +152,7 @@ class _RateForTradingState extends State<RateForTrading> {
                     //color: Colors.white,
                     border: Border(
                       bottom: BorderSide(
-                        color: kTextLightV2Color,
+                        color: kTextColor,
                         width: 0.2,
                       ),
                     ),
@@ -186,7 +186,7 @@ class _RateForTradingState extends State<RateForTrading> {
                   decoration: const BoxDecoration(
                     border: Border(
                       bottom: BorderSide(
-                        color: kTextLightV2Color,
+                        color: kTextColor,
                         width: 0.2,
                       ),
                     ),
@@ -205,13 +205,13 @@ class _RateForTradingState extends State<RateForTrading> {
                       ),
                       // const SizedBox(width: 10),
                       RatingBar(
-                        onRatingSelected: (rating) {
-                          setState(() {
-                            _rating = rating;
-                          });
-                          // ignore: avoid_print
-                          print('rating $_rating');
-                        },
+                        onRatingSelected: (rating) {},
+                        // onRatingSelected: (rating) {
+                        //   setState(() {
+                        //     _rating = rating;
+                        //   });
+                        //   // print('rating $_rating');
+                        // },
                       ),
                     ],
                   ),
@@ -221,7 +221,7 @@ class _RateForTradingState extends State<RateForTrading> {
                   decoration: const BoxDecoration(
                     border: Border(
                       bottom: BorderSide(
-                        color: kTextLightV2Color,
+                        color: kTextColor,
                         width: 0.2,
                       ),
                     ),

@@ -10,19 +10,16 @@ class RateTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-      // child: Text('hello'),
-      child: ListView.builder(
-        itemCount: userDetail.reviews!.length,
-        itemBuilder: (context, index) => ReviewCard(
-          review: userDetail.reviews![index],
-          //press: () {},
-          // press: () => Navigator.push(
-          //   context,
-          //   MaterialPageRoute(
-          //     builder: (context) => MessagesScreen(),
-          //   ),
-        ),
+    return ListView.builder(
+      itemCount: userDetail.reviews!.length,
+      itemBuilder: (context, index) => ReviewCard(
+        review: userDetail.reviews![index],
+        //press: () {},
+        // press: () => Navigator.push(
+        //   context,
+        //   MaterialPageRoute(
+        //     builder: (context) => MessagesScreen(),
+        //   ),
       ),
     );
   }

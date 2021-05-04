@@ -1,9 +1,11 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import '../../../configs/constants/assets_paths/shared_assets_root.dart';
 import '../../../configs/constants/color.dart';
 import '../../../models/chat/temp_class.dart';
 import 'tabs/rate_tab.dart';
+
 class MyRateScreen extends StatefulWidget {
   MyRateScreen({
     Key? key,
@@ -99,11 +101,11 @@ class MyDelegate extends SliverPersistentHeaderDelegate {
         color: Colors.white,
         border: Border(
           top: BorderSide(
-            color: kTextLightV2Color,
+            color: kTextColor,
             width: 0.2,
           ),
           bottom: BorderSide(
-            color: kTextLightV2Color,
+            color: kTextColor,
             width: 0.2,
           ),
         ),
@@ -151,7 +153,7 @@ class MainInfo extends StatelessWidget {
                       width: 100,
                       child: CircleAvatar(
                         child: Image.asset(
-                          'assets/images/Chat_screen_ava_temp/user.png',
+                          '$chatScreenAvaFolder/user.png',
                           height: 200,
                           fit: BoxFit.cover,
                         ),

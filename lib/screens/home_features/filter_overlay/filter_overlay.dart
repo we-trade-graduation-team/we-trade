@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:group_button/group_button.dart';
+import '../../../configs/constants/color.dart';
 
 class FilterOverlay extends StatefulWidget {
   const FilterOverlay({
@@ -63,7 +64,7 @@ class _FilterOverlayState extends State<FilterOverlay> {
                       DropdownButton<ProductKind>(
                         focusColor: Colors.grey,
                         isExpanded: true,
-                        iconEnabledColor: const Color(0xFF6F35A5),
+                        iconEnabledColor: kPrimaryColor,
                         hint: const Text('Tất cả'),
                         value: chosenKind,
                         items: productKinds.map((kind) {
@@ -80,7 +81,7 @@ class _FilterOverlayState extends State<FilterOverlay> {
                       ),
                     ],
                   ),
-                  const TableRow(children:[
+                  const TableRow(children: [
                     SizedBox(
                       height: 10,
                     ),
@@ -105,7 +106,7 @@ class _FilterOverlayState extends State<FilterOverlay> {
                   ]),
                   TableRow(children: [
                     Row(
-                      children:[
+                      children: [
                         const SizedBox(
                           width: 20,
                         ),
@@ -122,7 +123,7 @@ class _FilterOverlayState extends State<FilterOverlay> {
                     ),
                     DropdownButton<Province>(
                       isExpanded: true,
-                      iconEnabledColor: const Color(0xFF6F35A5),
+                      iconEnabledColor: kPrimaryColor,
                       hint: const Text('Tất cả'),
                       value: chosenProvince,
                       items: provinces.map((province) {
@@ -146,7 +147,7 @@ class _FilterOverlayState extends State<FilterOverlay> {
                       height: 10,
                     )
                   ]),
-                  TableRow(children:[
+                  TableRow(children: [
                     Row(
                       children: [
                         const SizedBox(
@@ -165,7 +166,7 @@ class _FilterOverlayState extends State<FilterOverlay> {
                     ),
                     DropdownButton<District>(
                       isExpanded: true,
-                      iconEnabledColor: const Color(0xFF6F35A5),
+                      iconEnabledColor: kPrimaryColor,
                       hint: const Text('Tất cả'),
                       value: chosenDistrict,
                       items: districts.map((district) {
@@ -186,7 +187,7 @@ class _FilterOverlayState extends State<FilterOverlay> {
               height: 10,
             ),
             GroupButton(
-                selectedColor: const Color(0xFF6F35A5),
+                selectedColor: kPrimaryColor,
                 buttons: costs,
                 spacing: 10,
                 onSelected: (index, isSelected) {})

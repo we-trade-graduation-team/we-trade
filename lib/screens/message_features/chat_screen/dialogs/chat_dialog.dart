@@ -41,8 +41,7 @@ class ChatDialog extends StatelessWidget {
                   children: [
                     InkWell(
                       onTap: () {
-                        // ignore: todo
-                        //TODO  kiếm userdetail dựa theo user được truyền vào
+                        //TODO:  kiếm userdetail dựa theo user được truyền vào
                         final userDetail = userDetailTemp;
                         pushNewScreenWithRouteSettings<void>(
                           parentContext,
@@ -64,7 +63,7 @@ class ChatDialog extends StatelessWidget {
                         decoration: const BoxDecoration(
                           border: Border(
                             bottom: BorderSide(
-                              color: kTextLightV2Color,
+                              color: kTextColor,
                               width: 0.2,
                             ),
                           ),
@@ -90,7 +89,7 @@ class ChatDialog extends StatelessWidget {
                         decoration: const BoxDecoration(
                           border: Border(
                             bottom: BorderSide(
-                              color: kTextLightV2Color,
+                              color: kTextColor,
                               width: 0.2,
                             ),
                           ),
@@ -116,7 +115,7 @@ class ChatDialog extends StatelessWidget {
                         decoration: const BoxDecoration(
                           border: Border(
                             bottom: BorderSide(
-                              color: kTextLightV2Color,
+                              color: kTextColor,
                               width: 0.2,
                             ),
                           ),
