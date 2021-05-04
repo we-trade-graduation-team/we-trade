@@ -16,26 +16,12 @@ import 'step2.dart';
 class PostItem_1 extends StatefulWidget {
   const PostItem_1({
     Key? key,
-    required this.menuScreenContext,
-    required this.onScreenHideButtonPressed,
-    required this.hideStatus,
   }) : super(key: key);
-  static const routeName = '/postitem1';
-  final BuildContext menuScreenContext;
-  final Function onScreenHideButtonPressed;
-  final bool hideStatus;
+
+  static const routeName = '/post_item1';
 
   @override
   _PostItem_1State createState() => _PostItem_1State();
-  @override
-  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
-    super.debugFillProperties(properties);
-    properties.add(DiagnosticsProperty<BuildContext>(
-        'menuScreenContext', menuScreenContext));
-    properties.add(DiagnosticsProperty<Function>(
-        'onScreenHideButtonPressed', onScreenHideButtonPressed));
-    properties.add(DiagnosticsProperty<bool>('hideStatus', hideStatus));
-  }
 }
 
 // ignore: camel_case_types

@@ -10,27 +10,12 @@ import 'body.dart';
 class ChatScreen extends StatefulWidget {
   const ChatScreen({
     Key? key,
-    required this.menuScreenContext,
-    required this.onScreenHideButtonPressed,
-    required this.hideStatus,
   }) : super(key: key);
 
   static String routeName = '/chat';
-  final BuildContext menuScreenContext;
-  final Function onScreenHideButtonPressed;
-  final bool hideStatus;
 
   @override
   _ChatScreenState createState() => _ChatScreenState();
-  @override
-  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
-    super.debugFillProperties(properties);
-    properties.add(DiagnosticsProperty<BuildContext>(
-        'menuScreenContext', menuScreenContext));
-    properties.add(DiagnosticsProperty<Function>(
-        'onScreenHideButtonPressed', onScreenHideButtonPressed));
-    properties.add(DiagnosticsProperty<bool>('hideStatus', hideStatus));
-  }
 }
 
 class _ChatScreenState extends State<ChatScreen> {

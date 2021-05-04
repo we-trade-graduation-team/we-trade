@@ -18,6 +18,8 @@ class RecommendedProducts extends StatelessWidget {
       press: () {},
       child: Center(
         child: Wrap(
+          // spacing: size.width * 0.053,
+          // runSpacing: size.height * 0.018,
           spacing: 20,
           runSpacing: 15,
           children: recommendedProducts

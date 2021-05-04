@@ -41,9 +41,10 @@ class UserMayAlsoLikeSection extends StatelessWidget {
                 child: Wrap(
                   spacing: 20,
                   runSpacing: 15,
-                  // alignment: WrapAlignment.center,
                   children: demoSimilarProducts
-                      .map((product) => ProductCard(product: product))
+                      .map(
+                        (product) => ProductCard(product: product),
+                      )
                       .toList(),
                 ),
               ),

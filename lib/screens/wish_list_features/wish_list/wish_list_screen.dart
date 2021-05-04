@@ -1,10 +1,14 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import '../../../models/shared_models/product_model.dart';
 import '../../../widgets/product_card.dart';
 
 class WishListScreen extends StatelessWidget {
-  const WishListScreen({Key? key}) : super(key: key);
-  static const routeName = '/wishlish';
+  const WishListScreen({
+    Key? key,
+  }) : super(key: key);
+
+  static const routeName = '/wish_list';
 
   List<Widget> buildProductsList(String title, List<Product> products) {
     return [
@@ -18,17 +22,19 @@ class WishListScreen extends StatelessWidget {
           ),
         ),
       ),
-      Wrap(
-        alignment: WrapAlignment.spaceAround,
-        spacing: 20,
-        runSpacing: 20,
-        children: [
-          ...products
-              .map(
-                (product) => ProductCard(product: product),
-              )
-              .toList(),
-        ],
+      Center(
+        child: Wrap(
+          // alignment: WrapAlignment.spaceAround,
+          spacing: 20,
+          runSpacing: 15,
+          children: [
+            ...products
+                .map(
+                  (product) => ProductCard(product: product),
+                )
+                .toList(),
+          ],
+        ),
       ),
       const SizedBox(height: 20),
     ];
@@ -40,10 +46,12 @@ class WishListScreen extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Lượt thích'),
       ),
-      body: ListView(children: [
-        ...buildProductsList('Các sản phẩm đã thích', demoProducts),
-        ...buildProductsList('Các sản phẩm bạn có thể thích', demoProducts),
-      ]),
+      body: ListView(
+        children: [
+          ...buildProductsList('Các sản phẩm đã thích', demoProducts),
+          ...buildProductsList('Các sản phẩm bạn có thể thích', demoProducts),
+        ],
+      ),
     );
   }
 }

@@ -9,12 +9,12 @@ import '../screens/home_features/detail_screen/detail_screen.dart';
 class ProductCard extends StatelessWidget {
   const ProductCard({
     Key? key,
-    this.width = 160,
-    this.height = 260,
+    // this.width = 160,
+    // this.height = 260,
     required this.product,
   }) : super(key: key);
 
-  final double width, height;
+  // final double width, height;
   final Product product;
 
   @override
@@ -31,27 +31,22 @@ class ProductCard extends StatelessWidget {
         withNavBar: false,
         pageTransitionAnimation: PageTransitionAnimation.cupertino,
       ),
-      child: SizedBox(
-        width: width,
-        height: height,
+      child: Container(
+        // color: Colors.blue,
+        width: size.width * 0.4,
+        height: size.height * 0.32,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Expanded(
-              flex: 16,
-              child: AspectRatio(
-                aspectRatio: 1,
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(8),
-                  child: Container(
-                    height: size.height * 0.2,
-                    child: Image.network(
-                      product.images[0],
-                      fit: BoxFit.cover,
-                      height: double.infinity,
-                      width: double.infinity,
-                    ),
-                  ),
+            AspectRatio(
+              aspectRatio: 1,
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(8),
+                child: Image.network(
+                  product.images[0],
+                  fit: BoxFit.cover,
+                  height: double.infinity,
+                  width: double.infinity,
                 ),
               ),
             ),
@@ -70,7 +65,6 @@ class ProductCard extends StatelessWidget {
                         product.title,
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
-                        // softWrap: false,
                       ),
                     ),
                     Expanded(
@@ -87,7 +81,6 @@ class ProductCard extends StatelessWidget {
                     ),
                     Expanded(
                       child: Row(
-                        // mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Expanded(
                             flex: 90,
@@ -119,7 +112,6 @@ class ProductCard extends StatelessWidget {
                                   maxLines: 1,
                                   style: const TextStyle(
                                     color: kPrimaryColor,
-                                    // fontSize: 8,
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
@@ -152,7 +144,7 @@ class ProductCard extends StatelessWidget {
     super.debugFillProperties(properties);
     // properties.add(DoubleProperty('width', width));
     properties.add(DiagnosticsProperty<Product>('product', product));
-    properties.add(DoubleProperty('height', height));
-    properties.add(DoubleProperty('width', width));
+    // properties.add(DoubleProperty('height', height));
+    // properties.add(DoubleProperty('width', width));
   }
 }

@@ -14,25 +14,9 @@ import '../user_info/user_info_screen.dart';
 class AccountScreen extends StatelessWidget {
   const AccountScreen({
     Key? key,
-    required this.menuScreenContext,
-    required this.onScreenHideButtonPressed,
-    required this.hideStatus,
   }) : super(key: key);
 
   static const routeName = '/account';
-  final BuildContext menuScreenContext;
-  final Function onScreenHideButtonPressed;
-  final bool hideStatus;
-
-  @override
-  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
-    super.debugFillProperties(properties);
-    properties.add(DiagnosticsProperty<BuildContext>(
-        'menuScreenContext', menuScreenContext));
-    properties.add(DiagnosticsProperty<Function>(
-        'onScreenHideButtonPressed', onScreenHideButtonPressed));
-    properties.add(DiagnosticsProperty<bool>('hideStatus', hideStatus));
-  }
 
   Widget profileNavigationLabel(
       Widget topWid, Widget botWid, Function navigateToScreen) {
