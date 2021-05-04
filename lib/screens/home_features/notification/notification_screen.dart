@@ -1,35 +1,34 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import '../../../configs/constants/strings.dart';
+import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
+
+import 'detailed_notification_screen.dart';
+import 'local_widgets/notification_appbar.dart';
 import 'notification.dart';
 
 class NotificationScreen extends StatelessWidget {
-  const NotificationScreen(
-      {Key? key,
-      this.notes = const [
-        NotificationData(
-            title: 'Đơn hàng đang trong quá trình vận chuyển',
-            content:
-                'Đơn hàng của quí khách đã được tiếp nhận bởi bộ phận vận chuyển'),
-        NotificationData(
-            title: 'Đơn hàng đang trong quá trình vận chuyển',
-            content:
-                'Đơn hàng của quí khách đã được tiếp nhận bởi bộ phận vận chuyển')
-      ]})
-      : super(key: key);
+  NotificationScreen({Key? key}) : super(key: key);
+  static String routeName = '/notificationScreen';
 
-  static String routeName = '/notification';
-
-  final List<NotificationData> notes;
+  final List<NotificationData> notes = [
+    const NotificationData(
+        title: 'Đơn hàng đang trong quá trình vận chuyển',
+        content:
+            'Đơn hàng của quí khách đã được tiếp nhận bởi bộ phận vận chuyển',
+        seen: false),
+    const NotificationData(
+        title: 'Đơn hàng đang trong quá trình vận chuyển',
+        content:
+            'Đơn hàng của quí khách đã được tiếp nhận bởi bộ phận vận chuyển',
+        seen: true)
+  ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text(kAppTitle),
-        centerTitle: true,
-        backgroundColor: Colors.lightBlue,
-      ),
+      appBar: PreferredSize(
+          preferredSize: Size.fromHeight(AppBar().preferredSize.height + 20),
+          child: const NotificationAppBar()),
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(10),
@@ -42,18 +41,16 @@ class NotificationScreen extends StatelessWidget {
               ),
               Column(
                 children: notes
-                    .map(
-                      (note) => NotificationCard(note: note),
-                    )
+                    .map((note) => NotificationCard(
+                          note: note,
+                        ))
                     .toList(),
               )
             ],
           ),
         ),
       ),
-      // bottomNavigationBar: const BuildBottomNavigationBar(
-      //   selectedIndex: 0,
-      // ),
+      //bottomNavigationBar: const CustomBottomNavigationBar(),
     );
   }
 
@@ -65,20 +62,33 @@ class NotificationScreen extends StatelessWidget {
 }
 
 class NotificationCard extends StatelessWidget {
-  const NotificationCard({Key? key, required this.note}) : super(key: key);
-
+  const NotificationCard({
+    Key? key,
+    required this.note,
+  }) : super(key: key);
   final NotificationData note;
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
     return Card(
-      margin: EdgeInsets.fromLTRB(size.width * 0.02, size.height * 0.01,
-          size.width * 0.02, size.height * 0.01),
+      color: note.seen ? Colors.grey[400] : Colors.grey[200],
+      margin: const EdgeInsets.fromLTRB(20, 10, 20, 10),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12),
+      ),
       child: Padding(
-        padding: EdgeInsets.all(size.width * 0.05),
-        child: Text(
-          note.title,
-          style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+        padding: const EdgeInsets.all(8),
+        child: TextButton(
+          onPressed: () => pushNewScreenWithRouteSettings<void>(
+            context,
+            screen: const DetailedNotificationScreen(),
+            settings: const RouteSettings(name: '/detailedNotificationScreen'),
+            withNavBar: true,
+          ),
+          child: Text(
+            note.title,
+            style: const TextStyle(
+                fontSize: 20, fontWeight: FontWeight.bold, color: Colors.black87),
+          ),
         ),
       ),
     );
