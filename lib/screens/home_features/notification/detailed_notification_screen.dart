@@ -1,55 +1,45 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import '../../../configs/constants/strings.dart';
-
+import '../../shared_features/report/local_widgets/pop_header.dart';
 import 'notification.dart';
 
 class DetailedNotificationScreen extends StatelessWidget {
-  const DetailedNotificationScreen(
-      {Key? key,
-      this.note = const NotificationData(
-          title: 'Đơn hàng đang trong quá trình vận chuyển',
-          content:
-              'Đơn hàng của quí khách đã được tiếp nhận bởi bộ phận vận chuyển')})
-      : super(key: key);
-
-  static String routeName = '/detailed_notification';
-
-  final NotificationData note;
+  const DetailedNotificationScreen({Key? key}) : super(key: key);
+  static String routeName = '/detailedNotificationScreen';
+  // ignore: avoid_field_initializers_in_const_classes
+  final NotificationData note = const NotificationData(
+      title: 'Đơn hàng đang trong quá trình vận chuyển',
+      content:
+          'Đơn hàng của quí khách đã được tiếp nhận bởi bộ phận vận chuyển',
+      seen: true);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text(kAppTitle),
-        centerTitle: true,
-        backgroundColor: Colors.lightBlue,
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(AppBar().preferredSize.height + 20),
+        child: const PopHeader(),
       ),
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(8),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                note.title,
-                style:
-                    const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+      body: Padding(
+        padding: const EdgeInsets.all(8),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Text(
+              note.title,
+              style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8),
+              child: Text(
+                note.content,
+                style: const TextStyle(fontSize: 18),
               ),
-              Padding(
-                padding: const EdgeInsets.all(8),
-                child: Text(
-                  note.content,
-                  style: const TextStyle(fontSize: 18),
-                ),
-              )
-            ],
-          ),
+            )
+          ],
         ),
       ),
-      // bottomNavigationBar: const BuildBottomNavigationBar(
-      //   selectedIndex: 0,
-      // ),
+      //bottomNavigationBar: const CustomBottomNavigationBar(),
     );
   }
 

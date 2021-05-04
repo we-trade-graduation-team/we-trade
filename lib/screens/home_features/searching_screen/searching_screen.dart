@@ -6,6 +6,7 @@ import 'package:material_floating_search_bar/material_floating_search_bar.dart';
 
 import '../../../configs/constants/color.dart';
 import '../../../configs/constants/strings.dart';
+import '../filter_overlay/filter_overlay.dart';
 import 'local_widgets/initial_content.dart';
 import 'local_widgets/search_results_list_view.dart';
 
@@ -90,6 +91,15 @@ class _SearchingScreenState extends State<SearchingScreen> {
     });
   }
 
+  void showFilterOverlay({required BuildContext context}) {
+    showDialog<FilterOverlay>(
+        context: context,
+        builder: (context){
+          return const FilterOverlay();
+        }
+    );
+  }
+
   @override
   void initState() {
     super.initState();
@@ -130,13 +140,15 @@ class _SearchingScreenState extends State<SearchingScreen> {
       //     onPressed: () {},
       //   ),
       // ),
-      FloatingSearchBarAction.icon(
-        icon: const Icon(
-          Icons.filter_alt_outlined,
-          color: kPrimaryColor,
-        ),
-        onTap: () {},
-      ),
+      Builder(builder: (context) {
+        return FloatingSearchBarAction.icon(
+          icon: const Icon(
+            Icons.filter_alt_outlined,
+            color: kPrimaryColor,
+          ),
+          onTap: () => showFilterOverlay(context: context),
+        );
+      }),
       FloatingSearchBarAction.searchToClear(
         showIfClosed: false,
       ),
