@@ -2,7 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import '../../../configs/constants/color.dart';
-import '../../detail_screen/detail.dart';
+//import '../../home_features/detail_screen/detail_screen.dart';
 
 // ignore: camel_case_types
 class PostItem_4 extends StatefulWidget {
@@ -143,7 +143,7 @@ class _PostItem_4_State extends State<PostItem_4> {
                     backgroundColor:
                         MaterialStateProperty.all<Color>(kPrimaryColor)),
                 onPressed: () {
-                  Navigator.of(context).pushNamed(DetailScreen.routeName);
+                  //Navigator.of(context).pushNamed(DetailScreen.routeName);
                 },
                 child: const Text('Hoàn thành'),
               ),
