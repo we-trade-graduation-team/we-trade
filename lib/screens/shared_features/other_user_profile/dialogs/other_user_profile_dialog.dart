@@ -4,8 +4,10 @@ import 'package:line_icons/line_icons.dart';
 import '../../../../configs/constants/color.dart';
 
 class OtherUserProfileDialog extends StatelessWidget {
-  const OtherUserProfileDialog({Key? key, required this.parentContext})
-      : super(key: key);
+  const OtherUserProfileDialog({
+    Key? key,
+    required this.parentContext,
+  }) : super(key: key);
   final BuildContext parentContext;
   @override
   Widget build(BuildContext context) {
