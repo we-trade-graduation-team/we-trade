@@ -1,16 +1,20 @@
-import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
-import '../../../configs/constants/color.dart';
+import 'package:flutter/material.dart';
 
-class PostItems4 extends StatefulWidget {
-  const PostItems4({Key? key}) : super(key: key);
-  static const routeName = '/postitem4';
+import '../../../configs/constants/color.dart';
+//import '../../home_features/detail_screen/detail_screen.dart';
+
+// ignore: camel_case_types
+class PostItem_4 extends StatefulWidget {
+  const PostItem_4({Key? key}) : super(key: key);
+  static const routeName = '/PostItem_4';
 
   @override
-  _PostItems4State createState() => _PostItems4State();
+  _PostItem_4_State createState() => _PostItem_4_State();
 }
 
-class _PostItems4State extends State<PostItems4> {
+// ignore: camel_case_types
+class _PostItem_4_State extends State<PostItem_4> {
   late FocusScopeNode node;
 
   @override
@@ -20,7 +24,7 @@ class _PostItems4State extends State<PostItems4> {
       backgroundColor: kScreenBackgroundColor,
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
-        // Here we take the value from the PostItems1 object that was created by
+        // Here we take the value from the Post_Item_1 object that was created by
         // the App.build method, and use it to set our appbar title.
         title: const Text('Đăng sản phẩm mới - 4',
             style: TextStyle(color: kTextColor)),
@@ -138,7 +142,9 @@ class _PostItems4State extends State<PostItems4> {
                         MaterialStateProperty.all<Color>(kPrimaryLightColor),
                     backgroundColor:
                         MaterialStateProperty.all<Color>(kPrimaryColor)),
-                onPressed: () {},
+                onPressed: () {
+                  //Navigator.of(context).pushNamed(DetailScreen.routeName);
+                },
                 child: const Text('Hoàn thành'),
               ),
             ],

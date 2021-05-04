@@ -1,16 +1,20 @@
+import 'dart:io';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
+//import 'package:flutter_form_builder/flutter_form_builder.dart';
 
 import '../../../configs/constants/color.dart';
 import 'step2.dart';
 
-// Navigator.of(context).pushNamed(PostItems1.routeName);
+// Navigator.of(context).pushNamed(PostItem_1.routeName);
 //import '../post_items/step1.dart';
 //import '../post_items/step2.dart';
-
-class PostItems1 extends StatefulWidget {
-  const PostItems1({
+// ignore: camel_case_types
+class PostItem_1 extends StatefulWidget {
+  const PostItem_1({
     Key? key,
     required this.menuScreenContext,
     required this.onScreenHideButtonPressed,
@@ -22,7 +26,7 @@ class PostItems1 extends StatefulWidget {
   final bool hideStatus;
 
   @override
-  _PostItems1State createState() => _PostItems1State();
+  _PostItem_1State createState() => _PostItem_1State();
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
@@ -34,12 +38,36 @@ class PostItems1 extends StatefulWidget {
   }
 }
 
-class _PostItems1State extends State<PostItems1> {
-  void _reset() {
+// ignore: camel_case_types
+class _PostItem_1State extends State<PostItem_1> {
+  late File _image = File(
+      'https://cdn.pixabay.com/photo/2017/11/10/05/24/add-2935429_960_720.png');
+
+  final picker = ImagePicker();
+
+  Future getImage() async {
+    //final pickedFile = await picker.getImage(source: ImageSource.camera);
+    // ignore: avoid_print
     setState(() {
-      //gọi khi có thay đổi
-      //FocusScope.of(context).requestFocus(FocusNode()); // tắt bàn phím
+      _image = File(
+          'https://cdn.pixabay.com/photo/2017/11/10/05/24/add-2935429_960_720.png');
     });
+  }
+
+  Widget imageAdded() {
+    if (_image.path == '') {
+      return Image.network(
+        'https://cdn.pixabay.com/photo/2017/11/10/05/24/add-2935429_960_720.png',
+        height: 100,
+        width: 100,
+      );
+    } else {
+      return FloatingActionButton(
+        onPressed: getImage,
+        tooltip: 'Pick Image',
+        child: const Icon(Icons.add_a_photo),
+      );
+    }
   }
 
   late FocusScopeNode node;
@@ -51,7 +79,7 @@ class _PostItems1State extends State<PostItems1> {
       backgroundColor: kScreenBackgroundColor,
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
-        // Here we take the value from the PostItems1 object that was created by
+        // Here we take the value from the PostItem_1 object that was created by
         // the App.build method, and use it to set our appbar title.
         title: const Text('Đăng sản phẩm mới',
             style: TextStyle(color: kTextColor)),
@@ -76,39 +104,10 @@ class _PostItems1State extends State<PostItems1> {
               ),
               Row(
                 children: [
-                  Expanded(
-                    child: GestureDetector(
-                      //thêm event
-                      onTap: _reset,
-                      child: Image.network(
-                        'https://cdn.pixabay.com/photo/2017/11/10/05/24/add-2935429_960_720.png',
-                        height: 100,
-                        width: 100,
-                      ),
-                    ),
-                  ),
-                  Expanded(
-                    child: GestureDetector(
-                      //thêm event
-                      onTap: _reset,
-                      child: Image.network(
-                        'https://cdn.pixabay.com/photo/2017/11/10/05/24/add-2935429_960_720.png',
-                        height: 100,
-                        width: 100,
-                      ),
-                    ),
-                  ),
-                  Expanded(
-                    child: GestureDetector(
-                      //thêm event
-                      onTap: _reset,
-                      child: Image.network(
-                        'https://cdn.pixabay.com/photo/2017/11/10/05/24/add-2935429_960_720.png',
-                        height: 100,
-                        width: 100,
-                      ),
-                    ),
-                  )
+                  Expanded(child: imageAdded()),
+                  Expanded(child: imageAdded()),
+                  Expanded(child: imageAdded()),
+                  Expanded(child: imageAdded()),
                 ],
               ),
               const SizedBox(
@@ -202,8 +201,8 @@ class _PostItems1State extends State<PostItems1> {
                 onPressed: () {
                   pushNewScreenWithRouteSettings<void>(
                     context,
-                    settings: const RouteSettings(name: PostItems2.routeName),
-                    screen: const PostItems2(),
+                    settings: const RouteSettings(name: PostItem_2.routeName),
+                    screen: const PostItem_2(),
                     // withNavBar: true,
                     pageTransitionAnimation: PageTransitionAnimation.cupertino,
                   );
@@ -222,5 +221,6 @@ class _PostItems1State extends State<PostItems1> {
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
     properties.add(DiagnosticsProperty<FocusScopeNode>('node', node));
+    properties.add(DiagnosticsProperty<ImagePicker>('picker', picker));
   }
 }
