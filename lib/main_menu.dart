@@ -15,9 +15,9 @@ import 'screens/account_features/account/account_screen.dart';
 import 'screens/home_features/home_screen/home_screen.dart';
 import 'screens/message_features/chat_screen/all_chat/chat_screen.dart';
 import 'screens/posting_features/post_items/step1.dart';
+import 'screens/wish_list_features/wish_list/wish_list_screen.dart';
 
-// Thêm file này vào folder lib
-late BuildContext testContext;
+// late BuildContext testContext;
 
 class BottomNavigationBarItemSource {
   BottomNavigationBarItemSource({
@@ -31,7 +31,6 @@ class BottomNavigationBarItemSource {
   final RouteAndNavigatorSettings routeAndNavigatorSettings;
 }
 
-//
 List<BottomNavigationBarItemSource> navBarItemSourceList = [
   BottomNavigationBarItemSource(
     title: 'Home',
@@ -85,6 +84,7 @@ class MainMenu extends StatefulWidget {
 
   @override
   _MainMenuState createState() => _MainMenuState();
+
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
@@ -107,51 +107,11 @@ class _MainMenuState extends State<MainMenu> {
 
   List<Widget> _buildScreens() {
     return [
-      HomeScreen(
-        menuScreenContext: widget.menuScreenContext,
-        hideStatus: _hideNavBar,
-        onScreenHideButtonPressed: () {
-          setState(() {
-            _hideNavBar = !_hideNavBar;
-          });
-        },
-      ),
-      ChatScreen(
-        menuScreenContext: widget.menuScreenContext,
-        onScreenHideButtonPressed: () {
-          setState(() {
-            _hideNavBar = !_hideNavBar;
-          });
-        },
-        hideStatus: _hideNavBar,
-      ),
-      PostItems1(
-        menuScreenContext: widget.menuScreenContext,
-        hideStatus: _hideNavBar,
-        onScreenHideButtonPressed: () {
-          setState(() {
-            _hideNavBar = !_hideNavBar;
-          });
-        },
-      ),
-      HomeScreen(
-        menuScreenContext: widget.menuScreenContext,
-        hideStatus: _hideNavBar,
-        onScreenHideButtonPressed: () {
-          setState(() {
-            _hideNavBar = !_hideNavBar;
-          });
-        },
-      ),
-      AccountScreen(
-        menuScreenContext: widget.menuScreenContext,
-        hideStatus: _hideNavBar,
-        onScreenHideButtonPressed: () {
-          setState(() {
-            _hideNavBar = !_hideNavBar;
-          });
-        },
-      ),
+      const HomeScreen(),
+      const ChatScreen(),
+      const PostItems1Screen(),
+      const WishListScreen(),
+      const AccountScreen(),
     ];
   }
 
@@ -199,7 +159,7 @@ class _MainMenuState extends State<MainMenu> {
           ? 0.0
           : kBottomNavigationBarHeight,
       bottomScreenMargin: kDefaultBottomNavigationBarHeight,
-      selectedTabScreenContext: (context) => testContext = context!,
+      // selectedTabScreenContext: (context) => testContext = context!,
       hideNavigationBar: _hideNavBar,
       itemAnimationProperties: const ItemAnimationProperties(
         duration: Duration(milliseconds: 400),

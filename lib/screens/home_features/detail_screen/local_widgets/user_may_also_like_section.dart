@@ -31,7 +31,7 @@ class UserMayAlsoLikeSection extends StatelessWidget {
           width: size.width,
           color: Colors.white,
           padding: EdgeInsets.symmetric(
-            horizontal: size.width * kDetailHorizontalPaddingPercent,
+            // horizontal: size.width * kDetailHorizontalPaddingPercent,
             vertical: size.height * kDetailVerticalPaddingPercent,
           ),
           child: Column(
@@ -41,9 +41,10 @@ class UserMayAlsoLikeSection extends StatelessWidget {
                 child: Wrap(
                   spacing: 20,
                   runSpacing: 15,
-                  // alignment: WrapAlignment.center,
                   children: demoSimilarProducts
-                      .map((product) => ProductCard(product: product))
+                      .map(
+                        (product) => ProductCard(product: product),
+                      )
                       .toList(),
                 ),
               ),

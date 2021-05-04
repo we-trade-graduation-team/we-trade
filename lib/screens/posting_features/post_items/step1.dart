@@ -5,43 +5,18 @@ import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 import '../../../configs/constants/color.dart';
 import 'step2.dart';
 
-// Navigator.of(context).pushNamed(PostItems1.routeName);
-//import '../post_items/step1.dart';
-//import '../post_items/step2.dart';
-
-class PostItems1 extends StatefulWidget {
-  const PostItems1({
+class PostItems1Screen extends StatefulWidget {
+  const PostItems1Screen({
     Key? key,
-    required this.menuScreenContext,
-    required this.onScreenHideButtonPressed,
-    required this.hideStatus,
   }) : super(key: key);
-  static const routeName = '/postitem1';
-  final BuildContext menuScreenContext;
-  final Function onScreenHideButtonPressed;
-  final bool hideStatus;
+
+  static const routeName = '/post_item1';
 
   @override
-  _PostItems1State createState() => _PostItems1State();
-  @override
-  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
-    super.debugFillProperties(properties);
-    properties.add(DiagnosticsProperty<BuildContext>(
-        'menuScreenContext', menuScreenContext));
-    properties.add(DiagnosticsProperty<Function>(
-        'onScreenHideButtonPressed', onScreenHideButtonPressed));
-    properties.add(DiagnosticsProperty<bool>('hideStatus', hideStatus));
-  }
+  _PostItems1ScreenState createState() => _PostItems1ScreenState();
 }
 
-class _PostItems1State extends State<PostItems1> {
-  void _reset() {
-    setState(() {
-      //gọi khi có thay đổi
-      //FocusScope.of(context).requestFocus(FocusNode()); // tắt bàn phím
-    });
-  }
-
+class _PostItems1ScreenState extends State<PostItems1Screen> {
   late FocusScopeNode node;
 
   @override
@@ -77,36 +52,24 @@ class _PostItems1State extends State<PostItems1> {
               Row(
                 children: [
                   Expanded(
-                    child: GestureDetector(
-                      //thêm event
-                      onTap: _reset,
-                      child: Image.network(
-                        'https://cdn.pixabay.com/photo/2017/11/10/05/24/add-2935429_960_720.png',
-                        height: 100,
-                        width: 100,
-                      ),
+                    child: Image.network(
+                      'https://cdn.pixabay.com/photo/2017/11/10/05/24/add-2935429_960_720.png',
+                      height: 100,
+                      width: 100,
                     ),
                   ),
                   Expanded(
-                    child: GestureDetector(
-                      //thêm event
-                      onTap: _reset,
-                      child: Image.network(
-                        'https://cdn.pixabay.com/photo/2017/11/10/05/24/add-2935429_960_720.png',
-                        height: 100,
-                        width: 100,
-                      ),
+                    child: Image.network(
+                      'https://cdn.pixabay.com/photo/2017/11/10/05/24/add-2935429_960_720.png',
+                      height: 100,
+                      width: 100,
                     ),
                   ),
                   Expanded(
-                    child: GestureDetector(
-                      //thêm event
-                      onTap: _reset,
-                      child: Image.network(
-                        'https://cdn.pixabay.com/photo/2017/11/10/05/24/add-2935429_960_720.png',
-                        height: 100,
-                        width: 100,
-                      ),
+                    child: Image.network(
+                      'https://cdn.pixabay.com/photo/2017/11/10/05/24/add-2935429_960_720.png',
+                      height: 100,
+                      width: 100,
                     ),
                   )
                 ],
