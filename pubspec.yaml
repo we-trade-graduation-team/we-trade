@@ -14,6 +14,7 @@ dependencies:
     sdk: flutter
   flutter_localizations:
     sdk: flutter
+  auto_size_text: ^3.0.0-nullsafety.0
   bot_toast: ^4.0.1
   carousel_slider: ^4.0.0-nullsafety.0
   cupertino_icons: ^1.0.2
@@ -55,7 +56,7 @@ dev_dependencies:
 flutter_icons:
   android: 'launcher_icon'
   ios: true
-  image_path: 'assets/images/logo/logo.png'
+  image_path: 'assets/images/logos/logo.png'
 
 flutter:
   uses-material-design: true
@@ -65,7 +66,7 @@ flutter:
     - assets/icons/
     - assets/icons/auth/
     - assets/images/
-    - assets/images/logo/
-    - assets/images/Chat_screen_ava_temp/
+    - assets/images/logos/
+    - assets/images/chat_screen_ava/
     - assets/images/products_images_temp/
     - assets/images/on_boarding_screen/

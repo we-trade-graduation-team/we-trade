@@ -1,3 +1,5 @@
+import '../../configs/constants/assets_paths/shared_assets_root.dart';
+
 import '../review/temp_class.dart';
 
 class Chat {
@@ -35,20 +37,20 @@ class UserDetail {
       required this.phone,
       required this.email,
       required this.address,
-      required this.leggit,
+      required this.legit,
       required this.postsNum,
       required this.followers,
-      required this.userDesciption,
+      required this.userDescription,
       this.reviews});
 
   final User user;
   final String phone;
   final String email;
   final String address;
-  final double leggit;
+  final double legit;
   final int postsNum;
   final int followers;
-  final String userDesciption;
+  final String userDescription;
   final List<Review>? reviews;
 
   //final List<Post> posts;
@@ -60,72 +62,72 @@ UserDetail userDetailTemp = UserDetail(
   phone: '0332087063',
   email: 'ngonhatrang99@gmail.com',
   address: '1xx nguyễn văn cừ, phường 5, quận 5, TP HCM ',
-  leggit: 4.8,
+  legit: 4.8,
   postsNum: 10,
   followers: 20,
-  userDesciption:
+  userDescription:
       'hello mọi người, mong rằng chúng ta sẽ có giao dịch tốt , aloooooooooooooooooooooooooooooooooo ne :3',
   reviews: reviewsData,
 );
 
 List<User> usersData = [
   User(
-    image: 'assets/images/Chat_screen_ava_temp/user.png',
+    image: '$chatScreenAvaFolder/user.png',
     name: 'Jenny Wilson',
     isActive: false,
     activeAt: 'active 3 mins ago',
   ),
   User(
-    image: 'assets/images/Chat_screen_ava_temp/user_2.png',
+    image: '$chatScreenAvaFolder/user_2.png',
     name: 'Esther Howard',
     isActive: true,
     activeAt: '',
   ),
   User(
-    image: 'assets/images/Chat_screen_ava_temp/user_3.png',
+    image: '$chatScreenAvaFolder/user_3.png',
     name: 'Ralph Edwards',
     isActive: true,
     activeAt: '',
   ),
   User(
-    image: 'assets/images/Chat_screen_ava_temp/user_4.png',
+    image: '$chatScreenAvaFolder/user_4.png',
     name: 'Jacob Jones',
     isActive: false,
     activeAt: 'active 3 mins ago',
   ),
   User(
     name: 'Albert Flores',
-    image: 'assets/images/Chat_screen_ava_temp/user_5.png',
+    image: '$chatScreenAvaFolder/user_5.png',
     isActive: false,
     activeAt: 'active 3 mins ago',
   ),
   User(
-    image: 'assets/images/Chat_screen_ava_temp/user.png',
+    image: '$chatScreenAvaFolder/user.png',
     name: 'Jenny Wilson',
     isActive: true,
     activeAt: '',
   ),
   User(
-    image: 'assets/images/Chat_screen_ava_temp/user_2.png',
+    image: '$chatScreenAvaFolder/user_2.png',
     name: 'Esther Howard',
     isActive: true,
     activeAt: '',
   ),
   User(
-    image: 'assets/images/Chat_screen_ava_temp/user_3.png',
+    image: '$chatScreenAvaFolder/user_3.png',
     name: 'Ralph Edwards',
     isActive: false,
     activeAt: 'active 3 mins ago',
   ),
   User(
-    image: 'assets/images/Chat_screen_ava_temp/user_4.png',
+    image: '$chatScreenAvaFolder/user_4.png',
     name: 'Jacob Jones',
     isActive: true,
     activeAt: '',
   ),
   User(
     name: 'Albert Flores',
-    image: 'assets/images/Chat_screen_ava_temp/user_5.png',
+    image: '$chatScreenAvaFolder/user_5.png',
     isActive: false,
     activeAt: 'active 3 mins ago',
   ),
