@@ -5,12 +5,16 @@ import 'package:flutter/services.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 
 import 'configs/constants/color.dart';
-import 'configs/constants/routes.dart';
+import 'configs/constants/keys.dart';
+import 'routing/account_features_routes.dart';
 import 'routing/add_new_screen_routes.dart';
-import 'screens/account/account_screen.dart';
-import 'screens/chat/all_chat/chat_screen.dart';
-import 'screens/home_screen/home_screen.dart';
-import 'screens/post_items/step1.dart';
+import 'routing/home_features_routes.dart';
+import 'routing/message_features_routes.dart';
+import 'routing/wish_list_features_routes.dart';
+import 'screens/account_features/account/account_screen.dart';
+import 'screens/home_features/home_screen/home_screen.dart';
+import 'screens/message_features/chat_screen/all_chat/chat_screen.dart';
+import 'screens/posting_features/post_items/step1.dart';
 
 // Thêm file này vào folder lib
 late BuildContext testContext;
@@ -34,21 +38,21 @@ List<BottomNavigationBarItemSource> navBarItemSourceList = [
     iconData: Icons.home,
     routeAndNavigatorSettings: RouteAndNavigatorSettings(
       initialRoute: '/',
-      routes: routes,
+      routes: homeFeaturesRoutes,
     ),
   ),
   BottomNavigationBarItemSource(
-    title: 'Chat',
-    iconData: Icons.chat,
+    title: 'Message',
+    iconData: Icons.message,
     routeAndNavigatorSettings: RouteAndNavigatorSettings(
       initialRoute: '/',
-      routes: routes,
+      routes: messageFeaturesRoutes,
     ),
   ),
   BottomNavigationBarItemSource(
     title: 'Add',
     iconData: Icons.add,
-    routeAndNavigatorSettings: RouteAndNavigatorSettings(
+    routeAndNavigatorSettings: const RouteAndNavigatorSettings(
       initialRoute: '/',
       routes: routes_postitem,
     ),
@@ -58,7 +62,7 @@ List<BottomNavigationBarItemSource> navBarItemSourceList = [
     iconData: Icons.favorite,
     routeAndNavigatorSettings: RouteAndNavigatorSettings(
       initialRoute: '/',
-      routes: routes,
+      routes: wishListFeaturesRoutes,
     ),
   ),
   BottomNavigationBarItemSource(
@@ -66,7 +70,7 @@ List<BottomNavigationBarItemSource> navBarItemSourceList = [
     iconData: Icons.person,
     routeAndNavigatorSettings: RouteAndNavigatorSettings(
       initialRoute: '/',
-      routes: routes,
+      routes: accountFeaturesRoutes,
     ),
   ),
 ];
@@ -151,10 +155,11 @@ class _MainMenuState extends State<MainMenu> {
     ];
   }
 
-  PersistentBottomNavBarItem buildNavBarItem(
-      {required IconData iconData,
-      required String title,
-      required RouteAndNavigatorSettings routeAndNavigatorSettings}) {
+  PersistentBottomNavBarItem buildNavBarItem({
+    required IconData iconData,
+    required String title,
+    required RouteAndNavigatorSettings routeAndNavigatorSettings,
+  }) {
     return PersistentBottomNavBarItem(
       icon: Icon(iconData),
       title: title,
@@ -189,52 +194,21 @@ class _MainMenuState extends State<MainMenu> {
       controller: _controller,
       screens: _buildScreens(),
       items: _navBarsItems(),
-      // confineInSafeArea: true,
-      // backgroundColor: Colors.white,
-      // handleAndroidBackButtonPress: true,
       resizeToAvoidBottomInset: true,
-      // stateManagement: true,
       navBarHeight: MediaQuery.of(context).viewInsets.bottom > 0
           ? 0.0
           : kBottomNavigationBarHeight,
-      // hideNavigationBarWhenKeyboardShows: true,
-      // margin: const EdgeInsets.all(0),
-      // popActionScreens: PopActionScreensType.all,
-      bottomScreenMargin: 0,
-      onWillPop: (context) async {
-        await showDialog<void>(
-          context: context!,
-          useSafeArea: true,
-          builder: (context) => Container(
-            height: 50,
-            width: 50,
-            color: Colors.white,
-            child: ElevatedButton(
-              onPressed: () => Navigator.pop(context),
-              child: const Text('Close'),
-            ),
-          ),
-        );
-        return false;
-      },
+      bottomScreenMargin: kDefaultBottomNavigationBarHeight,
       selectedTabScreenContext: (context) => testContext = context!,
       hideNavigationBar: _hideNavBar,
-      decoration: NavBarDecoration(
-        colorBehindNavBar: Colors.indigo,
-        borderRadius: BorderRadius.circular(20),
-      ),
-      // popAllScreensOnTapOfSelectedTab: true,
       itemAnimationProperties: const ItemAnimationProperties(
         duration: Duration(milliseconds: 400),
         curve: Curves.ease,
       ),
       screenTransitionAnimation: const ScreenTransitionAnimation(
         animateTabTransition: true,
-        // curve: Curves.ease,
-        // duration: Duration(milliseconds: 200),
       ),
-      navBarStyle:
-          NavBarStyle.style13, // Choose the nav bar style with this property
+      navBarStyle: NavBarStyle.style13,
     );
   }
 }

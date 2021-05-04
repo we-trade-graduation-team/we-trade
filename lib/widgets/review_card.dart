@@ -21,7 +21,7 @@ class ReviewCard extends StatelessWidget {
         //color: Colors.white,
         border: Border(
           bottom: BorderSide(
-            color: kTextLightV2Color,
+            color: kTextColor,
             width: 0.2,
           ),
         ),
@@ -129,7 +129,7 @@ class ReviewCard extends StatelessWidget {
           hintText: '\n',
           hintStyle: TextStyle(height: 2),
           labelStyle: TextStyle(
-            color: kRiviewTextLabel,
+            color: kReviewTextLabel,
             fontSize: 16,
             fontWeight: FontWeight.normal,
           ),

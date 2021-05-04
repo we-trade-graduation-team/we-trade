@@ -1,3 +1,5 @@
+import '../../configs/constants/assets_paths/shared_assets_root.dart';
+
 import '../review/temp_class.dart';
 
 class Chat {
@@ -70,62 +72,62 @@ UserDetail userDetailTemp = UserDetail(
 
 List<User> usersData = [
   User(
-    image: 'assets/images/Chat_screen_ava_temp/user.png',
+    image: '$chatScreenAvaFolder/user.png',
     name: 'Jenny Wilson',
     isActive: false,
     activeAt: 'active 3 mins ago',
   ),
   User(
-    image: 'assets/images/Chat_screen_ava_temp/user_2.png',
+    image: '$chatScreenAvaFolder/user_2.png',
     name: 'Esther Howard',
     isActive: true,
     activeAt: '',
   ),
   User(
-    image: 'assets/images/Chat_screen_ava_temp/user_3.png',
+    image: '$chatScreenAvaFolder/user_3.png',
     name: 'Ralph Edwards',
     isActive: true,
     activeAt: '',
   ),
   User(
-    image: 'assets/images/Chat_screen_ava_temp/user_4.png',
+    image: '$chatScreenAvaFolder/user_4.png',
     name: 'Jacob Jones',
     isActive: false,
     activeAt: 'active 3 mins ago',
   ),
   User(
     name: 'Albert Flores',
-    image: 'assets/images/Chat_screen_ava_temp/user_5.png',
+    image: '$chatScreenAvaFolder/user_5.png',
     isActive: false,
     activeAt: 'active 3 mins ago',
   ),
   User(
-    image: 'assets/images/Chat_screen_ava_temp/user.png',
+    image: '$chatScreenAvaFolder/user.png',
     name: 'Jenny Wilson',
     isActive: true,
     activeAt: '',
   ),
   User(
-    image: 'assets/images/Chat_screen_ava_temp/user_2.png',
+    image: '$chatScreenAvaFolder/user_2.png',
     name: 'Esther Howard',
     isActive: true,
     activeAt: '',
   ),
   User(
-    image: 'assets/images/Chat_screen_ava_temp/user_3.png',
+    image: '$chatScreenAvaFolder/user_3.png',
     name: 'Ralph Edwards',
     isActive: false,
     activeAt: 'active 3 mins ago',
   ),
   User(
-    image: 'assets/images/Chat_screen_ava_temp/user_4.png',
+    image: '$chatScreenAvaFolder/user_4.png',
     name: 'Jacob Jones',
     isActive: true,
     activeAt: '',
   ),
   User(
     name: 'Albert Flores',
-    image: 'assets/images/Chat_screen_ava_temp/user_5.png',
+    image: '$chatScreenAvaFolder/user_5.png',
     isActive: false,
     activeAt: 'active 3 mins ago',
   ),

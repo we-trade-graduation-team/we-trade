@@ -44,7 +44,7 @@ AppBarTheme appBarTheme() {
 TabBarTheme tabBarTheme() {
   return const TabBarTheme(
     labelColor: kPrimaryColor,
-    unselectedLabelColor: kTextLightV2Color,
+    unselectedLabelColor: kTextColor,
     unselectedLabelStyle: TextStyle(
       fontSize: 14,
       fontWeight: FontWeight.normal,
@@ -60,7 +60,7 @@ TabBarTheme tabBarTheme() {
           width: 2.5,
         ),
         // top: BorderSide(
-        //   color: kTextLightV2Color,
+        //   color: kTextColor,
         //   width: 0.5,
         // ),
       ),
