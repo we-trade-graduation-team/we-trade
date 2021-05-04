@@ -69,7 +69,7 @@ class PopupDialog extends StatelessWidget {
                       onTap: () {
                         pushNewScreen<void>(
                           parentContext,
-                          screen: const ReportScreenBloc(),
+                          screen: const ReportScreen(),
                           withNavBar: true, // OPTIONAL VALUE. True by default.
                           pageTransitionAnimation:
                               PageTransitionAnimation.cupertino,
