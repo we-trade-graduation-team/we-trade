@@ -12,28 +12,61 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  # The following adds the Cupertino Icons font to your application.
-  # Use with the CupertinoIcons class for iOS style icons.
-  group_button: ^1.3.0
-  provider:
-  flutter_rating_bar: ^4.0.0
-  cupertino_icons: ^1.0.2
-  line_icons: ^2.0.1
-  persistent_bottom_nav_bar: ^4.0.2
+  flutter_localizations:
+    sdk: flutter
   auto_size_text: ^3.0.0-nullsafety.0
-  flutter_svg: ^0.21.0-nullsafety.0
-  bot_toast: ^3.0.5
-  cloud_firestore: ^1.0.7
+  bot_toast: ^4.0.1
+  carousel_slider: ^4.0.0-nullsafety.0
+  cupertino_icons: ^1.0.2
+  dots_indicator: ^2.0.0
+  double_back_to_close_app: ^2.0.1
+  eva_icons_flutter: ^3.0.0
+  expand_widget: ^2.0.0
+  extended_sliver: ^2.0.0
+  flutter_card_swipper: ^0.4.0
+  flutter_form_builder: ^6.0.0
+  flutter_launcher_icons: ^0.9.0
+  flutter_rating_bar: ^4.0.0
+  flutter_staggered_animations: ^1.0.0
+  flutter_svg: ^0.22.0
+  freezed: ^0.14.1+3
+  freezed_annotation: ^0.14.1
+  group_button: ^2.1.0
+  http: ^0.13.2
+  intl: ^0.17.0
+  introduction_screen: ^2.1.0
+  json_annotation: ^4.0.1
+  json_serializable: ^4.1.1
+  line_icons: ^2.0.1
+  lottie: ^1.0.1
+  material_floating_search_bar: ^0.3.4
+  persistent_bottom_nav_bar: ^4.0.2
+  pin_code_fields: ^7.0.0
+  provider: ^5.0.0
+  shared_preferences: ^2.0.5
+  toggle_switch: ^0.1.9
+  image_picker: ^0.7.4
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  build_runner: ^2.0.1
+  flutter_native_splash: ^1.1.8+4
+
+flutter_icons:
+  android: 'launcher_icon'
+  ios: true
+  image_path: 'assets/images/logos/logo.png'
 
 flutter:
   uses-material-design: true
 
   assets:
+    - assets/
     - assets/icons/
+    - assets/icons/auth/
     - assets/images/
-    - assets/images/Chat_screen_ava_temp/
+    - assets/images/logos/
+    - assets/images/chat_screen_ava/
     - assets/images/products_images_temp/
+    - assets/images/on_boarding_screen/
