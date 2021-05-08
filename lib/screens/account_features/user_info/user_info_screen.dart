@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 import '../../../configs/constants/color.dart';
@@ -30,16 +31,28 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
   bool _isChanged = false;
   bool _isLoaded = false;
   Map<String, dynamic>? _user;
+  int timeOut = 10;
 
   @override
   void initState() {
     super.initState();
-    referenceDatabase
-        .collection('users')
-        .doc(userID)
-        .get()
-        .then((documentSnapshot) {
-          _user = documentSnapshot.data();
+    try {
+      referenceDatabase
+          .collection('quang')
+          .doc('0ufGJonX2S1uqT9M5Lq9')
+          .collection('users')
+          .doc(userID)
+          .get()
+          .then((documentSnapshot) {
+        _user = documentSnapshot.data();
+        if (_user == null) {
+          // ignore: avoid_print
+          print('_user: $_user');
+          _showMyDialog('Lỗi', 'Không có dữ liệu! Vui lòng thử lại.', () {
+            Navigator.of(context).pop();
+            Navigator.of(context).pop();
+          });
+        } else {
           _nameController.text = _user!['name'].toString();
           _emailController.text = _user!['email'].toString();
           _phoneNumController.text = _user!['phoneNumber'].toString();
@@ -49,16 +62,17 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
           setState(() {
             _isLoaded = true;
           });
-        })
-        .timeout(const Duration(seconds: 20))
-        .catchError((error) {
-          // print('Lỗi: $error');
-          _showMyDialog(
-              'Lỗi', 'Tải dữ liệu không thành công. Vui lòng thử lại!', () {
-            Navigator.of(context).pop();
-            Navigator.of(context).pop();
-          });
-        });
+        }
+      }).timeout(Duration(seconds: timeOut));
+    } on FirebaseException catch (e) {
+      // ignore: avoid_print
+      print('Lỗi: $e');
+      _showMyDialog('Lỗi', 'Tải dữ liệu không thành công. Vui lòng thử lại!',
+          () {
+        Navigator.of(context).pop();
+        Navigator.of(context).pop();
+      });
+    }
   }
 
   Future<void> _showMyDialog(
@@ -90,10 +104,11 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
     );
   }
 
-  void _saveChange() {
+  Future<void> _saveChange() async {
     setState(() {
       _isLoaded = false;
     });
+
     final data = <String, dynamic>{
       'name': _nameController.text,
       'email': _emailController.text,
@@ -101,30 +116,35 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
       'location': _locationController.text,
       'bio': _bioController.text,
     };
-    referenceDatabase
-        .collection('users')
-        .doc(userID)
-        .update(data)
-        .then((value) {
-          setState(() {
-            _isChanged = false;
-            _isLoaded = true;
-          });
 
-          _showMyDialog('Thành công', 'Thông tin thay đổi thành công!', () {
-            Navigator.of(context).pop();
-          });
-        })
-        .timeout(const Duration(seconds: 20))
-        .catchError((error) {
-          // ignore: avoid_print
-          print('Lỗi khi lưu: $error');
-          _showMyDialog(
-              'Thất bại', 'Thao tác Không thành công. Vui lòng thử lại sau.',
-              () {
-            Navigator.of(context).pop();
-          });
+    try {
+      await referenceDatabase
+          .collection('quang')
+          .doc('0ufGJonX2S1uqT9M5Lq9')
+          .collection('users')
+          .doc(userID)
+          .update(data)
+          .then((value) {
+        setState(() {
+          _isChanged = false;
+          _isLoaded = true;
         });
+
+        _showMyDialog('Thành công', 'Thông tin thay đổi thành công!', () {
+          Navigator.of(context).pop();
+        });
+      }).timeout(Duration(seconds: timeOut));
+    } on FirebaseException catch (error) {
+      // ignore: avoid_print
+      print('Lỗi khi lưu: $error');
+      await _showMyDialog(
+          'Thất bại', 'Thao tác Không thành công. Vui lòng thử lại sau.', () {
+        Navigator.of(context).pop();
+        setState(() {
+          _isLoaded = true;
+        });
+      });
+    }
   }
 
   @override
@@ -273,5 +293,11 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
         ),
       ),
     );
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(IntProperty('timeOut', timeOut));
   }
 }
