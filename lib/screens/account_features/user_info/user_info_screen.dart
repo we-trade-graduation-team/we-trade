@@ -26,7 +26,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
   final _bioController = TextEditingController();
 
   // ignore: diagnostic_describe_all_properties
-  final userID = 'mMl4IgenYanDSNvkylb5';
+  final userID = 'XZZr5b2aG5mGnQsvrAnq';
   // ignore: diagnostic_describe_all_properties
   bool _isChanged = false;
   bool _isLoaded = false;
@@ -39,13 +39,14 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
     try {
       referenceDatabase
           .collection('quang')
-          .doc('0ufGJonX2S1uqT9M5Lq9')
-          .collection('users')
-          .doc(userID)
+          // .doc('0ufGJonX2S1uqT9M5Lq9')
+          // .collection('users')
           .get()
           .then((documentSnapshot) {
-        _user = documentSnapshot.data();
-        if (_user == null) {
+        print('object:2 ');
+        print(documentSnapshot.docs[0].id);
+        // _user = documentSnapshot;
+        if (_user == 'null') {
           // ignore: avoid_print
           print('_user: $_user');
           _showMyDialog('Lỗi', 'Không có dữ liệu! Vui lòng thử lại.', () {
@@ -149,9 +150,26 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final CollectionReference users = FirebaseFirestore.instance
+        .collection('quangg')
+        .doc('0ufGJonX2S1uqT9M5Lq9')
+        .collection('users');
+
+    Future<void> addUser() {
+      return users
+          .add({
+            'full_name': 'fullName', // John Doe
+            'company': 'company', // Stokes and Sons
+            'age': 'age' // 42
+          })
+          .then((value) => print('User Added $value'))
+          .catchError((error) => print("Failed to add user: $error"));
+    }
+
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Thông tin tài khoản'),
+        title: GestureDetector(
+            onTap: addUser, child: const Text('Thông tin tài khoản')),
       ),
       body: _isLoaded
           ? GestureDetector(

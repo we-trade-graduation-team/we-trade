@@ -42,7 +42,8 @@ class CustomFormBuilderTextField extends StatefulWidget {
         'onEditingComplete', onEditingComplete));
     properties.add(
         EnumProperty<AutovalidateMode>('autovalidateMode', autovalidateMode));
-        properties.add(DiagnosticsProperty<TextInputType>('keyboardType', keyboardType));
+    properties
+        .add(DiagnosticsProperty<TextInputType>('keyboardType', keyboardType));
   }
 }
 
@@ -67,6 +68,9 @@ class _CustomFormBuilderTextFieldState
 
   @override
   Widget build(BuildContext context) {
+    final tempValue = TextEditingController();
+    tempValue.text = 'qwwww123@gmai.com';
+
     return FormBuilderTextField(
       focusNode: myFocusNode,
       name: widget.name,
@@ -86,6 +90,7 @@ class _CustomFormBuilderTextFieldState
       obscureText: widget.obscureText,
       autovalidateMode: widget.autovalidateMode,
       keyboardType: widget.keyboardType,
+      controller: tempValue,
     );
   }
 
