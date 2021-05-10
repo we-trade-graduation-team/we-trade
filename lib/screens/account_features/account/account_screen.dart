@@ -11,6 +11,7 @@ import '../my_rate/my_rate_screen.dart';
 import '../post_management/post_management_screen.dart';
 import '../trading_history/trading_history_screen.dart';
 import '../user_info/user_info_screen.dart';
+import './local_widgets/getter.dart';
 
 class AccountScreen extends StatelessWidget {
   AccountScreen({
@@ -22,7 +23,7 @@ class AccountScreen extends StatelessWidget {
   static final localRefDatabase = FirebaseFirestore.instance
       .collection('quang')
       .doc('h0Z8Hn6XvbtMsP4bwa4P');
-  static const localUserID = 'HClKVm4TTdlx28xCKTxF';
+  static const localUserID = 'HClKVm4TTdlx28xCKTxF'; //Duy Quang A
 
   Widget profileNavigationLabel(
       Widget topWid, Widget botWid, Function navigateToScreen) {
@@ -66,6 +67,7 @@ class AccountScreen extends StatelessWidget {
     return localRefDatabase
         .collection('users')
         .add(user)
+        // ignore: avoid_print
         .then((value) => print('User Added: $user'));
     // .catchError((error) => print('Failed to add user: $error'));
   }
@@ -75,9 +77,6 @@ class AccountScreen extends StatelessWidget {
     final height = MediaQuery.of(context).size.height;
     final bannerHeight = height * 0.28;
     return Scaffold(
-      // appBar: AppBar(
-      //   title: Text('Account'),
-      // ),
       body: SafeArea(
         child: Column(
           children: [
@@ -182,7 +181,7 @@ class AccountScreen extends StatelessWidget {
                                     )
                                   ],
                                 ),
-                                const Text('Leggit'),
+                                const Text('Leggit\n'),
                                 () {
                                   pushNewScreenWithRouteSettings<void>(
                                     context,
@@ -197,8 +196,15 @@ class AccountScreen extends StatelessWidget {
                                 },
                               ),
                               profileNavigationLabel(
-                                const Text('0'),
-                                const Text('Theo dõi'),
+                                const GetNumberOfFollow(
+                                  documentId: localUserID,
+                                  typeOfReturnNumber:
+                                      Follow_Screen_Name.following,
+                                ),
+                                const Text(
+                                  'Đang theo \n  dõi',
+                                  textAlign: TextAlign.center,
+                                ),
                                 () {
                                   pushNewScreenWithRouteSettings<void>(
                                     context,
@@ -216,7 +222,11 @@ class AccountScreen extends StatelessWidget {
                                 },
                               ),
                               profileNavigationLabel(
-                                const Text('1'),
+                                const GetNumberOfFollow(
+                                  documentId: localUserID,
+                                  typeOfReturnNumber:
+                                      Follow_Screen_Name.follower,
+                                ),
                                 const Text(
                                   'Người theo \n dõi',
                                   textAlign: TextAlign.center,
@@ -356,70 +366,5 @@ class AccountScreen extends StatelessWidget {
     properties.add(DiagnosticsProperty<DocumentReference<Map<String, dynamic>>>(
         'localRefDatabase', localRefDatabase));
     properties.add(DiagnosticsProperty<Map<String, Object>>('user', user));
-  }
-}
-
-class GetUserName extends StatelessWidget {
-  const GetUserName({Key? key, required this.documentId}) : super(key: key);
-  final String documentId;
-
-  @override
-  Widget build(BuildContext context) {
-    final CollectionReference users =
-        AccountScreen.localRefDatabase.collection('users');
-
-    return StreamBuilder<DocumentSnapshot>(
-      stream: users.doc(documentId).snapshots(),
-      builder: (context, snapshot) {
-        if (snapshot.hasError) {
-          return Text(
-            'Something went wrong',
-            style: TextStyle(
-              fontWeight: FontWeight.normal,
-              fontSize: 18,
-              color: Colors.red.withOpacity(0.5),
-            ),
-          );
-        }
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return Text(
-            'Loading',
-            style: TextStyle(
-              fontWeight: FontWeight.normal,
-              fontSize: 18,
-              color: kPrimaryLightColor.withOpacity(0.5),
-            ),
-          );
-        }
-
-        if (snapshot.hasData && !snapshot.data!.exists) {
-          return const Text(
-            'Document does not exist',
-            style: TextStyle(
-              fontWeight: FontWeight.normal,
-              fontSize: 20,
-              color: kPrimaryLightColor,
-            ),
-          );
-        }
-
-        final data = snapshot.data!.data() as Map<String, dynamic>;
-        final name = data['name'].toString();
-        return Text(
-          name,
-          style: const TextStyle(
-            fontWeight: FontWeight.bold,
-            fontSize: 20,
-            color: kPrimaryLightColor,
-          ),
-        );
-      },
-    );
-  }
-
-  @override
-  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
-    super.debugFillProperties(properties);
-    properties.add(StringProperty('documentId', documentId));
   }
 }
