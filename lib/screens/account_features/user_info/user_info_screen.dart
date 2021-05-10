@@ -1,7 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
+
 import '../../../configs/constants/color.dart';
 import 'change_password_screen.dart';
 
@@ -18,37 +20,41 @@ class UserInfoScreen extends StatefulWidget {
 
 class _UserInfoScreenState extends State<UserInfoScreen> {
   // ignore: diagnostic_describe_all_properties
-  final referenceDatabase = FirebaseFirestore.instance;
+  final userID = 'HClKVm4TTdlx28xCKTxF';
+  // ignore: diagnostic_describe_all_properties
+  final quangDocID = 'h0Z8Hn6XvbtMsP4bwa4P';
+  final referenceDatabase = FirebaseFirestore.instance
+      .collection('quang')
+      .doc('h0Z8Hn6XvbtMsP4bwa4P');
+
   final _nameController = TextEditingController();
   final _phoneNumController = TextEditingController();
   final _emailController = TextEditingController();
   final _locationController = TextEditingController();
   final _bioController = TextEditingController();
-
   // ignore: diagnostic_describe_all_properties
-  final userID = 'XZZr5b2aG5mGnQsvrAnq';
+  // ignore: diagnostic_describe_all_properties
   // ignore: diagnostic_describe_all_properties
   bool _isChanged = false;
   bool _isLoaded = false;
   Map<String, dynamic>? _user;
   int timeOut = 10;
 
+  final _formKey = GlobalKey<FormBuilderState>();
+  late FocusScopeNode node;
+
   @override
   void initState() {
     super.initState();
     try {
       referenceDatabase
-          .collection('quang')
-          // .doc('0ufGJonX2S1uqT9M5Lq9')
-          // .collection('users')
+          .collection('users')
+          .doc(userID)
           .get()
           .then((documentSnapshot) {
-        print('object:2 ');
-        print(documentSnapshot.docs[0].id);
-        // _user = documentSnapshot;
-        if (_user == 'null') {
-          // ignore: avoid_print
-          print('_user: $_user');
+        _user = documentSnapshot.data();
+
+        if (_user == null) {
           _showMyDialog('Lỗi', 'Không có dữ liệu! Vui lòng thử lại.', () {
             Navigator.of(context).pop();
             Navigator.of(context).pop();
@@ -59,7 +65,6 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
           _phoneNumController.text = _user!['phoneNumber'].toString();
           _locationController.text = _user!['location'].toString();
           _bioController.text = _user!['bio'].toString();
-
           setState(() {
             _isLoaded = true;
           });
@@ -120,8 +125,6 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
 
     try {
       await referenceDatabase
-          .collection('quang')
-          .doc('0ufGJonX2S1uqT9M5Lq9')
           .collection('users')
           .doc(userID)
           .update(data)
@@ -148,118 +151,120 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
     }
   }
 
+  void _onChangedHandleFunction(String? value) {
+    setState(() {
+      _isChanged = true;
+    });
+  }
+
+  void _onEdittingCompleteHandleFunction() {
+    node.unfocus();
+  }
+
   @override
   Widget build(BuildContext context) {
-    final CollectionReference users = FirebaseFirestore.instance
-        .collection('quangg')
-        .doc('0ufGJonX2S1uqT9M5Lq9')
-        .collection('users');
-
-    Future<void> addUser() {
-      return users
-          .add({
-            'full_name': 'fullName', // John Doe
-            'company': 'company', // Stokes and Sons
-            'age': 'age' // 42
-          })
-          .then((value) => print('User Added $value'))
-          .catchError((error) => print("Failed to add user: $error"));
-    }
+    node = FocusScope.of(context);
 
     return Scaffold(
       appBar: AppBar(
-        title: GestureDetector(
-            onTap: addUser, child: const Text('Thông tin tài khoản')),
+        title: const Text('Thông tin tài khoản'),
       ),
       body: _isLoaded
           ? GestureDetector(
-              onTap: () {
-                FocusScope.of(context).requestFocus(FocusNode());
-              },
+              onTap: () => node.unfocus(),
               child: ListView(
                 padding: const EdgeInsets.symmetric(
                   horizontal: 15,
                   vertical: 30,
                 ),
-                children: <Widget>[
-                  Column(
-                    children: <Widget>[
-                      TextField(
-                        decoration: const InputDecoration(
-                          icon: Icon(Icons.person),
-                          labelText: 'Họ và tên',
-                          hintText: 'Nhập họ tên',
+                children: [
+                  FormBuilder(
+                    key: _formKey,
+                    autovalidateMode: AutovalidateMode.onUserInteraction,
+                    child: Column(
+                      children: <Widget>[
+                        FormBuilderTextField(
+                          name: 'name',
+                          decoration: const InputDecoration(
+                            icon: Icon(Icons.person),
+                            labelText: 'Họ và tên',
+                            hintText: 'Nhập họ tên',
+                            floatingLabelBehavior: FloatingLabelBehavior.auto,
+                          ),
+                          validator: FormBuilderValidators.compose([
+                            FormBuilderValidators.required(context),
+                          ]),
+                          onEditingComplete: _onEdittingCompleteHandleFunction,
+                          textInputAction: TextInputAction.done,
+                          keyboardType: TextInputType.text,
+                          controller: _nameController,
+                          onChanged: _onChangedHandleFunction,
                         ),
-                        maxLength: 50,
-                        onChanged: (_) {
-                          setState(() {
-                            _isChanged = true;
-                          });
-                        },
-                        controller: _nameController,
-                      ),
-                      const SizedBox(height: 15),
-                      TextField(
-                        decoration: const InputDecoration(
-                          icon: Icon(Icons.phone),
-                          labelText: 'Số điện thoại',
-                          hintText: 'Nhập số điện thoại',
+                        const SizedBox(height: 15),
+                        FormBuilderTextField(
+                          name: 'email',
+                          decoration: const InputDecoration(
+                            icon: Icon(Icons.email),
+                            labelText: 'Email',
+                            hintText: 'Nhập email',
+                            floatingLabelBehavior: FloatingLabelBehavior.auto,
+                          ),
+                          validator: FormBuilderValidators.compose([
+                            FormBuilderValidators.required(context),
+                            FormBuilderValidators.email(context),
+                          ]),
+                          onEditingComplete: _onEdittingCompleteHandleFunction,
+                          textInputAction: TextInputAction.done,
+                          keyboardType: TextInputType.emailAddress,
+                          controller: _emailController,
+                          onChanged: _onChangedHandleFunction,
                         ),
-                        maxLength: 20,
-                        onChanged: (_) {
-                          setState(() {
-                            _isChanged = true;
-                          });
-                        },
-                        controller: _phoneNumController,
-                        keyboardType: TextInputType.phone,
-                      ),
-                      const SizedBox(height: 15),
-                      TextField(
-                        decoration: const InputDecoration(
-                          icon: Icon(Icons.email),
-                          labelText: 'Email',
-                          hintText: 'Nhập Email',
+                        const SizedBox(height: 15),
+                        FormBuilderTextField(
+                          name: 'phone',
+                          decoration: const InputDecoration(
+                            icon: Icon(Icons.phone),
+                            labelText: 'Số điện thoại',
+                            hintText: 'Nhập số điện thoại',
+                            floatingLabelBehavior: FloatingLabelBehavior.auto,
+                          ),
+                          onEditingComplete: _onEdittingCompleteHandleFunction,
+                          textInputAction: TextInputAction.done,
+                          keyboardType: TextInputType.phone,
+                          controller: _phoneNumController,
+                          onChanged: _onChangedHandleFunction,
                         ),
-                        maxLength: 100,
-                        onChanged: (_) {
-                          setState(() {
-                            _isChanged = true;
-                          });
-                        },
-                        controller: _emailController,
-                      ),
-                      const SizedBox(height: 15),
-                      TextField(
-                        decoration: const InputDecoration(
-                          icon: Icon(Icons.location_on),
-                          labelText: 'Địa chỉ',
-                          hintText: 'Chọn địa chỉ',
+                        const SizedBox(height: 15),
+                        FormBuilderTextField(
+                          name: 'location',
+                          decoration: const InputDecoration(
+                            icon: Icon(Icons.location_on),
+                            labelText: 'Địa chỉ',
+                            hintText: 'Chọn địa chỉ',
+                            floatingLabelBehavior: FloatingLabelBehavior.auto,
+                          ),
+                          onEditingComplete: _onEdittingCompleteHandleFunction,
+                          textInputAction: TextInputAction.done,
+                          controller: _locationController,
+                          onChanged: _onChangedHandleFunction,
                         ),
-                        maxLength: 200,
-                        controller: _locationController,
-                        onChanged: (_) {
-                          setState(() {
-                            _isChanged = true;
-                          });
-                        },
-                      ),
-                      const SizedBox(height: 30),
-                      TextField(
-                        decoration: const InputDecoration(
-                          labelText: 'Giới thiệu bản thân',
-                          hintText: 'Nhập lời giới thiệu...',
+                        const SizedBox(height: 15),
+                        FormBuilderTextField(
+                          name: 'bio',
+                          decoration: const InputDecoration(
+                            icon: Icon(Icons.fact_check),
+                            labelText: 'Giới thiệu bản thân',
+                            hintText: 'Nhập lời giới thiệu...',
+                            floatingLabelBehavior: FloatingLabelBehavior.auto,
+                          ),
+                          textInputAction: TextInputAction.newline,
+                          controller: _bioController,
+                          onChanged: _onChangedHandleFunction,
+                          maxLength: 300,
+                          maxLines: 4,
                         ),
-                        maxLength: 200,
-                        maxLines: 4,
-                        controller: _bioController,
-                        onChanged: (_) {
-                          setState(() {
-                            _isChanged = true;
-                          });
-                        },
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ],
               ),
@@ -276,7 +281,18 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
           children: [
             Expanded(
               child: ElevatedButton(
-                onPressed: _isChanged ? _saveChange : null,
+                onPressed: _isChanged
+                    ? () {
+                        _formKey.currentState!.save();
+                        if (_formKey.currentState!.validate()) {
+                          // print(_formKey.currentState!.value);
+                          _saveChange();
+                        } else {
+                          // ignore: avoid_print
+                          print('validation failed');
+                        }
+                      }
+                    : null,
                 style: ElevatedButton.styleFrom(
                   primary: _isChanged ? kPrimaryColor : Colors.grey,
                 ),
@@ -317,5 +333,8 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
     properties.add(IntProperty('timeOut', timeOut));
+    properties.add(DiagnosticsProperty<FocusScopeNode>('node', node));
+    properties.add(DiagnosticsProperty<DocumentReference<Map<String, dynamic>>>(
+        'referenceDatabase', referenceDatabase));
   }
 }
