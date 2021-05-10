@@ -53,7 +53,7 @@ class _MainMenuState extends State<MainMenu> {
       const ChatScreen(),
       const PostItem_1(),
       const WishListScreen(),
-      const AccountScreen(),
+      AccountScreen(),
     ];
   }
 

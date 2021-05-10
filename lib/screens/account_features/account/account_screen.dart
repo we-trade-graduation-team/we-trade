@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
@@ -12,11 +13,16 @@ import '../trading_history/trading_history_screen.dart';
 import '../user_info/user_info_screen.dart';
 
 class AccountScreen extends StatelessWidget {
-  const AccountScreen({
+  AccountScreen({
     Key? key,
   }) : super(key: key);
 
   static const routeName = '/account';
+  // final quangDocID = 'h0Z8Hn6XvbtMsP4bwa4P';
+  static final localRefDatabase = FirebaseFirestore.instance
+      .collection('quang')
+      .doc('h0Z8Hn6XvbtMsP4bwa4P');
+  static const localUserID = 'HClKVm4TTdlx28xCKTxF';
 
   Widget profileNavigationLabel(
       Widget topWid, Widget botWid, Function navigateToScreen) {
@@ -44,6 +50,26 @@ class AccountScreen extends StatelessWidget {
     );
   }
 
+  // ignore: avoid_field_initializers_in_const_classes
+  final user = {
+    'name': 'Tranf Duy qunag',
+    'email': 'asdas@hail.com',
+    'phoneNumber': '0202424024',
+    'location': 'asdasaf',
+    'bio': 'I like trading',
+    'following': <dynamic>[],
+    'followers': <dynamic>[],
+  };
+
+  Future<void> addUser() {
+    // Call the user's CollectionReference to add a new user
+    return localRefDatabase
+        .collection('users')
+        .add(user)
+        .then((value) => print('User Added: $user'));
+    // .catchError((error) => print('Failed to add user: $error'));
+  }
+
   @override
   Widget build(BuildContext context) {
     final height = MediaQuery.of(context).size.height;
@@ -68,12 +94,18 @@ class AccountScreen extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
                             IconButton(
-                                color: kPrimaryLightColor,
-                                icon: const Icon(Icons.settings),
-                                onPressed: () {
-                                  // ignore: avoid_print
-                                  print('setting pressed');
-                                })
+                              color: kPrimaryLightColor,
+                              icon: const Icon(Icons.settings),
+                              onPressed: () {
+                                // ignore: avoid_print
+                                print('setting pressed');
+                              },
+                            ),
+                            IconButton(
+                              color: kPrimaryLightColor,
+                              icon: const Icon(Icons.add),
+                              onPressed: addUser,
+                            ),
                           ],
                         ),
                         Row(
@@ -93,13 +125,8 @@ class AccountScreen extends StatelessWidget {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                const Text(
-                                  'Duy quang',
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 20,
-                                    color: kPrimaryLightColor,
-                                  ),
+                                const GetUserName(
+                                  documentId: localUserID,
                                 ),
                                 const SizedBox(height: 5),
                                 Container(
@@ -321,5 +348,78 @@ class AccountScreen extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(DiagnosticsProperty<DocumentReference<Map<String, dynamic>>>(
+        'localRefDatabase', localRefDatabase));
+    properties.add(DiagnosticsProperty<Map<String, Object>>('user', user));
+  }
+}
+
+class GetUserName extends StatelessWidget {
+  const GetUserName({Key? key, required this.documentId}) : super(key: key);
+  final String documentId;
+
+  @override
+  Widget build(BuildContext context) {
+    final CollectionReference users =
+        AccountScreen.localRefDatabase.collection('users');
+
+    return StreamBuilder<DocumentSnapshot>(
+      stream: users.doc(documentId).snapshots(),
+      builder: (context, snapshot) {
+        if (snapshot.hasError) {
+          return Text(
+            'Something went wrong',
+            style: TextStyle(
+              fontWeight: FontWeight.normal,
+              fontSize: 18,
+              color: Colors.red.withOpacity(0.5),
+            ),
+          );
+        }
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Text(
+            'Loading',
+            style: TextStyle(
+              fontWeight: FontWeight.normal,
+              fontSize: 18,
+              color: kPrimaryLightColor.withOpacity(0.5),
+            ),
+          );
+        }
+
+        if (snapshot.hasData && !snapshot.data!.exists) {
+          return const Text(
+            'Document does not exist',
+            style: TextStyle(
+              fontWeight: FontWeight.normal,
+              fontSize: 20,
+              color: kPrimaryLightColor,
+            ),
+          );
+        }
+
+        final data = snapshot.data!.data() as Map<String, dynamic>;
+        final name = data['name'].toString();
+        return Text(
+          name,
+          style: const TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 20,
+            color: kPrimaryLightColor,
+          ),
+        );
+      },
+    );
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(StringProperty('documentId', documentId));
   }
 }

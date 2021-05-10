@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
+import 'package:we_trade/screens/account_features/account/account_screen.dart';
 
 import '../../../configs/constants/color.dart';
 import 'change_password_screen.dart';
@@ -20,12 +21,10 @@ class UserInfoScreen extends StatefulWidget {
 
 class _UserInfoScreenState extends State<UserInfoScreen> {
   // ignore: diagnostic_describe_all_properties
-  final userID = 'HClKVm4TTdlx28xCKTxF';
+  final userID = AccountScreen.localUserID;
   // ignore: diagnostic_describe_all_properties
   final quangDocID = 'h0Z8Hn6XvbtMsP4bwa4P';
-  final referenceDatabase = FirebaseFirestore.instance
-      .collection('quang')
-      .doc('h0Z8Hn6XvbtMsP4bwa4P');
+  final referenceDatabase = AccountScreen.localRefDatabase;
 
   final _nameController = TextEditingController();
   final _phoneNumController = TextEditingController();
@@ -91,7 +90,6 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
           title: Text(title),
           content: SingleChildScrollView(
             child: ListBody(
-              // ignore: prefer_const_literals_to_create_immutables
               children: [
                 Text(content),
               ],
