@@ -3,10 +3,11 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
-import 'package:we_trade/screens/account_features/account/account_screen.dart';
 
 import '../../../configs/constants/color.dart';
-import 'change_password_screen.dart';
+import '../account/account_screen.dart';
+import '../utils.dart';
+import './change_password_screen.dart';
 
 class UserInfoScreen extends StatefulWidget {
   const UserInfoScreen({
@@ -21,19 +22,16 @@ class UserInfoScreen extends StatefulWidget {
 
 class _UserInfoScreenState extends State<UserInfoScreen> {
   // ignore: diagnostic_describe_all_properties
-  final userID = AccountScreen.localUserID;
-  // ignore: diagnostic_describe_all_properties
   final quangDocID = 'h0Z8Hn6XvbtMsP4bwa4P';
   final referenceDatabase = AccountScreen.localRefDatabase;
+  final userID = AccountScreen.localUserID;
 
   final _nameController = TextEditingController();
   final _phoneNumController = TextEditingController();
   final _emailController = TextEditingController();
   final _locationController = TextEditingController();
   final _bioController = TextEditingController();
-  // ignore: diagnostic_describe_all_properties
-  // ignore: diagnostic_describe_all_properties
-  // ignore: diagnostic_describe_all_properties
+
   bool _isChanged = false;
   bool _isLoaded = false;
   Map<String, dynamic>? _user;
@@ -54,10 +52,14 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
         _user = documentSnapshot.data();
 
         if (_user == null) {
-          _showMyDialog('Lỗi', 'Không có dữ liệu! Vui lòng thử lại.', () {
-            Navigator.of(context).pop();
-            Navigator.of(context).pop();
-          });
+          showMyNotificationDialog(
+              context: context,
+              title: 'Lỗi',
+              content: 'Không có dữ liệu! Vui lòng thử lại.',
+              handleFunction: () {
+                Navigator.of(context).pop();
+                Navigator.of(context).pop();
+              });
         } else {
           _nameController.text = _user!['name'].toString();
           _emailController.text = _user!['email'].toString();
@@ -72,40 +74,15 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
     } on FirebaseException catch (e) {
       // ignore: avoid_print
       print('Lỗi: $e');
-      _showMyDialog('Lỗi', 'Tải dữ liệu không thành công. Vui lòng thử lại!',
-          () {
-        Navigator.of(context).pop();
-        Navigator.of(context).pop();
-      });
+      showMyNotificationDialog(
+          context: context,
+          title: 'Lỗi',
+          content: 'Tải dữ liệu không thành công. Vui lòng thử lại!',
+          handleFunction: () {
+            Navigator.of(context).pop();
+            Navigator.of(context).pop();
+          });
     }
-  }
-
-  Future<void> _showMyDialog(
-      String title, String content, Function handleFunction) async {
-    return showDialog<void>(
-      context: context,
-      barrierDismissible: false, // user must tap button!
-      builder: (context) {
-        return AlertDialog(
-          title: Text(title),
-          content: SingleChildScrollView(
-            child: ListBody(
-              children: [
-                Text(content),
-              ],
-            ),
-          ),
-          actions: <Widget>[
-            TextButton(
-              onPressed: () {
-                handleFunction();
-              },
-              child: const Text('OK'),
-            ),
-          ],
-        );
-      },
-    );
   }
 
   Future<void> _saveChange() async {
@@ -132,20 +109,27 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
           _isLoaded = true;
         });
 
-        _showMyDialog('Thành công', 'Thông tin thay đổi thành công!', () {
-          Navigator.of(context).pop();
-        });
+        showMyNotificationDialog(
+            context: context,
+            title: 'Thành công',
+            content: 'Thông tin thay đổi thành công!',
+            handleFunction: () {
+              Navigator.of(context).pop();
+            });
       }).timeout(Duration(seconds: timeOut));
     } on FirebaseException catch (error) {
       // ignore: avoid_print
       print('Lỗi khi lưu: $error');
-      await _showMyDialog(
-          'Thất bại', 'Thao tác Không thành công. Vui lòng thử lại sau.', () {
-        Navigator.of(context).pop();
-        setState(() {
-          _isLoaded = true;
-        });
-      });
+      await showMyNotificationDialog(
+          context: context,
+          title: 'Thất bại',
+          content: 'Thao tác Không thành công. Vui lòng thử lại sau.',
+          handleFunction: () {
+            Navigator.of(context).pop();
+            setState(() {
+              _isLoaded = true;
+            });
+          });
     }
   }
 
@@ -334,5 +318,6 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
     properties.add(DiagnosticsProperty<FocusScopeNode>('node', node));
     properties.add(DiagnosticsProperty<DocumentReference<Map<String, dynamic>>>(
         'referenceDatabase', referenceDatabase));
+        properties.add(StringProperty('userID', userID));
   }
 }
