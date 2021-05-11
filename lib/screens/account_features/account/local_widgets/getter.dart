@@ -2,72 +2,100 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-import '../../../../configs/constants/color.dart';
 import '../../follow/follow_screen.dart';
 import '../account_screen.dart';
 
 class GetUserName extends StatelessWidget {
-  const GetUserName({Key? key, required this.documentId}) : super(key: key);
+  const GetUserName(
+      {Key? key, required this.documentId, required this.isStream})
+      : super(key: key);
   final String documentId;
+  final bool isStream;
 
   @override
   Widget build(BuildContext context) {
     final CollectionReference users =
         AccountScreen.localRefDatabase.collection('users');
 
-    return StreamBuilder<DocumentSnapshot>(
-      stream: users.doc(documentId).snapshots(),
-      builder: (context, snapshot) {
-        if (snapshot.hasError) {
-          return Text(
-            'Something went wrong',
-            style: TextStyle(
-              fontWeight: FontWeight.normal,
-              fontSize: 18,
-              color: Colors.red.withOpacity(0.5),
-            ),
-          );
-        }
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return Text(
-            'Loading',
-            style: TextStyle(
-              fontWeight: FontWeight.normal,
-              fontSize: 18,
-              color: kPrimaryLightColor.withOpacity(0.5),
-            ),
-          );
-        }
+    return isStream
+        ? StreamBuilder<DocumentSnapshot>(
+            stream: users.doc(documentId).snapshots(),
+            builder: (context, snapshot) {
+              if (snapshot.hasError) {
+                return Text(
+                  'Something went wrong',
+                  style: TextStyle(
+                    fontWeight: FontWeight.normal,
+                    color: Colors.red.withOpacity(0.6),
+                  ),
+                );
+              }
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const Text(
+                  'loading...',
+                  style: TextStyle(
+                    fontWeight: FontWeight.normal,
+                    color: Colors.black38,
+                  ),
+                );
+              }
 
-        if (snapshot.hasData && !snapshot.data!.exists) {
-          return const Text(
-            'Document does not exist',
-            style: TextStyle(
-              fontWeight: FontWeight.normal,
-              fontSize: 20,
-              color: kPrimaryLightColor,
-            ),
-          );
-        }
+              if (snapshot.hasData && !snapshot.data!.exists) {
+                return Text(
+                  'Document does not exist',
+                  style: TextStyle(
+                    fontWeight: FontWeight.normal,
+                    color: Colors.red.withOpacity(0.6),
+                  ),
+                );
+              }
 
-        final data = snapshot.data!.data() as Map<String, dynamic>;
-        final name = data['name'].toString();
-        return Text(
-          name,
-          style: const TextStyle(
-            fontWeight: FontWeight.bold,
-            fontSize: 20,
-            color: kPrimaryLightColor,
-          ),
-        );
-      },
-    );
+              final data = snapshot.data!.data() as Map<String, dynamic>;
+              final name = data['name'].toString();
+              return Text(name);
+            },
+          )
+        : FutureBuilder<DocumentSnapshot>(
+            future: users.doc(documentId).get(),
+            builder: (context, snapshot) {
+              if (snapshot.hasError) {
+                return Text('Something went wrong',
+                    style: TextStyle(
+                      fontWeight: FontWeight.normal,
+                      color: Colors.red.withOpacity(0.6),
+                    ));
+              }
+
+              if (snapshot.hasData && !snapshot.data!.exists) {
+                return Text('Document does not exist',
+                    style: TextStyle(
+                      fontWeight: FontWeight.normal,
+                      color: Colors.red.withOpacity(0.6),
+                    ));
+              }
+
+              if (snapshot.connectionState == ConnectionState.done) {
+                final data = snapshot.data!.data() as Map<String, dynamic>;
+                final name = data['name'].toString();
+                return Text(name);
+              }
+
+              return const Text(
+                'loading...',
+                style: TextStyle(
+                  fontWeight: FontWeight.normal,
+                  color: Colors.black38,
+                ),
+              );
+            },
+          );
   }
 
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
     properties.add(StringProperty('documentId', documentId));
+    properties.add(DiagnosticsProperty<bool>('isStream', isStream));
   }
 }
 

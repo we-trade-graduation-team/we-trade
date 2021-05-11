@@ -124,8 +124,16 @@ class AccountScreen extends StatelessWidget {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                const GetUserName(
-                                  documentId: localUserID,
+                                const DefaultTextStyle(
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 20,
+                                    color: kPrimaryLightColor,
+                                  ),
+                                  child: GetUserName(
+                                    documentId: localUserID,
+                                    isStream: true,
+                                  ),
                                 ),
                                 const SizedBox(height: 5),
                                 Container(
@@ -210,9 +218,13 @@ class AccountScreen extends StatelessWidget {
                                     context,
                                     settings: RouteSettings(
                                       name: FollowScreen.routeName,
-                                      arguments: FollowScreenArguments(
+                                      arguments: {
+                                        'screenArgument': FollowScreenArguments(
                                           screenName:
-                                              Follow_Screen_Name.following),
+                                              Follow_Screen_Name.following,
+                                        ),
+                                        'userID': localUserID
+                                      },
                                     ),
                                     screen: const FollowScreen(),
                                     withNavBar: false,
@@ -236,9 +248,13 @@ class AccountScreen extends StatelessWidget {
                                     context,
                                     settings: RouteSettings(
                                       name: FollowScreen.routeName,
-                                      arguments: FollowScreenArguments(
+                                      arguments: {
+                                        'screenArgument': FollowScreenArguments(
                                           screenName:
-                                              Follow_Screen_Name.follower),
+                                              Follow_Screen_Name.follower,
+                                        ),
+                                        'userID': localUserID
+                                      },
                                     ),
                                     screen: const FollowScreen(),
                                     withNavBar: false,

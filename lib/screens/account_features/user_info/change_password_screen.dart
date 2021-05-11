@@ -1,7 +1,9 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
+
 import '../../../configs/constants/color.dart';
+import '../utils.dart';
 
 class ChangePasswordScreen extends StatefulWidget {
   const ChangePasswordScreen({
@@ -24,34 +26,6 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
 
   void _onEdittingCompleteHandleFunction() {
     node.unfocus();
-  }
-
-  Future<void> _showMyDialog(
-      String title, String content, Function handleFunction) async {
-    return showDialog<void>(
-      context: context,
-      barrierDismissible: false, // user must tap button!
-      builder: (context) {
-        return AlertDialog(
-          title: Text(title),
-          content: SingleChildScrollView(
-            child: ListBody(
-              children: [
-                Text(content),
-              ],
-            ),
-          ),
-          actions: <Widget>[
-            TextButton(
-              onPressed: () {
-                handleFunction();
-              },
-              child: const Text('OK'),
-            ),
-          ],
-        );
-      },
-    );
   }
 
   @override
@@ -145,18 +119,23 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                   if (_formKey.currentState!.validate()) {
                     if (_confirmPasswordController.text !=
                         _newPasswordController.text) {
-                      _showMyDialog(
-                          'Thông báo', 'Xác nhận mật khẩu không chính xác.',
-                          () {
-                        Navigator.of(context).pop();
-                      });
+                      showMyNotificationDialog(
+                          context: context,
+                          title: 'Thông báo',
+                          content: 'Xác nhận mật khẩu không chính xác.',
+                          handleFunction: () {
+                            Navigator.of(context).pop();
+                          });
                     } else {
                       //TODO: compare pw in db
-                      _showMyDialog(
-                          'Thông báo', 'Thay đổi mật khẩu thành công.', () {
-                        Navigator.of(context).pop();
-                        Navigator.of(context).pop();
-                      });
+                      showMyNotificationDialog(
+                          context: context,
+                          title: 'Thông báo',
+                          content: 'Thay đổi mật khẩu thành công.',
+                          handleFunction: () {
+                            Navigator.of(context).pop();
+                            Navigator.of(context).pop();
+                          });
                     }
                   }
                 },
