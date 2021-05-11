@@ -86,6 +86,7 @@ class _CustomFormBuilderTextFieldState
       obscureText: widget.obscureText,
       autovalidateMode: widget.autovalidateMode,
       keyboardType: widget.keyboardType,
+      // onSubmitted: ,
     );
   }
 

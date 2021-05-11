@@ -5,20 +5,17 @@ class TopRoundedContainer extends StatelessWidget {
   const TopRoundedContainer({
     Key? key,
     required this.color,
-    required this.topMargin,
     this.width = double.infinity,
     this.child,
   }) : super(key: key);
 
   final double? width;
-  final double topMargin;
   final Color? color;
   final Widget? child;
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.only(top: topMargin),
       width: width,
       decoration: BoxDecoration(
         color: color,
@@ -36,6 +33,5 @@ class TopRoundedContainer extends StatelessWidget {
     super.debugFillProperties(properties);
     properties.add(ColorProperty('color', color));
     properties.add(DoubleProperty('width', width));
-    properties.add(DoubleProperty('topMargin', topMargin));
   }
 }
