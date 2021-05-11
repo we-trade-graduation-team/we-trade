@@ -45,31 +45,32 @@ class _SecondarySplashScreenState extends State<SecondarySplashScreen> {
     const lottieUrl =
         'https://assets9.lottiefiles.com/packages/lf20_l2kZFi.json';
     return FutureBuilder<void>(
-        future: checkFirstSeen(),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Scaffold(
-              body: LayoutBuilder(
-                builder: (_, constraints) => ListView(
-                  shrinkWrap: true,
-                  children: [
-                    // Load a Lottie file from a remote url
-                    Container(
-                      padding: const EdgeInsets.all(20),
-                      constraints: BoxConstraints(
-                        minHeight: constraints.maxHeight,
-                      ),
-                      child: Center(
-                        child: Lottie.network(lottieUrl),
-                      ),
+      future: checkFirstSeen(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Scaffold(
+            body: LayoutBuilder(
+              builder: (_, constraints) => ListView(
+                shrinkWrap: true,
+                children: [
+                  // Load a Lottie file from a remote url
+                  Container(
+                    padding: const EdgeInsets.all(20),
+                    constraints: BoxConstraints(
+                      minHeight: constraints.maxHeight,
                     ),
-                  ],
-                ),
+                    child: Center(
+                      child: Lottie.network(lottieUrl),
+                    ),
+                  ),
+                ],
               ),
-            );
-          } else {
-            return MainMenu(menuScreenContext: context);
-          }
-        });
+            ),
+          );
+        } else {
+          return MainMenu(menuScreenContext: context);
+        }
+      },
+    );
   }
 }

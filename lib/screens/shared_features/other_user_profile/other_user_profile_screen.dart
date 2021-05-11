@@ -37,15 +37,19 @@ class _OtherUserProfileScreenState extends State<OtherUserProfileScreen> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance!
-        .addPostFrameCallback((_) => getSizeAndPosition().whenComplete(() => {
-              Future<void>.delayed(const Duration(microseconds: 1))
-                  .then((value) {
-                setState(() {
-                  _visible = false;
-                });
-              })
-            }));
+    WidgetsBinding.instance!.addPostFrameCallback(
+      (_) => getSizeAndPosition().whenComplete(
+        () => {
+          Future<void>.delayed(const Duration(microseconds: 1)).then(
+            (value) {
+              setState(() {
+                _visible = false;
+              });
+            },
+          ),
+        },
+      ),
+    );
   }
 
   Widget getHeight(double width) {
