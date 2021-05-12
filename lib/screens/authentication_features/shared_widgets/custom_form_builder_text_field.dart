@@ -14,6 +14,7 @@ class CustomFormBuilderTextField extends StatefulWidget {
     this.autovalidateMode = AutovalidateMode.disabled,
     this.keyboardType = TextInputType.text,
     this.validator,
+    this.textEditingController,
   }) : super(key: key);
 
   final String name, labelText;
@@ -23,6 +24,7 @@ class CustomFormBuilderTextField extends StatefulWidget {
   final VoidCallback onEditingComplete;
   final AutovalidateMode autovalidateMode;
   final TextInputType keyboardType;
+  final TextEditingController? textEditingController;
 
   @override
   _CustomFormBuilderTextFieldState createState() =>
@@ -42,7 +44,10 @@ class CustomFormBuilderTextField extends StatefulWidget {
         'onEditingComplete', onEditingComplete));
     properties.add(
         EnumProperty<AutovalidateMode>('autovalidateMode', autovalidateMode));
-        properties.add(DiagnosticsProperty<TextInputType>('keyboardType', keyboardType));
+    properties
+        .add(DiagnosticsProperty<TextInputType>('keyboardType', keyboardType));
+    properties.add(DiagnosticsProperty<TextEditingController?>(
+        'textEditingController', textEditingController));
   }
 }
 
@@ -68,6 +73,7 @@ class _CustomFormBuilderTextFieldState
   @override
   Widget build(BuildContext context) {
     return FormBuilderTextField(
+      controller: widget.textEditingController,
       focusNode: myFocusNode,
       name: widget.name,
       decoration: InputDecoration(

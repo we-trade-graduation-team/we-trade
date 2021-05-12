@@ -68,7 +68,7 @@ class _SecondarySplashScreenState extends State<SecondarySplashScreen> {
             ),
           );
         } else {
-          return MainMenu(menuScreenContext: context);
+          return const MainMenu();
         }
       },
     );

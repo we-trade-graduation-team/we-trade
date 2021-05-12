@@ -259,8 +259,7 @@ class _BodyState extends State<Body> {
                       // snackBar('OTP Verified!!');
                       Navigator.of(context).push<void>(
                         MaterialPageRoute(
-                          builder: (context) =>
-                              MainMenu(menuScreenContext: context),
+                          builder: (context) => const MainMenu(),
                         ),
                       );
                     },

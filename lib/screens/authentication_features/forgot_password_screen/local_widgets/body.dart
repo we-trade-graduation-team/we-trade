@@ -55,7 +55,7 @@ class _BodyState extends State<Body> {
       navigateCallback: () {
         Navigator.of(context).push<void>(
           MaterialPageRoute(
-            builder: (context) => MainMenu(menuScreenContext: context),
+            builder: (context) => const MainMenu(),
           ),
         );
       },

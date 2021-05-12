@@ -2,9 +2,11 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:provider/provider.dart';
 
+import '../../../../authentication_service.dart';
 import '../../../../configs/constants/assets_paths/sign_in_screen_assets_path.dart';
-import '../../../../main_menu.dart';
+// import '../../../../main_menu.dart';
 import '../../forgot_password_screen/forgot_password_screen.dart';
 import '../../shared_widgets/auth_custom_background.dart';
 import '../../shared_widgets/custom_form_builder_text_field.dart';
@@ -22,6 +24,8 @@ class Body extends StatefulWidget {
 
 class _BodyState extends State<Body> {
   final _formKey = GlobalKey<FormBuilderState>();
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -45,6 +49,7 @@ class _BodyState extends State<Body> {
           ]),
           onEditingComplete: node.nextFocus,
           keyboardType: TextInputType.emailAddress,
+          textEditingController: emailController,
         ),
         // const SizedBox(height: 20),
         CustomFormBuilderTextField(
@@ -57,6 +62,7 @@ class _BodyState extends State<Body> {
           obscureText: true,
           textInputAction: TextInputAction.done,
           onEditingComplete: node.unfocus,
+          textEditingController: passwordController,
         ),
       ],
       footerWidgets: [
@@ -122,18 +128,31 @@ class _BodyState extends State<Body> {
         ),
       ],
       navigateCallback: () {
-        Navigator.of(context).pushAndRemoveUntil<void>(
-          MaterialPageRoute(
-            settings: const RouteSettings(
-              name: '/',
-            ),
-            builder: (context) => MainMenu(
-              menuScreenContext: context,
-            ),
-          ),
-          (route) => false,
-        );
+        context.read<AuthenticationService>().signIn(
+              email: emailController.text.trim(),
+              password: passwordController.text.trim(),
+            );
+        // Navigator.of(context).pushAndRemoveUntil<void>(
+        //   MaterialPageRoute(
+        //     settings: const RouteSettings(
+        //       name: '/',
+        //     ),
+        //     builder: (context) => MainMenu(
+        //       menuScreenContext: context,
+        //     ),
+        //   ),
+        //   (route) => false,
+        // );
       },
     );
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(DiagnosticsProperty<TextEditingController>(
+        'emailController', emailController));
+    properties.add(DiagnosticsProperty<TextEditingController>(
+        'passwordController', passwordController));
   }
 }
