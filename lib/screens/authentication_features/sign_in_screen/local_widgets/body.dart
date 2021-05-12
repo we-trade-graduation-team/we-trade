@@ -4,9 +4,8 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 
-import '../../../../authentication_service.dart';
 import '../../../../configs/constants/assets_paths/sign_in_screen_assets_path.dart';
-// import '../../../../main_menu.dart';
+import '../../../../services/authentication_service.dart';
 import '../../forgot_password_screen/forgot_password_screen.dart';
 import '../../shared_widgets/auth_custom_background.dart';
 import '../../shared_widgets/custom_form_builder_text_field.dart';
@@ -127,11 +126,16 @@ class _BodyState extends State<Body> {
           ],
         ),
       ],
-      navigateCallback: () {
-        context.read<AuthenticationService>().signIn(
+      navigateCallback: () async {
+        final result = await context.read<AuthenticationService>().signIn(
               email: emailController.text.trim(),
               password: passwordController.text.trim(),
             );
+        if (result == null) {
+          print('error');
+        } else {
+          print(result.email);
+        }
         // Navigator.of(context).pushAndRemoveUntil<void>(
         //   MaterialPageRoute(
         //     settings: const RouteSettings(
