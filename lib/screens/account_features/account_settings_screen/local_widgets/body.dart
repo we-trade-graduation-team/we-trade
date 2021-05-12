@@ -21,6 +21,8 @@ class Body extends StatelessWidget {
               width: size.width,
               child: ElevatedButton(
                 onPressed: () {
+                  Navigator.of(context)
+                      .pushNamedAndRemoveUntil('/', (route) => false);
                   context.read<AuthenticationService>().signOut();
                 },
                 // style: ElevatedButton.styleFrom(),

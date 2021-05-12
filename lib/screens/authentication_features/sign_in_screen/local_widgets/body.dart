@@ -128,6 +128,7 @@ class _BodyState extends State<Body> {
         ),
       ],
       navigateCallback: () {
+        Navigator.of(context).popUntil((route) => route.isFirst);
         context.read<AuthenticationService>().signIn(
               email: emailController.text.trim(),
               password: passwordController.text.trim(),

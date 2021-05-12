@@ -1,4 +1,5 @@
 import 'package:flutter/widgets.dart';
+import 'package:we_trade/screens/guide_features/welcome_screen/welcome.dart';
 
 import '../screens/authentication_features/complete_profile_screen/complete_profile_screen.dart';
 import '../screens/authentication_features/forgot_password_screen/forgot_password_screen.dart';
@@ -12,4 +13,5 @@ final Map<String, WidgetBuilder> authenticationFeaturesRoutes = {
   OtpScreen.routeName: (_) => const OtpScreen(phoneNumber: '+8801376221100'),
   SignInScreen.routeName: (_) => const SignInScreen(),
   SignUpScreen.routeName: (_) => const SignUpScreen(),
+  //WelcomeScreen.routeName: (_) => const SignUpScreen(),
 };
