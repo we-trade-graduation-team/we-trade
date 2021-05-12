@@ -4,17 +4,20 @@ import '../../shared_features/report/local_widgets/pop_header.dart';
 import 'notification.dart';
 
 class DetailedNotificationScreen extends StatelessWidget {
-  const DetailedNotificationScreen({Key? key}) : super(key: key);
+  const DetailedNotificationScreen({
+    Key? key,
+  }) : super(key: key);
+
   static String routeName = '/detailedNotificationScreen';
-  // ignore: avoid_field_initializers_in_const_classes
-  final NotificationData note = const NotificationData(
-      title: 'Đơn hàng đang trong quá trình vận chuyển',
-      content:
-          'Đơn hàng của quí khách đã được tiếp nhận bởi bộ phận vận chuyển',
-      seen: true);
 
   @override
   Widget build(BuildContext context) {
+    const note = NotificationData(
+      title: 'Đơn hàng đang trong quá trình vận chuyển',
+      content:
+          'Đơn hàng của quí khách đã được tiếp nhận bởi bộ phận vận chuyển',
+      seen: true,
+    );
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(AppBar().preferredSize.height + 20),
@@ -24,7 +27,7 @@ class DetailedNotificationScreen extends StatelessWidget {
         padding: const EdgeInsets.all(8),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
+          children: [
             Text(
               note.title,
               style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
@@ -39,13 +42,6 @@ class DetailedNotificationScreen extends StatelessWidget {
           ],
         ),
       ),
-      //bottomNavigationBar: const CustomBottomNavigationBar(),
     );
-  }
-
-  @override
-  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
-    super.debugFillProperties(properties);
-    properties.add(DiagnosticsProperty<NotificationData>('note', note));
   }
 }

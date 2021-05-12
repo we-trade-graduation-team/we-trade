@@ -24,24 +24,29 @@ class CategoryKind extends StatelessWidget {
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(100),
         child: Column(
-          children: <Widget>[
-            SizedBox(height: size.height*0.05,),
+          children: [
+            SizedBox(
+              height: size.height * 0.05,
+            ),
             Row(
-              children: <Widget>[
-                SizedBox(width: size.width*0.05,),
-                Container(
-                  decoration: BoxDecoration(
-                    border: Border.all(color: Colors.grey),
-                    borderRadius: const BorderRadius.all(Radius.circular(20))
-                  ),
-                    child: const HomeScreenSearchBar()
+              children: [
+                SizedBox(
+                  width: size.width * 0.05,
                 ),
-                SizedBox(width: size.width*0.05,),
+                Container(
+                    decoration: BoxDecoration(
+                        border: Border.all(color: Colors.grey),
+                        borderRadius:
+                            const BorderRadius.all(Radius.circular(20))),
+                    child: const HomeScreenSearchBar()),
+                SizedBox(
+                  width: size.width * 0.05,
+                ),
                 Container(
                   decoration: BoxDecoration(
-                    border: Border.all(color: Colors.grey),
-                      borderRadius: const BorderRadius.all(Radius.circular(20))
-                  ),
+                      border: Border.all(color: Colors.grey),
+                      borderRadius:
+                          const BorderRadius.all(Radius.circular(20))),
                   child: SizedBox(
                     height: 40,
                     width: 40,
@@ -52,7 +57,8 @@ class CategoryKind extends StatelessWidget {
                       press: () => pushNewScreenWithRouteSettings<void>(
                         context,
                         screen: NotificationScreen(),
-                        settings: const RouteSettings(name: '/notificationScreen'),
+                        settings:
+                            const RouteSettings(name: '/notificationScreen'),
                         withNavBar: true,
                       ),
                     ),
@@ -70,14 +76,14 @@ class CategoryKind extends StatelessWidget {
               minHeight: viewportConstraints.maxHeight,
             ),
             child: Padding(
-              padding:EdgeInsets.symmetric(horizontal: size.width * 0.05),
+              padding: EdgeInsets.symmetric(horizontal: size.width * 0.05),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: <Widget>[
+                children: [
                   Padding(
                     padding:
-                    EdgeInsets.symmetric(horizontal: size.width * 0.05),
+                        EdgeInsets.symmetric(horizontal: size.width * 0.05),
                     /*child: SectionTitle(
                             title: 'Sản phẩm mới',
                             press: () {},
@@ -87,7 +93,7 @@ class CategoryKind extends StatelessWidget {
                   HorizontalScrollProductListView(items: demoProducts),
                   Padding(
                     padding:
-                    EdgeInsets.symmetric(horizontal: size.width * 0.05),
+                        EdgeInsets.symmetric(horizontal: size.width * 0.05),
                     /*child: SectionTitle(
                             title: productKind.name,
                             press: () {},
@@ -108,7 +114,7 @@ class CategoryKind extends StatelessWidget {
                       children: [
                         ...List.generate(
                           recommendedProducts.length,
-                              (index) =>
+                          (index) =>
                               ProductCard(product: recommendedProducts[index]),
                         ),
                       ],

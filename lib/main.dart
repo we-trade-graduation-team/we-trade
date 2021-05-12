@@ -4,14 +4,17 @@ import 'package:flutter/material.dart';
 
 import 'app.dart';
 
-// ignore: non_constant_identifier_names
-bool USE_FIRESTORE_EMULATOR = false;
+bool useFirestoreEmulator = false;
+
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  if (USE_FIRESTORE_EMULATOR) {
+  if (useFirestoreEmulator) {
     FirebaseFirestore.instance.settings = const Settings(
-        host: 'localhost:8080', sslEnabled: false, persistenceEnabled: false);
+      host: 'localhost:8080',
+      sslEnabled: false,
+      persistenceEnabled: false,
+    );
   }
   runApp(const MyApp());
 }
