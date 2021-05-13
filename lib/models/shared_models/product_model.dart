@@ -1,6 +1,6 @@
 // import 'package:json_annotation/json_annotation.dart';
 import '../detail_screen/question_model.dart';
-import 'user_model.dart';
+import 'account_model.dart';
 
 // @JsonSerializable()
 class Product {
@@ -28,7 +28,7 @@ class Product {
   final List<String> images, tradeForCategory;
   final double price;
   final bool isFavourite, isPopular;
-  final User owner;
+  final Account owner;
   final List<Question>? questions;
 }
 

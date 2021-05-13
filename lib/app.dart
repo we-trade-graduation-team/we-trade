@@ -4,11 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
-import 'authentication_service.dart';
-import 'authentication_wrapper.dart';
 
+import 'authentication_wrapper.dart';
 import 'configs/theme/theme.dart';
 import 'routing/authentication_features_routes.dart';
+import 'services/authentication/authentication_service.dart';
 // import 'screens/shared_features/secondary_splash_screen/secondary_splash_screen.dart';
 
 class MyApp extends StatelessWidget {

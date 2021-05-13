@@ -1,7 +1,7 @@
 import '../detail_screen/user_rating_model.dart';
 
-class User {
-  User({
+class Account {
+  Account({
     required this.id,
     required this.avatar,
     required this.username,
@@ -13,8 +13,8 @@ class User {
   final List<UserRating>? ratings;
 }
 
-List<User> demoUsers = [
-  User(
+List<Account> demoUsers = [
+  Account(
     id: 1,
     username: 'Michael',
     avatar:
@@ -34,7 +34,7 @@ List<User> demoUsers = [
       ),
     ],
   ),
-  User(
+  Account(
     id: 2,
     username: 'Shayna',
     avatar:
@@ -54,13 +54,13 @@ List<User> demoUsers = [
       ),
     ],
   ),
-  User(
+  Account(
     id: 3,
     username: 'Samantha',
     avatar:
         'https://images.unsplash.com/photo-1499651681375-8afc5a4db253?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=987&q=80',
   ),
-  User(
+  Account(
     id: 4,
     username: 'Jack',
     avatar:

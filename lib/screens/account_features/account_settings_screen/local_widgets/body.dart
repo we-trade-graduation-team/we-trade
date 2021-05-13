@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../../../authentication_service.dart';
+import '../../../../configs/constants/color.dart';
+import '../../../../services/authentication/authentication_service.dart';
 
 class Body extends StatelessWidget {
   const Body({
@@ -20,12 +21,14 @@ class Body extends StatelessWidget {
               height: 50,
               width: size.width,
               child: ElevatedButton(
-                onPressed: () {
-                  Navigator.of(context)
+                onPressed: () async {
+                  await context.read<AuthenticationService>().signOut();
+                  await Navigator.of(context)
                       .pushNamedAndRemoveUntil('/', (route) => false);
-                  context.read<AuthenticationService>().signOut();
                 },
-                // style: ElevatedButton.styleFrom(),
+                style: ElevatedButton.styleFrom(
+                  primary: kPrimaryColor,
+                ),
                 child: const Text('Sign out'),
               ),
             ),
