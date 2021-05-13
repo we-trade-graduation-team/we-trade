@@ -1,15 +1,23 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import '../../../../configs/constants/color.dart';
 
 class ChatInput extends StatelessWidget {
-  const ChatInput({
+  ChatInput({
     Key? key,
   }) : super(key: key);
+  final inputFormKey = GlobalKey<FormState>();
+
+  void sendMessage() {
+    if (inputFormKey.currentState!.validate()) {
+      //TODO validate mới cho thực hiện gửi tin nhắn
+      print('validate thành công');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     const height = 48.0;
-
     return Container(
       padding: const EdgeInsets.only(left: 10, bottom: 10, top: 10, right: 10),
       width: double.infinity,
@@ -64,15 +72,21 @@ class ChatInput extends StatelessWidget {
                 color: kBackGroundColor,
                 borderRadius: BorderRadius.circular(5),
               ),
-              child: const TextField(
-                maxLines: null,
-                decoration: InputDecoration(
-                  hintText: 'Write message...',
-                  hintStyle: TextStyle(color: Colors.black54),
-                  contentPadding: EdgeInsets.fromLTRB(10, 0, 10, 0),
-                  border: InputBorder.none,
-                  enabledBorder: InputBorder.none,
-                  focusedBorder: InputBorder.none,
+              child: Form(
+                key: inputFormKey,
+                child: TextFormField(
+                  validator: (val) {
+                    return val!.isEmpty ? '' : null;
+                  },
+                  maxLines: null,
+                  decoration: const InputDecoration(
+                    hintText: 'Write message...',
+                    hintStyle: TextStyle(color: Colors.black54),
+                    contentPadding: EdgeInsets.fromLTRB(10, 0, 10, 0),
+                    border: InputBorder.none,
+                    enabledBorder: InputBorder.none,
+                    focusedBorder: InputBorder.none,
+                  ),
                 ),
               ),
             ),
@@ -82,7 +96,9 @@ class ChatInput extends StatelessWidget {
             height: height,
             child: Center(
               child: GestureDetector(
-                onTap: () {},
+                onTap: () {
+                  sendMessage();
+                },
                 child: Container(
                   height: 35,
                   width: 35,
@@ -152,5 +168,12 @@ class ChatInput extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(DiagnosticsProperty<GlobalKey<FormState>>(
+        'inputFormKey', inputFormKey));
   }
 }

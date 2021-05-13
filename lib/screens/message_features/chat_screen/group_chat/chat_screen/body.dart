@@ -12,7 +12,7 @@ class _BodyState extends State<Body> {
   @override
   Widget build(BuildContext context) {
     return Stack(
-      children: const [
+      children: [
         Align(
           alignment: Alignment.bottomLeft,
           child: ChatInput(),

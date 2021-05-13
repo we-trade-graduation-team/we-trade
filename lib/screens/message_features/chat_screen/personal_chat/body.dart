@@ -27,7 +27,7 @@ class _BodyState extends State<Body> {
 
     return Stack(
       children: [
-        const Align(
+        Align(
           alignment: Alignment.bottomLeft,
           child: ChatInput(),
         ),
