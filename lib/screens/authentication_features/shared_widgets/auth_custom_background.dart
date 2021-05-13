@@ -38,7 +38,6 @@ class AuthCustomBackground extends StatelessWidget {
       child: GestureDetector(
         onTap: node.unfocus,
         child: Stack(
-          // alignment: Alignment.center,
           children: [
             Positioned.fill(
               top: firstContainerTopMargin,
