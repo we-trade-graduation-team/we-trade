@@ -19,7 +19,7 @@ class ForgotPasswordScreen extends StatelessWidget {
     return const Scaffold(
       body: Body(),
       backgroundColor: Colors.black,
-      resizeToAvoidBottomInset: false,
+      // resizeToAvoidBottomInset: false,
     );
   }
 }

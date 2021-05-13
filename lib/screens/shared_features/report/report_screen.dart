@@ -5,9 +5,10 @@ import 'package:flutter/material.dart';
 import 'package:group_button/group_button.dart';
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:provider/provider.dart';
-import '../../../bloc/report_bloc.dart';
-import '../../../models/shared_models/product_model.dart';
 
+import '../../../bloc/report_bloc.dart';
+import '../../../configs/constants/color.dart';
+import '../../../models/shared_models/product_model.dart';
 import 'local_widgets/pop_header.dart';
 
 class ReportScreenBody extends StatefulWidget {
@@ -42,59 +43,64 @@ class _ReportScreenState extends State<ReportScreenBody> {
               padding: const EdgeInsets.all(10),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        ClipRRect(
-                          borderRadius: BorderRadius.circular(8),
-                          child: Container(
-                            height: size.height * 0.2,
-                            width: size.height * 0.2,
-                            child: Hero(
-                              tag: demoProducts[0].id.toString(),
-                              child: Image.network(
-                                demoProducts[0].images[0],
-                                fit: BoxFit.cover,
-                                height: double.infinity,
-                                width: double.infinity,
-                              ),
-                            ),
+                children: [
+                  Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(8),
+                      child: Container(
+                        height: size.height * 0.2,
+                        width: size.height * 0.2,
+                        child: Image.network(
+                          demoProducts[0].images[0],
+                          fit: BoxFit.cover,
+                          height: double.infinity,
+                          width: double.infinity,
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      width: size.width * 0.05,
+                    ),
+                    Expanded(
+                      // width: size.width * 0.5,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          AutoSizeText(
+                            demoProducts[0].title,
+                            maxLines: 2,
+                            style: const TextStyle(fontWeight: FontWeight.bold),
                           ),
-                        ),
-                        SizedBox(
-                          width: size.width * 0.05,
-                        ),
-                        Container(
-                          width: size.width * 0.5,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              AutoSizeText(
-                                demoProducts[0].title,
-                                maxLines: 2,
-                                style: const TextStyle(
-                                    fontWeight: FontWeight.bold),
+                          // Text(
+                          //   demoProducts[0].ownerLocation,
+                          //   maxLines: 2,
+                          //   overflow: TextOverflow.ellipsis,
+                          //   style: const TextStyle(fontSize: 18),
+                          // ),
+                          const SizedBox(
+                            height: 10,
+                          ),
+                          Row(
+                            children: [
+                              const Icon(Icons.edit_location),
+                              const SizedBox(
+                                width: 5,
                               ),
-                              Text(
-                                demoProducts[0].ownerLocation,
-                                style: const TextStyle(fontSize: 18),
-                              ),
-                              Row(
-                                // ignore: prefer_const_literals_to_create_immutables
-                                children: <Widget>[
-                                  const Icon(Icons.edit_location),
-                                  Text(
-                                    demoProducts[0].ownerLocation,
-                                    style: const TextStyle(fontSize: 18),
-                                  )
-                                ],
+                              Expanded(
+                                child: Text(
+                                  demoProducts[0].ownerLocation,
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: const TextStyle(fontSize: 18),
+                                ),
                               )
                             ],
-                          ),
-                        )
-                      ]),
-                  const SizedBox(height: 10),
+                          )
+                        ],
+                      ),
+                    )
+                  ]),
+                  const SizedBox(height: 20),
                   const Text(
                     'Lý do:',
                     style: TextStyle(fontSize: 22),
@@ -110,18 +116,17 @@ class _ReportScreenState extends State<ReportScreenBody> {
                     buttons: lyDo,
                     selectedColor: const Color(0xFF6F35A5),
                   ),
+                  const SizedBox(height: 10),
                   TextField(
-                    // ignore: avoid_bool_literals_in_conditional_expressions
-                    enabled: reportBloc.unlockTextField ? true : false,
+                    enabled: reportBloc.unlockTextField,
                     maxLines: null,
                     decoration: InputDecoration(
-                      // ignore: avoid_bool_literals_in_conditional_expressions
-                      filled: reportBloc.unlockTextField ? false : true,
-                      fillColor: Colors.grey,
+                      filled: !reportBloc.unlockTextField,
+                      fillColor: kBackGroundColor,
                       border: const OutlineInputBorder(),
                     ),
                   ),
-                  Row(children: <Widget>[
+                  Row(children: [
                     IconButton(
                         icon: reportBloc.confirmed
                             ? const Icon(Icons.check_box)
@@ -133,31 +138,29 @@ class _ReportScreenState extends State<ReportScreenBody> {
                     )
                   ]),
                   Container(
-                      alignment: Alignment.centerRight,
-                      child: Card(
-                        child: TextButton(
-                          onPressed: () {},
-                          style: ButtonStyle(
-                              backgroundColor: reportBloc.confirmed
-                                  ? MaterialStateProperty.all<Color>(
-                                      const Color(0xFF6F35A5))
-                                  : MaterialStateProperty.all<Color>(
-                                      Colors.grey),
-                              shape: MaterialStateProperty.all<
-                                      RoundedRectangleBorder>(
-                                  RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(18),
-                              ))),
-                          child: const Padding(
-                            padding: EdgeInsets.fromLTRB(10, 2, 10, 2),
-                            child: Text(
-                              'Báo cáo',
-                              style:
-                                  TextStyle(fontSize: 22, color: Colors.white),
-                            ),
+                    alignment: Alignment.centerRight,
+                    child: Card(
+                      child: TextButton(
+                        onPressed: () {},
+                        style: ButtonStyle(
+                            backgroundColor: reportBloc.confirmed
+                                ? MaterialStateProperty.all<Color>(
+                                    const Color(0xFF6F35A5))
+                                : MaterialStateProperty.all<Color>(Colors.grey),
+                            shape: MaterialStateProperty.all<
+                                RoundedRectangleBorder>(RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(18),
+                            ))),
+                        child: const Padding(
+                          padding: EdgeInsets.fromLTRB(10, 2, 10, 2),
+                          child: Text(
+                            'Báo cáo',
+                            style: TextStyle(fontSize: 22, color: Colors.white),
                           ),
                         ),
-                      )),
+                      ),
+                    ),
+                  ),
                 ],
               ),
             ),

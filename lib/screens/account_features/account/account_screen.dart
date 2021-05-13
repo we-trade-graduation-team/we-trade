@@ -1,15 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
-import '../../../configs/constants/assets_paths/shared_assets_root.dart';
 
+import '../../../configs/constants/assets_paths/shared_assets_root.dart';
 import '../../../configs/constants/color.dart';
 import '../../wish_list_features/wish_list/wish_list_screen.dart';
+import '../account_settings_screen/account_settings_screen.dart';
 import '../follow/follow_screen.dart';
 import '../my_rate/my_rate_screen.dart';
 import '../post_management/post_management_screen.dart';
 import '../trading_history/trading_history_screen.dart';
 import '../user_info/user_info_screen.dart';
+
+class AccountListTileModel {
+  AccountListTileModel({
+    required this.leadingIcon,
+    required this.titleText,
+    required this.onTapFunc,
+  });
+
+  final Icon leadingIcon;
+  final String titleText;
+  final VoidCallback onTapFunc;
+}
 
 class AccountScreen extends StatelessWidget {
   const AccountScreen({
@@ -31,16 +44,13 @@ class AccountScreen extends StatelessWidget {
     );
   }
 
-  ListTile buildListTile(
-      Icon leadingIcon, String titleText, Function onTapFunc) {
+  ListTile buildListTile(AccountListTileModel model) {
     return ListTile(
-      leading: leadingIcon,
-      title: Align(
-        alignment: const Alignment(-1.2, 0),
-        child: Text(titleText),
-      ),
+      leading: model.leadingIcon,
+      title: Text(model.titleText),
       trailing: const Icon(Icons.arrow_forward_ios),
-      onTap: () => onTapFunc(),
+      onTap: model.onTapFunc,
+      minLeadingWidth: 10,
     );
   }
 
@@ -48,6 +58,104 @@ class AccountScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final height = MediaQuery.of(context).size.height;
     final bannerHeight = height * 0.28;
+
+    final accountListTileItemModel = [
+      AccountListTileModel(
+        titleText: 'Quản lí bài đăng',
+        leadingIcon: const Icon(
+          Icons.post_add,
+          color: Colors.blueGrey,
+        ),
+        onTapFunc: () {
+          pushNewScreenWithRouteSettings<void>(
+            context,
+            settings: const RouteSettings(
+              name: PostManagementScreen.routeName,
+            ),
+            screen: PostManagementScreen(),
+            withNavBar: false,
+            pageTransitionAnimation: PageTransitionAnimation.cupertino,
+          );
+        },
+      ),
+      AccountListTileModel(
+        titleText: 'Đã thích',
+        leadingIcon: const Icon(
+          Icons.favorite_border,
+          color: Colors.redAccent,
+        ),
+        onTapFunc: () {
+          pushNewScreenWithRouteSettings<void>(
+            context,
+            settings: const RouteSettings(
+              name: WishListScreen.routeName,
+            ),
+            screen: const WishListScreen(),
+            withNavBar: false,
+            pageTransitionAnimation: PageTransitionAnimation.cupertino,
+          );
+        },
+      ),
+      AccountListTileModel(
+        titleText: 'Lịch sử giao dịch',
+        leadingIcon: const Icon(
+          Icons.schedule,
+          color: Colors.blue,
+        ),
+        onTapFunc: () {
+          pushNewScreenWithRouteSettings<void>(
+            context,
+            settings: const RouteSettings(
+              name: TradingHistoryScreen.routeName,
+            ),
+            screen: TradingHistoryScreen(),
+            withNavBar: false,
+            pageTransitionAnimation: PageTransitionAnimation.cupertino,
+          );
+        },
+      ),
+      AccountListTileModel(
+        titleText: 'Đánh giá của tôi',
+        leadingIcon: const Icon(
+          Icons.star_border,
+          color: Colors.green,
+        ),
+        onTapFunc: () {
+          pushNewScreenWithRouteSettings<void>(
+            context,
+            settings: const RouteSettings(
+              name: MyRateScreen.routeName,
+            ),
+            screen: MyRateScreen(),
+            withNavBar: false,
+            pageTransitionAnimation: PageTransitionAnimation.cupertino,
+          );
+        },
+      ),
+      AccountListTileModel(
+        titleText: 'Thiết lập tài khoản',
+        leadingIcon: const Icon(
+          Icons.person_outline,
+          color: Colors.lightBlue,
+        ),
+        onTapFunc: () {
+          pushNewScreen<void>(
+            context,
+            screen: const AccountSettingsScreen(),
+            withNavBar: false,
+          );
+        },
+      ),
+      AccountListTileModel(
+        titleText: 'Trợ giúp',
+        leadingIcon: const Icon(
+          Icons.help_outline,
+          color: Colors.amber,
+        ),
+        onTapFunc: () {},
+      ),
+    ];
+
     return Scaffold(
       // appBar: AppBar(
       //   title: Text('Account'),
@@ -216,102 +324,12 @@ class AccountScreen extends StatelessWidget {
                 ],
               ),
             ),
-            Expanded(
-              child: ListView(
-                children: [
-                  buildListTile(
-                    const Icon(
-                      Icons.post_add,
-                      color: Colors.blueGrey,
-                    ),
-                    'Quản lí bài đăng',
-                    () {
-                      pushNewScreenWithRouteSettings<void>(
-                        context,
-                        settings: const RouteSettings(
-                          name: PostManagementScreen.routeName,
-                        ),
-                        screen: PostManagementScreen(),
-                        withNavBar: false,
-                        pageTransitionAnimation:
-                            PageTransitionAnimation.cupertino,
-                      );
-                    },
-                  ),
-                  buildListTile(
-                    const Icon(
-                      Icons.favorite_border,
-                      color: Colors.redAccent,
-                    ),
-                    'Đã thích',
-                    () {
-                      pushNewScreenWithRouteSettings<void>(
-                        context,
-                        settings: const RouteSettings(
-                          name: WishListScreen.routeName,
-                        ),
-                        screen: const WishListScreen(),
-                        withNavBar: false,
-                        pageTransitionAnimation:
-                            PageTransitionAnimation.cupertino,
-                      );
-                    },
-                  ),
-                  buildListTile(
-                    const Icon(
-                      Icons.schedule,
-                      color: Colors.blue,
-                    ),
-                    'Lịch sử giao dịch',
-                    () {
-                      pushNewScreenWithRouteSettings<void>(
-                        context,
-                        settings: const RouteSettings(
-                          name: TradingHistoryScreen.routeName,
-                        ),
-                        screen: TradingHistoryScreen(),
-                        withNavBar: false,
-                        pageTransitionAnimation:
-                            PageTransitionAnimation.cupertino,
-                      );
-                    },
-                  ),
-                  buildListTile(
-                    const Icon(
-                      Icons.star_border,
-                      color: Colors.green,
-                    ),
-                    'Đánh giá của tôi',
-                    () {
-                      pushNewScreenWithRouteSettings<void>(
-                        context,
-                        settings: const RouteSettings(
-                          name: MyRateScreen.routeName,
-                        ),
-                        screen: MyRateScreen(),
-                        withNavBar: false,
-                        pageTransitionAnimation:
-                            PageTransitionAnimation.cupertino,
-                      );
-                    },
-                  ),
-                  buildListTile(
-                    const Icon(
-                      Icons.person_outline,
-                      color: Colors.lightBlue,
-                    ),
-                    'Thiết lập tài khoản',
-                    () {},
-                  ),
-                  buildListTile(
-                    const Icon(
-                      Icons.help_outline,
-                      color: Colors.amber,
-                    ),
-                    'Trợ giúp',
-                    () {},
-                  ),
-                ],
+            ListView.builder(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              itemCount: accountListTileItemModel.length,
+              itemBuilder: (_, index) => buildListTile(
+                accountListTileItemModel[index],
               ),
             ),
           ],

@@ -37,7 +37,7 @@ class _PostItem_4_State extends State<PostItem_4> {
           margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
           child: ListView(
             shrinkWrap: true,
-            children: <Widget>[
+            children: [
               //Thông tin mặc định
               TextFormField(
                   minLines: 5,

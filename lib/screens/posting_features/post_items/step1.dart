@@ -33,7 +33,6 @@ class _PostItem_1State extends State<PostItem_1> {
 
   Future getImage() async {
     //final pickedFile = await picker.getImage(source: ImageSource.camera);
-    // ignore: avoid_print
     setState(() {
       _image = File(
           'https://cdn.pixabay.com/photo/2017/11/10/05/24/add-2935429_960_720.png');

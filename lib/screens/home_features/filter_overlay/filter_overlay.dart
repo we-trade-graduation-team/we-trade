@@ -47,13 +47,13 @@ class _FilterOverlayState extends State<FilterOverlay> {
       child: Padding(
         padding: const EdgeInsets.all(12.5),
         child: Table(
-          children: <TableRow>[
-            TableRow(children: <Widget>[
+          children: [
+            TableRow(children: [
               Table(
                   defaultVerticalAlignment: TableCellVerticalAlignment.middle,
-                  children: <TableRow>[
+                  children: [
                     TableRow(
-                      children: <Widget>[
+                      children: [
                         const Text(
                           'Loại mặt hàng:',
                           style: TextStyle(fontSize: 20),
@@ -79,7 +79,7 @@ class _FilterOverlayState extends State<FilterOverlay> {
                       ],
                     ),
                     const TableRow(
-                      children: <Widget>[
+                      children: [
                         SizedBox(
                           height: 10,
                         ),
@@ -88,7 +88,7 @@ class _FilterOverlayState extends State<FilterOverlay> {
                         ),
                       ],
                     ),
-                    const TableRow(children: <Widget>[
+                    const TableRow(children: [
                       SizedBox(
                         height: 10,
                       ),
@@ -96,14 +96,14 @@ class _FilterOverlayState extends State<FilterOverlay> {
                         height: 10,
                       )
                     ]),
-                    TableRow(children: <Widget>[
+                    TableRow(children: [
                       const Text(
                         'Nơi bán:',
                         style: TextStyle(fontSize: 20),
                       ),
                       Container(),
                     ]),
-                    const TableRow(children: <Widget>[
+                    const TableRow(children: [
                       SizedBox(
                         height: 5,
                       ),
@@ -111,17 +111,16 @@ class _FilterOverlayState extends State<FilterOverlay> {
                         height: 5,
                       )
                     ]),
-                    TableRow(children: <Widget>[
+                    TableRow(children: [
                       Row(
-                        children: <Widget>[
+                        children: [
                           const SizedBox(
                             width: 20,
                           ),
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
-                            // ignore: prefer_const_literals_to_create_immutables
-                            children: <Widget>[
-                              const AutoSizeText(
+                            children: const [
+                              AutoSizeText(
                                 'Tỉnh/Thành phố:',
                                 style: TextStyle(fontSize: 14),
                                 maxLines: 1,
@@ -148,7 +147,7 @@ class _FilterOverlayState extends State<FilterOverlay> {
                         },
                       )
                     ]),
-                    const TableRow(children: <Widget>[
+                    const TableRow(children: [
                       SizedBox(
                         height: 10,
                       ),
@@ -156,17 +155,16 @@ class _FilterOverlayState extends State<FilterOverlay> {
                         height: 10,
                       )
                     ]),
-                    TableRow(children: <Widget>[
+                    TableRow(children: [
                       Row(
-                        children: <Widget>[
+                        children: [
                           const SizedBox(
                             width: 20,
                           ),
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
-                            // ignore: prefer_const_literals_to_create_immutables
-                            children: [
-                              const AutoSizeText(
+                            children: const [
+                              AutoSizeText(
                                 'Quận/Huyện:',
                                 style: TextStyle(fontSize: 14),
                               ),
@@ -194,23 +192,25 @@ class _FilterOverlayState extends State<FilterOverlay> {
                     ])
                   ]),
             ]),
-            const TableRow(children: <Widget>[
+            const TableRow(children: [
               SizedBox(
                 height: 10,
               ),
             ]),
-            const TableRow(children: <Widget>[
+            const TableRow(children: [
               SizedBox(
                 height: 10,
               ),
             ]),
-            TableRow(children: <Widget>[
-              GroupButton(
-                  selectedColor: const Color(0xFF6F35A5),
-                  buttons: costs,
-                  spacing: 10,
-                  onSelected: (index, isSelected) {}),
-            ])
+            TableRow(
+              children: [
+                GroupButton(
+                    selectedColor: const Color(0xFF6F35A5),
+                    buttons: costs,
+                    spacing: 10,
+                    onSelected: (index, isSelected) {}),
+              ],
+            )
           ],
         ),
       ),

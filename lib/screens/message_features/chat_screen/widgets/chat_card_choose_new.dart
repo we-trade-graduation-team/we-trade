@@ -32,8 +32,8 @@ class _ChatCardAddNewState extends State<ChatCardAddNew> {
 
   @override
   void initState() {
-    isSelected = widget.isSelected;
     super.initState();
+    isSelected = widget.isSelected;
   }
 
   @override

@@ -9,8 +9,12 @@ import '../../../shared_features/other_user_profile/other_user_profile_screen.da
 import '../../../shared_features/report/report_screen.dart';
 
 class ChatDialog extends StatelessWidget {
-  const ChatDialog({Key? key, required this.user, required this.parentContext})
-      : super(key: key);
+  const ChatDialog({
+    Key? key,
+    required this.user,
+    required this.parentContext,
+  }) : super(key: key);
+  
   final User user;
   final BuildContext parentContext;
 
@@ -43,7 +47,7 @@ class ChatDialog extends StatelessWidget {
                   children: [
                     InkWell(
                       onTap: () {
-                        //TODO:  kiếm userdetail dựa theo user được truyền vào
+                        // TODO: kiếm userdetail dựa theo user được truyền vào
                         final userDetail = userDetailTemp;
                         pushNewScreenWithRouteSettings<void>(
                           parentContext,
