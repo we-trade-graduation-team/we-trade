@@ -7,9 +7,9 @@ import 'package:loading_overlay/loading_overlay.dart';
 import 'package:provider/provider.dart';
 
 import '../../../configs/constants/assets_paths/sign_in_screen_assets_path.dart';
-import '../../../configs/constants/color.dart';
 import '../../../services/authentication/authentication_service.dart';
 import '../../../services/authentication/dialog_contents/sign_in_dialog_content.dart';
+import '../../../services/authentication/progress_indicator.dart';
 import '../../../services/authentication/show_dialog_flash.dart';
 import '../forgot_password_screen/forgot_password_screen.dart';
 import '../shared_widgets/auth_custom_background.dart';
@@ -148,9 +148,10 @@ class _SignInScreenState extends State<SignInScreen> {
         isLoading: _isLoading,
         color: Colors.white,
         opacity: 1,
-        progressIndicator: const CircularProgressIndicator(
-          color: kPrimaryColor,
-        ),
+        // progressIndicator: const SpinKitCircle(
+        //   color: kPrimaryColor,
+        // ),
+        progressIndicator: progressIndicator,
         child: AuthCustomBackground(
           title: 'Welcome\nBack',
           authFeatureTitle: 'Sign in',

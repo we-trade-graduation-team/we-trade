@@ -5,13 +5,12 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:loading_overlay/loading_overlay.dart';
 import 'package:provider/provider.dart';
 
-import '../../../configs/constants/color.dart';
 import '../../../services/authentication/authentication_service.dart';
 import '../../../services/authentication/dialog_contents/sign_up_dialog_content.dart';
+import '../../../services/authentication/progress_indicator.dart';
 import '../../../services/authentication/show_dialog_flash.dart';
 import '../shared_widgets/auth_custom_background.dart';
 import '../shared_widgets/custom_form_builder_text_field.dart';
-// import '../sign_in_screen/sign_in.dart';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({
@@ -142,9 +141,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
         isLoading: _isLoading,
         color: Colors.white,
         opacity: 1,
-        progressIndicator: const CircularProgressIndicator(
-          color: kPrimaryColor,
-        ),
+        progressIndicator: progressIndicator,
         child: AuthCustomBackground(
           title: 'Sign up and\nstarting trading',
           authFeatureTitle: 'Sign up',
