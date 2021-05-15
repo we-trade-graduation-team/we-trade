@@ -3,31 +3,47 @@ import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:line_icons/line_icons.dart';
+
 import '../../../configs/constants/color.dart';
 import '../../../configs/constants/keys.dart';
-
 import 'rounded_icon_button.dart';
 import 'top_rounded_container.dart';
 
-class AuthCustomBackground extends StatelessWidget {
+class AuthCustomBackground extends StatefulWidget {
   const AuthCustomBackground({
     Key? key,
-    required this.inputFormWidgets,
-    this.navigateCallback,
+    required this.inputFormChildren,
+    this.onSubmit,
     this.title,
     this.authFeatureTitle,
-    this.footerWidgets,
+    this.footerChildren,
     this.titleGuide,
     this.formKey,
   }) : super(key: key);
 
-  final List<Widget> inputFormWidgets;
-  final List<Widget>? footerWidgets;
+  final List<Widget> inputFormChildren;
+  final List<Widget>? footerChildren;
   final Widget? titleGuide;
   final String? title, authFeatureTitle;
-  final VoidCallback? navigateCallback;
+  final VoidCallback? onSubmit;
   final GlobalKey<FormBuilderState>? formKey;
 
+  @override
+  _AuthCustomBackgroundState createState() => _AuthCustomBackgroundState();
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(StringProperty('title', title));
+    properties.add(StringProperty('authFeatureTitle', authFeatureTitle));
+    properties.add(
+        ObjectFlagProperty<VoidCallback>.has('navigateCallback', onSubmit));
+    properties.add(
+        DiagnosticsProperty<GlobalKey<FormBuilderState>?>('formKey', formKey));
+  }
+}
+
+class _AuthCustomBackgroundState extends State<AuthCustomBackground> {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
@@ -54,7 +70,7 @@ class AuthCustomBackground extends StatelessWidget {
                 color: Colors.white,
               ),
             ),
-            if (formKey != null)
+            if (widget.formKey != null)
               Positioned.fill(
                 top: secondContainerTopMargin,
                 bottom: secondContainerTopMargin,
@@ -78,14 +94,14 @@ class AuthCustomBackground extends StatelessWidget {
                             ),
                           ),
                           children: [
-                            if (title != null)
+                            if (widget.title != null)
                               Container(
                                 height: size.height * 0.15,
                                 alignment: Alignment.centerLeft,
                                 child: FittedBox(
                                   fit: BoxFit.fitWidth,
                                   child: Text(
-                                    title!,
+                                    widget.title!,
                                     style: TextStyle(
                                       fontSize: 38,
                                       fontWeight: FontWeight.bold,
@@ -94,10 +110,10 @@ class AuthCustomBackground extends StatelessWidget {
                                   ),
                                 ),
                               ),
-                            if (titleGuide != null) titleGuide!,
+                            if (widget.titleGuide != null) widget.titleGuide!,
                             // SizedBox(height: size.height * 0.03),
                             FormBuilder(
-                              key: formKey,
+                              key: widget.formKey,
                               onChanged: () {},
                               autovalidateMode:
                                   AutovalidateMode.onUserInteraction,
@@ -109,15 +125,15 @@ class AuthCustomBackground extends StatelessWidget {
                                         const NeverScrollableScrollPhysics(),
                                     // padding: EdgeInsets.zero,
                                     itemBuilder: (_, index) =>
-                                        inputFormWidgets[index],
+                                        widget.inputFormChildren[index],
                                     separatorBuilder: (_, __) => const Divider(
                                       height: 20,
                                       color: Colors.transparent,
                                     ),
-                                    itemCount: inputFormWidgets.length,
+                                    itemCount: widget.inputFormChildren.length,
                                   ),
                                   // ...inputFormWidgets,
-                                  if (authFeatureTitle != null)
+                                  if (widget.authFeatureTitle != null)
                                     Padding(
                                       padding: const EdgeInsets.only(
                                         top: 40,
@@ -128,7 +144,7 @@ class AuthCustomBackground extends StatelessWidget {
                                             MainAxisAlignment.spaceBetween,
                                         children: [
                                           Text(
-                                            authFeatureTitle!,
+                                            widget.authFeatureTitle!,
                                             style: TextStyle(
                                               fontSize: 22,
                                               fontWeight: FontWeight.bold,
@@ -147,11 +163,11 @@ class AuthCustomBackground extends StatelessWidget {
                                             onPressed: () {
                                               node.unfocus();
 
-                                              if (formKey!.currentState
+                                              if (widget.formKey!.currentState
                                                       ?.saveAndValidate() ??
                                                   false) {
-                                                if (navigateCallback != null) {
-                                                  navigateCallback!();
+                                                if (widget.onSubmit != null) {
+                                                  widget.onSubmit!();
                                                 }
                                               }
                                             },
@@ -163,7 +179,8 @@ class AuthCustomBackground extends StatelessWidget {
                                 ],
                               ),
                             ),
-                            if (footerWidgets != null) ...footerWidgets!,
+                            if (widget.footerChildren != null)
+                              ...widget.footerChildren!,
                           ],
                         ),
                       ),
@@ -185,7 +202,7 @@ class AuthCustomBackground extends StatelessWidget {
                         ),
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
-                          children: inputFormWidgets,
+                          children: widget.inputFormChildren,
                         ),
                       ),
                     ],
@@ -196,16 +213,5 @@ class AuthCustomBackground extends StatelessWidget {
         ),
       ),
     );
-  }
-
-  @override
-  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
-    super.debugFillProperties(properties);
-    properties.add(StringProperty('title', title));
-    properties.add(StringProperty('authFeatureTitle', authFeatureTitle));
-    properties.add(ObjectFlagProperty<VoidCallback>.has(
-        'navigateCallback', navigateCallback));
-    properties.add(
-        DiagnosticsProperty<GlobalKey<FormBuilderState>?>('formKey', formKey));
   }
 }

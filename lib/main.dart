@@ -1,19 +1,18 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_core/firebase_core.dart';
+// import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'app.dart';
 
-bool useFirestoreEmulator = false;
+// bool useFirestoreEmulator = false;
 
-Future<void> main() async {
+void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
-  if (useFirestoreEmulator) {
-    FirebaseFirestore.instance.settings = const Settings(
-      host: 'localhost:8080',
-      sslEnabled: false,
-      persistenceEnabled: false,
-    );
-  }
-  runApp(const MyApp());
+  // await Firebase.initializeApp();
+  // if (useFirestoreEmulator) {
+  //   FirebaseFirestore.instance.settings = const Settings(
+  //     host: 'localhost:8080',
+  //     sslEnabled: false,
+  //     persistenceEnabled: false,
+  //   );
+  // }
+  runApp(const App());
 }

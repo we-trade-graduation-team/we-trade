@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter/services.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 
 import '../../../configs/constants/assets_paths/shared_assets_root.dart';
 import '../../../configs/constants/color.dart';
+import '../../../services/flash/flash_helper.dart' as flash_helper;
 import '../../wish_list_features/wish_list/wish_list_screen.dart';
 import '../account_settings_screen/account_settings_screen.dart';
 import '../follow/follow_screen.dart';
@@ -24,15 +26,30 @@ class AccountListTileModel {
   final VoidCallback onTapFunc;
 }
 
-class AccountScreen extends StatelessWidget {
+class AccountScreen extends StatefulWidget {
   const AccountScreen({
     Key? key,
   }) : super(key: key);
 
   static const routeName = '/account';
 
+  @override
+  _AccountScreenState createState() => _AccountScreenState();
+}
+
+class _AccountScreenState extends State<AccountScreen> {
+  @override
+  void dispose() {
+    flash_helper.dispose();
+    super.dispose();
+  }
+
+
   Widget profileNavigationLabel(
-      Widget topWid, Widget botWid, Function navigateToScreen) {
+    Widget topWid,
+    Widget botWid,
+    Function navigateToScreen,
+  ) {
     return GestureDetector(
       onTap: () => navigateToScreen(),
       child: Column(
@@ -56,6 +73,14 @@ class AccountScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    flash_helper.init(context);
+    
+    SystemChrome.setSystemUIOverlayStyle(
+      const SystemUiOverlayStyle(
+        statusBarIconBrightness: Brightness.light,
+      ),
+    );
+
     final height = MediaQuery.of(context).size.height;
     final bannerHeight = height * 0.28;
 
@@ -141,7 +166,16 @@ class AccountScreen extends StatelessWidget {
         onTapFunc: () {
           pushNewScreen<void>(
             context,
-            screen: const AccountSettingsScreen(),
+            // screen: const AccountSettingsScreen(),
+            screen: Overlay(
+              initialEntries: [
+                OverlayEntry(
+                  builder: (_) {
+                    return const AccountSettingsScreen();
+                  },
+                ),
+              ],
+            ),
             withNavBar: false,
           );
         },
@@ -157,182 +191,187 @@ class AccountScreen extends StatelessWidget {
     ];
 
     return Scaffold(
+      backgroundColor: Colors.black,
       // appBar: AppBar(
       //   title: Text('Account'),
       // ),
       body: SafeArea(
-        child: Column(
-          children: [
-            Container(
-              color: kPrimaryColor,
-              height: bannerHeight,
-              child: Column(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 20),
-                    child: Column(
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            IconButton(
-                                color: kPrimaryLightColor,
-                                icon: const Icon(Icons.settings),
-                                onPressed: () {}),
-                          ],
-                        ),
-                        Row(
-                          children: [
-                            Container(
-                              margin: const EdgeInsets.only(right: 10),
-                              height: 55,
-                              width: 55,
-                              child: CircleAvatar(
-                                child: Image.asset(
-                                  '$chatScreenAvaFolder/user.png',
-                                  fit: BoxFit.cover,
+        child: ColoredBox(
+          color: Colors.white,
+          child: Column(
+            children: [
+              Container(
+                color: kPrimaryColor,
+                height: bannerHeight,
+                child: Column(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      child: Column(
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              IconButton(
+                                  color: kPrimaryLightColor,
+                                  icon: const Icon(Icons.settings),
+                                  onPressed: () {}),
+                            ],
+                          ),
+                          Row(
+                            children: [
+                              Container(
+                                margin: const EdgeInsets.only(right: 10),
+                                height: 55,
+                                width: 55,
+                                child: CircleAvatar(
+                                  child: Image.asset(
+                                    '$chatScreenAvaFolder/user.png',
+                                    fit: BoxFit.cover,
+                                  ),
                                 ),
                               ),
-                            ),
-                            Column(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                const Text(
-                                  'Duy quang',
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 20,
-                                    color: kPrimaryLightColor,
+                              Column(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const Text(
+                                    'Duy quang',
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 20,
+                                      color: kPrimaryLightColor,
+                                    ),
                                   ),
-                                ),
-                                const SizedBox(height: 5),
-                                Container(
-                                  padding: const EdgeInsets.all(5),
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(10),
-                                    color: Colors.black87,
-                                  ),
-                                  child: GestureDetector(
-                                    onTap: () {
-                                      pushNewScreenWithRouteSettings<void>(
-                                        context,
-                                        settings: const RouteSettings(
-                                          name: UserInfoScreen.routeName,
+                                  const SizedBox(height: 5),
+                                  Container(
+                                    padding: const EdgeInsets.all(5),
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(10),
+                                      color: Colors.black87,
+                                    ),
+                                    child: GestureDetector(
+                                      onTap: () {
+                                        pushNewScreenWithRouteSettings<void>(
+                                          context,
+                                          settings: const RouteSettings(
+                                            name: UserInfoScreen.routeName,
+                                          ),
+                                          screen: const UserInfoScreen(),
+                                          withNavBar: false,
+                                          pageTransitionAnimation:
+                                              PageTransitionAnimation.cupertino,
+                                        );
+                                      },
+                                      child: const Text(
+                                        'Thông tin tài khoản',
+                                        style: TextStyle(
+                                          decoration: TextDecoration.underline,
+                                          color: kPrimaryLightColor,
                                         ),
-                                        screen: const UserInfoScreen(),
-                                        withNavBar: false,
-                                        pageTransitionAnimation:
-                                            PageTransitionAnimation.cupertino,
-                                      );
-                                    },
-                                    child: const Text(
-                                      'Thông tin tài khoản',
-                                      style: TextStyle(
-                                        decoration: TextDecoration.underline,
-                                        color: kPrimaryLightColor,
                                       ),
                                     ),
                                   ),
-                                ),
-                              ],
-                            )
-                          ],
-                        ),
-                        const SizedBox(height: 10),
-                        DefaultTextStyle(
-                          style: const TextStyle(
-                            fontSize: 16,
-                            color: kPrimaryLightColor,
-                          ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              profileNavigationLabel(
-                                Row(
-                                  children: const [
-                                    Icon(
-                                      Icons.star_rate_rounded,
-                                      color: Colors.yellow,
-                                    ),
-                                    Text(
-                                      '3',
-                                    )
-                                  ],
-                                ),
-                                const Text('Leggit'),
-                                () {
-                                  pushNewScreenWithRouteSettings<void>(
-                                    context,
-                                    settings: const RouteSettings(
-                                      name: MyRateScreen.routeName,
-                                    ),
-                                    screen: MyRateScreen(),
-                                    withNavBar: false,
-                                    pageTransitionAnimation:
-                                        PageTransitionAnimation.cupertino,
-                                  );
-                                },
-                              ),
-                              profileNavigationLabel(
-                                const Text('0'),
-                                const Text('Theo dõi'),
-                                () {
-                                  pushNewScreenWithRouteSettings<void>(
-                                    context,
-                                    settings: RouteSettings(
-                                      name: FollowScreen.routeName,
-                                      arguments: FollowScreenArguments(
-                                          screenName:
-                                              Follow_Screen_Name.following),
-                                    ),
-                                    screen: const FollowScreen(),
-                                    withNavBar: false,
-                                    pageTransitionAnimation:
-                                        PageTransitionAnimation.cupertino,
-                                  );
-                                },
-                              ),
-                              profileNavigationLabel(
-                                const Text('1'),
-                                const Text(
-                                  'Người theo \n dõi',
-                                  textAlign: TextAlign.center,
-                                ),
-                                () {
-                                  pushNewScreenWithRouteSettings<void>(
-                                    context,
-                                    settings: RouteSettings(
-                                      name: FollowScreen.routeName,
-                                      arguments: FollowScreenArguments(
-                                          screenName:
-                                              Follow_Screen_Name.follower),
-                                    ),
-                                    screen: const FollowScreen(),
-                                    withNavBar: false,
-                                    pageTransitionAnimation:
-                                        PageTransitionAnimation.cupertino,
-                                  );
-                                },
-                              ),
+                                ],
+                              )
                             ],
                           ),
-                        )
-                      ],
+                          const SizedBox(height: 10),
+                          DefaultTextStyle(
+                            style: const TextStyle(
+                              fontSize: 16,
+                              color: kPrimaryLightColor,
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              children: [
+                                profileNavigationLabel(
+                                  Row(
+                                    children: const [
+                                      Icon(
+                                        Icons.star_rate_rounded,
+                                        color: Colors.yellow,
+                                      ),
+                                      Text(
+                                        '3',
+                                      )
+                                    ],
+                                  ),
+                                  const Text('Legit'),
+                                  () {
+                                    pushNewScreenWithRouteSettings<void>(
+                                      context,
+                                      settings: const RouteSettings(
+                                        name: MyRateScreen.routeName,
+                                      ),
+                                      screen: MyRateScreen(),
+                                      withNavBar: false,
+                                      pageTransitionAnimation:
+                                          PageTransitionAnimation.cupertino,
+                                    );
+                                  },
+                                ),
+                                profileNavigationLabel(
+                                  const Text('0'),
+                                  const Text('Theo dõi'),
+                                  () {
+                                    pushNewScreenWithRouteSettings<void>(
+                                      context,
+                                      settings: RouteSettings(
+                                        name: FollowScreen.routeName,
+                                        arguments: FollowScreenArguments(
+                                            screenName:
+                                                Follow_Screen_Name.following),
+                                      ),
+                                      screen: const FollowScreen(),
+                                      withNavBar: false,
+                                      pageTransitionAnimation:
+                                          PageTransitionAnimation.cupertino,
+                                    );
+                                  },
+                                ),
+                                profileNavigationLabel(
+                                  const Text('1'),
+                                  const Text(
+                                    'Người theo \n dõi',
+                                    textAlign: TextAlign.center,
+                                  ),
+                                  () {
+                                    pushNewScreenWithRouteSettings<void>(
+                                      context,
+                                      settings: RouteSettings(
+                                        name: FollowScreen.routeName,
+                                        arguments: FollowScreenArguments(
+                                            screenName:
+                                                Follow_Screen_Name.follower),
+                                      ),
+                                      screen: const FollowScreen(),
+                                      withNavBar: false,
+                                      pageTransitionAnimation:
+                                          PageTransitionAnimation.cupertino,
+                                    );
+                                  },
+                                ),
+                              ],
+                            ),
+                          )
+                        ],
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
-            ListView.builder(
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              itemCount: accountListTileItemModel.length,
-              itemBuilder: (_, index) => buildListTile(
-                accountListTileItemModel[index],
+              ListView.builder(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                itemCount: accountListTileItemModel.length,
+                itemBuilder: (_, index) => buildListTile(
+                  accountListTileItemModel[index],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

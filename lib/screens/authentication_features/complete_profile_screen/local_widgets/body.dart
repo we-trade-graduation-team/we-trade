@@ -25,7 +25,7 @@ class _BodyState extends State<Body> {
       title: 'Complete\nprofile',
       authFeatureTitle: 'Complete profile',
       formKey: _formKey,
-      inputFormWidgets: [
+      inputFormChildren: [
         CustomFormBuilderTextField(
           name: 'first_name',
           labelText: 'First name',
@@ -64,7 +64,7 @@ class _BodyState extends State<Body> {
           keyboardType: TextInputType.streetAddress,
         ),
       ],
-      navigateCallback: () {
+      onSubmit: () {
         Navigator.pushNamed(context, OtpScreen.routeName);
       },
     );

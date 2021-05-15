@@ -82,7 +82,7 @@ class _BodyState extends State<Body> {
     const demoOTP = '1234';
     const otpLength = 4;
     return AuthCustomBackground(
-      inputFormWidgets: [
+      inputFormChildren: [
         Padding(
           padding: const EdgeInsets.only(left: 50),
           child: Lottie.network(

@@ -27,7 +27,7 @@ class _BodyState extends State<Body> {
       title: 'Forgot\npassword',
       authFeatureTitle: 'Forgot password',
       formKey: _formKey,
-      inputFormWidgets: [
+      inputFormChildren: [
         CustomFormBuilderTextField(
           name: 'email',
           labelText: 'Email address',
@@ -52,7 +52,7 @@ class _BodyState extends State<Body> {
           ),
         ),
       ),
-      navigateCallback: () {
+      onSubmit: () {
         Navigator.of(context).push<void>(
           MaterialPageRoute(
             builder: (context) => const MainMenu(),

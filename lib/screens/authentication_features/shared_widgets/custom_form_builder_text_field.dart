@@ -76,23 +76,25 @@ class _CustomFormBuilderTextFieldState
       controller: widget.textEditingController,
       focusNode: myFocusNode,
       name: widget.name,
-      decoration: InputDecoration(
-        labelText: widget.labelText,
-        labelStyle: TextStyle(
-          color: myFocusNode.hasFocus
-              ? kPrimaryColor
-              : kTextColor.withOpacity(0.3),
-          fontWeight: FontWeight.w600,
-        ),
-        floatingLabelBehavior: FloatingLabelBehavior.auto,
-      ),
+      decoration: _inputDecoration(),
       validator: widget.validator,
       onEditingComplete: widget.onEditingComplete,
       textInputAction: TextInputAction.next,
       obscureText: widget.obscureText,
       autovalidateMode: widget.autovalidateMode,
       keyboardType: widget.keyboardType,
-      // onSubmitted: ,
+    );
+  }
+
+  InputDecoration _inputDecoration() {
+    return InputDecoration(
+      labelText: widget.labelText,
+      labelStyle: TextStyle(
+        color:
+            myFocusNode.hasFocus ? kPrimaryColor : kTextColor.withOpacity(0.3),
+        fontWeight: FontWeight.w600,
+      ),
+      floatingLabelBehavior: FloatingLabelBehavior.auto,
     );
   }
 
