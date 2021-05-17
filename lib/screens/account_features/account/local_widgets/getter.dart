@@ -152,3 +152,60 @@ class GetNumberOfFollow extends StatelessWidget {
         'typeOfReturnNumber', typeOfReturnNumber));
   }
 }
+
+class GetLegit extends StatelessWidget {
+  const GetLegit({
+    Key? key,
+    required this.documentId,
+  }) : super(key: key);
+  final String documentId;
+
+  @override
+  Widget build(BuildContext context) {
+    final CollectionReference users =
+        AccountScreen.localRefDatabase.collection('users');
+
+    return FutureBuilder<DocumentSnapshot>(
+      future: users.doc(documentId).get(),
+      builder: (context, snapshot) {
+        if (snapshot.hasError) {
+          return Text('NaN',
+              style: TextStyle(
+                fontWeight: FontWeight.normal,
+                color: Colors.red.withOpacity(0.6),
+              ));
+        }
+
+        if (snapshot.hasData && !snapshot.data!.exists) {
+          return Text('NaN',
+              style: TextStyle(
+                fontWeight: FontWeight.normal,
+                color: Colors.red.withOpacity(0.6),
+              ));
+        }
+
+        if (snapshot.connectionState == ConnectionState.done) {
+          final data = snapshot.data!.data() as Map<String, dynamic>;
+          var legit = double.parse(data['legit'].toString());
+          legit = legit > 5 ? 5 : legit;
+          legit = legit < 0 ? 0 : legit;
+          return Text('$legit');
+        }
+
+        return const Text(
+          'loading...',
+          style: TextStyle(
+            fontWeight: FontWeight.normal,
+            color: Colors.black38,
+          ),
+        );
+      },
+    );
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(StringProperty('documentId', documentId));
+  }
+}

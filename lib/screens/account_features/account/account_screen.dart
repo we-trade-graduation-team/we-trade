@@ -60,6 +60,7 @@ class AccountScreen extends StatelessWidget {
     'bio': 'I like trading',
     'following': <dynamic>[],
     'followers': <dynamic>[],
+    'legit': 0
   };
 
   Future<void> addUser() {
@@ -184,12 +185,10 @@ class AccountScreen extends StatelessWidget {
                                       Icons.star_rate_rounded,
                                       color: Colors.yellow,
                                     ),
-                                    Text(
-                                      '3',
-                                    )
+                                    GetLegit(documentId: localUserID),
                                   ],
                                 ),
-                                const Text('Leggit\n'),
+                                const Text('Legit\n'),
                                 () {
                                   pushNewScreenWithRouteSettings<void>(
                                     context,

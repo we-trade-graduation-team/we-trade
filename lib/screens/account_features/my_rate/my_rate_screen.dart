@@ -1,9 +1,12 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+
 import '../../../configs/constants/assets_paths/shared_assets_root.dart';
 import '../../../configs/constants/color.dart';
 import '../../../models/chat/temp_class.dart';
+import '../account/account_screen.dart';
 import 'tabs/rate_tab.dart';
 
 class MyRateScreen extends StatefulWidget {
@@ -13,6 +16,8 @@ class MyRateScreen extends StatefulWidget {
 
   static const routeName = '/myrate';
   final UserDetail userDetail = userDetailTemp;
+  final referenceDatabase = AccountScreen.localRefDatabase;
+  final userID = AccountScreen.localUserID;
 
   @override
   _MyRateScreenState createState() => _MyRateScreenState();
@@ -20,6 +25,9 @@ class MyRateScreen extends StatefulWidget {
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
     properties.add(DiagnosticsProperty<UserDetail>('userDetail', userDetail));
+    properties.add(DiagnosticsProperty<DocumentReference<Map<String, dynamic>>>(
+        'referenceDatabase', referenceDatabase));
+    properties.add(StringProperty('userID', userID));
   }
 }
 
@@ -126,12 +134,53 @@ class MyDelegate extends SliverPersistentHeaderDelegate {
   }
 }
 
-class MainInfo extends StatelessWidget {
+class MainInfo extends StatefulWidget {
   const MainInfo({Key? key, required this.width, required this.widget})
       : super(key: key);
 
   final double width;
   final MyRateScreen widget;
+
+  @override
+  _MainInfoState createState() => _MainInfoState();
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(DoubleProperty('width', width));
+  }
+}
+
+class _MainInfoState extends State<MainInfo> {
+  final referenceDatabase = AccountScreen.localRefDatabase;
+  final userID = AccountScreen.localUserID;
+
+  double legit = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    try {
+      referenceDatabase
+          .collection('users')
+          .doc(userID)
+          .get()
+          .then((documentSnapshot) {
+        final _user = documentSnapshot.data();
+        if (_user == null) {
+          legit = 0;
+        } else {
+          setState(() {
+            legit = double.parse(_user['legit'].toString());
+            legit = legit > 5 ? 5 : legit;
+            legit = legit < 0 ? 0 : legit;
+          });
+        }
+      });
+    } on FirebaseException catch (e) {
+      // ignore: avoid_print
+      print('Lỗi: $e');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -163,7 +212,7 @@ class MainInfo extends StatelessWidget {
                 ),
                 const SizedBox(height: 10),
                 RatingBar.builder(
-                  initialRating: 3.5,
+                  initialRating: legit,
                   allowHalfRating: true,
                   //itemCount: 5,
                   glowRadius: 10,
@@ -189,6 +238,10 @@ class MainInfo extends StatelessWidget {
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
-    properties.add(DoubleProperty('width', width));
+    properties.add(DoubleProperty('width', widget.width));
+    properties.add(DoubleProperty('legit', legit));
+    properties.add(DiagnosticsProperty<DocumentReference<Map<String, dynamic>>>(
+        'referenceDatabase', referenceDatabase));
+    properties.add(StringProperty('userID', userID));
   }
 }
