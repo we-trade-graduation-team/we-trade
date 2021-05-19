@@ -75,19 +75,33 @@ class _FollowScreenState extends State<FollowScreen> {
     final screen = routeArguments['screenArgument'] as FollowScreenArguments;
     var usersRender = <dynamic>[];
     var followingUsers = <dynamic>[];
-    var followers = <dynamic>[];
 
     if (_isLoaded) {
       usersRender = screen.screenName == Follow_Screen_Name.follower
           ? _user!['followers'] as List
           : _user!['following'] as List;
       followingUsers = _user!['following'] as List;
-      followers = _user!['followers'] as List;
     }
 
-    Widget buildFollowButton() {
+    Widget buildFollowButton(String idValue) {
       return ElevatedButton(
-        onPressed: () {},
+        onPressed: () {
+          followingUsers.add(idValue);
+          try {
+            referenceDatabase
+                .collection('users')
+                .doc(userID)
+                .update({'following': followingUsers}).then((value) {
+              setState(() {
+                _user!['following'] = followingUsers;
+                _isLoaded = true;
+              });
+            }).timeout(Duration(seconds: timeOut));
+          } on FirebaseException catch (error) {
+            // ignore: avoid_print
+            print('Lỗi khi follow: $error');
+          }
+        },
         style: ElevatedButton.styleFrom(
           primary: kPrimaryColor,
           elevation: 4,
@@ -116,8 +130,6 @@ class _FollowScreenState extends State<FollowScreen> {
                       .collection('users')
                       .doc(userID)
                       .update({'following': followingUsers}).then((value) {
-                    // ignore: avoid_print
-                    print('user updated');
                     setState(() {
                       _user!['following'] = followingUsers;
                       _isLoaded = true;
@@ -175,7 +187,8 @@ class _FollowScreenState extends State<FollowScreen> {
                           : (followingUsers.contains(usersRender[index])
                               ? buildUnfollowButton(
                                   usersRender[index] as String)
-                              : buildFollowButton()),
+                              : buildFollowButton(
+                                  usersRender[index] as String)),
                     ),
                   ),
                   itemCount: usersRender.length,
