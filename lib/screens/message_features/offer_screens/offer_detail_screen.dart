@@ -9,7 +9,7 @@ import '../../../widgets/product_card.dart';
 class OfferDetailScreen extends StatelessWidget {
   const OfferDetailScreen({Key? key}) : super(key: key);
 
-  static String routeName = '/detail_offer';
+  static const routeName = '/detail_offer';
 
   @override
   Widget build(BuildContext context) {

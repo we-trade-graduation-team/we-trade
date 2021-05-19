@@ -60,7 +60,8 @@ class AccountScreen extends StatelessWidget {
     'bio': 'I like trading',
     'following': <dynamic>[],
     'followers': <dynamic>[],
-    'legit': 0
+    'legit': 0,
+    'tradingHistory': <dynamic>[],
   };
 
   Future<void> addUser() {
@@ -322,8 +323,10 @@ class AccountScreen extends StatelessWidget {
                       pushNewScreenWithRouteSettings<void>(
                         context,
                         settings: const RouteSettings(
-                          name: TradingHistoryScreen.routeName,
-                        ),
+                            name: TradingHistoryScreen.routeName,
+                            arguments: {
+                              'userID': localUserID,
+                            }),
                         screen: TradingHistoryScreen(),
                         withNavBar: false,
                         pageTransitionAnimation:
