@@ -73,22 +73,88 @@ class _FollowScreenState extends State<FollowScreen> {
     final routeArguments =
         ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
     final screen = routeArguments['screenArgument'] as FollowScreenArguments;
-    var followUsers = <dynamic>[];
+    var usersRender = <dynamic>[];
+    var followingUsers = <dynamic>[];
+    var followers = <dynamic>[];
 
     if (_isLoaded) {
-      followUsers = screen.screenName == Follow_Screen_Name.follower
+      usersRender = screen.screenName == Follow_Screen_Name.follower
           ? _user!['followers'] as List
           : _user!['following'] as List;
+      followingUsers = _user!['following'] as List;
+      followers = _user!['followers'] as List;
+    }
+
+    Widget buildFollowButton() {
+      return ElevatedButton(
+        onPressed: () {},
+        style: ElevatedButton.styleFrom(
+          primary: kPrimaryColor,
+          elevation: 4,
+          onPrimary: kPrimaryLightColor,
+        ),
+        child: const Text('   Theo dõi  '),
+      );
+    }
+
+    Widget buildUnfollowButton(String idValue) {
+      return OutlinedButton(
+        onPressed: () async {
+          await showMyConfirmationDialog(
+              context: context,
+              title: 'Thông báo',
+              content: 'Bạn có chắc muốn bỏ theo dõi người dùng này không?',
+              onConfirmFunction: () {
+                Navigator.of(context).pop();
+                setState(() {
+                  _isLoaded = false;
+                });
+
+                followingUsers.remove(idValue);
+                try {
+                  referenceDatabase
+                      .collection('users')
+                      .doc(userID)
+                      .update({'following': followingUsers}).then((value) {
+                    // ignore: avoid_print
+                    print('user updated');
+                    setState(() {
+                      _user!['following'] = followingUsers;
+                      _isLoaded = true;
+                    });
+                  }).timeout(Duration(seconds: timeOut));
+                } on FirebaseException catch (error) {
+                  // ignore: avoid_print
+                  print('Lỗi khi unfollow: $error');
+                }
+              },
+              onCancelFunction: () {
+                Navigator.of(context).pop();
+              });
+        },
+        style: OutlinedButton.styleFrom(
+          side: const BorderSide(
+            color: kPrimaryColor,
+            width: 1.5,
+          ),
+        ),
+        child: const Text(
+          'Bỏ theo dõi',
+          style: TextStyle(
+            color: kPrimaryColor,
+          ),
+        ),
+      );
     }
 
     return Scaffold(
       appBar: AppBar(
         title: screen.screenName == Follow_Screen_Name.follower
             ? const Text('Theo dõi bởi')
-            : const Text('Theo  dõi'),
+            : const Text('Đang theo dõi'),
       ),
       body: _isLoaded
-          ? (followUsers.isNotEmpty
+          ? (usersRender.isNotEmpty
               ? ListView.builder(
                   itemBuilder: (ctx, index) => Padding(
                     padding: const EdgeInsets.symmetric(vertical: 5),
@@ -99,38 +165,20 @@ class _FollowScreenState extends State<FollowScreen> {
                         fit: BoxFit.cover,
                       ),
                       title: GetUserName(
-                        key: ValueKey(followUsers[index].toString()),
-                        documentId: followUsers[index].toString(),
+                        key: ValueKey(usersRender[index].toString()),
+                        documentId: usersRender[index].toString(),
                         isStream: false,
                       ),
-                      trailing: index == 0
-                          ? OutlinedButton(
-                              onPressed: () {},
-                              style: OutlinedButton.styleFrom(
-                                side: const BorderSide(
-                                  color: kPrimaryColor,
-                                  width: 1.5,
-                                ),
-                              ),
-                              child: const Text(
-                                'Bỏ theo dõi',
-                                style: TextStyle(
-                                  color: kPrimaryColor,
-                                ),
-                              ),
-                            )
-                          : ElevatedButton(
-                              onPressed: () {},
-                              style: ElevatedButton.styleFrom(
-                                primary: kPrimaryColor,
-                                elevation: 4,
-                                onPrimary: kPrimaryLightColor,
-                              ),
-                              child: const Text('   Theo dõi  '),
-                            ),
+                      trailing: screen.screenName ==
+                              Follow_Screen_Name.following
+                          ? buildUnfollowButton(usersRender[index] as String)
+                          : (followingUsers.contains(usersRender[index])
+                              ? buildUnfollowButton(
+                                  usersRender[index] as String)
+                              : buildFollowButton()),
                     ),
                   ),
-                  itemCount: followUsers.length,
+                  itemCount: usersRender.length,
                 )
               : const Center(
                   child: Text(
