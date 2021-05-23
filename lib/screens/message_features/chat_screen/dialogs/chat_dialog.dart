@@ -8,13 +8,13 @@ import '../../../../models/chat/temp_class.dart';
 import '../../../shared_features/other_user_profile/other_user_profile_screen.dart';
 import '../../../shared_features/report/report_screen.dart';
 
-class ChatDialog extends StatelessWidget {
-  const ChatDialog({
+class PersonalChatDialog extends StatelessWidget {
+  const PersonalChatDialog({
     Key? key,
     required this.user,
     required this.parentContext,
   }) : super(key: key);
-  
+
   final User user;
   final BuildContext parentContext;
 
@@ -47,16 +47,12 @@ class ChatDialog extends StatelessWidget {
                   children: [
                     InkWell(
                       onTap: () {
-                        // TODO: kiếm userdetail dựa theo user được truyền vào
-                        final userDetail = userDetailTemp;
                         pushNewScreenWithRouteSettings<void>(
                           parentContext,
                           settings: RouteSettings(
-                            name: OtherUserProfileScreen.routeName,
-                            arguments: OtherUserProfileArguments(
-                              userDetail: userDetail,
-                            ),
-                          ),
+                              name: OtherUserProfileScreen.routeName,
+                              arguments:
+                                  OtherUserProfileArguments(userId: user.id)),
                           screen: const OtherUserProfileScreen(),
                           withNavBar: false,
                           pageTransitionAnimation:

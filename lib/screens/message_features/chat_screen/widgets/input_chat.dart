@@ -11,7 +11,6 @@ class ChatInput extends StatelessWidget {
   void sendMessage() {
     if (inputFormKey.currentState!.validate()) {
       //TODO validate mới cho thực hiện gửi tin nhắn
-      print('validate thành công');
     }
   }
 
@@ -96,9 +95,7 @@ class ChatInput extends StatelessWidget {
             height: height,
             child: Center(
               child: GestureDetector(
-                onTap: () {
-                  sendMessage();
-                },
+                onTap: sendMessage,
                 child: Container(
                   height: 35,
                   width: 35,

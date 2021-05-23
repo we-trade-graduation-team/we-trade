@@ -2,12 +2,11 @@ import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:line_icons/line_icons.dart';
-import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 
 import '../../../configs/constants/color.dart';
 import '../../../models/chat/temp_class.dart';
 import '../../../widgets/custom_material_button.dart';
-import '../../message_features/chat_screen/personal_chat/personal_chat_screen.dart';
+import '../../../widgets/custom_user_avatar.dart';
 import 'dialogs/other_user_profile_dialog.dart';
 import 'tabs/about_tab.dart';
 import 'tabs/posts_tab.dart';
@@ -25,7 +24,7 @@ class OtherUserProfileScreen extends StatefulWidget {
 class _OtherUserProfileScreenState extends State<OtherUserProfileScreen> {
   final tabData = ['ABOUT', 'POSTS', 'REVIEW'];
   final mainInfoKey = GlobalKey();
-  late Size flexibleSpaceBarSize;
+  Size flexibleSpaceBarSize = const Size(0, 0);
   bool _visible = true;
 
   Future<void> getSizeAndPosition() async {
@@ -131,8 +130,11 @@ class _OtherUserProfileScreenState extends State<OtherUserProfileScreen> {
   @override
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
-    final agrs =
-        ModalRoute.of(context)!.settings.arguments as OtherUserProfileArguments;
+    //final agrs =
+    //    ModalRoute.of(context)!.settings.arguments as OtherUserProfileArguments;
+    //TODO, get userDetail by agrs.id
+    final userDetail = userDetailTemp;
+
     return Scaffold(
       appBar: AppBar(
         actions: [
@@ -163,8 +165,7 @@ class _OtherUserProfileScreenState extends State<OtherUserProfileScreen> {
                         backgroundColor: Colors.white,
                         collapsedHeight: flexibleSpaceBarSize.height,
                         expandedHeight: flexibleSpaceBarSize.height,
-                        flexibleSpace:
-                            buildMainInfoWidget(agrs.userDetail, width),
+                        flexibleSpace: buildMainInfoWidget(userDetail, width),
                       ),
                       SliverPersistentHeader(
                         delegate: MyDelegate(
@@ -186,9 +187,9 @@ class _OtherUserProfileScreenState extends State<OtherUserProfileScreen> {
                   body: TabBarView(
                     //children: getTabContent(),
                     children: [
-                      AboutTab(userDetail: agrs.userDetail),
-                      PostsTab(userDetail: agrs.userDetail),
-                      ReviewTab(userDetail: agrs.userDetail),
+                      AboutTab(userDetail: userDetail),
+                      PostsTab(userDetail: userDetail),
+                      ReviewTab(userDetail: userDetail),
                     ],
                   ),
                 ),
@@ -218,10 +219,8 @@ class _OtherUserProfileScreenState extends State<OtherUserProfileScreen> {
                   child: CircleAvatar(
                     radius: width / 7 - 2.5,
                     backgroundColor: Colors.white,
-                    child: CircleAvatar(
-                      backgroundImage: AssetImage(userDetail.user.image),
-                      radius: width / 7 - 5,
-                    ),
+                    child: CustomUserAvatar(
+                        image: userDetail.user.image, radius: width / 7 - 5),
                   ),
                 ),
               ),
@@ -271,33 +270,9 @@ class _OtherUserProfileScreenState extends State<OtherUserProfileScreen> {
                                 color: kPrimaryColor,
                                 size: 20,
                               ),
-                              press: () => pushNewScreenWithRouteSettings<void>(
-                                    context,
-                                    settings: RouteSettings(
-                                      name: PersonalChatScreen.routeName,
-                                      arguments: PersonalChatArguments(
-                                        chat: Chat(
-                                          id: 0,
-                                          lastMessage: '',
-                                          time: '',
-                                          users: [userDetail.user],
-                                        ),
-                                      ),
-                                    ),
-                                    screen: const PersonalChatScreen(),
-                                    withNavBar: false,
-                                    pageTransitionAnimation:
-                                        PageTransitionAnimation.cupertino,
-                                  ),
-                              // press: () => Navigator.pushNamed(
-                              //     context, PersonalChatScreen.routeName,
-                              //     arguments: PersonalChatArguments(
-                              //         chat: Chat(
-                              //       id: 0,
-                              //       lastMessage: '',
-                              //       time: '',
-                              //       users: [userDetail.user],
-                              //     ))),
+                              press: () {
+                                //TODO navigate to chat_room_screen (id)
+                              },
                               text: 'Nhắn tin',
                               width: MediaQuery.of(context).size.width / 3.8,
                               isFilled: false,
@@ -468,6 +443,6 @@ class ReviewProperty extends StatelessWidget {
 }
 
 class OtherUserProfileArguments {
-  OtherUserProfileArguments({required this.userDetail});
-  UserDetail userDetail;
+  OtherUserProfileArguments({required this.userId});
+  final String userId;
 }

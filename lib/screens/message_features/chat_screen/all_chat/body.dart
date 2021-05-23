@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 
 import '../../../../models/chat/temp_class.dart';
-import '../group_chat/chat_screen/group_chat_screen.dart';
-import '../personal_chat/personal_chat_screen.dart';
 import '../widgets/chat_card.dart';
 import '../widgets/search_bar.dart';
 
@@ -23,32 +20,34 @@ class Body extends StatelessWidget {
               itemBuilder: (context, index) => ChatCard(
                 chat: chatsData[index],
                 press: () {
-                  if (chatsData[index].users.length == 1) {
-                    pushNewScreenWithRouteSettings<void>(
-                      context,
-                      settings: RouteSettings(
-                        name: PersonalChatScreen.routeName,
-                        arguments:
-                            PersonalChatArguments(chat: chatsData[index]),
-                      ),
-                      screen: const PersonalChatScreen(),
-                      withNavBar: false,
-                      pageTransitionAnimation:
-                          PageTransitionAnimation.cupertino,
-                    );
-                  } else {
-                    pushNewScreenWithRouteSettings<void>(
-                      context,
-                      settings: RouteSettings(
-                        name: GroupChatScreen.routeName,
-                        arguments: GroupChatArguments(chat: chatsData[index]),
-                      ),
-                      screen: const GroupChatScreen(),
-                      withNavBar: false,
-                      pageTransitionAnimation:
-                          PageTransitionAnimation.cupertino,
-                    );
-                  }
+                  //TODO navigate to chat_room_screen(id)
+
+                  // if (chatsData[index].users.length == 1) {
+                  //   pushNewScreenWithRouteSettings<void>(
+                  //     context,
+                  //     settings: RouteSettings(
+                  //       name: PersonalChatScreen.routeName,
+                  //       arguments:
+                  //           PersonalChatArguments(chat: chatsData[index]),
+                  //     ),
+                  //     screen: const PersonalChatScreen(),
+                  //     withNavBar: false,
+                  //     pageTransitionAnimation:
+                  //         PageTransitionAnimation.cupertino,
+                  //   );
+                  // } else {
+                  //   pushNewScreenWithRouteSettings<void>(
+                  //     context,
+                  //     settings: RouteSettings(
+                  //       name: GroupChatScreen.routeName,
+                  //       arguments: GroupChatArguments(chat: chatsData[index]),
+                  //     ),
+                  //     screen: const GroupChatScreen(),
+                  //     withNavBar: false,
+                  //     pageTransitionAnimation:
+                  //         PageTransitionAnimation.cupertino,
+                  //   );
+                  //}
                 },
               ),
             ),

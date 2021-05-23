@@ -27,6 +27,7 @@ class _PersonalChatScreenState extends State<PersonalChatScreen> {
 
     return Scaffold(
       appBar: AppBar(
+        centerTitle: false,
         title: UserCard(
             user: agrs.chat.users[0], press: () {}, showActiveAt: true),
         actions: [
@@ -50,7 +51,8 @@ class _PersonalChatScreenState extends State<PersonalChatScreen> {
 
   void showOverlay({required BuildContext context, required User user}) {
     BotToast.showAttachedWidget(
-      attachedBuilder: (_) => ChatDialog(user: user, parentContext: context),
+      attachedBuilder: (_) =>
+          PersonalChatDialog(user: user, parentContext: context),
       targetContext: context,
     );
   }

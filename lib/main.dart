@@ -16,5 +16,6 @@ Future<void> main() async {
       persistenceEnabled: false,
     );
   }
-  runApp(MyApp());
+
+  runApp(const MyApp());
 }

@@ -1,6 +1,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+
 import '../../../../models/chat/temp_class.dart';
+import '../../../../widgets/custom_user_avatar.dart';
 
 class ChatCard extends StatelessWidget {
   const ChatCard({
@@ -23,10 +25,8 @@ class ChatCard extends StatelessWidget {
             Stack(
               children: [
                 if (chat.users.length == 1)
-                  CircleAvatar(
-                    radius: 24,
-                    backgroundImage: AssetImage(chat.users[0].image),
-                  ),
+                  CustomUserAvatar(image: chat.users[0].image, radius: 24),
+                //buildAvatarChat(chat.users[0].image, 24),
                 if (chat.users.length == 1)
                   if (chat.users[0].isActive)
                     Positioned(
@@ -51,15 +51,11 @@ class ChatCard extends StatelessWidget {
                         Positioned(
                           right: 0,
                           bottom: 0,
-                          child: CircleAvatar(
-                            radius: 16,
-                            backgroundImage: AssetImage(chat.users[0].image),
-                          ),
+                          child: CustomUserAvatar(
+                              image: chat.users[0].image, radius: 16),
                         ),
-                        CircleAvatar(
-                          radius: 16,
-                          backgroundImage: AssetImage(chat.users[1].image),
-                        ),
+                        CustomUserAvatar(
+                            image: chat.users[1].image, radius: 16),
                       ],
                     ),
                   ),

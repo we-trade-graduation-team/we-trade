@@ -53,7 +53,9 @@ class _ChatCardAddNewState extends State<ChatCardAddNew> {
           }),
           secondary: CircleAvatar(
             radius: 24,
-            backgroundImage: AssetImage(widget.user.image),
+            backgroundImage: NetworkImage(widget.user.image.isEmpty
+                ? '/assets/images/message/user_avatar.png'
+                : widget.user.image),
           ),
           controlAffinity: ListTileControlAffinity.trailing,
         ));

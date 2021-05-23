@@ -9,6 +9,7 @@ import 'authentication_wrapper.dart';
 import 'configs/theme/theme.dart';
 import 'routing/authentication_features_routes.dart';
 import 'services/authentication/authentication_service.dart';
+
 // import 'screens/shared_features/secondary_splash_screen/secondary_splash_screen.dart';
 
 class MyApp extends StatelessWidget {

@@ -8,20 +8,17 @@ part 'user_model.g.dart';
 
 @JsonSerializable(explicitToJson: true)
 class UserModel {
-  UserModel({
-    required this.uid,
-    this.email,
-    this.username,
-    this.address,
-  });
+  UserModel(
+      {required this.uid, this.email, this.username, this.address, this.image});
 
   /// A necessary factory constructor for creating a new User instance
   /// from a map. Pass the map to the generated `_$UserFromJson()` constructor.
   /// The constructor is named after the source class, in this case, User.
-  factory UserModel.fromJson(Map<String, dynamic> json) => _$UserModelFromJson(json);
+  factory UserModel.fromJson(Map<String, dynamic> json) =>
+      _$UserModelFromJson(json);
 
   final String uid;
-  final String? email, username;
+  final String? email, username, image;
   final Address? address;
 
   /// `toJson` is the convention for a class to declare support for serialization

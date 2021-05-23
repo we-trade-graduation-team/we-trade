@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
+import 'package:provider/provider.dart';
+import '../../../../../models/authentication/user_model.dart';
 
 import '../../../../../models/chat/temp_class.dart';
 import '../../../../shared_features/other_user_profile/other_user_profile_screen.dart';
@@ -14,7 +16,7 @@ class AllMemberScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final agrs =
         ModalRoute.of(context)!.settings.arguments as AllMemberArguments;
-
+    final thisUser = Provider.of<UserModel?>(context, listen: false)!;
     return Scaffold(
       appBar: AppBar(
         title: const Text(
@@ -34,23 +36,25 @@ class AllMemberScreen extends StatelessWidget {
         ],
       ),
       body: Container(
-        margin: const EdgeInsets.symmetric(vertical: 10),
+        margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
         child: ListView.builder(
-          itemCount: agrs.chat.users.length,
+          itemCount: agrs.users.length,
           itemBuilder: (context, index) => UserCard(
-            user: agrs.chat.users[index],
-            press: () => pushNewScreenWithRouteSettings<void>(
-              context,
-              settings: RouteSettings(
-                name: OtherUserProfileScreen.routeName,
-                arguments:
-                    OtherUserProfileArguments(userDetail: userDetailTemp),
-              ),
-              screen: const OtherUserProfileScreen(),
-              withNavBar: false,
-              pageTransitionAnimation: PageTransitionAnimation.cupertino,
-            ),
-          ),
+              user: agrs.users[index],
+              press: () {
+                if (agrs.users[index].id != thisUser.uid) {
+                  pushNewScreenWithRouteSettings<void>(
+                    context,
+                    settings: RouteSettings(
+                        name: OtherUserProfileScreen.routeName,
+                        arguments: OtherUserProfileArguments(
+                            userId: agrs.users[index].id)),
+                    screen: const OtherUserProfileScreen(),
+                    withNavBar: false,
+                    pageTransitionAnimation: PageTransitionAnimation.cupertino,
+                  );
+                }
+              }),
         ),
       ),
     );
@@ -58,7 +62,7 @@ class AllMemberScreen extends StatelessWidget {
 }
 
 class AllMemberArguments {
-  AllMemberArguments({required this.chat});
+  AllMemberArguments({required this.users});
 
-  final Chat chat;
+  final List<User> users;
 }

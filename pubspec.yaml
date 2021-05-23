@@ -14,6 +14,7 @@ dependencies:
     sdk: flutter
   flutter_localizations:
     sdk: flutter
+  algolia: ^1.0.1
   auto_size_text: ^3.0.0-nullsafety.0
   bot_toast: ^4.0.1
   carousel_slider: ^4.0.0-nullsafety.0
@@ -76,3 +77,4 @@ flutter:
     - assets/images/products_images_temp/
     - assets/images/on_boarding_screen/
     - assets/images/secondary_splash_screen/
+    - assets/images/message/

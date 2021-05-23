@@ -10,10 +10,11 @@ import '../group_chat/members/all_members_screen.dart';
 
 class GroupChatDialog extends StatelessWidget {
   const GroupChatDialog(
-      {Key? key, required this.parentContext, required this.chat})
+      {Key? key, required this.parentContext, required this.users})
       : super(key: key);
   final BuildContext parentContext;
-  final Chat chat;
+  final List<User> users;
+
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -47,7 +48,7 @@ class GroupChatDialog extends StatelessWidget {
                           parentContext,
                           settings: RouteSettings(
                             name: AllMemberScreen.routeName,
-                            arguments: AllMemberArguments(chat: chat),
+                            arguments: AllMemberArguments(users: users),
                           ),
                           screen: const AllMemberScreen(),
                           withNavBar: false,
@@ -198,6 +199,6 @@ class GroupChatDialog extends StatelessWidget {
     super.debugFillProperties(properties);
     properties
         .add(DiagnosticsProperty<BuildContext>('parentContext', parentContext));
-    properties.add(DiagnosticsProperty<Chat>('chat', chat));
+    properties.add(IterableProperty<User>('users', users));
   }
 }

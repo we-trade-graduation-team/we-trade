@@ -22,6 +22,7 @@ class _ChatScreenState extends State<ChatScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       appBar: AppBar(
         title: const Text(
           'CHAT',
@@ -45,25 +46,25 @@ class _ChatScreenState extends State<ChatScreen> {
   }
 }
 
-class BuildFloatingActionButton extends StatelessWidget {
-  const BuildFloatingActionButton({
-    Key? key,
-  }) : super(key: key);
+// class BuildFloatingActionButton extends StatelessWidget {
+//   const BuildFloatingActionButton({
+//     Key? key,
+//   }) : super(key: key);
 
-  @override
-  Widget build(BuildContext context) {
-    return FloatingActionButton(
-      onPressed: () => pushNewScreen<void>(
-        context,
-        screen: const AddChatScreen(),
-        withNavBar: false,
-        pageTransitionAnimation: PageTransitionAnimation.cupertino,
-      ),
-      backgroundColor: kPrimaryColor,
-      child: const Icon(
-        Icons.group_add,
-        color: Colors.white,
-      ),
-    );
-  }
-}
+//   @override
+//   Widget build(BuildContext context) {
+//     return FloatingActionButton(
+//       onPressed: () => pushNewScreen<void>(
+//         context,
+//         screen: const AddChatScreen(),
+//         withNavBar: false,
+//         pageTransitionAnimation: PageTransitionAnimation.cupertino,
+//       ),
+//       backgroundColor: kPrimaryColor,
+//       child: const Icon(
+//         Icons.group_add,
+//         color: Colors.white,
+//       ),
+//     );
+//   }
+// }
