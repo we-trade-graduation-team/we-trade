@@ -52,7 +52,10 @@ class GetUserName extends StatelessWidget {
 
               final data = snapshot.data!.data() as Map<String, dynamic>;
               final name = data['name'].toString();
-              return Text(name);
+              return Text(
+                name,
+                overflow: TextOverflow.ellipsis,
+              );
             },
           )
         : FutureBuilder<DocumentSnapshot>(
@@ -77,7 +80,10 @@ class GetUserName extends StatelessWidget {
               if (snapshot.connectionState == ConnectionState.done) {
                 final data = snapshot.data!.data() as Map<String, dynamic>;
                 final name = data['name'].toString();
-                return Text(name);
+                return Text(
+                  name,
+                  overflow: TextOverflow.ellipsis,
+                );
               }
 
               return const Text(
