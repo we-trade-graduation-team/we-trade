@@ -47,21 +47,41 @@ class TradingProductCard extends StatelessWidget {
         await referenceDatabase.collection('users').doc(userID).update({
           'hiddenPosts': hiddenPosts,
           'posts': posts,
-        }).then((value) {
-          // setState(() {
-          //   _isLoaded = true;
-          // });
         });
       });
     } catch (error) {
-      // ignore: avoid_print
-      print(error);
+      rethrow;
+    }
+  }
+
+  Future<void> _reShowPost(String postID) async {
+    try {
+      await referenceDatabase
+          .collection('users')
+          .doc(userID)
+          .get()
+          .then((documentSnapshot) async {
+        final _user = documentSnapshot.data();
+        final hiddenPosts = _user!['hiddenPosts'] as List;
+        final posts = _user['posts'] as List;
+        final res = hiddenPosts.remove(postID);
+
+        if (res) {
+          posts.add(postID);
+        }
+        await referenceDatabase.collection('users').doc(userID).update({
+          'hiddenPosts': hiddenPosts,
+          'posts': posts,
+        });
+      });
+    } catch (error) {
+      rethrow;
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    final deletePost = OverlayItem(
+    final deletePostOverlayItem = OverlayItem(
       text: 'Xóa',
       iconData: Icons.delete,
       handleFunction: () async {
@@ -96,10 +116,28 @@ class TradingProductCard extends StatelessWidget {
           );
         },
       ),
-      deletePost,
+      deletePostOverlayItem,
     ];
     final overlayItemsOfHiddenPosts = [
-      deletePost,
+      OverlayItem(
+        text: 'Hiện tin',
+        iconData: Icons.visibility,
+        handleFunction: () async {
+          await showMyConfirmationDialog(
+              context: context,
+              title: 'Thông báo',
+              content:
+                  'Bạn có chắc muốn hiển thị bài đăng này không? Người dùng khác có thể xem bài đăng này của bạn.',
+              onConfirmFunction: () {
+                _reShowPost(id);
+                Navigator.of(context).pop();
+              },
+              onCancelFunction: () {
+                Navigator.of(context).pop();
+              });
+        },
+      ),
+      deletePostOverlayItem,
     ];
 
     return GestureDetector(
@@ -107,7 +145,6 @@ class TradingProductCard extends StatelessWidget {
         // print('product tapped');
       },
       child: Container(
-        // margin: const EdgeInsets.fromLTRB(15, 3, 15, 3),
         margin: const EdgeInsets.fromLTRB(15, 3, 8, 3),
         padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 10),
         decoration: const BoxDecoration(
