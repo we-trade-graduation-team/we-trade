@@ -54,7 +54,8 @@ class _HistoryProductCardState extends State<HistoryProductCard> {
   final userID = AccountScreen.localUserID;
 
   late String otherSideUserID;
-  late String status;
+  late int status;
+  late String statusText;
   late Color statusTextColor;
   late String dateTime;
   bool _isLoaded = false;
@@ -100,11 +101,7 @@ class _HistoryProductCardState extends State<HistoryProductCard> {
         _trading = documentSnapshot.data();
         _trading!['id'] = documentSnapshot.id;
 
-        if (_trading == null) {
-          // ignore: avoid_print
-          print('trading is null');
-          return;
-        } else {
+        if (_trading != null) {
           setState(() {
             otherSideUserID = _trading!['owner'].toString() == userID
                 ? _trading!['makeOfferUser'].toString()
@@ -113,23 +110,23 @@ class _HistoryProductCardState extends State<HistoryProductCard> {
             final temp = _trading!['createAt'] as Timestamp;
             final d = temp.toDate();
             dateTime = DateFormat.yMMMMd('en_US').add_jm().format(d);
-
-            final statusTemp = _trading!['status'] as int;
-            switch (statusTemp) {
+            status = _trading!['status'] as int;
+            switch (status) {
               case 1:
-                status = 'Thành công';
+                statusText = 'Thành công';
                 statusTextColor = Colors.green;
                 break;
               case 2:
-                status = 'Đang giao dịch';
+                statusText = 'Đang giao dịch';
                 statusTextColor = Colors.yellow[700]!;
-
                 break;
               case 3:
-                status = 'Thất bại';
+                statusText = 'Thất bại';
                 statusTextColor = Colors.red[400]!;
                 break;
               default:
+                statusText = 'Unknown';
+                statusTextColor = Colors.red[400]!;
                 break;
             }
 
@@ -137,53 +134,56 @@ class _HistoryProductCardState extends State<HistoryProductCard> {
           });
         }
       }).timeout(Duration(seconds: timeOut));
-    } on FirebaseException catch (e) {
-      // ignore: avoid_print
-      print('Lỗi: $e');
+    } on FirebaseException {
+      rethrow;
     }
   }
 
   @override
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
+    final height = MediaQuery.of(context).size.width;
 
-    final overlayItems = <OverlayItem>[
-      OverlayItem(
-        text: 'Đánh giá',
-        iconData: Icons.star,
-        handleFunction: () {
-          pushNewScreenWithRouteSettings<void>(
-            context,
-            settings: const RouteSettings(name: RateForTrading.routeName),
-            screen: const RateForTrading(),
-            // withNavBar: true,
-            pageTransitionAnimation: PageTransitionAnimation.cupertino,
-          );
-        },
-      ),
-      OverlayItem(
-        text: 'Xóa',
-        iconData: Icons.delete,
-        handleFunction: () async {
-          await showMyConfirmationDialog(
-              context: context,
-              title: 'Thông báo',
-              content: 'Bạn có chắc muốn xóa lịch sử giao dịch này không?',
-              onConfirmFunction: () {
-                _removeTradingHistory(widget.tradingID);
-                Navigator.of(context).pop();
-              },
-              onCancelFunction: () {
-                Navigator.of(context).pop();
-              });
-        },
-      ),
-    ];
+    final rateOverlayItem = OverlayItem(
+      text: 'Đánh giá',
+      iconData: Icons.star,
+      handleFunction: () {
+        pushNewScreenWithRouteSettings<void>(
+          context,
+          settings: RouteSettings(
+            name: RateForTrading.routeName,
+            arguments: {
+              'otherSideUserID': otherSideUserID,
+              'tradingID': widget.tradingID,
+            },
+          ),
+          screen: const RateForTrading(),
+          // withNavBar: true,
+          pageTransitionAnimation: PageTransitionAnimation.cupertino,
+        );
+      },
+    );
+    final removeOverlayItem = OverlayItem(
+      text: 'Xóa',
+      iconData: Icons.delete,
+      handleFunction: () async {
+        await showMyConfirmationDialog(
+            context: context,
+            title: 'Thông báo',
+            content: 'Bạn có chắc muốn xóa lịch sử giao dịch này không?',
+            onConfirmFunction: () {
+              _removeTradingHistory(widget.tradingID);
+              Navigator.of(context).pop();
+            },
+            onCancelFunction: () {
+              Navigator.of(context).pop();
+            });
+      },
+    );
 
     return _isLoaded
         ? GestureDetector(
             onTap: () {
-              // print('product tapped');
               pushNewScreenWithRouteSettings<void>(
                 context,
                 settings: RouteSettings(
@@ -194,13 +194,10 @@ class _HistoryProductCardState extends State<HistoryProductCard> {
                         offerSideProducts: widget.offerSideProducts,
                         offerSideMoney: widget.offerSideMoney)),
                 screen: const OfferDetailScreen(),
-
-                // withNavBar: true,
                 pageTransitionAnimation: PageTransitionAnimation.cupertino,
               );
             },
             child: Container(
-              // margin: const EdgeInsets.fromLTRB(15, 5, 15, 5),
               margin: const EdgeInsets.fromLTRB(15, 5, 0, 5),
               padding: const EdgeInsets.symmetric(vertical: 10),
               decoration: const BoxDecoration(
@@ -218,34 +215,22 @@ class _HistoryProductCardState extends State<HistoryProductCard> {
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      // Container(
-                      //   width: width * 0.26,
-                      //   height: height * 0.15,
-                      //   child: ClipRRect(
-                      //     borderRadius: BorderRadius.circular(10),
-                      //     child: Image.asset(
-                      //       productsData[0].images[0],
-                      //       fit: BoxFit.cover,
-                      //     ),
-                      //   ),
-                      // ),
+                      Container(
+                        width: width * 0.25,
+                        height: height * 0.18,
+                        // child: ClipRRect(
+                        //   borderRadius: BorderRadius.circular(10),
+                        //   child: Image.asset(
+                        //     productsData[0].images[0],
+                        //     fit: BoxFit.cover,
+                        //   ),
+                        // ),
+                        color: Colors.red,
+                      ),
                       const SizedBox(width: 15),
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          // Container(
-                          //   width: width * 0.45,
-                          //   child: Text(
-                          //     productsData[0].name,
-                          //     overflow: TextOverflow.ellipsis,
-                          //     maxLines: 2,
-                          //     style: const TextStyle(
-                          //       fontSize: 16,
-                          //       fontWeight: FontWeight.w600,
-                          //     ),
-                          //   ),
-                          // ),
-                          const SizedBox(height: 7),
                           Row(
                             children: [
                               const Text(
@@ -255,15 +240,18 @@ class _HistoryProductCardState extends State<HistoryProductCard> {
                                   fontWeight: FontWeight.w400,
                                 ),
                               ),
-                              DefaultTextStyle(
-                                style: const TextStyle(
-                                  fontWeight: FontWeight.w400,
-                                  fontSize: 13,
-                                  color: kPrimaryColor,
-                                ),
-                                child: GetUserName(
-                                  documentId: otherSideUserID,
-                                  isStream: false,
+                              Container(
+                                width: width * 0.3,
+                                child: DefaultTextStyle(
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.w400,
+                                    fontSize: 13,
+                                    color: kPrimaryColor,
+                                  ),
+                                  child: GetUserName(
+                                    documentId: otherSideUserID,
+                                    isStream: false,
+                                  ),
                                 ),
                               ),
                             ],
@@ -279,7 +267,7 @@ class _HistoryProductCardState extends State<HistoryProductCard> {
                                 ),
                               ),
                               Text(
-                                status,
+                                statusText,
                                 style: TextStyle(
                                   fontSize: 13,
                                   fontWeight: FontWeight.w400,
@@ -304,8 +292,11 @@ class _HistoryProductCardState extends State<HistoryProductCard> {
                         ],
                       ),
                       CustomOverlayIconButton(
-                          iconData: Icons.more_vert,
-                          overlayItems: overlayItems),
+                        iconData: Icons.more_vert,
+                        overlayItems: status == widget.statusValue['success']
+                            ? [rateOverlayItem, removeOverlayItem]
+                            : [removeOverlayItem],
+                      ),
                     ],
                   ),
                 ],
@@ -334,21 +325,7 @@ class _HistoryProductCardState extends State<HistoryProductCard> {
     properties.add(StringProperty('otherSideUserID', otherSideUserID));
     properties.add(ColorProperty('statusTextColor', statusTextColor));
     properties.add(StringProperty('dateTime', dateTime));
-    properties.add(StringProperty('status', status));
+    properties.add(StringProperty('status', statusText));
+    properties.add(IntProperty('status', status));
   }
 }
-//1: successful
-//2: onProgress
-//3: failed
-
-// class TradingStatus {
-//   TradingStatus({required this.id, required this.status});
-//   int id;
-//   String status;
-// }
-
-// class Sta {
-//   int success = 1;
-//   int onProgress = 2;
-//   int failure = 3;
-// }

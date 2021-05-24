@@ -2,29 +2,20 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-import '../../../models/chat/temp_class.dart';
 import '../../../models/shared_models/product_model.dart';
 import '../account/account_screen.dart';
 import '../shared_widgets/history_prod_card.dart';
 import '../utils.dart';
 
 class TradingHistoryScreen extends StatefulWidget {
-  TradingHistoryScreen({
+  const TradingHistoryScreen({
     Key? key,
   }) : super(key: key);
 
   static const routeName = '/tradinghistory';
 
-  final UserDetail userDetail = userDetailTemp;
-
   @override
   _TradingHistoryScreenState createState() => _TradingHistoryScreenState();
-
-  @override
-  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
-    super.debugFillProperties(properties);
-    properties.add(DiagnosticsProperty<UserDetail>('userDetail', userDetail));
-  }
 }
 
 class _TradingHistoryScreenState extends State<TradingHistoryScreen> {
@@ -33,12 +24,11 @@ class _TradingHistoryScreenState extends State<TradingHistoryScreen> {
   @override
   Widget build(BuildContext context) {
     final referenceDatabase = AccountScreen.localRefDatabase;
-    // const isHaveOfferDeal = true;
     final offerSideProducts = [allProduct[0], allProduct[1]];
     const money = 100000;
     final forProduct = allProduct[3];
 
-    return Scaffold(
+  return Scaffold(
       appBar: AppBar(
         title: const Text('Lịch sử giao dịch'),
       ),
@@ -68,50 +58,50 @@ class _TradingHistoryScreenState extends State<TradingHistoryScreen> {
           return Container(
             color: const Color.fromARGB(2, 3, 4, 2),
             child: ListView.builder(
-                itemBuilder: (context, index) {
-                  return FutureBuilder<DocumentSnapshot>(
-                    future: referenceDatabase
-                        .collection('tradings')
-                        .doc(tradingHistory[index].toString())
-                        .get(),
-                    builder: (context, snapshot) {
-                      if (snapshot.hasError) {
-                        return Text('Something went wrong',
-                            style: TextStyle(
-                              fontWeight: FontWeight.normal,
-                              color: Colors.red.withOpacity(0.6),
-                            ));
-                      }
+              itemBuilder: (context, index) {
+                return FutureBuilder<DocumentSnapshot>(
+                  future: referenceDatabase
+                      .collection('tradings')
+                      .doc(tradingHistory[index].toString())
+                      .get(),
+                  builder: (context, snapshot) {
+                    if (snapshot.hasError) {
+                      return Text('Something went wrong',
+                          style: TextStyle(
+                            fontWeight: FontWeight.normal,
+                            color: Colors.red.withOpacity(0.6),
+                          ));
+                    }
 
-                      if (snapshot.hasData && !snapshot.data!.exists) {
-                        return Text('Document does not exist',
-                            style: TextStyle(
-                              fontWeight: FontWeight.normal,
-                              color: Colors.red.withOpacity(0.6),
-                            ));
-                      }
-                      if (snapshot.connectionState == ConnectionState.done) {
-                        return Padding(
-                          padding: const EdgeInsets.all(8),
-                          child: HistoryProductCard(
-                            key: Key(snapshot.data!.id.toString()),
-                            tradingID: snapshot.data!.id,
-                            offerSideProducts: offerSideProducts,
-                            forProduct: forProduct,
-                            offerSideMoney: money,
-                          ),
-                        );
-                      }
-                      return const Center(
-                        child: CircularProgressIndicator(
-                          valueColor:
-                              AlwaysStoppedAnimation<Color>(Colors.blue),
+                    if (snapshot.hasData && !snapshot.data!.exists) {
+                      return Text('Document does not exist',
+                          style: TextStyle(
+                            fontWeight: FontWeight.normal,
+                            color: Colors.red.withOpacity(0.6),
+                          ));
+                    }
+                    if (snapshot.connectionState == ConnectionState.done) {
+                      return Padding(
+                        padding: const EdgeInsets.all(8),
+                        child: HistoryProductCard(
+                          key: Key(snapshot.data!.id.toString()),
+                          tradingID: snapshot.data!.id,
+                          offerSideProducts: offerSideProducts,
+                          forProduct: forProduct,
+                          offerSideMoney: money,
                         ),
                       );
-                    },
-                  );
-                },
-                itemCount: tradingHistory.length),
+                    }
+                    return const Center(
+                      child: CircularProgressIndicator(
+                        valueColor: AlwaysStoppedAnimation<Color>(Colors.blue),
+                      ),
+                    );
+                  },
+                );
+              },
+              itemCount: tradingHistory.length,
+            ),
           );
         },
       ),
