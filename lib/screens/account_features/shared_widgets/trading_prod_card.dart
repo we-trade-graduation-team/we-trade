@@ -1,9 +1,10 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 
 import '../../../configs/constants/color.dart';
-import '../../../models/review/temp_class.dart';
+import '../../../models/product/temp_class.dart';
 import '../../../screens/account_features/post_management/hide_post_screen.dart';
 import 'custom_overlay_icon_button.dart';
 import 'trading_prod_overlay.dart';
@@ -11,17 +12,23 @@ import 'trading_prod_overlay.dart';
 class TradingProductCard extends StatelessWidget {
   const TradingProductCard({
     Key? key,
-    required this.review,
+    required this.name,
+    required this.price,
+    required this.dateTime,
+    required this.isHiddenPost,
   }) : super(key: key);
 
-  final Review review;
+  final String name;
+  final String price;
+  final DateTime dateTime;
+  final bool isHiddenPost;
 
   @override
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
     final height = MediaQuery.of(context).size.height;
 
-    final overlayItems = <OverlayItem>[
+    final overlayItemsOfVisiblePosts = [
       OverlayItem(
         text: 'Ẩn tin',
         iconData: Icons.visibility_off,
@@ -33,7 +40,21 @@ class TradingProductCard extends StatelessWidget {
             // withNavBar: true,
             pageTransitionAnimation: PageTransitionAnimation.cupertino,
           );
-          // Navigator.of(context).pushNamed(HidePostScreen.routeName);
+        },
+      ),
+    ];
+    final overlayItemsOfHiddenPosts = [
+      OverlayItem(
+        text: 'Xóa',
+        iconData: Icons.visibility_off,
+        handleFunction: () {
+          pushNewScreenWithRouteSettings<void>(
+            context,
+            settings: const RouteSettings(name: HidePostScreen.routeName),
+            screen: const HidePostScreen(),
+            // withNavBar: true,
+            pageTransitionAnimation: PageTransitionAnimation.cupertino,
+          );
         },
       ),
     ];
@@ -44,7 +65,7 @@ class TradingProductCard extends StatelessWidget {
       },
       child: Container(
         // margin: const EdgeInsets.fromLTRB(15, 3, 15, 3),
-        margin: const EdgeInsets.fromLTRB(15, 3, 0, 3),
+        margin: const EdgeInsets.fromLTRB(15, 3, 8, 3),
         padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 10),
         decoration: const BoxDecoration(
           //color: Colors.white,
@@ -66,7 +87,8 @@ class TradingProductCard extends StatelessWidget {
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(10),
                     child: Image.asset(
-                      review.product.images[0],
+                      //TODO:change image source
+                      productsData[0].images[0],
                       fit: BoxFit.cover,
                     ),
                   ),
@@ -77,20 +99,20 @@ class TradingProductCard extends StatelessWidget {
                   children: [
                     Container(
                       width: width * 0.45,
-                      child: const Text(
-                        'LApTop moiw 12 12sqwrqwq eqweqwe qweqt qwrqmua2121212121222121qwq qwxcvf',
+                      child: Text(
+                        name,
                         overflow: TextOverflow.ellipsis,
                         maxLines: 2,
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.w600,
                         ),
                       ),
                     ),
                     const SizedBox(height: 10),
-                    const Text(
-                      r'$200-$300',
-                      style: TextStyle(
+                    Text(
+                      '\$ $price',
+                      style: const TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.w400,
                         color: kPrimaryColor,
@@ -98,9 +120,16 @@ class TradingProductCard extends StatelessWidget {
                     ),
                   ],
                 ),
-                CustomOverlayIconButton(
-                  iconData: Icons.more_vert,
-                  overlayItems: overlayItems,
+                Expanded(
+                  child: Align(
+                    alignment: Alignment.topRight,
+                    child: CustomOverlayIconButton(
+                      iconData: Icons.more_vert,
+                      overlayItems: isHiddenPost
+                          ? overlayItemsOfHiddenPosts
+                          : overlayItemsOfVisiblePosts,
+                    ),
+                  ),
                 ),
               ],
             ),
@@ -109,9 +138,12 @@ class TradingProductCard extends StatelessWidget {
               child: Container(
                 margin: const EdgeInsets.fromLTRB(0, 10, 0, 0),
                 child: Text(
-                  review.dateTime.toString(),
+                  DateFormat.yMMMMd('en_US')
+                      .add_jm()
+                      .format(dateTime)
+                      .toString(),
                   style: const TextStyle(
-                    fontSize: 10,
+                    fontSize: 11,
                     fontWeight: FontWeight.w300,
                   ),
                 ),
@@ -126,6 +158,9 @@ class TradingProductCard extends StatelessWidget {
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
-    properties.add(DiagnosticsProperty<Review>('review', review));
+    properties.add(DiagnosticsProperty<bool>('isHiddenPost', isHiddenPost));
+    properties.add(StringProperty('name', name));
+    properties.add(StringProperty('price', price));
+    properties.add(DiagnosticsProperty<DateTime>('dateTime', dateTime));
   }
 }

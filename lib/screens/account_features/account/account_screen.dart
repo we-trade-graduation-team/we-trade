@@ -327,7 +327,7 @@ class AccountScreen extends StatelessWidget {
                             arguments: {
                               'userID': localUserID,
                             }),
-                        screen: TradingHistoryScreen(),
+                        screen: const TradingHistoryScreen(),
                         withNavBar: false,
                         pageTransitionAnimation:
                             PageTransitionAnimation.cupertino,

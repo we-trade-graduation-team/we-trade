@@ -67,8 +67,8 @@ class _PostManagementScreenState extends State<PostManagementScreen> {
 
   List<Widget> getTabContent() {
     return [
-      TradingProductsTab(userDetail: widget.userDetail),
-      TradingProductsTab(userDetail: widget.userDetail),
+      const TradingProductsTab(isHiddenPosts: false),
+      const TradingProductsTab(isHiddenPosts: true),
     ];
   }
 
