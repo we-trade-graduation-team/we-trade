@@ -89,6 +89,7 @@ class _TradingProductsTabState extends State<TradingProductsTab> {
 
                           return TradingProductCard(
                             key: ValueKey(post['id'].toString()),
+                            id: post['id'].toString(),
                             name: post['name'].toString(),
                             price: post['price'].toString(),
                             dateTime: dateTime,
