@@ -88,9 +88,10 @@ class TradingProductCard extends StatelessWidget {
         handleFunction: () {
           pushNewScreenWithRouteSettings<void>(
             context,
-            settings: const RouteSettings(name: HidePostScreen.routeName),
+            settings: RouteSettings(name: HidePostScreen.routeName, arguments: {
+              'id': id,
+            }),
             screen: const HidePostScreen(),
-            // withNavBar: true,
             pageTransitionAnimation: PageTransitionAnimation.cupertino,
           );
         },

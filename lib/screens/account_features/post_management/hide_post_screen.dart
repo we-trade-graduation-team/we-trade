@@ -1,12 +1,14 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+
 import '../../../configs/constants/color.dart';
+import '../account/account_screen.dart';
+import '../utils.dart';
 
 enum HidePostReasonValue {
   stopTrading,
-
   tradedViaWeTrade,
-
   tradeViaOtherChannel,
 }
 
@@ -40,16 +42,18 @@ class HidePostScreen extends StatefulWidget {
   }) : super(key: key);
 
   static const routeName = '/hidepost';
-
   @override
   _HidePostScreenState createState() => _HidePostScreenState();
 }
 
 class _HidePostScreenState extends State<HidePostScreen> {
-  List<Reason> reasons = [];
+  final referenceDatabase = AccountScreen.localRefDatabase;
+  final userID = AccountScreen.localUserID;
 
-  Reason selectedReason =
-      Reason(title: 'title', value: HidePostReasonValue.stopTrading);
+  List<Reason> reasons = [];
+  Reason selectedReason = Reason(
+      title: 'Tôi không muốn bán nữa.', value: HidePostReasonValue.stopTrading);
+  bool isSelected = false;
 
   @override
   void initState() {
@@ -75,6 +79,7 @@ class _HidePostScreenState extends State<HidePostScreen> {
             setState(() {
               // print(currentReason!.title);
               setSelectedReason(currentReason as Reason);
+              isSelected = true;
             });
           },
           selected: selectedReason == reason,
@@ -84,8 +89,40 @@ class _HidePostScreenState extends State<HidePostScreen> {
     return widgets;
   }
 
+  Future<bool> _hidePost(String postID) async {
+    try {
+      await referenceDatabase
+          .collection('users')
+          .doc(userID)
+          .get()
+          .then((documentSnapshot) async {
+        final _user = documentSnapshot.data();
+        final hiddenPosts = _user!['hiddenPosts'] as List;
+        final posts = _user['posts'] as List;
+        final res = posts.remove(postID);
+
+        if (res) {
+          hiddenPosts.add(postID);
+        }
+        await referenceDatabase.collection('users').doc(userID).update({
+          'hiddenPosts': hiddenPosts,
+          'posts': posts,
+        }).then((value) {
+          return true;
+        });
+      });
+    } catch (error) {
+      rethrow;
+    }
+    return false;
+  }
+
   @override
   Widget build(BuildContext context) {
+    final arguments =
+        ModalRoute.of(context)!.settings.arguments as Map<String, String>;
+    final postID = arguments['id'].toString();
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Ẩn tin'),
@@ -113,7 +150,20 @@ class _HidePostScreenState extends State<HidePostScreen> {
           children: [
             Expanded(
               child: ElevatedButton(
-                onPressed: () {},
+                onPressed: () {
+                  if (!isSelected) {
+                    showMyNotificationDialog(
+                        context: context,
+                        title: 'Thông báo',
+                        content: 'Bạn chưa chọn lí do.',
+                        handleFunction: () {
+                          Navigator.of(context).pop();
+                        });
+                  } else {
+                    _hidePost(postID);
+                    Navigator.of(context).pop();
+                  }
+                },
                 style: ElevatedButton.styleFrom(
                   primary: kPrimaryColor,
                 ),
@@ -132,5 +182,9 @@ class _HidePostScreenState extends State<HidePostScreen> {
     properties.add(IterableProperty<Reason>('reasons', reasons));
     properties
         .add(DiagnosticsProperty<Reason>('selectedReason', selectedReason));
+    properties.add(DiagnosticsProperty<DocumentReference<Map<String, dynamic>>>(
+        'referenceDatabase', referenceDatabase));
+    properties.add(StringProperty('userID', userID));
+    properties.add(DiagnosticsProperty<bool>('isSelected', isSelected));
   }
 }
