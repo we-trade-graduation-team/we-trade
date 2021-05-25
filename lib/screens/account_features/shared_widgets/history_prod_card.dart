@@ -150,15 +150,9 @@ class _HistoryProductCardState extends State<HistoryProductCard> {
       handleFunction: () {
         pushNewScreenWithRouteSettings<void>(
           context,
-          settings: RouteSettings(
-            name: RateForTrading.routeName,
-            arguments: {
-              'otherSideUserID': otherSideUserID,
-              'tradingID': widget.tradingID,
-            },
-          ),
-          screen: const RateForTrading(),
-          // withNavBar: true,
+          settings: const RouteSettings(name: RateForTrading.routeName),
+          screen: RateForTrading(
+              tradingID: widget.tradingID, otherSideUserID: otherSideUserID),
           pageTransitionAnimation: PageTransitionAnimation.cupertino,
         );
       },
