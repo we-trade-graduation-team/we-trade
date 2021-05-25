@@ -215,3 +215,104 @@ class GetLegit extends StatelessWidget {
     properties.add(StringProperty('documentId', documentId));
   }
 }
+
+class GetPostName extends StatelessWidget {
+  const GetPostName(
+      {Key? key, required this.documentId, required this.isStream})
+      : super(key: key);
+  final String documentId;
+  final bool isStream;
+
+  @override
+  Widget build(BuildContext context) {
+    final CollectionReference posts =
+        AccountScreen.localRefDatabase.collection('posts');
+
+    return isStream
+        ? StreamBuilder<DocumentSnapshot>(
+            stream: posts.doc(documentId).snapshots(),
+            builder: (context, snapshot) {
+              if (snapshot.hasError) {
+                return Text(
+                  'Something went wrong',
+                  style: TextStyle(
+                    fontWeight: FontWeight.normal,
+                    color: Colors.red.withOpacity(0.6),
+                  ),
+                );
+              }
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const Text(
+                  'loading...',
+                  style: TextStyle(
+                    fontWeight: FontWeight.normal,
+                    color: Colors.black38,
+                  ),
+                );
+              }
+
+              if (snapshot.hasData && !snapshot.data!.exists) {
+                return Text(
+                  'Document does not exist',
+                  style: TextStyle(
+                    fontWeight: FontWeight.normal,
+                    color: Colors.red.withOpacity(0.6),
+                  ),
+                );
+              }
+
+              final data = snapshot.data!.data() as Map<String, dynamic>;
+              final name = data['name'].toString();
+              return Text(
+                name,
+                overflow: TextOverflow.ellipsis,
+              );
+            },
+          )
+        : FutureBuilder<DocumentSnapshot>(
+            future: posts.doc(documentId).get(),
+            builder: (context, snapshot) {
+              if (snapshot.hasError) {
+                return Text('Something went wrong',
+                    style: TextStyle(
+                      fontWeight: FontWeight.normal,
+                      color: Colors.red.withOpacity(0.6),
+                    ));
+              }
+
+              if (snapshot.hasData && !snapshot.data!.exists) {
+                return Text('Document does not exist',
+                    style: TextStyle(
+                      fontWeight: FontWeight.normal,
+                      color: Colors.red.withOpacity(0.6),
+                    ));
+              }
+
+              if (snapshot.connectionState == ConnectionState.done) {
+                final data = snapshot.data!.data() as Map<String, dynamic>;
+                final name = data['name'].toString();
+                return Text(
+                  name,
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 2,
+                );
+              }
+
+              return const Text(
+                'loading...',
+                style: TextStyle(
+                  fontWeight: FontWeight.normal,
+                  color: Colors.black38,
+                ),
+              );
+            },
+          );
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(StringProperty('documentId', documentId));
+    properties.add(DiagnosticsProperty<bool>('isStream', isStream));
+  }
+}
