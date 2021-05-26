@@ -1,11 +1,40 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
+import 'package:provider/provider.dart';
 
+import '../../../../models/authentication/user_model.dart';
 import '../../../../models/chat/temp_class.dart';
+import '../../../../services/message/algolia_message_service.dart';
+import '../../../../services/message/firestore_message_service.dart';
+import '../chat_room/chat_room.dart';
 import '../widgets/chat_card.dart';
 import '../widgets/search_bar.dart';
 
-class Body extends StatelessWidget {
+class Body extends StatefulWidget {
   const Body({Key? key}) : super(key: key);
+
+  @override
+  _BodyState createState() => _BodyState();
+}
+
+class _BodyState extends State<Body> {
+  MessageServiceFireStore dataServiceFireStore = MessageServiceFireStore();
+  MessageServiceAlgolia dataServiceAlgolia = MessageServiceAlgolia();
+  late UserModel thisUser = Provider.of<UserModel?>(context, listen: false)!;
+  late List<Chat> chatRooms = [];
+
+  @override
+  void initState() {
+    super.initState();
+    dataServiceAlgolia.getAllChatRooms(thisUser.uid).then((result) {
+      setState(() {
+        chatRooms = result;
+      });
+    }).whenComplete(() {
+      setState(() {});
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -16,38 +45,21 @@ class Body extends StatelessWidget {
           const SearchBar(),
           Expanded(
             child: ListView.builder(
-              itemCount: chatsData.length,
+              itemCount: chatRooms.length,
               itemBuilder: (context, index) => ChatCard(
-                chat: chatsData[index],
+                chat: chatRooms[index],
+                isSendByMe: chatRooms[index].senderId == thisUser.uid,
                 press: () {
-                  //TODO navigate to chat_room_screen(id)
-
-                  // if (chatsData[index].users.length == 1) {
-                  //   pushNewScreenWithRouteSettings<void>(
-                  //     context,
-                  //     settings: RouteSettings(
-                  //       name: PersonalChatScreen.routeName,
-                  //       arguments:
-                  //           PersonalChatArguments(chat: chatsData[index]),
-                  //     ),
-                  //     screen: const PersonalChatScreen(),
-                  //     withNavBar: false,
-                  //     pageTransitionAnimation:
-                  //         PageTransitionAnimation.cupertino,
-                  //   );
-                  // } else {
-                  //   pushNewScreenWithRouteSettings<void>(
-                  //     context,
-                  //     settings: RouteSettings(
-                  //       name: GroupChatScreen.routeName,
-                  //       arguments: GroupChatArguments(chat: chatsData[index]),
-                  //     ),
-                  //     screen: const GroupChatScreen(),
-                  //     withNavBar: false,
-                  //     pageTransitionAnimation:
-                  //         PageTransitionAnimation.cupertino,
-                  //   );
-                  //}
+                  pushNewScreenWithRouteSettings<void>(
+                    context,
+                    settings: RouteSettings(
+                      name: ChatRoomScreen.routeName,
+                    ),
+                    screen:
+                        ChatRoomScreen(chatRoomId: chatRooms[index].chatRoomId),
+                    withNavBar: false,
+                    pageTransitionAnimation: PageTransitionAnimation.cupertino,
+                  );
                 },
               ),
             ),
@@ -55,5 +67,16 @@ class Body extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(IterableProperty<Chat>('chats', chatRooms));
+    properties.add(DiagnosticsProperty<UserModel>('thisUser', thisUser));
+    properties.add(DiagnosticsProperty<MessageServiceFireStore>(
+        'dataServiceFireStore', dataServiceFireStore));
+    properties.add(DiagnosticsProperty<MessageServiceAlgolia>(
+        'dataServiceAlgolia', dataServiceAlgolia));
   }
 }

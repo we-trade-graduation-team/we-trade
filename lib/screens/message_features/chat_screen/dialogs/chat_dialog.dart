@@ -4,18 +4,17 @@ import 'package:line_icons/line_icons.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 
 import '../../../../configs/constants/color.dart';
-import '../../../../models/chat/temp_class.dart';
 import '../../../shared_features/other_user_profile/other_user_profile_screen.dart';
 import '../../../shared_features/report/report_screen.dart';
 
 class PersonalChatDialog extends StatelessWidget {
   const PersonalChatDialog({
     Key? key,
-    required this.user,
     required this.parentContext,
+    required this.userId,
   }) : super(key: key);
 
-  final User user;
+  final String userId;
   final BuildContext parentContext;
 
   @override
@@ -52,7 +51,7 @@ class PersonalChatDialog extends StatelessWidget {
                           settings: RouteSettings(
                               name: OtherUserProfileScreen.routeName,
                               arguments:
-                                  OtherUserProfileArguments(userId: user.id)),
+                                  OtherUserProfileArguments(userId: userId)),
                           screen: const OtherUserProfileScreen(),
                           withNavBar: false,
                           pageTransitionAnimation:
@@ -174,8 +173,8 @@ class PersonalChatDialog extends StatelessWidget {
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
-    properties.add(DiagnosticsProperty<User>('user', user));
     properties
         .add(DiagnosticsProperty<BuildContext>('parentContext', parentContext));
+    properties.add(StringProperty('userId', userId));
   }
 }

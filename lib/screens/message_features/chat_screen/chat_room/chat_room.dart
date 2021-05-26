@@ -5,8 +5,9 @@ import 'package:line_icons/line_icons.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../models/authentication/user_model.dart';
-import '../../../../models/chat/temp_class.dart';
-import '../../../../services/message/message_service.dart';
+import '../../../../services/message/algolia_message_service.dart';
+import '../../../../services/message/firestore_message_service.dart';
+import '../../const_string/const_str.dart';
 import '../dialogs/chat_dialog.dart';
 import '../dialogs/group_chat_dialog.dart';
 import '../widgets/users_card.dart';
@@ -31,29 +32,40 @@ class ChatRoomScreen extends StatefulWidget {
 }
 
 class _ChatRoomScreenState extends State<ChatRoomScreen> {
-  MessageService dataService = MessageService();
-  List<User> users = [];
-  late UserModel thisUser;
-  late User thisUserDetail;
+  MessageServiceFireStore dataServiceFireStore = MessageServiceFireStore();
+  MessageServiceAlgolia dataServiceAlgolia = MessageServiceAlgolia();
+  late UserModel thisUser = Provider.of<UserModel?>(context, listen: false)!;
 
-  Future<void> getUsers() async {
-    final usersId = await dataService.getAllUserInChatRoom(widget.chatRoomId);
-    thisUser = Provider.of<UserModel?>(context, listen: false)!;
-    for (final userId in usersId) {
-      if (userId != thisUser.uid) {
-        final user = await dataService.getUserById(userId);
-        users.add(user);
-      } else {
-        thisUserDetail = await dataService.getUserById(userId);
-      }
+  late List<String> otherUsersId = [];
+  late List<String> usersImage = [''];
+  late String chatRoomName = '';
+
+  Future<void> getImagesAndChatRoomName() async {
+    await dataServiceAlgolia
+        .getImagesAndChatRoomNameAndOtherUsersId(
+            widget.chatRoomId, thisUser.uid)
+        .then((mapData) {
+      setState(() {
+        chatRoomName = mapData[chatRoomNameStr].toString();
+        usersImage =
+            (mapData[usersImageStr] as List<dynamic>).cast<String>().toList();
+        otherUsersId =
+            (mapData[usersIdStr] as List<dynamic>).cast<String>().toList();
+      });
+    });
+  }
+
+  void changeGroupChatName() {
+    if (otherUsersId.length != 1) {
+      //TODO chạy hàm change name group chat đây
     }
+    //else ko chạy : ) ko cần thiết lắm
   }
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
-    getUsers().whenComplete(() {
+    getImagesAndChatRoomName().whenComplete(() {
       setState(() {});
     });
   }
@@ -64,10 +76,10 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
       appBar: AppBar(
         centerTitle: false,
         title: UsersCard(
-            users: users,
-            press: () {
-              //TODO change name
-            }),
+          chatName: chatRoomName,
+          images: usersImage,
+          press: changeGroupChatName,
+        ),
         actions: [
           IconButton(
             icon: const Icon(Icons.phone),
@@ -78,28 +90,37 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
               icon: Icon(LineIcons.values['verticalEllipsis']),
               onPressed: () {
                 showOverlay(
-                    context: context,
-                    users: List.from(users)..add(thisUserDetail));
+                  context: context,
+                  chatRoomId: widget.chatRoomId,
+                  type: otherUsersId.length == 1,
+                );
               },
             );
           })
         ],
       ),
-      body: const Body(),
+      body: Body(
+        chatRoomId: widget.chatRoomId,
+      ),
     );
   }
 
-  void showOverlay({required BuildContext context, required List<User> users}) {
-    if (users.length == 1) {
+  Future<void> showOverlay(
+      {required BuildContext context,
+      required bool type,
+      required String chatRoomId}) async {
+    if (type) {
       BotToast.showAttachedWidget(
         attachedBuilder: (_) =>
-            PersonalChatDialog(user: users[0], parentContext: context),
+            PersonalChatDialog(userId: otherUsersId[0], parentContext: context),
         targetContext: context,
       );
     } else {
       BotToast.showAttachedWidget(
-        attachedBuilder: (_) =>
-            GroupChatDialog(parentContext: context, users: users),
+        attachedBuilder: (_) => GroupChatDialog(
+          parentContext: context,
+          chatRoomId: chatRoomId,
+        ),
         targetContext: context,
       );
     }
@@ -108,10 +129,13 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
-    properties.add(IterableProperty<User>('users', users));
-    properties
-        .add(DiagnosticsProperty<MessageService>('dataService', dataService));
+    properties.add(DiagnosticsProperty<MessageServiceFireStore>(
+        'dataService', dataServiceFireStore));
     properties.add(DiagnosticsProperty<UserModel>('thisUser', thisUser));
-    properties.add(DiagnosticsProperty<User>('thisUserDetail', thisUserDetail));
+    properties.add(IterableProperty<String>('usersImage', usersImage));
+    properties.add(StringProperty('chatRoomName', chatRoomName));
+    properties.add(IterableProperty<String>('usersId', otherUsersId));
+    properties.add(DiagnosticsProperty<MessageServiceAlgolia>(
+        'dataServiceAlgolia', dataServiceAlgolia));
   }
 }

@@ -4,16 +4,17 @@ import 'package:line_icons/line_icons.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 
 import '../../../../configs/constants/color.dart';
-import '../../../../models/chat/temp_class.dart';
 import '../../../shared_features/report/report_screen.dart';
 import '../group_chat/members/all_members_screen.dart';
 
 class GroupChatDialog extends StatelessWidget {
-  const GroupChatDialog(
-      {Key? key, required this.parentContext, required this.users})
-      : super(key: key);
+  const GroupChatDialog({
+    Key? key,
+    required this.parentContext,
+    required this.chatRoomId,
+  }) : super(key: key);
   final BuildContext parentContext;
-  final List<User> users;
+  final String chatRoomId;
 
   @override
   Widget build(BuildContext context) {
@@ -48,9 +49,8 @@ class GroupChatDialog extends StatelessWidget {
                           parentContext,
                           settings: RouteSettings(
                             name: AllMemberScreen.routeName,
-                            arguments: AllMemberArguments(users: users),
                           ),
-                          screen: const AllMemberScreen(),
+                          screen: AllMemberScreen(chatRoomId: chatRoomId),
                           withNavBar: false,
                           pageTransitionAnimation:
                               PageTransitionAnimation.cupertino,
@@ -199,6 +199,6 @@ class GroupChatDialog extends StatelessWidget {
     super.debugFillProperties(properties);
     properties
         .add(DiagnosticsProperty<BuildContext>('parentContext', parentContext));
-    properties.add(IterableProperty<User>('users', users));
+    properties.add(StringProperty('ChatRoomId', chatRoomId));
   }
 }

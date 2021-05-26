@@ -7,8 +7,10 @@ import 'package:provider/provider.dart';
 import '../../../../configs/constants/color.dart';
 import '../../../../models/authentication/user_model.dart';
 import '../../../../models/chat/temp_class.dart';
-import '../../../../services/message/message_service.dart';
+import '../../../../services/message/algolia_message_service.dart';
+import '../../../../services/message/firestore_message_service.dart';
 import '../../../../widgets/custom_material_button.dart';
+import '../../const_string/const_str.dart';
 import '../chat_room/chat_room.dart';
 import '../widgets/user_card.dart';
 import '../widgets/user_choice_chip.dart';
@@ -22,28 +24,18 @@ class Body extends StatefulWidget {
 }
 
 class _BodyState extends State<Body> {
-  MessageService dataService = MessageService();
+  MessageServiceFireStore dataServiceFireStore = MessageServiceFireStore();
+  MessageServiceAlgolia dataServiceAlgolia = MessageServiceAlgolia();
   TextEditingController searchText = TextEditingController();
   late UserModel thisUser;
 
   late List<AlgoliaObjectSnapshot> querySnapshot = [];
   late List<User> choosedUsers = [];
 
-  Future<void> initiateSearch() async {
-    if (searchText.text.isNotEmpty) {
-      final result = await dataService.getUserByAlgolia(searchText.text);
-      setState(() {
-        querySnapshot = result;
-      });
-    }
-  }
-
   void addUserToList(User user) {
     setState(() {
       if (!choosedUsers.contains(user) && user.id != thisUser.uid) {
         choosedUsers.add(user);
-        // searchText.clear();
-        // querySnapshot.clear();
       }
     });
   }
@@ -68,30 +60,75 @@ class _BodyState extends State<Body> {
           ],
         ),
       );
-      return;
     }
-    checkAndSendNewChatRoomIfNeed();
+    if (choosedUsers.length == 1) {
+      // check có chat room với ng này chưa?
+      //nếu có thì chuyển hướng thẳng vói chat room đó
+      //nếu không thì push data chat room mới lên firestore và algolia
+      //id userId1userId2
+      checkAndSendNewChatRoomoOneUser();
+    } else {
+      //group auto taọ group mới,
+      //id tự generate dù là có trùng thành viên group có sẵn
+      //send new chat message
+      sendNewChatRoomGroup();
+    }
   }
 
-  void checkAndSendNewChatRoomIfNeed() {
-    final objectID = createChatRoomId(choosedUsers);
-    dataService.getChatRoomByChatRoomId(objectID).then((result) {
+  void checkAndSendNewChatRoomoOneUser() {
+    final chatRoomId = createChatRoomId(choosedUsers);
+
+    dataServiceFireStore
+        .getChatRoomByChatRoomId(chatRoomId)
+        .then((result) async {
       if (result.docs.isEmpty) {
         final mapData = createChatRoomMap();
-        dataService.createChatRoomFireStore(mapData['fireStoreMap']!, objectID);
-        dataService.createChatRoomAlgolia(mapData['algoliaMap']!, objectID);
+        await dataServiceFireStore.createChatRoomFireStore(
+            mapData['fireStoreMap']!, chatRoomId);
+        await dataServiceAlgolia.createChatRoomAlgolia(
+            mapData['algoliaMap']!, chatRoomId);
+        //send new chat message to start chat room
+        await startNewChatRoom(chatRoomId);
       }
-      //push new screen chat_room with id para
-      setState(() {
-        choosedUsers.clear();
-      });
-      pushNewScreen<void>(
-        context,
-        screen: ChatRoomScreen(chatRoomId: objectID),
-        withNavBar: false, // OPTIONAL VALUE. True by default.
-        pageTransitionAnimation: PageTransitionAnimation.cupertino,
-      );
+      navigateToChatRoom(chatRoomId);
     });
+  }
+
+  void sendNewChatRoomGroup() {
+    final mapData = createChatRoomMap();
+    dataServiceFireStore
+        .createChatRoomGenerateIdFireStore(mapData['fireStoreMap']!)
+        .then((chatRoomId) {
+      dataServiceAlgolia
+          .createChatRoomAlgolia(mapData['algoliaMap']!, chatRoomId)
+          .then((value) async {
+        await startNewChatRoom(chatRoomId);
+        navigateToChatRoom(chatRoomId);
+      });
+    });
+  }
+
+  Future<void> startNewChatRoom(String chatRoomId) async {
+    final name = thisUser.username ?? thisUser.email;
+    final image = thisUser.image ?? '';
+    await dataServiceFireStore.addMessageToChatRoom(
+        thisUser.uid, 0, 'hi, cùng chat nào', chatRoomId, name!, image);
+  }
+
+  void navigateToChatRoom(String chatRoomId) {
+    //push new screen chat_room with id para
+    setState(() {
+      choosedUsers.clear();
+      searchText.clear();
+      querySnapshot.clear();
+    });
+
+    pushNewScreen<void>(
+      context,
+      screen: ChatRoomScreen(chatRoomId: chatRoomId),
+      withNavBar: false, // OPTIONAL VALUE. True by default.
+      pageTransitionAnimation: PageTransitionAnimation.cupertino,
+    );
   }
 
   String createChatRoomId(List<User> users) {
@@ -101,6 +138,7 @@ class _BodyState extends State<Body> {
       usersId.add(user.id);
     }
     usersId.add(thisUser.uid);
+    usersId.sort();
     usersId.forEach(chatRoomId.write);
     return chatRoomId.toString();
   }
@@ -125,22 +163,38 @@ class _BodyState extends State<Body> {
     usersId.sort();
     usersName.sort();
 
+    var chatRoomName = '';
+    if (choosedUsers.length > 1) {
+      chatRoomName = UsersCard.finalChatName(usersName);
+    }
+
     final algoliaMap = <String, dynamic>{
-      'users_image': usersAva,
-      'users_name': usersName,
-      'users_email': usersEmail,
-      'chat_room_name': UsersCard.finalChatName(usersName)
+      usersImageStr: usersAva,
+      usersNameStr: usersName,
+      emailsStr: usersEmail,
+      chatRoomNameStr: chatRoomName,
+      usersIdStr: usersId,
     };
 
     final fireStoreMap = <String, dynamic>{
-      'users': usersId,
-      'chat_room_name': UsersCard.finalChatName(usersName)
+      usersIdStr: usersId,
+      chatRoomNameStr: chatRoomName
     };
 
     return <String, Map<String, dynamic>>{
       'fireStoreMap': fireStoreMap,
       'algoliaMap': algoliaMap
     };
+  }
+
+  Future<void> initiateSearch() async {
+    if (searchText.text.isNotEmpty) {
+      final result =
+          await dataServiceAlgolia.searchUserByAlgolia(searchText.text);
+      setState(() {
+        querySnapshot = result;
+      });
+    }
   }
 
   Widget searchList() {
@@ -155,11 +209,11 @@ class _BodyState extends State<Body> {
                   final object = querySnapshot[index];
                   final user = User(
                       id: object.objectID,
-                      name: object.data['name'].toString(),
-                      image: object.data['image'].toString(),
-                      email: object.data['E-mail'].toString(),
-                      isActive: object.data['is_active'] as bool,
-                      activeAt: object.data['active_at'].toString());
+                      name: object.data[nameStr].toString(),
+                      image: object.data[imageStr].toString(),
+                      email: object.data[emailStr].toString(),
+                      isActive: object.data[isActiveStr] as bool,
+                      activeAt: object.data[activeAtStr].toString());
                   return UserCard(
                       user: user,
                       press: () {
@@ -198,7 +252,6 @@ class _BodyState extends State<Body> {
   void initState() {
     super.initState();
     thisUser = Provider.of<UserModel?>(context, listen: false)!;
-
     initiateSearch().whenComplete(() {
       setState(() {});
     });
@@ -279,13 +332,15 @@ class _BodyState extends State<Body> {
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
-    properties
-        .add(DiagnosticsProperty<MessageService>('dataService', dataService));
+    properties.add(DiagnosticsProperty<MessageServiceFireStore>(
+        'dataService', dataServiceFireStore));
     properties.add(
         DiagnosticsProperty<TextEditingController>('searchText', searchText));
     properties.add(IterableProperty<AlgoliaObjectSnapshot>(
         'querySnapshot', querySnapshot));
     properties.add(IterableProperty<User>('choosedUsers', choosedUsers));
     properties.add(DiagnosticsProperty<UserModel>('thisUser', thisUser));
+    properties.add(DiagnosticsProperty<MessageServiceAlgolia>(
+        'dataServiceAlgolia', dataServiceAlgolia));
   }
 }

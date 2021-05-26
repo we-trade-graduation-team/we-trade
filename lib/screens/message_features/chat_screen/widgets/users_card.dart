@@ -1,18 +1,19 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-import '../../../../models/chat/temp_class.dart';
 import '../../../../widgets/custom_user_avatar.dart';
 
 class UsersCard extends StatelessWidget {
   const UsersCard({
     Key? key,
-    required this.users,
     required this.press,
-    this.chatName = '',
+    required this.images,
+    this.isActive = false,
+    required this.chatName,
   }) : super(key: key);
 
-  final List<User> users;
+  final List<String> images;
+  final bool isActive;
   final String chatName;
   final VoidCallback press;
 
@@ -25,43 +26,39 @@ class UsersCard extends StatelessWidget {
     return result.substring(0, result.length - 2);
   }
 
-  List<String> getUsersName() {
-    final listName = <String>[];
-    for (final user in users) {
-      listName.add(user.name);
-    }
-    return listName;
-  }
-
   @override
   Widget build(BuildContext context) {
-    if (users.isNotEmpty) {
+    if (images.isNotEmpty) {
       return InkWell(
         onTap: press,
         child: Padding(
           padding: const EdgeInsets.symmetric(vertical: 15),
           child: Row(
             children: [
-              if (users.length > 1)
+              if (images.length > 2)
                 Container(
                   width: 48,
                   height: 48,
                   child: Stack(
                     children: [
+                      CustomUserAvatar(image: images[1], radius: 16),
                       Positioned(
-                          right: 0,
-                          bottom: 0,
-                          child: CustomUserAvatar(
-                              image: users[0].image, radius: 16)),
-                      CustomUserAvatar(image: users[1].image, radius: 16),
+                        right: 0,
+                        bottom: 0,
+                        child: CircleAvatar(
+                            radius: 16,
+                            backgroundColor: Colors.white,
+                            child: CustomUserAvatar(
+                                image: images[0], radius: 16 - 2)),
+                      ),
                     ],
                   ),
                 )
               else
                 Stack(
                   children: [
-                    CustomUserAvatar(image: users[0].image, radius: 24),
-                    if (users[0].isActive)
+                    CustomUserAvatar(image: images[0], radius: 24),
+                    if (isActive)
                       Positioned(
                         right: 0,
                         bottom: 0,
@@ -81,7 +78,7 @@ class UsersCard extends StatelessWidget {
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 10),
                   child: Text(
-                    chatName.isEmpty ? finalChatName(getUsersName()) : chatName,
+                    chatName,
                     style: const TextStyle(
                         fontSize: 16, fontWeight: FontWeight.w500),
                   ),
@@ -99,7 +96,8 @@ class UsersCard extends StatelessWidget {
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
     properties.add(ObjectFlagProperty<VoidCallback>.has('press', press));
-    properties.add(IterableProperty<User>('users', users));
     properties.add(StringProperty('chatName', chatName));
+    properties.add(IterableProperty<String>('images', images));
+    properties.add(DiagnosticsProperty<bool>('isActive', isActive));
   }
 }
