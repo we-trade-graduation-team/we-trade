@@ -1,8 +1,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-class RatingBar extends StatefulWidget {
-  const RatingBar({
+class MyRatingBar extends StatefulWidget {
+  const MyRatingBar({
     Key? key,
     required this.onRatingSelected,
     this.maximumRating = 5,
@@ -12,7 +12,7 @@ class RatingBar extends StatefulWidget {
   final int maximumRating;
 
   @override
-  _RatingBarState createState() => _RatingBarState();
+  _MyRatingBarState createState() => _MyRatingBarState();
 
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
@@ -23,7 +23,7 @@ class RatingBar extends StatefulWidget {
   }
 }
 
-class _RatingBarState extends State<RatingBar> {
+class _MyRatingBarState extends State<MyRatingBar> {
   int _currentRating = 0;
 
   Widget _buildRatingStar(int index) {

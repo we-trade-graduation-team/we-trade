@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
 import '../../../configs/constants/assets_paths/shared_assets_root.dart';
 import '../../../configs/constants/color.dart';
@@ -35,12 +36,14 @@ class _RateForTradingState extends State<RateForTrading> {
   final referenceDatabase = AccountScreen.localRefDatabase;
 
   final _commentController = TextEditingController();
-  int rating = 0;
+  int star = 0;
   int timeOut = 10;
   bool _isLoaded = false;
+  bool _isRated = false;
   late Widget usernameText;
   late List<Widget> postTexts = <Widget>[];
   late List<Widget> postImages = <Widget>[];
+  late Map<String, dynamic> rating;
 
   List<Widget> buildPostsList(List<Widget> postTexts, List<Widget> postImages) {
     final postsList = <Widget>[];
@@ -81,6 +84,35 @@ class _RateForTradingState extends State<RateForTrading> {
     return postsList;
   }
 
+  Future<void> updateLegit(String userID, int star) async {
+    try {
+      await referenceDatabase
+          .collection('users')
+          .doc(widget.otherSideUserID)
+          .get()
+          .then((documentSnapshot) async {
+        final _user = documentSnapshot.data();
+        var legit = double.parse(_user!['legit'].toString());
+        var ratingCount = _user['ratingCount'] as int;
+        legit = (legit * ratingCount + star) / (++ratingCount);
+        legit = double.parse(legit.toStringAsFixed(2));
+        await referenceDatabase
+            .collection('users')
+            .doc(userID)
+            .update({'legit': legit, 'ratingCount': ratingCount});
+      });
+    } on FirebaseException catch (_) {
+      await showMyNotificationDialog(
+          context: context,
+          title: 'Lỗi',
+          content: 'Thao tác không thành công! Vui lòng thử lại sau.',
+          handleFunction: () {
+            Navigator.of(context).pop();
+            Navigator.of(context).pop();
+          });
+    }
+  }
+
   @override
   void initState() {
     usernameText =
@@ -103,9 +135,9 @@ class _RateForTradingState extends State<RateForTrading> {
               });
         } else {
           final amIOwner = trading['owner'] == userID;
-          final posts = !amIOwner
-              ? trading['ownerPosts'] as List
-              : trading['offerUserPosts'] as List;
+          final posts = amIOwner
+              ? trading['offerUserPosts'] as List
+              : trading['ownerPosts'] as List;
 
           for (var i = 0; i < posts.length; i++) {
             final Widget name =
@@ -113,11 +145,28 @@ class _RateForTradingState extends State<RateForTrading> {
             postTexts.add(name);
           }
 
-          setState(() {
-            _isLoaded = true;
-          });
+          await referenceDatabase
+              .collection('ratings')
+              .where('userMakeRating', isEqualTo: userID)
+              .where('trading', isEqualTo: widget.tradingID)
+              .get()
+              .then((querySnapshot) async {
+            if (querySnapshot.docs.isNotEmpty) {
+              setState(() {
+                rating = querySnapshot.docs[0].data();
+                star = rating['star'] as int;
+                _commentController.text = rating['comment'].toString();
+                _isRated = true;
+                _isLoaded = true;
+              });
+            } else {
+              setState(() {
+                _isLoaded = true;
+              });
+            }
+          }).timeout(Duration(seconds: timeOut));
         }
-      }).timeout(Duration(seconds: timeOut));
+      });
     } on FirebaseException catch (_) {
       showMyNotificationDialog(
           context: context,
@@ -128,6 +177,7 @@ class _RateForTradingState extends State<RateForTrading> {
             Navigator.of(context).pop();
           });
     }
+
     super.initState();
   }
 
@@ -148,6 +198,7 @@ class _RateForTradingState extends State<RateForTrading> {
     };
 
     return referenceDatabase.collection('ratings').add(rating).then((_) {
+      updateLegit(userBeRated, star);
       showMyNotificationDialog(
           context: context,
           title: 'Thông báo',
@@ -294,14 +345,33 @@ class _RateForTradingState extends State<RateForTrading> {
                                 ),
                               ),
                             ),
-                            // const SizedBox(width: 10),
-                            RatingBar(
-                              onRatingSelected: (_rating) {
-                                setState(() {
-                                  rating = _rating;
-                                });
-                              },
-                            ),
+                            const SizedBox(width: 10),
+                            if (_isRated)
+                              RatingBar.builder(
+                                initialRating: star * 1.0,
+                                allowHalfRating: true,
+                                //itemCount: 5,
+                                glowRadius: 10,
+                                glowColor: Colors.yellow[100],
+                                itemSize: 20,
+                                itemPadding:
+                                    const EdgeInsets.symmetric(horizontal: 2),
+                                itemBuilder: (context, _) => const Icon(
+                                  Icons.star,
+                                  color: Colors.amber,
+                                ),
+                                //onRatingUpdate: print,
+                                ignoreGestures: true,
+                                onRatingUpdate: (value) {},
+                              )
+                            else
+                              MyRatingBar(
+                                onRatingSelected: (_star) {
+                                  setState(() {
+                                    star = _star;
+                                  });
+                                },
+                              ),
                           ],
                         ),
                       ),
@@ -310,7 +380,7 @@ class _RateForTradingState extends State<RateForTrading> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Container(
-                            padding: const EdgeInsets.only(bottom: 20),
+                            padding: const EdgeInsets.only(bottom: 10),
                             width: titleWidth,
                             child: const Text(
                               'Nhận xét',
@@ -320,15 +390,30 @@ class _RateForTradingState extends State<RateForTrading> {
                               ),
                             ),
                           ),
-                          TextField(
-                            controller: _commentController,
-                            maxLength: 200,
-                            decoration: const InputDecoration(
-                              labelText: 'Nhận xét giao dịch',
-                              hintText: 'Nhập lời nhận xét...',
+                          if (_isRated)
+                            Container(
+                              alignment: Alignment.topLeft,
+                              padding: const EdgeInsets.symmetric(
+                                  vertical: 8, horizontal: 15),
+                              decoration: BoxDecoration(
+                                color: Colors.black26,
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              child: Text(
+                                _commentController.text,
+                                style: const TextStyle(fontSize: 15),
+                              ),
+                            )
+                          else
+                            TextField(
+                              controller: _commentController,
+                              maxLength: 200,
+                              decoration: const InputDecoration(
+                                labelText: 'Nhận xét giao dịch',
+                                hintText: 'Nhập lời nhận xét...',
+                              ),
+                              maxLines: 4,
                             ),
-                            maxLines: 4,
-                          ),
                         ],
                       )
                     ],
@@ -348,33 +433,33 @@ class _RateForTradingState extends State<RateForTrading> {
           children: [
             Expanded(
               child: ElevatedButton(
-                onPressed: () async {
-                  final star = rating;
-                  final comment = _commentController.text;
-
-                  await showMyConfirmationDialog(
-                      context: context,
-                      title: 'Thông báo',
-                      content:
-                          'Bạn muốn gửi đánh giá này chứ? Thao tác này chỉ được thực hiện một lần.',
-                      onConfirmFunction: () {
-                        sendRating(
-                          tradingID: widget.tradingID,
-                          userMakeRating: userID,
-                          userBeRated: widget.otherSideUserID,
-                          star: star,
-                          comment: comment,
-                        );
-                        Navigator.of(context).pop();
+                onPressed: _isRated
+                    ? null
+                    : () async {
+                        await showMyConfirmationDialog(
+                            context: context,
+                            title: 'Thông báo',
+                            content:
+                                'Bạn muốn gửi đánh giá này chứ? Thao tác này chỉ được thực hiện một lần.',
+                            onConfirmFunction: () {
+                              sendRating(
+                                tradingID: widget.tradingID,
+                                userMakeRating: userID,
+                                userBeRated: widget.otherSideUserID,
+                                star: star,
+                                comment: _commentController.text,
+                              );
+                              Navigator.of(context).pop();
+                            },
+                            onCancelFunction: () {
+                              Navigator.of(context).pop();
+                            });
                       },
-                      onCancelFunction: () {
-                        Navigator.of(context).pop();
-                      });
-                },
                 style: ElevatedButton.styleFrom(
-                  primary: kPrimaryColor,
+                  primary: _isRated ? Colors.grey : kPrimaryColor,
                 ),
-                child: const Text('Gửi'),
+                child: Text(
+                    _isRated ? 'Bạn đã thực hiện đánh giá này rồi' : 'Gửi'),
               ),
             ),
           ],
@@ -390,6 +475,7 @@ class _RateForTradingState extends State<RateForTrading> {
     properties.add(DiagnosticsProperty<DocumentReference<Map<String, dynamic>>>(
         'referenceDatabase', referenceDatabase));
     properties.add(IntProperty('timeOut', timeOut));
-    properties.add(IntProperty('rating', rating));
+    properties.add(DiagnosticsProperty<Map<String, dynamic>>('rating', rating));
+    properties.add(IntProperty('star', star));
   }
 }
