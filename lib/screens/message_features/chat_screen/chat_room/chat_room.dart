@@ -17,9 +17,13 @@ class ChatRoomScreen extends StatefulWidget {
   const ChatRoomScreen({
     Key? key,
     required this.chatRoomId,
+    this.chatRoomName = '',
+    this.usersImage = const [],
   }) : super(key: key);
 
   final String chatRoomId;
+  final String chatRoomName;
+  final List<String> usersImage;
   static String routeName = '/chat/chat_room';
 
   @override
@@ -28,6 +32,8 @@ class ChatRoomScreen extends StatefulWidget {
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
     properties.add(StringProperty('chatRoomId', chatRoomId));
+    properties.add(StringProperty('chatRoomName', chatRoomName));
+    properties.add(IterableProperty<String>('usersImage', usersImage));
   }
 }
 
@@ -37,18 +43,28 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
   late UserModel thisUser = Provider.of<UserModel?>(context, listen: false)!;
 
   late List<String> otherUsersId = [];
-  late List<String> usersImage = [''];
+  late List<String> usersImage = [];
   late String chatRoomName = '';
 
-  Future<void> getImagesAndChatRoomName() async {
+  Future<void> getOtherUsersId() async {
+    var isEmpty = false;
+    if (widget.usersImage.isNotEmpty && widget.chatRoomName.isNotEmpty) {
+      setState(() {
+        usersImage = widget.usersImage;
+        chatRoomName = widget.chatRoomName;
+      });
+      isEmpty = true;
+    }
     await dataServiceAlgolia
         .getImagesAndChatRoomNameAndOtherUsersId(
             widget.chatRoomId, thisUser.uid)
         .then((mapData) {
       setState(() {
-        chatRoomName = mapData[chatRoomNameStr].toString();
-        usersImage =
-            (mapData[usersImageStr] as List<dynamic>).cast<String>().toList();
+        if (!isEmpty) {
+          chatRoomName = mapData[chatRoomNameStr].toString();
+          usersImage =
+              (mapData[usersImageStr] as List<dynamic>).cast<String>().toList();
+        }
         otherUsersId =
             (mapData[usersIdStr] as List<dynamic>).cast<String>().toList();
       });
@@ -65,7 +81,7 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
   @override
   void initState() {
     super.initState();
-    getImagesAndChatRoomName().whenComplete(() {
+    getOtherUsersId().whenComplete(() {
       setState(() {});
     });
   }

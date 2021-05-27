@@ -130,8 +130,6 @@ class _OtherUserProfileScreenState extends State<OtherUserProfileScreen> {
   @override
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
-    //final agrs =
-    //    ModalRoute.of(context)!.settings.arguments as OtherUserProfileArguments;
     //TODO, get userDetail by agrs.id
     final userDetail = userDetailTemp;
 

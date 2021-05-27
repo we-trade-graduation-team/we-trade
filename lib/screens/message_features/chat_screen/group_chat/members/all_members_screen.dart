@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 import 'package:provider/provider.dart';
 
@@ -7,6 +8,7 @@ import '../../../../../models/authentication/user_model.dart';
 import '../../../../../models/chat/temp_class.dart';
 import '../../../../../services/message/algolia_message_service.dart';
 import '../../../../shared_features/other_user_profile/other_user_profile_screen.dart';
+import '../../../const_string/const_str.dart';
 import '../../add_chat/add_chat_screen.dart';
 import '../../widgets/user_card.dart';
 
@@ -31,9 +33,7 @@ class _AllMemberScreenState extends State<AllMemberScreen> {
   @override
   void initState() {
     super.initState();
-    getAllUser().whenComplete(() {
-      setState(() {});
-    });
+    getAllUser();
   }
 
   Future<void> getAllUser() async {
@@ -68,25 +68,41 @@ class _AllMemberScreenState extends State<AllMemberScreen> {
       ),
       body: Container(
         margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-        child: ListView.builder(
-          itemCount: users.length,
-          itemBuilder: (context, index) => UserCard(
-              user: users[index],
-              press: () {
-                if (users[index].id != thisUser.uid) {
-                  pushNewScreenWithRouteSettings<void>(
-                    context,
-                    settings: RouteSettings(
-                        name: OtherUserProfileScreen.routeName,
-                        arguments:
-                            OtherUserProfileArguments(userId: users[index].id)),
-                    screen: const OtherUserProfileScreen(),
-                    withNavBar: false,
-                    pageTransitionAnimation: PageTransitionAnimation.cupertino,
-                  );
-                }
-              }),
-        ),
+        child: users.isNotEmpty
+            ? ListView.builder(
+                itemCount: users.length,
+                itemBuilder: (context, index) => UserCard(
+                    user: users[index],
+                    press: () {
+                      if (users[index].id != thisUser.uid) {
+                        pushNewScreenWithRouteSettings<void>(
+                          context,
+                          settings: RouteSettings(
+                              name: OtherUserProfileScreen.routeName,
+                              arguments: OtherUserProfileArguments(
+                                  userId: users[index].id)),
+                          screen: const OtherUserProfileScreen(),
+                          withNavBar: false,
+                          pageTransitionAnimation:
+                              PageTransitionAnimation.cupertino,
+                        );
+                      }
+                    }),
+              )
+            : Center(
+                child: Column(
+                  children: [
+                    Lottie.network(
+                      messageLoadingStr2,
+                      width: 100,
+                      height: 100,
+                      fit: BoxFit.fill,
+                    ),
+                    const SizedBox(height: 20),
+                    const Text(loadingDataStr),
+                  ],
+                ),
+              ),
       ),
     );
   }

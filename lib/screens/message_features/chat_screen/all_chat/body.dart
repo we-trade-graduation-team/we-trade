@@ -1,13 +1,13 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
+import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../models/authentication/user_model.dart';
 import '../../../../models/chat/temp_class.dart';
 import '../../../../services/message/algolia_message_service.dart';
 import '../../../../services/message/firestore_message_service.dart';
-import '../chat_room/chat_room.dart';
+import '../../const_string/const_str.dart';
 import '../widgets/chat_card.dart';
 import '../widgets/search_bar.dart';
 
@@ -31,8 +31,6 @@ class _BodyState extends State<Body> {
       setState(() {
         chatRooms = result;
       });
-    }).whenComplete(() {
-      setState(() {});
     });
   }
 
@@ -44,25 +42,29 @@ class _BodyState extends State<Body> {
         children: [
           const SearchBar(),
           Expanded(
-            child: ListView.builder(
-              itemCount: chatRooms.length,
-              itemBuilder: (context, index) => ChatCard(
-                chat: chatRooms[index],
-                isSendByMe: chatRooms[index].senderId == thisUser.uid,
-                press: () {
-                  pushNewScreenWithRouteSettings<void>(
-                    context,
-                    settings: RouteSettings(
-                      name: ChatRoomScreen.routeName,
+            child: chatRooms.isNotEmpty
+                ? ListView.builder(
+                    itemCount: chatRooms.length,
+                    itemBuilder: (context, index) => ChatCard(
+                      chat: chatRooms[index],
+                      isSendByMe: chatRooms[index].senderId == thisUser.uid,
+                      typeFunction: navigateToChatRoomStr,
                     ),
-                    screen:
-                        ChatRoomScreen(chatRoomId: chatRooms[index].chatRoomId),
-                    withNavBar: false,
-                    pageTransitionAnimation: PageTransitionAnimation.cupertino,
-                  );
-                },
-              ),
-            ),
+                  )
+                : Center(
+                    child: Column(
+                      children: [
+                        Lottie.network(
+                          messageLoadingStr,
+                          width: 100,
+                          height: 100,
+                          fit: BoxFit.fill,
+                        ),
+                        const SizedBox(height: 20),
+                        const Text(loadingDataStr),
+                      ],
+                    ),
+                  ),
           ),
         ],
       ),

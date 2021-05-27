@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../configs/constants/color.dart';
@@ -47,7 +48,20 @@ class _BodyState extends State<Body> {
                     thisUser.uid == chats[index].data()[senderIdStr].toString(),
               );
             })
-        : Container();
+        : Center(
+            child: Column(
+              children: [
+                Lottie.network(
+                  messageLoadingStr,
+                  width: 100,
+                  height: 100,
+                  fit: BoxFit.fill,
+                ),
+                const SizedBox(height: 10),
+                const Text(loadingDataStr),
+              ],
+            ),
+          );
     // StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
     //   stream: chats,
     //   builder: (context, snapshot) {
@@ -76,8 +90,6 @@ class _BodyState extends State<Body> {
       setState(() {
         chats = result;
       });
-    }).whenComplete(() {
-      setState(() {});
     });
   }
 

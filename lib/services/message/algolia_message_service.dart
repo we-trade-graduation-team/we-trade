@@ -38,18 +38,6 @@ class MessageServiceAlgolia {
     await algolia.instance.index(trangChatRooms).addObject(chatData);
   }
 
-  // Future<List<String>> getUsersAvatarInChatRoom(String objectID) {
-  //   return algolia.instance
-  //       .index(trangChatRooms)
-  //       .object(objectID)
-  //       .getObject()
-  //       .then((value) {
-  //     final result =
-  //         (value.data[usersImageStr] as List<dynamic>).cast<String>().toList();
-  //     return result;
-  //   });
-  // }
-
   Future<Map<String, dynamic>> getImagesAndChatRoomNameAndOtherUsersId(
       String chatRoomId, String thisUserId) {
     return algolia.instance
@@ -84,38 +72,6 @@ class MessageServiceAlgolia {
       };
     });
   }
-
-  // Future<String> getChatRoomName(String objectID) {
-  //   return algolia.instance
-  //       .index(trangChatRooms)
-  //       .object(objectID)
-  //       .getObject()
-  //       .then((value) {
-  //     final result = value.data[chatRoomNameStr].toString();
-  //     return result;
-  //   });
-  // }
-
-  // Future<List<String>> getAllOtherUsersIdInChatRoom(
-  //     //TODO dont need
-  //     String chatRoomId,
-  //     String thisUserId) async {
-  //   return algolia.instance
-  //       .index(trangChatRooms)
-  //       .object(chatRoomId)
-  //       .getObject()
-  //       .then((value) {
-  //     final otherUsersId = <String>[];
-  //     final allUsersId =
-  //         (value.data[usersIdStr] as List<dynamic>).cast<String>().toList();
-  //     for (final userid in allUsersId) {
-  //       if (userid != thisUserId) {
-  //         otherUsersId.add(userid);
-  //       }
-  //     }
-  //     return otherUsersId;
-  //   });
-  // }
 
   Future<List<User>> getAllUserInChatRoom(String chatRoomId) {
     return algolia.instance

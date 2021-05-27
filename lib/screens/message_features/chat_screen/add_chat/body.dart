@@ -1,6 +1,7 @@
 import 'package:algolia/algolia.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 import 'package:provider/provider.dart';
 
@@ -61,6 +62,7 @@ class _BodyState extends State<Body> {
         ),
       );
     }
+    showBottomSheet(context);
     if (choosedUsers.length == 1) {
       // check có chat room với ng này chưa?
       //nếu có thì chuyển hướng thẳng vói chat room đó
@@ -122,6 +124,8 @@ class _BodyState extends State<Body> {
       searchText.clear();
       querySnapshot.clear();
     });
+
+    Navigator.of(context).popUntil(ModalRoute.withName('/'));
 
     pushNewScreen<void>(
       context,
@@ -325,6 +329,35 @@ class _BodyState extends State<Body> {
             height: 30,
           )
         ],
+      ),
+    );
+  }
+
+  void showBottomSheet(BuildContext context) {
+    showModalBottomSheet<Widget>(
+      enableDrag: false,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(10),
+          topRight: Radius.circular(10),
+        ),
+      ),
+      barrierColor: Colors.grey[300]!.withOpacity(0.5),
+      context: context,
+      builder: (context) => Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+        child: Column(
+          children: [
+            Lottie.network(
+              messageLoadingStr,
+              width: 100,
+              height: 100,
+              fit: BoxFit.fill,
+            ),
+            const SizedBox(height: 20),
+            const Text(loadingDataStr),
+          ],
+        ),
       ),
     );
   }

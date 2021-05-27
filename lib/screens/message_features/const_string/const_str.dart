@@ -26,3 +26,10 @@ const String lastMessageStr = 'last_message';
 const String usersImageStr = 'images';
 const String usersNameStr = 'names';
 const String emailsStr = 'emails';
+
+const String navigateToChatRoomStr = 'chatRoom';
+const String loadingDataStr = 'Loading data ...';
+const String messageLoadingStr =
+    'https://assets7.lottiefiles.com/private_files/lf30_96yLMX.json';
+const String messageLoadingStr2 =
+    'https://assets7.lottiefiles.com/packages/lf20_Z4BhGL.json';
