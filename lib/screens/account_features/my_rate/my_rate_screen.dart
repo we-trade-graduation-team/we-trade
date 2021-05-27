@@ -33,7 +33,7 @@ class MyRateScreen extends StatefulWidget {
 
 class _MyRateScreenState extends State<MyRateScreen> {
   final tabData = [
-    'ĐÁNH GIÁ',
+    'TÔI ĐÁNH GIÁ',
     'ĐƯỢC ĐÁNH GIÁ',
   ];
 
@@ -85,8 +85,10 @@ class _MyRateScreenState extends State<MyRateScreen> {
 
   List<Widget> getTabContent() {
     return [
-      RateTab(userDetail: widget.userDetail),
-      RateTab(userDetail: widget.userDetail),
+      // RateTab(isMyRateFromOther: false, userDetail: widget.userDetail),
+      // RateTab(isMyRateFromOther: true, userDetail: widget.userDetail),
+      const RateTab(isMyRateFromOther: false),
+      const RateTab(isMyRateFromOther: true),
     ];
   }
 
@@ -201,6 +203,7 @@ class _MainInfoState extends State<MainInfo> {
                       height: 100,
                       width: 100,
                       child: CircleAvatar(
+                        //TODO: change image source
                         child: Image.asset(
                           '$chatScreenAvaFolder/user.png',
                           height: 200,
