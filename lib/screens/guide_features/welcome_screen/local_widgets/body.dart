@@ -4,10 +4,10 @@ import 'package:lottie/lottie.dart';
 import '../../../../configs/constants/color.dart';
 import '../../../../configs/constants/keys.dart';
 import '../../../../configs/constants/strings.dart';
-import '../../../authentication_features/sign_in_screen/sign_in.dart';
-import '../../../authentication_features/sign_up_screen/sign_up.dart';
+// import '../../../authentication_features/sign_in_screen/sign_in.dart';
+// import '../../../authentication_features/sign_up_screen/sign_up.dart';
 
-import 'default_button.dart';
+// import 'default_button.dart';
 
 class Body extends StatelessWidget {
   const Body({
@@ -50,19 +50,19 @@ class Body extends StatelessWidget {
                   fit: BoxFit.fill,
                 ),
               ),
-              DefaultButton(
-                text: 'Sign in',
-                press: () =>
-                    Navigator.pushNamed(context, SignInScreen.routeName),
-              ),
-              SizedBox(height: size.height * 0.02),
-              DefaultButton(
-                text: 'Sign up',
-                color: kPrimaryLightColor,
-                textColor: kTextLightColor,
-                press: () =>
-                    Navigator.pushNamed(context, SignUpScreen.routeName),
-              ),
+              // DefaultButton(
+              //   text: 'Sign in',
+              //   press: () =>
+              //       Navigator.pushNamed(context, SignInScreen.routeName),
+              // ),
+              // SizedBox(height: size.height * 0.02),
+              // DefaultButton(
+              //   text: 'Sign up',
+              //   color: kPrimaryLightColor,
+              //   textColor: kTextLightColor,
+              //   press: () =>
+              //       Navigator.pushNamed(context, SignUpScreen.routeName),
+              // ),
             ],
           ),
         ),

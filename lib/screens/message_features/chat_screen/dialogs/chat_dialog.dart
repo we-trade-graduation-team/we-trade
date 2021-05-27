@@ -4,14 +4,17 @@ import 'package:line_icons/line_icons.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 
 import '../../../../configs/constants/color.dart';
-import '../../../../models/chat/temp_class.dart';
 import '../../../shared_features/other_user_profile/other_user_profile_screen.dart';
 import '../../../shared_features/report/report_screen.dart';
 
-class ChatDialog extends StatelessWidget {
-  const ChatDialog({Key? key, required this.user, required this.parentContext})
-      : super(key: key);
-  final User user;
+class PersonalChatDialog extends StatelessWidget {
+  const PersonalChatDialog({
+    Key? key,
+    required this.parentContext,
+    required this.userId,
+  }) : super(key: key);
+
+  final String userId;
   final BuildContext parentContext;
 
   @override
@@ -43,16 +46,12 @@ class ChatDialog extends StatelessWidget {
                   children: [
                     InkWell(
                       onTap: () {
-                        //TODO:  kiếm userdetail dựa theo user được truyền vào
-                        final userDetail = userDetailTemp;
                         pushNewScreenWithRouteSettings<void>(
                           parentContext,
                           settings: RouteSettings(
-                            name: OtherUserProfileScreen.routeName,
-                            arguments: OtherUserProfileArguments(
-                              userDetail: userDetail,
-                            ),
-                          ),
+                              name: OtherUserProfileScreen.routeName,
+                              arguments:
+                                  OtherUserProfileArguments(userId: userId)),
                           screen: const OtherUserProfileScreen(),
                           withNavBar: false,
                           pageTransitionAnimation:
@@ -174,8 +173,8 @@ class ChatDialog extends StatelessWidget {
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
-    properties.add(DiagnosticsProperty<User>('user', user));
     properties
         .add(DiagnosticsProperty<BuildContext>('parentContext', parentContext));
+    properties.add(StringProperty('userId', userId));
   }
 }

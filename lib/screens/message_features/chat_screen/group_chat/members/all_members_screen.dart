@@ -1,19 +1,52 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
+import 'package:provider/provider.dart';
 
+import '../../../../../models/authentication/user_model.dart';
 import '../../../../../models/chat/temp_class.dart';
+import '../../../../../services/message/algolia_message_service.dart';
 import '../../../../shared_features/other_user_profile/other_user_profile_screen.dart';
+import '../../../const_string/const_str.dart';
 import '../../add_chat/add_chat_screen.dart';
 import '../../widgets/user_card.dart';
 
-class AllMemberScreen extends StatelessWidget {
-  const AllMemberScreen({Key? key}) : super(key: key);
+class AllMemberScreen extends StatefulWidget {
+  const AllMemberScreen({Key? key, required this.chatRoomId}) : super(key: key);
   static String routeName = '/chat/group_chat/members';
+  final String chatRoomId;
+
+  @override
+  _AllMemberScreenState createState() => _AllMemberScreenState();
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(StringProperty('chatRoomId', chatRoomId));
+  }
+}
+
+class _AllMemberScreenState extends State<AllMemberScreen> {
+  final dataServiceAlgolia = MessageServiceAlgolia();
+  List<User> users = <User>[];
+
+  @override
+  void initState() {
+    super.initState();
+    getAllUser();
+  }
+
+  Future<void> getAllUser() async {
+    final result =
+        await dataServiceAlgolia.getAllUserInChatRoom(widget.chatRoomId);
+    setState(() {
+      users = result;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
-    final agrs =
-        ModalRoute.of(context)!.settings.arguments as AllMemberArguments;
+    final thisUser = Provider.of<UserModel?>(context, listen: false)!;
 
     return Scaffold(
       appBar: AppBar(
@@ -34,31 +67,57 @@ class AllMemberScreen extends StatelessWidget {
         ],
       ),
       body: Container(
-        margin: const EdgeInsets.symmetric(vertical: 10),
-        child: ListView.builder(
-          itemCount: agrs.chat.users.length,
-          itemBuilder: (context, index) => UserCard(
-            user: agrs.chat.users[index],
-            press: () => pushNewScreenWithRouteSettings<void>(
-              context,
-              settings: RouteSettings(
-                name: OtherUserProfileScreen.routeName,
-                arguments:
-                    OtherUserProfileArguments(userDetail: userDetailTemp),
+        margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+        child: users.isNotEmpty
+            ? ListView.builder(
+                itemCount: users.length,
+                itemBuilder: (context, index) => UserCard(
+                    user: users[index],
+                    press: () {
+                      if (users[index].id != thisUser.uid) {
+                        pushNewScreenWithRouteSettings<void>(
+                          context,
+                          settings: RouteSettings(
+                              name: OtherUserProfileScreen.routeName,
+                              arguments: OtherUserProfileArguments(
+                                  userId: users[index].id)),
+                          screen: const OtherUserProfileScreen(),
+                          withNavBar: false,
+                          pageTransitionAnimation:
+                              PageTransitionAnimation.cupertino,
+                        );
+                      }
+                    }),
+              )
+            : Center(
+                child: Column(
+                  children: [
+                    Lottie.network(
+                      messageLoadingStr2,
+                      width: 100,
+                      height: 100,
+                      fit: BoxFit.fill,
+                    ),
+                    const SizedBox(height: 20),
+                    const Text(loadingDataStr),
+                  ],
+                ),
               ),
-              screen: const OtherUserProfileScreen(),
-              withNavBar: false,
-              pageTransitionAnimation: PageTransitionAnimation.cupertino,
-            ),
-          ),
-        ),
       ),
     );
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(IterableProperty<User>('users', users));
+    properties.add(DiagnosticsProperty<MessageServiceAlgolia>(
+        'dataServiceAlgolia', dataServiceAlgolia));
   }
 }
 
 class AllMemberArguments {
-  AllMemberArguments({required this.chat});
+  AllMemberArguments({required this.chatRoomId});
 
-  final Chat chat;
+  final String chatRoomId;
 }

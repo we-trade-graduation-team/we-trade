@@ -21,12 +21,11 @@ class TypeOfGoods {
 
 // ignore: camel_case_types
 class _PostItem_2_State extends State<PostItem_2> {
-  // ignore: unused_element
-  void _reset() {
-    setState(() {
-      //gọi khi có thay đổi
-    });
-  }
+  // void _reset() {
+  //   setState(() {
+  //     //gọi khi có thay đổi
+  //   });
+  // }
 
   List<TypeOfGoods> _type = [
     TypeOfGoods(id: 1, name: 'Lion'),

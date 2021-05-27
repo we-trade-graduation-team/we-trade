@@ -13,6 +13,7 @@ class OfferDetailScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    //TODO : trang arguments truyền thêm cái tình trạng dô, tùy tình trạng mk có hiện nút xác nhận gì nữa hay ko
     final agrs = ModalRoute.of(context)!.settings.arguments
         as OfferDetailScreenArguments;
     const bottomMargin = 0.5;
@@ -117,6 +118,8 @@ class OfferDetailScreen extends StatelessWidget {
             ),
             Align(
               alignment: Alignment.bottomCenter,
+              //TODO: trang, khúc này chắc đổi tình trạng nút thành tình trạng text
+              //nếu như tình trạng đã giao dịch thành công r
               child: Container(
                 color: kScreenBackgroundColor,
                 child: Row(

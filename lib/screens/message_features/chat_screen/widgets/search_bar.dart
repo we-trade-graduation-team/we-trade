@@ -1,3 +1,6 @@
+import 'dart:ui';
+
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import '../../../../configs/constants/color.dart';
 
@@ -43,13 +46,26 @@ class SearchBar extends StatelessWidget {
               ),
             ),
           ),
-          Container(
-            margin: const EdgeInsets.fromLTRB(10, 0, 20, 0),
-            child: const Icon(
-              Icons.search,
-              color: kPrimaryColor,
+
+          GestureDetector(
+            onTap: () {},
+            child: Container(
+              margin: const EdgeInsets.fromLTRB(10, 0, 20, 0),
+              child: const Icon(
+                Icons.search,
+                color: kPrimaryColor,
+              ),
             ),
-          )
+          ),
+          // Container(
+          //   margin: const EdgeInsets.fromLTRB(10, 0, 20, 0),
+          //   child:
+
+          //   const Icon(
+          //     Icons.search,
+          //     color: kPrimaryColor,
+          //   ),
+          // )
         ],
       ),
     );
