@@ -11,7 +11,7 @@ import 'models/main_menu/bottom_navigation_bar_item_model.dart';
 import 'screens/account_features/account/account_screen.dart';
 import 'screens/home_features/home_screen/home_screen.dart';
 import 'screens/message_features/chat_screen/all_chat/chat_screen.dart';
-import 'screens/posting_features/post_items/step1.dart';
+import 'screens/posting_features/post_items/postitem_stepone.dart';
 import 'screens/wish_list_features/wish_list/wish_list_screen.dart';
 
 // late BuildContext testContext;
@@ -51,7 +51,7 @@ class _MainMenuState extends State<MainMenu> {
     return [
       const HomeScreen(),
       const ChatScreen(),
-      const PostItem_1(),
+      const PostItemOne(),
       const WishListScreen(),
       const AccountScreen(),
     ];
