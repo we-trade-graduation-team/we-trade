@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:line_icons/line_icons.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 import 'package:provider/provider.dart';
-import 'package:we_trade/models/authentication/user_model.dart';
 
 import '../../../../configs/constants/color.dart';
+import '../../../../models/authentication/user_model.dart';
 import '../../../shared_features/report/report_screen.dart';
 import '../group_chat/members/all_members_screen.dart';
 
@@ -217,9 +217,8 @@ Future<Widget?> showAlertDialogOutGroup(
   );
   final Widget continueButton = TextButton(
     onPressed: () {
-      final thisUser =
-          Provider.of<UserModel?>(context, listen: false)!;
-      
+      final thisUser = Provider.of<UserModel?>(context, listen: false)!;
+
       Navigator.of(context).pop();
     },
     child: const Text('Rời khỏi'),

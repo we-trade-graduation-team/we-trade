@@ -119,13 +119,6 @@ class _BodyState extends State<Body> {
 
   void navigateToChatRoom(
       {required String chatRoomId, required bool chatGroup}) {
-    //push new screen chat_room with id para
-    setState(() {
-      choosedUsers.clear();
-      searchTextController.clear();
-      querySnapshot.clear();
-    });
-
     Navigator.of(context).popUntil(ModalRoute.withName('/'));
 
     pushNewScreen<void>(

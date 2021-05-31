@@ -23,45 +23,47 @@ class ChatScreen extends StatefulWidget {
 class _ChatScreenState extends State<ChatScreen> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      resizeToAvoidBottomInset: false,
-      appBar: AppBar(
-        title: const Text(
-          'CHAT',
-        ),
-        //TODO làm tạm để load lại all chat room
-        //mốt xóa đi : ) ===> real time
-        actions: [
-          GestureDetector(
-            onTap: () {
-              // Navigator.pushReplacement(
-              //     context,
-              //     MaterialPageRoute(
-              //         builder: (BuildContext context) => this));
-              log('?????');
-            },
-            child: Container(
-              margin: const EdgeInsets.fromLTRB(10, 0, 20, 0),
-              child: const Icon(
-                Icons.replay,
-                color: kPrimaryColor,
+    return GestureDetector(
+      onTap: () {
+        FocusScope.of(context).requestFocus(FocusNode());
+      },
+      child: Scaffold(
+        resizeToAvoidBottomInset: false,
+        appBar: AppBar(
+          title: const Text(
+            'CHAT',
+          ),
+          //TODO làm tạm để load lại all chat room
+          //mốt xóa đi : ) ===> real time
+          actions: [
+            GestureDetector(
+              onTap: () {
+                Navigator.of(context).pushReplacement(MaterialPageRoute<void>(
+                    builder: (context) => super.widget));
+              },
+              child: Container(
+                margin: const EdgeInsets.fromLTRB(10, 0, 20, 0),
+                child: const Icon(
+                  Icons.replay,
+                  color: kPrimaryColor,
+                ),
               ),
-            ),
-          )
-        ],
-      ),
-      body: const Body(),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () => pushNewScreen<void>(
-          context,
-          screen: const AddChatScreen(),
-          withNavBar: false, // OPTIONAL VALUE. True by default.
-          pageTransitionAnimation: PageTransitionAnimation.cupertino,
+            )
+          ],
         ),
-        backgroundColor: kPrimaryColor,
-        child: const Icon(
-          Icons.group_add,
-          color: Colors.white,
+        body: const Body(),
+        floatingActionButton: FloatingActionButton(
+          onPressed: () => pushNewScreen<void>(
+            context,
+            screen: const AddChatScreen(),
+            withNavBar: false, // OPTIONAL VALUE. True by default.
+            pageTransitionAnimation: PageTransitionAnimation.cupertino,
+          ),
+          backgroundColor: kPrimaryColor,
+          child: const Icon(
+            Icons.group_add,
+            color: Colors.white,
+          ),
         ),
       ),
     );

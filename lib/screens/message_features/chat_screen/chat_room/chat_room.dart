@@ -44,10 +44,12 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
   MessageServiceFireStore dataServiceFireStore = MessageServiceFireStore();
   MessageServiceAlgolia dataServiceAlgolia = MessageServiceAlgolia();
   late UserModel thisUser = Provider.of<UserModel?>(context, listen: false)!;
-
+  final TextEditingController newChatRoomNameController =
+      TextEditingController();
   late List<String> otherUsersId = [];
   late List<String> usersImage = [];
   late String chatRoomName = '';
+  late String newChatRoomName = chatRoomName;
 
   Future<void> getOtherUsersId() async {
     var isEmpty = false;
@@ -77,6 +79,7 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
   void changeGroupChatName() {
     if (widget.groupChat) {
       //TODO chạy hàm change name group chat đây
+      displayTextInputDialog(context);
     }
     //else ko chạy : ) ko cần thiết lắm
   }
@@ -91,37 +94,82 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        centerTitle: false,
-        title: UsersCard(
-          chatName: chatRoomName,
-          images: usersImage,
-          press: changeGroupChatName,
-        ),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.phone),
-            onPressed: () {},
+    return GestureDetector(
+      onTap: () {
+        FocusScope.of(context).requestFocus(FocusNode());
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          centerTitle: false,
+          title: UsersCard(
+            chatName: chatRoomName,
+            images: usersImage,
+            press: changeGroupChatName,
           ),
-          Builder(builder: (context) {
-            return IconButton(
-              icon: Icon(LineIcons.values['verticalEllipsis']),
-              onPressed: () {
-                showOverlay(
-                  context: context,
-                  chatRoomId: widget.chatRoomId,
-                  groupChat: widget.groupChat,
-                );
-              },
-            );
-          })
-        ],
-      ),
-      body: Body(
-        chatRoomId: widget.chatRoomId,
+          actions: [
+            IconButton(
+              icon: const Icon(Icons.phone),
+              onPressed: () {},
+            ),
+            Builder(builder: (context) {
+              return IconButton(
+                icon: Icon(LineIcons.values['verticalEllipsis']),
+                onPressed: () {
+                  showOverlay(
+                    context: context,
+                    chatRoomId: widget.chatRoomId,
+                    groupChat: widget.groupChat,
+                  );
+                },
+              );
+            })
+          ],
+        ),
+        body: Body(
+          chatRoomId: widget.chatRoomId,
+        ),
       ),
     );
+  }
+
+  Future<void> displayTextInputDialog(BuildContext context) async {
+    newChatRoomNameController.text = chatRoomName;
+    return showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: const Text('Chỉnh sửa tên nhóm'),
+            content: TextFormField(
+              maxLength: 100,
+              controller: newChatRoomNameController,
+            ),
+            actions: <Widget>[
+              TextButton(
+                onPressed: () {
+                  setState(() {
+                    Navigator.pop(context);
+                  });
+                },
+                child: const Text('Hủy'),
+              ),
+              TextButton(
+                onPressed: () {
+                  setState(() {
+                    chatRoomName = newChatRoomNameController.text;
+                    dataServiceAlgolia
+                        .changeGroupChatName(widget.chatRoomId, chatRoomName)
+                        .then((value) {
+                      dataServiceFireStore.changeGroupChatName(
+                          widget.chatRoomId, chatRoomName);
+                    });
+                    Navigator.pop(context);
+                  });
+                },
+                child: const Text('OK'),
+              ),
+            ],
+          );
+        });
   }
 
   Future<void> showOverlay(
@@ -156,5 +204,8 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
     properties.add(IterableProperty<String>('usersId', otherUsersId));
     properties.add(DiagnosticsProperty<MessageServiceAlgolia>(
         'dataServiceAlgolia', dataServiceAlgolia));
+    properties.add(StringProperty('newChatRoomName', newChatRoomName));
+    properties.add(DiagnosticsProperty<TextEditingController>(
+        'newChatRoomNameController', newChatRoomNameController));
   }
 }

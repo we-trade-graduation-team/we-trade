@@ -1,5 +1,8 @@
+import 'dart:developer';
+
 import 'package:algolia/algolia.dart';
 import 'package:date_format/date_format.dart';
+import 'package:intl/intl.dart';
 import 'package:we_trade/models/authentication/user_model.dart';
 import '../../models/chat/temp_class.dart';
 import '../../screens/message_features/const_string/const_str.dart';
@@ -41,18 +44,20 @@ class MessageServiceAlgolia {
 
   Future<Map<String, dynamic>> getImagesAndChatRoomNameAndOtherUsersId(
       String chatRoomId, String thisUserId) {
-    return algolia.instance
-        .index(trangChatRooms)
-        .object(chatRoomId)
-        .getObject()
-        .then((value) {
+    return Future.delayed(const Duration(seconds: 2), () async {
+      return algolia.instance
+          .index(trangChatRooms)
+          .object(chatRoomId)
+          .getObject();
+    }).then((value) {
       final otherUsersId =
           (value.data[usersIdStr] as List<dynamic>).cast<String>().toList();
       final allImages =
           (value.data[usersImageStr] as List<dynamic>).cast<String>().toList();
+      final groupChat = value.data[isGroupChatStr] as bool;
       var chatRoomName = value.data[chatRoomNameStr].toString();
 
-      if (allImages.length == 2) {
+      if (!groupChat) {
         // nếu là ko phải group thì trả ra image và name ng còn lại (otherUser)
         final names =
             (value.data[usersNameStr] as List<dynamic>).cast<String>().toList();
@@ -115,20 +120,19 @@ class MessageServiceAlgolia {
         break;
     }
 
-    final addedObject =
-        await Future.delayed(const Duration(seconds: 2), () async {
+    final object =
+        await Future.delayed(const Duration(milliseconds: 1500), () async {
       return algolia.instance
           .index(trangChatRooms)
           .object(chatRoomId)
           .getObject();
     });
 
-    final updateData = Map<String, dynamic>.from(addedObject.data);
+    final updateData = Map<String, dynamic>.from(object.data);
     updateData[lastMessageStr] = lastMessage;
     updateData[senderIdStr] = senderId;
     updateData[senderNameStr] = name;
-    updateData[timeStr] =
-        formatDate(DateTime.now(), [dd, '-', mm, '-', yy, ' ', hh, ':', nn]);
+    updateData[timeStr] = DateFormat.yMd().add_jm().format(DateTime.now());
     await algolia.instance
         .index(trangChatRooms)
         .object(chatRoomId)
@@ -165,17 +169,40 @@ class MessageServiceAlgolia {
           groupChat: snapShot.data[isGroupChatStr] as bool,
         ));
       }
+      chats.sort((a, b) => DateFormat.yMd()
+          .add_jm()
+          .parse(b.time)
+          .compareTo(DateFormat.yMd('en_US').add_jm().parse(a.time)));
       return chats;
     });
   }
 
+//TODO out group chat
   Future<void> outOfChatRoom(String chatRoomId, UserModel user) async {
-    final object = await Future.delayed(const Duration(seconds: 2), () async {
+    final object =
+        await Future.delayed(const Duration(milliseconds: 1500), () async {
       return algolia.instance
           .index(trangChatRooms)
           .object(chatRoomId)
           .getObject();
     });
     final updateData = Map<String, dynamic>.from(object.data);
+  }
+
+  Future<void> changeGroupChatName(
+      String chatRoomId, String newChatRoomName) async {
+    final object =
+        await Future.delayed(const Duration(milliseconds: 1500), () async {
+      return algolia.instance
+          .index(trangChatRooms)
+          .object(chatRoomId)
+          .getObject();
+    });
+    final updateObject = Map<String, dynamic>.from(object.data);
+    updateObject[chatRoomNameStr] = newChatRoomName;
+    await algolia.instance
+        .index(trangChatRooms)
+        .object(chatRoomId)
+        .updateData(updateObject);
   }
 }

@@ -11,13 +11,18 @@ class AddChatScreen extends StatefulWidget {
 class _AddChatScreenState extends State<AddChatScreen> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text(
-          'ADD CHAT',
+    return GestureDetector(
+      onTap: () {
+        FocusScope.of(context).requestFocus(FocusNode());
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text(
+            'ADD CHAT',
+          ),
         ),
+        body: const Body(),
       ),
-      body: const Body(),
     );
   }
 }

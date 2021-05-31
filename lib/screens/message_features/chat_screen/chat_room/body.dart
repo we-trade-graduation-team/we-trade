@@ -42,7 +42,7 @@ class _BodyState extends State<Body> {
         return snapshot.hasData
             ? ListView.builder(
                 shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
+                //physics: const NeverScrollableScrollPhysics(),
                 itemCount: snapshot.data!.docs.length,
                 itemBuilder: (context, index) {
                   final data =
@@ -90,23 +90,21 @@ class _BodyState extends State<Body> {
     const money = 100000;
     final forProduct = allProduct[3];
 
-    return Stack(
+    return Column(
       children: [
-        SingleChildScrollView(
-          child: chatMessages(),
-        ),
-        Align(
-          alignment: Alignment.bottomLeft,
-          child: buildInputChat(),
-        ),
         if (isHaveOfferDeal)
-          Align(
+          Container(
             alignment: Alignment.topCenter,
             child: OfferCard(
                 offerSideProducts: offerSideProducts,
                 forProduct: forProduct,
                 offerSideMoney: money),
           ),
+        Expanded(child: chatMessages()),
+        Container(
+          alignment: Alignment.bottomLeft,
+          child: buildInputChat(),
+        ),
       ],
     );
   }

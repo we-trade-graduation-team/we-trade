@@ -85,6 +85,7 @@ class MessageServiceFireStore {
         .snapshots();
   }
 
+//TODO out group
   Future<void> outOfChatRoom(String chatRoomId, String userId) async {
     await FirebaseFirestore.instance
         .collection('trang')
@@ -98,5 +99,15 @@ class MessageServiceFireStore {
       usersId.removeWhere((element) => element == userId);
       value.reference.update(<String, dynamic>{usersIdStr: usersId});
     });
+  }
+
+  Future<void> changeGroupChatName(
+      String chatRoomId, String newGroupName) async {
+    await FirebaseFirestore.instance
+        .collection('trang')
+        .doc('nzTptOzmSw1IbLfKHxOT')
+        .collection(chatRoomCollection)
+        .doc(chatRoomId)
+        .update({chatRoomNameStr: newGroupName});
   }
 }
