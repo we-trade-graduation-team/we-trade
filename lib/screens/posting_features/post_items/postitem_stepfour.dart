@@ -4,17 +4,11 @@ import 'package:flutter/material.dart';
 import '../../../configs/constants/color.dart';
 //import '../../home_features/detail_screen/detail_screen.dart';
 
-// ignore: camel_case_types
-class PostItem_4 extends StatefulWidget {
-  const PostItem_4({Key? key}) : super(key: key);
-  static const routeName = '/PostItem_4';
+// ignore: must_be_immutable
+class PostItemFour extends StatelessWidget {
+  PostItemFour({Key? key}) : super(key: key);
+  static const routeName = '/PostItemFour';
 
-  @override
-  _PostItem_4_State createState() => _PostItem_4_State();
-}
-
-// ignore: camel_case_types
-class _PostItem_4_State extends State<PostItem_4> {
   late FocusScopeNode node;
 
   @override
@@ -143,7 +137,15 @@ class _PostItem_4_State extends State<PostItem_4> {
                     backgroundColor:
                         MaterialStateProperty.all<Color>(kPrimaryColor)),
                 onPressed: () {
-                  //Navigator.of(context).pushNamed(DetailScreen.routeName);
+                  //  pushNewScreenWithRouteSettings<void>(
+                  //     context,
+                  //     settings:
+                  //         const RouteSettings(name: PostItemFour.routeName),
+                  //     screen: const PostItemFour(),
+                  //     withNavBar: true,
+                  //     pageTransitionAnimation:
+                  //         PageTransitionAnimation.cupertino,
+                  //   );
                 },
                 child: const Text('Hoàn thành'),
               ),
