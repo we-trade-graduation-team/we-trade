@@ -1,9 +1,9 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 
 import '../../../configs/constants/color.dart';
+import '../../../services/post_feature/post_service_firestore.dart';
 import 'postitem_stepthree.dart';
 
 class PostItemTwo extends StatefulWidget {
@@ -22,83 +22,43 @@ class TypeofGoods {
 }
 
 class _PostItemTwoState extends State<PostItemTwo> {
+  PostServiceFireStore dataServiceFireStore = PostServiceFireStore();
   bool isLoading = true;
   List<TypeofGoods> _type = [];
   List<TypeofGoods> _subType = [];
 
-  Map<String, List<String>> mapSubCategory = <String, List<String>>{};
   String mainCategory = '';
   String subCategory = '';
 
-  void getMainCategoryData() {
-    //lấy data mainCategory
-    final _typeTemp = <TypeofGoods>[];
-    final CollectionReference category = FirebaseFirestore.instance
-        .collection('thientin')
-        .doc('category')
-        .collection('categoryList');
-    category.get().then((categoryType) {
-      var index = 1;
-      for (final type in categoryType.docs) {
-        final tempType =
-            TypeofGoods(id: index, name: type['category_name'].toString());
-        if (_typeTemp.any((element) => element.id == tempType.id)) {
-          index++;
-        } else {
-          _typeTemp.add(tempType);
-          index++;
-        }
+  Future<List<TypeofGoods>> getMainCategoryData() {
+    final _tempCategory = <TypeofGoods>[];
+    return dataServiceFireStore.getMainCategory().then((value) {
+      for (final item in value.docs) {
+        final itemCate = TypeofGoods(
+            id: int.parse(item.id),
+            name: item.data()['category_name'].toString());
+        _tempCategory.add(itemCate);
       }
-      setState(() {
-        _type = _typeTemp; //Gán data cho List mainCategory
-        mainCategory =
-            _type[0].name; //Hiển thị phần tử đầu tiên trong dropdownButton
-        getSubCategoryData(); // Lấy data subCategory, dựa theo phần tử dropdownButton đang chọn
-      });
+      return _tempCategory;
     });
   }
 
-  void getSubCategoryData() {
+  Future<List<TypeofGoods>> getSubCategoryData(String mainCategory) {
     final _typeSubTemp = <TypeofGoods>[];
-    final category = FirebaseFirestore.instance
-        .collection('thientin')
-        .doc('category')
-        .collection('categoryList')
-        .where('category_name', isEqualTo: mainCategory);
-    category.get().then((categoryType) {
-      for (final element in categoryType.docs) {
-        var index = 1;
-        element.reference
-            .collection('subCategory')
-            .get()
-            .then((subCategoryType) => {
-                  for (final subTypeData in subCategoryType.docs)
-                    {
-                      if (_typeSubTemp.any((element) =>
-                          element.name == subTypeData['subCategory_name']))
-                        {index++}
-                      else
-                        {
-                          _typeSubTemp.add(TypeofGoods(
-                              id: index,
-                              name:
-                                  subTypeData['subCategory_name'].toString())),
-                          index++
-                        }
-                    }
-                });
+    return dataServiceFireStore.getSubCategory(mainCategory).then((value) {
+      var index = 0;
+      for (final item in value.docs) {
+        final subCate = TypeofGoods(
+            id: index, name: item.data()['subCategory_name'].toString());
+        _typeSubTemp.add(subCate);
+        index++;
       }
-      setState(() {
-        _subType = _typeSubTemp; // Gán data cho List subCategory
-        subCategory =
-            _subType[0].name; //Hiển thị phần tử đầu tiên trong dropdownButton
-        isLoading = false; // Hiển thị ra màn hình
-      });
+      return _typeSubTemp;
     });
   }
 
   Widget categoryDropDown() => DropdownButton<String>(
-        value: mainCategory,
+        value: _type.isNotEmpty ? mainCategory : '',
         icon: const Icon(Icons.arrow_drop_down),
         elevation: 16,
         isExpanded: true,
@@ -110,21 +70,21 @@ class _PostItemTwoState extends State<PostItemTwo> {
         onChanged: (newValue) {
           setState(() {
             mainCategory = newValue!;
-            //isLoading = true; //thành loading
-            //_subType.clear();
+            isLoading = true; //thành loading
           });
-          //getSubCategoryData(mainCategory);
         },
-        items: _type.map<DropdownMenuItem<String>>((value) {
-          return DropdownMenuItem<String>(
-            value: value.name,
-            child: Text(value.name),
-          );
-        }).toList(),
+        items: _type.isNotEmpty
+            ? _type.map<DropdownMenuItem<String>>((value) {
+                return DropdownMenuItem<String>(
+                  value: value.name,
+                  child: Text(value.name),
+                );
+              }).toList()
+            : [],
       );
 
   Widget subCategoryDropDown() => DropdownButton<String>(
-        value: subCategory,
+        value: _subType.isNotEmpty ? subCategory : '',
         icon: const Icon(Icons.arrow_drop_down),
         elevation: 16,
         isExpanded: true,
@@ -138,27 +98,47 @@ class _PostItemTwoState extends State<PostItemTwo> {
             subCategory = newValue!;
           });
         },
-        items: _subType.map<DropdownMenuItem<String>>((value) {
-          return DropdownMenuItem<String>(
-            value: value.name,
-            child: Text(value.name),
-          );
-        }).toList(),
+        items: _subType.isNotEmpty
+            ? _subType.map<DropdownMenuItem<String>>((value) {
+                return DropdownMenuItem<String>(
+                  value: value.name,
+                  child: Text(value.name),
+                );
+              }).toList()
+            : [],
       );
 
   @override
   void initState() {
+    getMainCategoryData().then((value) {
+      setState(() {
+        _type = value;
+        mainCategory = value[0].name;
+      });
+    });
     super.initState();
-    getMainCategoryData();
   }
 
   @override
   Widget build(BuildContext context) {
     final arguments = ModalRoute.of(context)!.settings.arguments as Map;
 
-    if (arguments.isNotEmpty) {
-      //print(arguments['item_name']);
-    }
+    if (arguments.isNotEmpty) {}
+
+    getSubCategoryData(mainCategory).then((value) {
+      if (value.isNotEmpty) {
+        setState(() {
+          _subType = value;
+          subCategory = value[0].name;
+          isLoading = false;
+        });
+      } else {
+        setState(() {
+          _subType = [];
+          isLoading = false;
+        });
+      }
+    });
 
     return Scaffold(
       backgroundColor: kScreenBackgroundColor,
@@ -192,7 +172,7 @@ class _PostItemTwoState extends State<PostItemTwo> {
                       height: 5,
                     ),
                     const Text('Danh mục phụ'),
-                    //subCategoryDropDown(),
+                    subCategoryDropDown(),
                     const Align(
                         alignment: Alignment.topLeft,
                         child: Text('Loại của sản phẩm là: ',
@@ -246,7 +226,7 @@ class _PostItemTwoState extends State<PostItemTwo> {
     properties.add(DiagnosticsProperty<bool>('isLoading', isLoading));
     properties.add(StringProperty('mainCategory', mainCategory));
     properties.add(StringProperty('subCategory', subCategory));
-    properties.add(DiagnosticsProperty<Map<String, List<String>>>(
-        'mapSubCategory', mapSubCategory));
+    properties.add(DiagnosticsProperty<PostServiceFireStore>(
+        'dataServiceFireStore', dataServiceFireStore));
   }
 }

@@ -105,7 +105,7 @@ class _MainMenuState extends State<MainMenu> {
           navBarHeight: MediaQuery.of(context).viewInsets.bottom > 0
               ? 0.0
               : kBottomNavigationBarHeight,
-          bottomScreenMargin: kDefaultBottomNavigationBarHeight,
+          // bottomScreenMargin: kDefaultBottomNavigationBarHeight,
           // selectedTabScreenContext: (context) => testContext = context!,
           hideNavigationBar: _hideNavBar,
           itemAnimationProperties: const ItemAnimationProperties(

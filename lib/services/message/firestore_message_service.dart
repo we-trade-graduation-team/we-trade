@@ -96,9 +96,9 @@ class MessageServiceFireStore {
     return FirebaseFirestore.instance
         .collection('trang')
         .doc('nzTptOzmSw1IbLfKHxOT')
-        .collection(chatRoomCollection)
+        .collection(chatRoomCollection) //bảng chatroom
         .doc(chatRoomId)
-        .collection(chatCollection)
+        .collection(chatCollection) //trong bảng chat rooms có chứa bảng chát
         .orderBy(timeStr)
         .get()
         .then((value) {

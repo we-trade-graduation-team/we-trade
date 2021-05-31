@@ -42,7 +42,7 @@ packages:
       name: async
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.6.1"
+    version: "2.5.0"
   auto_size_text:
     dependency: "direct main"
     description:
@@ -323,7 +323,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "6.1.0"
-<<<<<<< HEAD
   firebase_auth:
     dependency: "direct main"
     description:
@@ -333,10 +332,6 @@ packages:
     version: "1.1.4"
   firebase_auth_platform_interface:
     dependency: transitive
-=======
-  firebase_core:
-    dependency: "direct main"
->>>>>>> 27fb9a8007225b487e1f769b6cb369f8361efaaf
     description:
       name: firebase_auth_platform_interface
       url: "https://pub.dartlang.org"
