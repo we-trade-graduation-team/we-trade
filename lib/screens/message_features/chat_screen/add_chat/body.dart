@@ -27,7 +27,7 @@ class Body extends StatefulWidget {
 class _BodyState extends State<Body> {
   MessageServiceFireStore dataServiceFireStore = MessageServiceFireStore();
   MessageServiceAlgolia dataServiceAlgolia = MessageServiceAlgolia();
-  TextEditingController searchText = TextEditingController();
+  TextEditingController searchTextController = TextEditingController();
   late UserModel thisUser;
 
   late List<AlgoliaObjectSnapshot> querySnapshot = [];
@@ -92,7 +92,7 @@ class _BodyState extends State<Body> {
         //send new chat message to start chat room
         await startNewChatRoom(chatRoomId);
       }
-      navigateToChatRoom(chatRoomId);
+      navigateToChatRoom(chatRoomId: chatRoomId, chatGroup: false);
     });
   }
 
@@ -105,7 +105,7 @@ class _BodyState extends State<Body> {
           .createChatRoomAlgolia(mapData['algoliaMap']!, chatRoomId)
           .then((value) async {
         await startNewChatRoom(chatRoomId);
-        navigateToChatRoom(chatRoomId);
+        navigateToChatRoom(chatRoomId: chatRoomId, chatGroup: true);
       });
     });
   }
@@ -117,11 +117,12 @@ class _BodyState extends State<Body> {
         thisUser.uid, 0, 'hi, cùng chat nào', chatRoomId, name!, image);
   }
 
-  void navigateToChatRoom(String chatRoomId) {
+  void navigateToChatRoom(
+      {required String chatRoomId, required bool chatGroup}) {
     //push new screen chat_room with id para
     setState(() {
       choosedUsers.clear();
-      searchText.clear();
+      searchTextController.clear();
       querySnapshot.clear();
     });
 
@@ -129,7 +130,10 @@ class _BodyState extends State<Body> {
 
     pushNewScreen<void>(
       context,
-      screen: ChatRoomScreen(chatRoomId: chatRoomId),
+      screen: ChatRoomScreen(
+        chatRoomId: chatRoomId,
+        groupChat: chatGroup,
+      ),
       withNavBar: false, // OPTIONAL VALUE. True by default.
       pageTransitionAnimation: PageTransitionAnimation.cupertino,
     );
@@ -152,6 +156,8 @@ class _BodyState extends State<Body> {
     final usersName = <String>[];
     final usersAva = <String>[];
     final usersEmail = <String>[];
+    var isGroupChat = false;
+
     for (final user in choosedUsers) {
       usersId.add(user.id);
       usersName.add(user.name);
@@ -164,12 +170,10 @@ class _BodyState extends State<Body> {
     usersAva.add(thisUser.image == null ? '' : thisUser.image!);
     usersEmail.add(thisUser.email == null ? '' : thisUser.email!);
 
-    usersId.sort();
-    usersName.sort();
-
     var chatRoomName = '';
     if (choosedUsers.length > 1) {
       chatRoomName = UsersCard.finalChatName(usersName);
+      isGroupChat = true;
     }
 
     final algoliaMap = <String, dynamic>{
@@ -178,10 +182,12 @@ class _BodyState extends State<Body> {
       emailsStr: usersEmail,
       chatRoomNameStr: chatRoomName,
       usersIdStr: usersId,
+      isGroupChatStr: isGroupChat,
     };
 
     final fireStoreMap = <String, dynamic>{
       usersIdStr: usersId,
+      isGroupChatStr: isGroupChat,
       chatRoomNameStr: chatRoomName
     };
 
@@ -192,9 +198,9 @@ class _BodyState extends State<Body> {
   }
 
   Future<void> initiateSearch() async {
-    if (searchText.text.isNotEmpty) {
-      final result =
-          await dataServiceAlgolia.searchUserByAlgolia(searchText.text);
+    if (searchTextController.text.isNotEmpty) {
+      final result = await dataServiceAlgolia
+          .searchUserByAlgolia(searchTextController.text);
       setState(() {
         querySnapshot = result;
       });
@@ -287,7 +293,7 @@ class _BodyState extends State<Body> {
               children: [
                 Expanded(
                   child: TextField(
-                    controller: searchText,
+                    controller: searchTextController,
                     decoration: const InputDecoration(
                       contentPadding: EdgeInsets.only(left: 10),
                       hintText: 'Search here',
@@ -367,8 +373,8 @@ class _BodyState extends State<Body> {
     super.debugFillProperties(properties);
     properties.add(DiagnosticsProperty<MessageServiceFireStore>(
         'dataService', dataServiceFireStore));
-    properties.add(
-        DiagnosticsProperty<TextEditingController>('searchText', searchText));
+    properties.add(DiagnosticsProperty<TextEditingController>(
+        'searchText', searchTextController));
     properties.add(IterableProperty<AlgoliaObjectSnapshot>(
         'querySnapshot', querySnapshot));
     properties.add(IterableProperty<User>('choosedUsers', choosedUsers));

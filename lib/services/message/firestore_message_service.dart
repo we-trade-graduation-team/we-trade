@@ -56,27 +56,9 @@ class MessageServiceFireStore {
 
     await addMessageToFireStore(chatRoomId, mapData);
 
-    var lastMessage = '';
-    switch (type) {
-      case 0:
-        lastMessage = contentToSend;
-        break;
-      case 1:
-        lastMessage = 'Gửi một ảnh';
-        break;
-      case 2:
-        lastMessage = 'Gửi một video';
-        break;
-      case 3:
-        lastMessage = 'Gửi một clip thoại';
-        break;
-
-      default:
-        lastMessage = '';
-        break;
-    }
-    await messageServiceAlgolia.updateChatRoomAlgolia(
-        chatRoomId, lastMessage, senderId, senderName);
+    // ignore: unawaited_futures
+    messageServiceAlgolia.updateChatRoomAlgolia(
+        chatRoomId, contentToSend, senderId, senderName, type);
   }
 
   Future<void> addMessageToFireStore(
@@ -91,8 +73,8 @@ class MessageServiceFireStore {
         .catchError((dynamic e) {});
   }
 
-  Future<List<QueryDocumentSnapshot<Map<String, dynamic>>>> getChats(
-      String chatRoomId) {
+  Future<Stream<QuerySnapshot<Map<String, dynamic>>>> getChats(
+      String chatRoomId) async {
     return FirebaseFirestore.instance
         .collection('trang')
         .doc('nzTptOzmSw1IbLfKHxOT')
@@ -100,10 +82,21 @@ class MessageServiceFireStore {
         .doc(chatRoomId)
         .collection(chatCollection)
         .orderBy(timeStr)
+        .snapshots();
+  }
+
+  Future<void> outOfChatRoom(String chatRoomId, String userId) async {
+    await FirebaseFirestore.instance
+        .collection('trang')
+        .doc('nzTptOzmSw1IbLfKHxOT')
+        .collection(chatRoomCollection)
+        .doc(chatRoomId)
         .get()
         .then((value) {
-      final result = value.docs;
-      return result;
+      final usersId =
+          (value.data()![usersIdStr] as List<dynamic>).cast<String>().toList();
+      usersId.removeWhere((element) => element == userId);
+      value.reference.update(<String, dynamic>{usersIdStr: usersId});
     });
   }
 }

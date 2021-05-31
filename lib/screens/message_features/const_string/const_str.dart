@@ -14,6 +14,7 @@ const String phoneNumberStr = 'phoneNumber';
 
 const String chatRoomNameStr = 'chat_room_name';
 const String usersIdStr = 'users_id';
+const String isGroupChatStr = 'group_chat';
 
 const String senderIdStr = 'sender_id';
 const String messageStr = 'message';

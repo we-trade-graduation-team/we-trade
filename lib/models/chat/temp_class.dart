@@ -4,9 +4,11 @@ import '../review/temp_class.dart';
 
 class Chat {
   Chat({
+    required this.groupChat,
     required this.usersId,
     required this.names,
     required this.images,
+    required this.emails,
     required this.chatRoomId,
     required this.chatRoomName,
     required this.lastMessage,
@@ -16,7 +18,8 @@ class Chat {
   });
 
   final String chatRoomId;
-  final List<String> images, usersId, names;
+  final bool groupChat;
+  final List<String> images, usersId, names, emails;
   final String chatRoomName;
   final String time;
   final String lastMessage;

@@ -1,5 +1,6 @@
 import 'package:algolia/algolia.dart';
 import 'package:date_format/date_format.dart';
+import 'package:we_trade/models/authentication/user_model.dart';
 import '../../models/chat/temp_class.dart';
 import '../../screens/message_features/const_string/const_str.dart';
 import '../algolia/algolia.dart';
@@ -73,6 +74,8 @@ class MessageServiceAlgolia {
     });
   }
 
+//hàm này t lấy đc list<users_id> và t muốn trả ra list<User> trong
+//chat room này
   Future<List<User>> getAllUserInChatRoom(String chatRoomId) {
     return algolia.instance
         .index(trangChatRooms)
@@ -90,8 +93,28 @@ class MessageServiceAlgolia {
     });
   }
 
-  Future<void> updateChatRoomAlgolia(String chatRoomId, String lastMessage,
-      String senderId, String name) async {
+  Future<void> updateChatRoomAlgolia(String chatRoomId, String contentToSend,
+      String senderId, String name, int type) async {
+    var lastMessage = '';
+    switch (type) {
+      case 0:
+        lastMessage = contentToSend;
+        break;
+      case 1:
+        lastMessage = 'Gửi một ảnh';
+        break;
+      case 2:
+        lastMessage = 'Gửi một video';
+        break;
+      case 3:
+        lastMessage = 'Gửi một clip thoại';
+        break;
+
+      default:
+        lastMessage = '';
+        break;
+    }
+
     final addedObject =
         await Future.delayed(const Duration(seconds: 2), () async {
       return algolia.instance
@@ -136,9 +159,23 @@ class MessageServiceAlgolia {
           names: (snapShot.data[usersNameStr] as List<dynamic>)
               .cast<String>()
               .toList(),
+          emails: (snapShot.data[emailsStr] as List<dynamic>)
+              .cast<String>()
+              .toList(),
+          groupChat: snapShot.data[isGroupChatStr] as bool,
         ));
       }
       return chats;
     });
+  }
+
+  Future<void> outOfChatRoom(String chatRoomId, UserModel user) async {
+    final object = await Future.delayed(const Duration(seconds: 2), () async {
+      return algolia.instance
+          .index(trangChatRooms)
+          .object(chatRoomId)
+          .getObject();
+    });
+    final updateData = Map<String, dynamic>.from(object.data);
   }
 }

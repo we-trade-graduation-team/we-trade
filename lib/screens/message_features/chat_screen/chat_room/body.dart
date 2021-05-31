@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../configs/constants/color.dart';
@@ -29,68 +28,56 @@ class Body extends StatefulWidget {
 }
 
 class _BodyState extends State<Body> {
-  MessageServiceFireStore dataService = MessageServiceFireStore();
+  MessageServiceFireStore dataServiceFireStore = MessageServiceFireStore();
   TextEditingController messageTextController = TextEditingController();
-  late List<QueryDocumentSnapshot<Map<String, dynamic>>> chats = [];
+  // late List<QueryDocumentSnapshot<Map<String, dynamic>>> chats = [];
   late UserModel thisUser = Provider.of<UserModel?>(context, listen: false)!;
+  // ignore: diagnostic_describe_all_properties
+  late Stream<QuerySnapshot> chats;
 
   Widget chatMessages() {
-    return chats.isNotEmpty
-        ? ListView.builder(
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            itemCount: chats.length,
-            itemBuilder: (context, index) {
-              return MessageTile(
-                senderImage: chats[index].data()[senderImageStr].toString(),
-                message: chats[index].data()[messageStr].toString(),
-                sendByMe:
-                    thisUser.uid == chats[index].data()[senderIdStr].toString(),
-              );
-            })
-        : Center(
-            child: Column(
-              children: [
-                Lottie.network(
-                  messageLoadingStr,
-                  width: 100,
-                  height: 100,
-                  fit: BoxFit.fill,
-                ),
-                const SizedBox(height: 10),
-                const Text(loadingDataStr),
-              ],
-            ),
-          );
-    // StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
-    //   stream: chats,
-    //   builder: (context, snapshot) {
-    //     return snapshot.hasData
-    //         ? ListView.builder(
-    //             physics: const NeverScrollableScrollPhysics(),
-    //             itemCount: snapshot.data!.docs.length,
-    //             itemBuilder: (context, index) {
-    //               return MessageTile(
-    //                 message: snapshot.data!.docs[index]
-    //                     .data()[messageStr]
-    //                     .toString(),
-    //                 sendByMe: thisUser.uid ==
-    //                     snapshot.data!.docs[index].data()[senderIdStr],
-    //               );
-    //             })
-    //         : Container();
-    //   },
-    // );
+    return StreamBuilder<QuerySnapshot>(
+      stream: chats,
+      builder: (context, snapshot) {
+        return snapshot.hasData
+            ? ListView.builder(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                itemCount: snapshot.data!.docs.length,
+                itemBuilder: (context, index) {
+                  final data =
+                      snapshot.data!.docs[index].data() as Map<String, dynamic>;
+                  return MessageTile(
+                    message: data[messageStr].toString(),
+                    sendByMe: thisUser.uid == data[senderIdStr],
+                  );
+                })
+            : Container();
+      },
+    );
+  }
+
+  Future<void> addMessageToChatRoom() async {
+    if (messageTextController.text.isNotEmpty) {
+      final name = (thisUser.username ?? thisUser.email)!;
+      final image = thisUser.image ?? '';
+      await dataServiceFireStore
+          .addMessageToChatRoom(thisUser.uid, 0, messageTextController.text,
+              widget.chatRoomId, name, image)
+          .then((value) => setState(() {
+                messageTextController.text = '';
+              }));
+    }
   }
 
   @override
   void initState() {
-    super.initState();
-    dataService.getChats(widget.chatRoomId).then((result) {
+    dataServiceFireStore.getChats(widget.chatRoomId).then((result) {
       setState(() {
         chats = result;
       });
     });
+    super.initState();
   }
 
   @override
@@ -199,7 +186,7 @@ class _BodyState extends State<Body> {
             height: height,
             child: Center(
               child: GestureDetector(
-                onTap: () {},
+                onTap: addMessageToChatRoom,
                 child: Container(
                   height: 35,
                   width: 35,
@@ -278,9 +265,6 @@ class _BodyState extends State<Body> {
         'messageTextController', messageTextController));
     properties.add(DiagnosticsProperty<UserModel>('thisUser', thisUser));
     properties.add(DiagnosticsProperty<MessageServiceFireStore>(
-        'dataService', dataService));
-    properties.add(
-        IterableProperty<QueryDocumentSnapshot<Map<String, dynamic>>>(
-            'chats', chats));
+        'dataService', dataServiceFireStore));
   }
 }

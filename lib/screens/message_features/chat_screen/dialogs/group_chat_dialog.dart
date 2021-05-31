@@ -2,6 +2,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:line_icons/line_icons.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
+import 'package:provider/provider.dart';
+import 'package:we_trade/models/authentication/user_model.dart';
 
 import '../../../../configs/constants/color.dart';
 import '../../../shared_features/report/report_screen.dart';
@@ -81,7 +83,9 @@ class GroupChatDialog extends StatelessWidget {
                       ),
                     ),
                     InkWell(
-                      onTap: () {},
+                      onTap: () {
+                        showAlertDialogOutGroup(parentContext, chatRoomId);
+                      },
                       child: Container(
                         margin: const EdgeInsets.fromLTRB(0, 0, 0, 10),
                         padding: const EdgeInsets.fromLTRB(0, 0, 20, 10),
@@ -201,4 +205,41 @@ class GroupChatDialog extends StatelessWidget {
         .add(DiagnosticsProperty<BuildContext>('parentContext', parentContext));
     properties.add(StringProperty('ChatRoomId', chatRoomId));
   }
+}
+
+Future<Widget?> showAlertDialogOutGroup(
+    BuildContext context, String chatRoomId) {
+  final Widget cancelButton = TextButton(
+    onPressed: () {
+      Navigator.of(context).pop();
+    },
+    child: const Text('Hủy'),
+  );
+  final Widget continueButton = TextButton(
+    onPressed: () {
+      final thisUser =
+          Provider.of<UserModel?>(context, listen: false)!;
+      
+      Navigator.of(context).pop();
+    },
+    child: const Text('Rời khỏi'),
+  );
+
+  final alert = AlertDialog(
+    title: const Text('Rời khỏi nhóm ?'),
+    content: const Text(
+        'Bạn có chắc chắn muốn rời khỏi cuộc trò chuyện? \n bạn sẽ không nhận được tin nhắn mới nữa'),
+    actions: [
+      cancelButton,
+      continueButton,
+    ],
+  );
+
+  // show the dialog
+  return showDialog<Widget>(
+    context: context,
+    builder: (context) {
+      return alert;
+    },
+  );
 }

@@ -17,12 +17,14 @@ class ChatRoomScreen extends StatefulWidget {
   const ChatRoomScreen({
     Key? key,
     required this.chatRoomId,
+    required this.groupChat,
     this.chatRoomName = '',
     this.usersImage = const [],
   }) : super(key: key);
 
   final String chatRoomId;
   final String chatRoomName;
+  final bool groupChat;
   final List<String> usersImage;
   static String routeName = '/chat/chat_room';
 
@@ -34,6 +36,7 @@ class ChatRoomScreen extends StatefulWidget {
     properties.add(StringProperty('chatRoomId', chatRoomId));
     properties.add(StringProperty('chatRoomName', chatRoomName));
     properties.add(IterableProperty<String>('usersImage', usersImage));
+    properties.add(DiagnosticsProperty<bool>('chatGroup', groupChat));
   }
 }
 
@@ -72,7 +75,7 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
   }
 
   void changeGroupChatName() {
-    if (otherUsersId.length != 1) {
+    if (widget.groupChat) {
       //TODO chạy hàm change name group chat đây
     }
     //else ko chạy : ) ko cần thiết lắm
@@ -108,7 +111,7 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
                 showOverlay(
                   context: context,
                   chatRoomId: widget.chatRoomId,
-                  type: otherUsersId.length == 1,
+                  groupChat: widget.groupChat,
                 );
               },
             );
@@ -123,9 +126,9 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
 
   Future<void> showOverlay(
       {required BuildContext context,
-      required bool type,
+      required bool groupChat,
       required String chatRoomId}) async {
-    if (type) {
+    if (!groupChat) {
       BotToast.showAttachedWidget(
         attachedBuilder: (_) =>
             PersonalChatDialog(userId: otherUsersId[0], parentContext: context),
