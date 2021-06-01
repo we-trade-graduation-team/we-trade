@@ -105,7 +105,7 @@ class _BodyState extends State<Body> {
 
   @override
   void initState() {
-    dataServiceAlgolia.getAllChatRooms(thisUser.uid).then((result) {
+    dataServiceFireStore.getAllChatRooms(thisUser.uid).then((result) {
       setState(() {
         chatRooms = List.from(result);
         showChatRooms = List.from(result);

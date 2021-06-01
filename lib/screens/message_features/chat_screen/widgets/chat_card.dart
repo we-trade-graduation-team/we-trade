@@ -9,6 +9,7 @@ import '../../../../services/message/algolia_message_service.dart';
 import '../../../../widgets/custom_user_avatar.dart';
 import '../../const_string/const_str.dart';
 import '../chat_room/chat_room.dart';
+import 'users_card.dart';
 
 class ChatCard extends StatefulWidget {
   const ChatCard({
@@ -42,27 +43,6 @@ class _ChatCardState extends State<ChatCard> {
   MessageServiceAlgolia dataServiceAlgolia = MessageServiceAlgolia();
   late List<String> images = [];
   late String chatRoomName = '';
-
-  void getImagesAndChatRoomName() {
-    if (!widget.chat.groupChat) {
-      var otherUserIndex = 0;
-      for (var i = 0; i < 2; i++) {
-        if (widget.chat.usersId[i] != thisUser.uid) {
-          otherUserIndex = i;
-          break;
-        }
-      }
-      setState(() {
-        images = [widget.chat.images[otherUserIndex]];
-        chatRoomName = widget.chat.names[otherUserIndex];
-      });
-    } else {
-      setState(() {
-        images = widget.chat.images;
-        chatRoomName = widget.chat.chatRoomName;
-      });
-    }
-  }
 
   Widget buildChatRoomImage() {
     if (images.isNotEmpty) {
@@ -112,9 +92,11 @@ class _ChatCardState extends State<ChatCard> {
 
   String getLastMessage() {
     final name = widget.isSendByMe
-        ? 'Bạn'
-        : (widget.chat.senderName.isNotEmpty ? widget.chat.senderName : '');
-    return '$name: ${widget.chat.lastMessage}';
+        ? 'Bạn:'
+        : (widget.chat.senderName.isNotEmpty
+            ? '${widget.chat.senderName}:'
+            : '');
+    return '$name ${widget.chat.lastMessage}';
   }
 
   @override
@@ -124,7 +106,12 @@ class _ChatCardState extends State<ChatCard> {
 
   @override
   Widget build(BuildContext context) {
-    getImagesAndChatRoomName();
+    final imagesAndChatRoomName =
+        UsersCard.getImagesAndChatRoomName(widget.chat, thisUser.uid);
+    images = (imagesAndChatRoomName[usersImageStr] as List<dynamic>)
+        .cast<String>()
+        .toList();
+    chatRoomName = imagesAndChatRoomName[chatRoomNameStr].toString();
     return images.isNotEmpty
         ? InkWell(
             onTap: () {

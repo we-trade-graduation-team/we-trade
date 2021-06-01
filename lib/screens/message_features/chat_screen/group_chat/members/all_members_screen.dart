@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 import 'package:provider/provider.dart';
+import 'package:we_trade/services/message/firestore_message_service.dart';
 
 import '../../../../../models/authentication/user_model.dart';
 import '../../../../../models/chat/temp_class.dart';
@@ -27,7 +28,7 @@ class AllMemberScreen extends StatefulWidget {
 }
 
 class _AllMemberScreenState extends State<AllMemberScreen> {
-  final dataServiceAlgolia = MessageServiceAlgolia();
+  final dataServiceFireStore = MessageServiceFireStore();
   List<User> users = <User>[];
 
   @override
@@ -38,7 +39,7 @@ class _AllMemberScreenState extends State<AllMemberScreen> {
 
   Future<void> getAllUser() async {
     final result =
-        await dataServiceAlgolia.getAllUserInChatRoom(widget.chatRoomId);
+        await dataServiceFireStore.getAllUserInChatRoom(widget.chatRoomId);
     setState(() {
       users = result;
     });
@@ -111,8 +112,9 @@ class _AllMemberScreenState extends State<AllMemberScreen> {
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
     properties.add(IterableProperty<User>('users', users));
-    properties.add(DiagnosticsProperty<MessageServiceAlgolia>(
-        'dataServiceAlgolia', dataServiceAlgolia));
+
+    properties.add(DiagnosticsProperty<MessageServiceFireStore>(
+        'dataServiceFireStore', dataServiceFireStore));
   }
 }
 

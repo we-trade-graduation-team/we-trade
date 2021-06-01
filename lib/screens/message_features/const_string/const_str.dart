@@ -29,7 +29,7 @@ const String usersNameStr = 'names';
 const String emailsStr = 'emails';
 
 const String navigateToChatRoomStr = 'chatRoom';
-const String loadingDataStr = 'Loading data ...';
+const String loadingDataStr = 'Loading  ...';
 const String messageLoadingStr =
     'https://assets7.lottiefiles.com/private_files/lf30_96yLMX.json';
 const String messageLoadingStr2 =

@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:line_icons/line_icons.dart';
 import 'package:provider/provider.dart';
+import 'package:we_trade/configs/constants/color.dart';
 
 import '../../../../models/authentication/user_model.dart';
 import '../../../../services/message/algolia_message_service.dart';
@@ -49,7 +50,6 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
   late List<String> otherUsersId = [];
   late List<String> usersImage = [];
   late String chatRoomName = '';
-  late String newChatRoomName = chatRoomName;
 
   Future<void> getOtherUsersId() async {
     var isEmpty = false;
@@ -60,25 +60,26 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
       });
       isEmpty = true;
     }
-    await dataServiceAlgolia
-        .getImagesAndChatRoomNameAndOtherUsersId(
-            widget.chatRoomId, thisUser.uid)
-        .then((mapData) {
+
+    await dataServiceFireStore.getChatRoom(widget.chatRoomId).then((value) {
+      final usersId = value.usersId;
+      usersId.removeWhere((element) => element == thisUser.uid);
       setState(() {
         if (!isEmpty) {
+          final mapData =
+              UsersCard.getImagesAndChatRoomName(value, thisUser.uid);
           chatRoomName = mapData[chatRoomNameStr].toString();
           usersImage =
               (mapData[usersImageStr] as List<dynamic>).cast<String>().toList();
         }
-        otherUsersId =
-            (mapData[usersIdStr] as List<dynamic>).cast<String>().toList();
+        otherUsersId = usersId;
       });
     });
   }
 
   void changeGroupChatName() {
     if (widget.groupChat) {
-      //TODO chạy hàm change name group chat đây
+      //chạy hàm change name group chat đây
       displayTextInputDialog(context);
     }
     //else ko chạy : ) ko cần thiết lắm
@@ -150,22 +151,27 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
                     Navigator.pop(context);
                   });
                 },
-                child: const Text('Hủy'),
+                child: const Text(
+                  'Hủy',
+                  style: TextStyle(color: kTextColor),
+                ),
               ),
               TextButton(
                 onPressed: () {
-                  setState(() {
-                    chatRoomName = newChatRoomNameController.text;
-                    dataServiceAlgolia
-                        .changeGroupChatName(widget.chatRoomId, chatRoomName)
-                        .then((value) {
-                      dataServiceFireStore.changeGroupChatName(
-                          widget.chatRoomId, chatRoomName);
+                  final newChatRoomName = newChatRoomNameController.text;
+                  if (newChatRoomName != chatRoomName) {
+                    dataServiceFireStore.changeGroupChatName(
+                        widget.chatRoomId, newChatRoomNameController.text);
+                    setState(() {
+                      chatRoomName = newChatRoomNameController.text;
                     });
-                    Navigator.pop(context);
-                  });
+                  }
+                  Navigator.pop(context);
                 },
-                child: const Text('OK'),
+                child: const Text(
+                  'OK',
+                  style: TextStyle(color: kPrimaryColor),
+                ),
               ),
             ],
           );
@@ -204,7 +210,6 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
     properties.add(IterableProperty<String>('usersId', otherUsersId));
     properties.add(DiagnosticsProperty<MessageServiceAlgolia>(
         'dataServiceAlgolia', dataServiceAlgolia));
-    properties.add(StringProperty('newChatRoomName', newChatRoomName));
     properties.add(DiagnosticsProperty<TextEditingController>(
         'newChatRoomNameController', newChatRoomNameController));
   }

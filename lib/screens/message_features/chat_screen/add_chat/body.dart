@@ -29,6 +29,7 @@ class _BodyState extends State<Body> {
   MessageServiceAlgolia dataServiceAlgolia = MessageServiceAlgolia();
   TextEditingController searchTextController = TextEditingController();
   late UserModel thisUser;
+  late bool isLoading = false;
 
   late List<AlgoliaObjectSnapshot> querySnapshot = [];
   late List<User> choosedUsers = [];
@@ -62,7 +63,7 @@ class _BodyState extends State<Body> {
         ),
       );
     }
-    showBottomSheet(context);
+    UsersCard.showBottomSheet(context);
     if (choosedUsers.length == 1) {
       // check có chat room với ng này chưa?
       //nếu có thì chuyển hướng thẳng vói chat room đó
@@ -85,11 +86,7 @@ class _BodyState extends State<Body> {
         .then((result) async {
       if (result.docs.isEmpty) {
         final mapData = createChatRoomMap();
-        await dataServiceFireStore.createChatRoomFireStore(
-            mapData['fireStoreMap']!, chatRoomId);
-        await dataServiceAlgolia.createChatRoomAlgolia(
-            mapData['algoliaMap']!, chatRoomId);
-        //send new chat message to start chat room
+        await dataServiceFireStore.createChatRoomFireStore(mapData, chatRoomId);
         await startNewChatRoom(chatRoomId);
       }
       navigateToChatRoom(chatRoomId: chatRoomId, chatGroup: false);
@@ -99,14 +96,11 @@ class _BodyState extends State<Body> {
   void sendNewChatRoomGroup() {
     final mapData = createChatRoomMap();
     dataServiceFireStore
-        .createChatRoomGenerateIdFireStore(mapData['fireStoreMap']!)
-        .then((chatRoomId) {
-      dataServiceAlgolia
-          .createChatRoomAlgolia(mapData['algoliaMap']!, chatRoomId)
-          .then((value) async {
-        await startNewChatRoom(chatRoomId);
-        navigateToChatRoom(chatRoomId: chatRoomId, chatGroup: true);
-      });
+        .createChatRoomGenerateIdFireStore(mapData)
+        .then((chatRoomId) async {
+      await startNewChatRoom(chatRoomId);
+      navigateToChatRoom(chatRoomId: chatRoomId, chatGroup: true);
+      //});
     });
   }
 
@@ -144,7 +138,7 @@ class _BodyState extends State<Body> {
     return chatRoomId.toString();
   }
 
-  Map<String, Map<String, dynamic>> createChatRoomMap() {
+  Map<String, dynamic> createChatRoomMap() {
     final usersId = <String>[];
     final usersName = <String>[];
     final usersAva = <String>[];
@@ -163,70 +157,78 @@ class _BodyState extends State<Body> {
     usersAva.add(thisUser.image == null ? '' : thisUser.image!);
     usersEmail.add(thisUser.email == null ? '' : thisUser.email!);
 
-    var chatRoomName = '';
     if (choosedUsers.length > 1) {
-      chatRoomName = UsersCard.finalChatName(usersName);
       isGroupChat = true;
     }
 
-    final algoliaMap = <String, dynamic>{
+    return <String, dynamic>{
+      isGroupChatStr: isGroupChat,
+      chatRoomNameStr: '',
+      usersIdStr: usersId,
       usersImageStr: usersAva,
       usersNameStr: usersName,
       emailsStr: usersEmail,
-      chatRoomNameStr: chatRoomName,
-      usersIdStr: usersId,
-      isGroupChatStr: isGroupChat,
-    };
-
-    final fireStoreMap = <String, dynamic>{
-      usersIdStr: usersId,
-      isGroupChatStr: isGroupChat,
-      chatRoomNameStr: chatRoomName
-    };
-
-    return <String, Map<String, dynamic>>{
-      'fireStoreMap': fireStoreMap,
-      'algoliaMap': algoliaMap
     };
   }
 
   Future<void> initiateSearch() async {
+    setState(() {
+      isLoading = true;
+    });
     if (searchTextController.text.isNotEmpty) {
       final result = await dataServiceAlgolia
           .searchUserByAlgolia(searchTextController.text);
       setState(() {
         querySnapshot = result;
+        isLoading = false;
       });
     }
   }
 
   Widget searchList() {
-    return querySnapshot.isNotEmpty
-        ? Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
-            child: ListView.builder(
-                physics: const NeverScrollableScrollPhysics(),
-                shrinkWrap: true,
-                itemCount: querySnapshot.length,
-                itemBuilder: (context, index) {
-                  final object = querySnapshot[index];
-                  final user = User(
-                      id: object.objectID,
-                      name: object.data[nameStr].toString(),
-                      image: object.data[imageStr].toString(),
-                      email: object.data[emailStr].toString(),
-                      isActive: object.data[isActiveStr] as bool,
-                      activeAt: object.data[activeAtStr].toString());
-                  return UserCard(
-                      user: user,
-                      press: () {
-                        setState(() {
-                          addUserToList(user);
-                        });
-                      });
-                }),
+    return isLoading
+        ? Center(
+            child: Column(
+              children: [
+                Lottie.network(
+                  messageLoadingStr2,
+                  width: 100,
+                  height: 100,
+                  fit: BoxFit.fill,
+                ),
+                const SizedBox(height: 20),
+                const Text(loadingDataStr),
+              ],
+            ),
           )
-        : Container();
+        : querySnapshot.isNotEmpty
+            ? Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: ListView.builder(
+                    physics: const NeverScrollableScrollPhysics(),
+                    shrinkWrap: true,
+                    itemCount: querySnapshot.length,
+                    itemBuilder: (context, index) {
+                      final object = querySnapshot[index];
+                      final user = User(
+                          id: object.objectID,
+                          name: object.data[nameStr].toString(),
+                          image: object.data[imageStr].toString(),
+                          email: object.data[emailStr].toString(),
+                          isActive: object.data[isActiveStr] as bool,
+                          activeAt: object.data[activeAtStr].toString());
+                      return UserCard(
+                          user: user,
+                          press: () {
+                            setState(() {
+                              addUserToList(user);
+                            });
+                          });
+                    }),
+              )
+            : const Center(
+                child: Text('no result'),
+              );
   }
 
   Widget choosedUserListView() {
@@ -255,9 +257,9 @@ class _BodyState extends State<Body> {
   void initState() {
     super.initState();
     thisUser = Provider.of<UserModel?>(context, listen: false)!;
-    initiateSearch().whenComplete(() {
-      setState(() {});
-    });
+    // initiateSearch().whenComplete(() {
+    //   setState(() {});
+    // });
   }
 
   @override
@@ -332,35 +334,6 @@ class _BodyState extends State<Body> {
     );
   }
 
-  void showBottomSheet(BuildContext context) {
-    showModalBottomSheet<Widget>(
-      enableDrag: false,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(10),
-          topRight: Radius.circular(10),
-        ),
-      ),
-      barrierColor: Colors.grey[300]!.withOpacity(0.5),
-      context: context,
-      builder: (context) => Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-        child: Column(
-          children: [
-            Lottie.network(
-              messageLoadingStr,
-              width: 100,
-              height: 100,
-              fit: BoxFit.fill,
-            ),
-            const SizedBox(height: 20),
-            const Text(loadingDataStr),
-          ],
-        ),
-      ),
-    );
-  }
-
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
@@ -374,5 +347,6 @@ class _BodyState extends State<Body> {
     properties.add(DiagnosticsProperty<UserModel>('thisUser', thisUser));
     properties.add(DiagnosticsProperty<MessageServiceAlgolia>(
         'dataServiceAlgolia', dataServiceAlgolia));
+    properties.add(DiagnosticsProperty<bool>('isLoading', isLoading));
   }
 }

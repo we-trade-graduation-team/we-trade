@@ -49,6 +49,8 @@ class _BodyState extends State<Body> {
                       snapshot.data!.docs[index].data() as Map<String, dynamic>;
                   return MessageTile(
                     message: data[messageStr].toString(),
+                    senderImage: data[senderImageStr].toString(),
+                    isOutGroupMessage: data[senderIdStr].toString().isEmpty,
                     sendByMe: thisUser.uid == data[senderIdStr],
                   );
                 })
@@ -131,7 +133,7 @@ class _BodyState extends State<Body> {
                   child: const Icon(
                     Icons.menu,
                     color: kPrimaryColor,
-                    size: 20,
+                    size: 25,
                   ),
                 ),
               ),
@@ -151,7 +153,7 @@ class _BodyState extends State<Body> {
                   child: const Icon(
                     Icons.mic,
                     color: kPrimaryColor,
-                    size: 20,
+                    size: 25,
                   ),
                 ),
               ),
@@ -187,11 +189,11 @@ class _BodyState extends State<Body> {
                 onTap: addMessageToChatRoom,
                 child: Container(
                   height: 35,
-                  width: 35,
+                  width: 40,
                   child: const Icon(
                     Icons.send_rounded,
                     color: kPrimaryColor,
-                    size: 20,
+                    size: 25,
                   ),
                 ),
               ),

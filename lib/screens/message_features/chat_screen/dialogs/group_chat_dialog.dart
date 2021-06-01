@@ -3,11 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:line_icons/line_icons.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 import 'package:provider/provider.dart';
+import 'package:we_trade/models/authentication/user_model.dart';
+import 'package:we_trade/services/message/firestore_message_service.dart';
 
 import '../../../../configs/constants/color.dart';
-import '../../../../models/authentication/user_model.dart';
 import '../../../shared_features/report/report_screen.dart';
 import '../group_chat/members/all_members_screen.dart';
+import '../widgets/users_card.dart';
 
 class GroupChatDialog extends StatelessWidget {
   const GroupChatDialog({
@@ -84,7 +86,8 @@ class GroupChatDialog extends StatelessWidget {
                     ),
                     InkWell(
                       onTap: () {
-                        showAlertDialogOutGroup(parentContext, chatRoomId);
+                        showAlertDialogOutGroup(
+                            parentContext, chatRoomId, parentContext);
                       },
                       child: Container(
                         margin: const EdgeInsets.fromLTRB(0, 0, 0, 10),
@@ -208,7 +211,7 @@ class GroupChatDialog extends StatelessWidget {
 }
 
 Future<Widget?> showAlertDialogOutGroup(
-    BuildContext context, String chatRoomId) {
+    BuildContext context, String chatRoomId, BuildContext parentContext) {
   final Widget cancelButton = TextButton(
     onPressed: () {
       Navigator.of(context).pop();
@@ -216,10 +219,14 @@ Future<Widget?> showAlertDialogOutGroup(
     child: const Text('Hủy'),
   );
   final Widget continueButton = TextButton(
-    onPressed: () {
-      final thisUser = Provider.of<UserModel?>(context, listen: false)!;
-
+    onPressed: () async {
       Navigator.of(context).pop();
+      UsersCard.showBottomSheet(context);
+      await Future.delayed(const Duration(milliseconds: 1000), () async {});
+      final thisUser = Provider.of<UserModel?>(context, listen: false)!;
+      final messageServiceFireStore = MessageServiceFireStore();
+      await messageServiceFireStore.outOfChatRoom(chatRoomId, thisUser.uid);
+      Navigator.of(parentContext).popUntil(ModalRoute.withName('/'));
     },
     child: const Text('Rời khỏi'),
   );
