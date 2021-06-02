@@ -3,10 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:line_icons/line_icons.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 import 'package:provider/provider.dart';
-import 'package:we_trade/models/authentication/user_model.dart';
-import 'package:we_trade/services/message/firestore_message_service.dart';
 
 import '../../../../configs/constants/color.dart';
+import '../../../../models/authentication/user_model.dart';
+import '../../../../services/message/firestore_message_service.dart';
 import '../../../shared_features/report/report_screen.dart';
 import '../group_chat/members/all_members_screen.dart';
 import '../widgets/users_card.dart';

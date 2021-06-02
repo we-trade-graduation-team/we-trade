@@ -3,7 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:line_icons/line_icons.dart';
 import 'package:provider/provider.dart';
-import 'package:we_trade/configs/constants/color.dart';
+import '../../../../configs/constants/color.dart';
 
 import '../../../../models/authentication/user_model.dart';
 import '../../../../services/message/algolia_message_service.dart';

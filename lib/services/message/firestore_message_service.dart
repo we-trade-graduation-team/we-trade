@@ -1,7 +1,4 @@
-import 'dart:developer';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/animation.dart';
 import 'package:intl/intl.dart';
 import '../../models/chat/temp_class.dart';
 import '../../screens/message_features/chat_screen/widgets/users_card.dart';
@@ -20,6 +17,18 @@ class MessageServiceFireStore {
         .collection(chatRoomCollection)
         .where(FieldPath.documentId, isEqualTo: chatRoomId)
         .get();
+  }
+
+  Future<List<String>> getAllUsersIdInChatRoom(String chatRoomId) {
+    return FirebaseFirestore.instance
+        .collection('trang')
+        .doc('nzTptOzmSw1IbLfKHxOT')
+        .collection(chatRoomCollection)
+        .doc(chatRoomId)
+        .get()
+        .then((value) {
+      return (value.get(usersIdStr) as List<dynamic>).cast<String>().toList();
+    });
   }
 
   Future<void> createChatRoomFireStore(
@@ -63,10 +72,6 @@ class MessageServiceFireStore {
     await addMessageToFireStore(chatRoomId, mapData);
 
     updateChatRoom(chatRoomId, contentToSend, senderId, senderName, type);
-
-    // ignore: unawaited_futures
-    // messageServiceAlgolia.updateChatRoomAlgolia(
-    //     chatRoomId, contentToSend, senderId, senderName, type);
   }
 
   void updateChatRoom(String chatRoomId, String contentToSend, String senderId,
@@ -129,15 +134,9 @@ class MessageServiceFireStore {
   }
 
   Future<List<User>> getAllUserInChatRoom(String chatRoomId) {
-    return FirebaseFirestore.instance
-        .collection('trang')
-        .doc('nzTptOzmSw1IbLfKHxOT')
-        .collection(chatRoomCollection)
-        .doc(chatRoomId)
-        .get()
-        .then((value) async {
-      final usersId =
-          (value.data()![usersIdStr] as List<dynamic>).cast<String>().toList();
+    return getAllUsersIdInChatRoom(chatRoomId).then((usersId) async {
+      // final usersId =
+      //     (value.data()![usersIdStr] as List<dynamic>).cast<String>().toList();
       final users = <User>[];
       for (final userid in usersId) {
         final user = await messageServiceAlgolia.getUserById(userid);
@@ -203,7 +202,6 @@ class MessageServiceFireStore {
     );
   }
 
-//TODO out group
   Future<void> outOfChatRoom(String chatRoomId, String userId) async {
     await FirebaseFirestore.instance
         .collection('trang')
@@ -254,5 +252,47 @@ class MessageServiceFireStore {
         .collection(chatRoomCollection)
         .doc(chatRoomId)
         .update({chatRoomNameStr: newGroupName});
+  }
+
+  Future<void> addUsersToGroupChat(
+    String chatRoomId,
+    String myName,
+    List<String> usersId,
+    List<String> usersImage,
+    List<String> usersEmail,
+    List<String> usersName,
+  ) async {
+    var message = '$myName  đã thêm ';
+    await getChatRoom(chatRoomId).then((chatRoom) async {
+      for (var i = 0; i < usersId.length; i++) {
+        if (!chatRoom.usersId.contains(usersId[i])) {
+          message += '${usersName[i]}, ';
+          chatRoom.usersId.add(usersId[i]);
+          chatRoom.images.add(usersImage[i]);
+          chatRoom.emails.add(usersEmail[i]);
+          chatRoom.names.add(usersName[i]);
+        }
+      }
+
+      if (message != '$myName  đã thêm ') {
+        //update data chatroom
+        await FirebaseFirestore.instance
+            .collection('trang')
+            .doc('nzTptOzmSw1IbLfKHxOT')
+            .collection(chatRoomCollection)
+            .doc(chatRoomId)
+            .update({
+          emailStr: chatRoom.emails,
+          usersNameStr: chatRoom.names,
+          usersImageStr: chatRoom.images,
+          usersIdStr: chatRoom.usersId,
+        });
+
+        //add chat to chat room
+        message = message.substring(0, message.length - 2);
+        // ignore: unawaited_futures
+        addMessageToChatRoom('', 0, message, chatRoomId, '', '');
+      }
+    });
   }
 }

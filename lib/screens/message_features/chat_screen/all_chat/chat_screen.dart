@@ -1,12 +1,12 @@
-import 'dart:developer';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
+import 'package:provider/provider.dart';
 
 import '../../../../configs/constants/color.dart';
-import '../add_chat/add_chat_screen.dart';
+import '../../../../models/authentication/user_model.dart';
+import '../search_user/search_user_screen.dart';
 import 'body.dart';
 
 class ChatScreen extends StatefulWidget {
@@ -53,12 +53,20 @@ class _ChatScreenState extends State<ChatScreen> {
         ),
         body: const Body(),
         floatingActionButton: FloatingActionButton(
-          onPressed: () => pushNewScreen<void>(
-            context,
-            screen: const AddChatScreen(),
-            withNavBar: false, // OPTIONAL VALUE. True by default.
-            pageTransitionAnimation: PageTransitionAnimation.cupertino,
-          ),
+          onPressed: () {
+            final thisUser = Provider.of<UserModel?>(context, listen: false)!;
+            pushNewScreenWithRouteSettings<void>(
+              context,
+              screen: const SearchUserScreen(),
+              settings: RouteSettings(
+                name: SearchUserScreen.routeName,
+                arguments: SearchUserScreenArgument(
+                    tittle: 'ADD CHAT', addChat: true, usersId: [thisUser.uid]),
+              ),
+              withNavBar: false, // OPTIONAL VALUE. True by default.
+              pageTransitionAnimation: PageTransitionAnimation.cupertino,
+            );
+          },
           backgroundColor: kPrimaryColor,
           child: const Icon(
             Icons.group_add,

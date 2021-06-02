@@ -18,10 +18,24 @@ import '../widgets/user_choice_chip.dart';
 import '../widgets/users_card.dart';
 
 class Body extends StatefulWidget {
-  const Body({Key? key}) : super(key: key);
-
+  const Body(
+      {Key? key,
+      required this.addChat,
+      required this.usersId,
+      this.chatRoomId = ''})
+      : super(key: key);
+  final String chatRoomId;
+  final bool addChat;
+  final List<String> usersId;
   @override
   _BodyState createState() => _BodyState();
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(DiagnosticsProperty<bool>('addChat', addChat));
+    properties.add(IterableProperty<String>('usersId', usersId));
+    properties.add(StringProperty('chatRoomId', chatRoomId));
+  }
 }
 
 class _BodyState extends State<Body> {
@@ -36,7 +50,7 @@ class _BodyState extends State<Body> {
 
   void addUserToList(User user) {
     setState(() {
-      if (!choosedUsers.contains(user) && user.id != thisUser.uid) {
+      if (!choosedUsers.contains(user) && !widget.usersId.contains(user.id)) {
         choosedUsers.add(user);
       }
     });
@@ -48,7 +62,7 @@ class _BodyState extends State<Body> {
     });
   }
 
-  void goToChatRoom() {
+  void okButtonEventHandle() {
     if (choosedUsers.isEmpty) {
       showDialog<String>(
         context: context,
@@ -64,20 +78,27 @@ class _BodyState extends State<Body> {
       );
     }
     UsersCard.showBottomSheet(context);
-    if (choosedUsers.length == 1) {
-      // check có chat room với ng này chưa?
-      //nếu có thì chuyển hướng thẳng vói chat room đó
-      //nếu không thì push data chat room mới lên firestore và algolia
-      //id userId1userId2
-      checkAndSendNewChatRoomoOneUser();
+    if (widget.addChat) {
+      // nếu là add new chat
+      if (choosedUsers.length == 1) {
+        // check có chat room với ng này chưa?
+        //nếu có thì chuyển hướng thẳng vói chat room đó
+        //nếu không thì push data chat room mới lên firestore và algolia
+        //id userId1userId2
+        checkAndSendNewChatRoomoOneUser();
+      } else {
+        //group auto taọ group mới,
+        //id tự generate dù là có trùng thành viên group có sẵn
+        //send new chat message
+        sendNewChatRoomGroup();
+      }
     } else {
-      //group auto taọ group mới,
-      //id tự generate dù là có trùng thành viên group có sẵn
-      //send new chat message
-      sendNewChatRoomGroup();
+      // add user vào group chat
+      addUserToGroupChat();
     }
   }
 
+// function handle create Add chat feature =============================
   void checkAndSendNewChatRoomoOneUser() {
     final chatRoomId = createChatRoomId(choosedUsers);
 
@@ -115,11 +136,14 @@ class _BodyState extends State<Body> {
       {required String chatRoomId, required bool chatGroup}) {
     Navigator.of(context).popUntil(ModalRoute.withName('/'));
 
-    pushNewScreen<void>(
+    pushNewScreenWithRouteSettings<void>(
       context,
       screen: ChatRoomScreen(
         chatRoomId: chatRoomId,
         groupChat: chatGroup,
+      ),
+      settings: RouteSettings(
+        name: ChatRoomScreen.routeName,
       ),
       withNavBar: false, // OPTIONAL VALUE. True by default.
       pageTransitionAnimation: PageTransitionAnimation.cupertino,
@@ -170,7 +194,39 @@ class _BodyState extends State<Body> {
       emailsStr: usersEmail,
     };
   }
+// end ==================================================================
 
+// function handle add user to group chat feature =======================
+  Future<void> addUserToGroupChat() async {
+    final usersId = <String>[];
+    final usersName = <String>[];
+    final usersImage = <String>[];
+    final usersEmail = <String>[];
+
+    for (final user in choosedUsers) {
+      usersId.add(user.id);
+      usersName.add(user.name);
+      usersImage.add(user.image);
+      usersEmail.add(user.email);
+    }
+
+    final myName =
+        thisUser.username == null ? thisUser.email! : thisUser.username!;
+
+    // ignore: unawaited_futures
+    dataServiceFireStore
+        .addUsersToGroupChat(widget.chatRoomId, myName, usersId, usersImage,
+            usersEmail, usersName)
+        .then((value) {
+      Navigator.of(context).popUntil((route) {
+        return route.settings.name == ChatRoomScreen.routeName;
+      });
+    });
+  }
+
+//end ===================================================================
+
+// WIdget ui function ====================================================
   Future<void> initiateSearch() async {
     setState(() {
       isLoading = true;
@@ -257,9 +313,6 @@ class _BodyState extends State<Body> {
   void initState() {
     super.initState();
     thisUser = Provider.of<UserModel?>(context, listen: false)!;
-    // initiateSearch().whenComplete(() {
-    //   setState(() {});
-    // });
   }
 
   @override
@@ -324,7 +377,7 @@ class _BodyState extends State<Body> {
           ),
           Expanded(child: SingleChildScrollView(child: searchList())),
           CustomMaterialButton(
-            press: goToChatRoom,
+            press: okButtonEventHandle,
             text: 'OK',
             width: MediaQuery.of(context).size.width - 100,
             height: 30,

@@ -1,10 +1,10 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
-import 'package:we_trade/models/chat/temp_class.dart';
-import 'package:we_trade/screens/message_features/const_string/const_str.dart';
 
+import '../../../../models/chat/temp_class.dart';
 import '../../../../widgets/custom_user_avatar.dart';
+import '../../const_string/const_str.dart';
 
 class UsersCard extends StatelessWidget {
   const UsersCard({
