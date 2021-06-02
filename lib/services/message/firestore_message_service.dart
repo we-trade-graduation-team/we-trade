@@ -129,7 +129,7 @@ class MessageServiceFireStore {
         .collection(chatRoomCollection)
         .doc(chatRoomId)
         .collection(chatCollection)
-        .orderBy(timeStr)
+        .orderBy(timeStr, descending: true)
         .snapshots();
   }
 
@@ -262,7 +262,7 @@ class MessageServiceFireStore {
     List<String> usersEmail,
     List<String> usersName,
   ) async {
-    var message = '$myName  đã thêm ';
+    var message = '$myName đã thêm ';
     await getChatRoom(chatRoomId).then((chatRoom) async {
       for (var i = 0; i < usersId.length; i++) {
         if (!chatRoom.usersId.contains(usersId[i])) {

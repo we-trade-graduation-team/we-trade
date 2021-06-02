@@ -44,10 +44,12 @@ class _BodyState extends State<Body> {
                 shrinkWrap: true,
                 //physics: const NeverScrollableScrollPhysics(),
                 itemCount: snapshot.data!.docs.length,
+                reverse: true,
                 itemBuilder: (context, index) {
                   final data =
                       snapshot.data!.docs[index].data() as Map<String, dynamic>;
                   return MessageTile(
+                    time: int.parse(data[timeStr].toString()),
                     message: data[messageStr].toString(),
                     senderImage: data[senderImageStr].toString(),
                     isOutGroupMessage: data[senderIdStr].toString().isEmpty,
