@@ -101,16 +101,18 @@ class _BodyState extends State<Body> {
 // function handle create Add chat feature =============================
   void checkAndSendNewChatRoomoOneUser() {
     final chatRoomId = createChatRoomId(choosedUsers);
-
     dataServiceFireStore
         .getChatRoomByChatRoomId(chatRoomId)
         .then((result) async {
-      if (result.docs.isEmpty) {
+      if (!result.exists) {
         final mapData = createChatRoomMap();
-        await dataServiceFireStore.createChatRoomFireStore(mapData, chatRoomId);
+        await dataServiceFireStore.createPeerToPeerChatRoomFireStore(
+            mapData, chatRoomId);
         await startNewChatRoom(chatRoomId);
       }
-      navigateToChatRoom(chatRoomId: chatRoomId, chatGroup: false);
+      await dataServiceFireStore.getChatRoom(chatRoomId).then((value) {
+        navigateToChatRoom(chatRoom: value, chatGroup: false);
+      });
     });
   }
 
@@ -118,29 +120,26 @@ class _BodyState extends State<Body> {
     final mapData = createChatRoomMap();
     dataServiceFireStore
         .createChatRoomGenerateIdFireStore(mapData)
-        .then((chatRoomId) async {
-      await startNewChatRoom(chatRoomId);
-      navigateToChatRoom(chatRoomId: chatRoomId, chatGroup: true);
+        .then((chatRoom) async {
+      await startNewChatRoom(chatRoom.chatRoomId);
+      navigateToChatRoom(chatRoom: chatRoom, chatGroup: true);
       //});
     });
   }
 
   Future<void> startNewChatRoom(String chatRoomId) async {
     final name = thisUser.username ?? thisUser.email;
-    final image = thisUser.image ?? '';
     await dataServiceFireStore.addMessageToChatRoom(
-        thisUser.uid, 0, 'hi, cùng chat nào', chatRoomId, name!, image);
+        thisUser.uid, 0, 'hi, cùng chat nào', chatRoomId, name!);
   }
 
-  void navigateToChatRoom(
-      {required String chatRoomId, required bool chatGroup}) {
+  void navigateToChatRoom({required Chat chatRoom, required bool chatGroup}) {
     Navigator.of(context).popUntil(ModalRoute.withName('/'));
 
     pushNewScreenWithRouteSettings<void>(
       context,
       screen: ChatRoomScreen(
-        chatRoomId: chatRoomId,
-        groupChat: chatGroup,
+        chat: chatRoom,
       ),
       settings: RouteSettings(
         name: ChatRoomScreen.routeName,

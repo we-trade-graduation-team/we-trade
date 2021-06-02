@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
@@ -24,8 +25,10 @@ class _BodyState extends State<Body> {
   late UserModel thisUser = Provider.of<UserModel?>(context, listen: false)!;
   TextEditingController searchTextController = TextEditingController();
   bool isLoading = true;
-  late List<Chat> chatRooms = [];
-  late List<Chat> showChatRooms = [];
+  bool isSearching = false;
+  String queryStr = '';
+  // ignore: diagnostic_describe_all_properties
+  late Stream<QuerySnapshot> chatRooms2;
 
   bool isContain(List<String> src, String queryStr) {
     var result = false;
@@ -38,78 +41,52 @@ class _BodyState extends State<Body> {
     return result;
   }
 
-  void searchChatRoom() {
-    final queryStr = searchTextController.text.toLowerCase().trim();
-    setState(() {
-      isLoading = true;
-    });
-
-    if (queryStr.isNotEmpty) {
-      final dummySearchChatRooms = <Chat>[];
-      for (final chat in chatRooms) {
-        if (chat.chatRoomName.toLowerCase().contains(queryStr)) {
-          dummySearchChatRooms.add(chat);
-          continue;
-        }
-        if (isContain(chat.emails, queryStr) ||
-            isContain(chat.names, queryStr)) {
-          dummySearchChatRooms.add(chat);
-          continue;
-        }
-      }
-      setState(() {
-        showChatRooms = List.from(dummySearchChatRooms);
-        isLoading = false;
-      });
-    } else {
-      setState(() {
-        showChatRooms = List.from(chatRooms);
-        isLoading = false;
-      });
+  bool isInSearchList(Chat chat) {
+    if (queryStr.isEmpty ||
+        chat.chatRoomName.toLowerCase().contains(queryStr) ||
+        isContain(chat.emails, queryStr) ||
+        isContain(chat.names, queryStr)) {
+      return true;
     }
+    return false;
   }
 
-  Widget buildChatRoomList() {
-    return !isLoading
-        ? (showChatRooms.isNotEmpty
+  Widget chatRoomsList() {
+    return StreamBuilder<QuerySnapshot>(
+      stream: chatRooms2,
+      builder: (context, snapshot) {
+        return snapshot.hasData
             ? ListView.builder(
+                itemCount: snapshot.data!.docs.length,
                 shrinkWrap: true,
-                itemCount: showChatRooms.length,
                 itemBuilder: (context, index) {
-                  return ChatCard(
-                    chat: showChatRooms[index],
-                    isSendByMe: showChatRooms[index].senderId == thisUser.uid,
-                    typeFunction: navigateToChatRoomStr,
-                  );
+                  final chat = dataServiceFireStore.createChatFromData(
+                      snapshot.data!.docs[index].data() as Map<String, dynamic>,
+                      snapshot.data!.docs[index].id);
+                  if (isInSearchList(chat)) {
+                    return ChatCard(
+                      chat: chat,
+                      isSendByMe: chat.senderId == thisUser.uid,
+                      typeFunction: navigateToChatRoomStr,
+                    );
+                  } else {
+                    return Container();
+                  }
                 })
-            : const Center(
-                child: Text('No result'),
-              ))
-        : Center(
-            child: Column(
-              children: [
-                Lottie.network(
-                  messageLoadingStr,
-                  width: 100,
-                  height: 100,
-                  fit: BoxFit.fill,
-                ),
-                const SizedBox(height: 20),
-                const Text(loadingDataStr),
-              ],
-            ),
-          );
+            : Container();
+      },
+    );
   }
 
   @override
   void initState() {
-    dataServiceFireStore.getAllChatRooms(thisUser.uid).then((result) {
-      setState(() {
-        chatRooms = List.from(result);
-        showChatRooms = List.from(result);
-        isLoading = false;
-      });
-    });
+    dataServiceFireStore
+        .getAllChatRooms2(thisUser.uid)
+        .then((value) => chatRooms2 = value)
+        .whenComplete(() => setState(() {
+              isLoading = false;
+            }));
+
     super.initState();
   }
 
@@ -122,21 +99,7 @@ class _BodyState extends State<Body> {
           buildSearchBar(),
           Expanded(
             child: !isLoading
-                ? (showChatRooms.isNotEmpty
-                    ? ListView.builder(
-                        shrinkWrap: true,
-                        itemCount: showChatRooms.length,
-                        itemBuilder: (context, index) {
-                          return ChatCard(
-                            chat: showChatRooms[index],
-                            isSendByMe:
-                                showChatRooms[index].senderId == thisUser.uid,
-                            typeFunction: navigateToChatRoomStr,
-                          );
-                        })
-                    : const Center(
-                        child: Text('No result'),
-                      ))
+                ? chatRoomsList()
                 : Center(
                     child: Column(
                       children: [
@@ -195,7 +158,11 @@ class _BodyState extends State<Body> {
             ),
           ),
           GestureDetector(
-            onTap: searchChatRoom,
+            onTap: () {
+              setState(() {
+                queryStr = searchTextController.text.toLowerCase().trim();
+              });
+            },
             child: Container(
               margin: const EdgeInsets.fromLTRB(10, 0, 20, 0),
               child: const Icon(
@@ -212,7 +179,6 @@ class _BodyState extends State<Body> {
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
-    properties.add(IterableProperty<Chat>('chats', chatRooms));
     properties.add(DiagnosticsProperty<UserModel>('thisUser', thisUser));
     properties.add(DiagnosticsProperty<MessageServiceFireStore>(
         'dataServiceFireStore', dataServiceFireStore));
@@ -220,7 +186,8 @@ class _BodyState extends State<Body> {
         'dataServiceAlgolia', dataServiceAlgolia));
     properties.add(DiagnosticsProperty<TextEditingController>(
         'searchTextController', searchTextController));
-    properties.add(IterableProperty<Chat>('showChatRooms', showChatRooms));
     properties.add(DiagnosticsProperty<bool>('isLoading', isLoading));
+    properties.add(DiagnosticsProperty<bool>('isSearching', isSearching));
+    properties.add(StringProperty('queryStr', queryStr));
   }
 }

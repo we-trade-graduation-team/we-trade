@@ -24,16 +24,16 @@ class MessageTile extends StatefulWidget {
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
     properties.add(StringProperty('message', message));
-    properties.add(StringProperty('senderImage', senderImage));
     properties
         .add(DiagnosticsProperty<bool>('isOutGroupMessage', isOutGroupMessage));
     properties.add(DiagnosticsProperty<bool>('sendByMe', sendByMe));
     properties.add(IntProperty('time', time));
+    properties.add(StringProperty('senderImage', senderImage));
   }
 }
 
 class _MessageTileState extends State<MessageTile> {
-  var isVisible = false;
+  bool isVisible = false;
   @override
   Widget build(BuildContext context) {
     return !widget.isOutGroupMessage
@@ -132,5 +132,6 @@ class _MessageTileState extends State<MessageTile> {
     properties.add(StringProperty('image', widget.senderImage));
     properties.add(DiagnosticsProperty<bool>(
         'isOutGroupMessage', widget.isOutGroupMessage));
+    properties.add(DiagnosticsProperty<bool>('isVisible', isVisible));
   }
 }

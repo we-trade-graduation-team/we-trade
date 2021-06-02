@@ -17,6 +17,19 @@ class Chat {
     required this.time,
   });
 
+  Chat.nullChat()
+      : chatRoomId = '',
+        chatRoomName = '',
+        emails = [],
+        groupChat = false,
+        images = [],
+        lastMessage = '',
+        names = [],
+        senderId = '',
+        senderName = '',
+        time = '',
+        usersId = [];
+
   final String chatRoomId;
   final bool groupChat;
   final List<String> images, usersId, names, emails;

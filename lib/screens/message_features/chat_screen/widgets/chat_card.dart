@@ -122,10 +122,9 @@ class _ChatCardState extends State<ChatCard> {
                     name: ChatRoomScreen.routeName,
                   ),
                   screen: ChatRoomScreen(
-                    chatRoomId: widget.chat.chatRoomId,
+                    chat: widget.chat,
                     chatRoomName: chatRoomName,
                     usersImage: images,
-                    groupChat: widget.chat.groupChat,
                   ),
                   withNavBar: false,
                   pageTransitionAnimation: PageTransitionAnimation.cupertino,

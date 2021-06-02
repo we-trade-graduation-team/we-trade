@@ -15,8 +15,10 @@ class Body extends StatefulWidget {
   const Body({
     Key? key,
     required this.chatRoomId,
+    required this.userAndAva,
   }) : super(key: key);
   final String chatRoomId;
+  final Map<String, String> userAndAva;
 
   @override
   _BodyState createState() => _BodyState();
@@ -24,13 +26,14 @@ class Body extends StatefulWidget {
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
     properties.add(StringProperty('chatRoomId', chatRoomId));
+    properties.add(
+        DiagnosticsProperty<Map<String, String>>('userAndAva', userAndAva));
   }
 }
 
 class _BodyState extends State<Body> {
   MessageServiceFireStore dataServiceFireStore = MessageServiceFireStore();
   TextEditingController messageTextController = TextEditingController();
-  // late List<QueryDocumentSnapshot<Map<String, dynamic>>> chats = [];
   late UserModel thisUser = Provider.of<UserModel?>(context, listen: false)!;
   // ignore: diagnostic_describe_all_properties
   late Stream<QuerySnapshot> chats;
@@ -51,7 +54,10 @@ class _BodyState extends State<Body> {
                   return MessageTile(
                     time: int.parse(data[timeStr].toString()),
                     message: data[messageStr].toString(),
-                    senderImage: data[senderImageStr].toString(),
+                    senderImage:
+                        widget.userAndAva.containsKey(data[senderIdStr])
+                            ? widget.userAndAva[data[senderIdStr]].toString()
+                            : '',
                     isOutGroupMessage: data[senderIdStr].toString().isEmpty,
                     sendByMe: thisUser.uid == data[senderIdStr],
                   );
@@ -64,10 +70,9 @@ class _BodyState extends State<Body> {
   Future<void> addMessageToChatRoom() async {
     if (messageTextController.text.isNotEmpty) {
       final name = (thisUser.username ?? thisUser.email)!;
-      final image = thisUser.image ?? '';
       await dataServiceFireStore
           .addMessageToChatRoom(thisUser.uid, 0, messageTextController.text,
-              widget.chatRoomId, name, image)
+              widget.chatRoomId, name)
           .then((value) => setState(() {
                 messageTextController.text = '';
               }));
