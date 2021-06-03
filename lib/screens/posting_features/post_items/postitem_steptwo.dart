@@ -116,6 +116,7 @@ class _PostItemTwoState extends State<PostItemTwo> {
         mainCategory = value[0].name;
       });
     });
+
     super.initState();
   }
 
@@ -129,8 +130,12 @@ class _PostItemTwoState extends State<PostItemTwo> {
       if (value.isNotEmpty) {
         setState(() {
           _subType = value;
-          subCategory = value[0].name;
-          isLoading = false;
+          if (value.any((element) => element.name == subCategory)) {
+            isLoading = false;
+          } else {
+            subCategory = value[0].name;
+            isLoading = false;
+          }
         });
       } else {
         setState(() {
@@ -139,7 +144,6 @@ class _PostItemTwoState extends State<PostItemTwo> {
         });
       }
     });
-
     return Scaffold(
       backgroundColor: kScreenBackgroundColor,
       resizeToAvoidBottomInset: false,

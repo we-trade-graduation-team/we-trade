@@ -1,10 +1,12 @@
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart'; // import cho upload image
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
-import 'package:image_picker/image_picker.dart';
+import 'package:image_picker/image_picker.dart'; // import cho upload image
+import 'package:permission_handler/permission_handler.dart'; // import cho upload image
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 
 import '../../../configs/constants/color.dart';
@@ -22,35 +24,7 @@ class PostItemOne extends StatefulWidget {
 }
 
 class _PostItemOneState extends State<PostItemOne> {
-  late File _image = File(
-      'https://cdn.pixabay.com/photo/2017/11/10/05/24/add-2935429_960_720.png');
-
-  final picker = ImagePicker();
-
-  Future getImage() async {
-    //final pickedFile = await picker.getImage(source: ImageSource.camera);
-    setState(() {
-      _image = File(
-          'https://cdn.pixabay.com/photo/2017/11/10/05/24/add-2935429_960_720.png');
-    });
-  }
-
-  Widget imageAdded() {
-    if (_image.path == '') {
-      return Image.network(
-        'https://cdn.pixabay.com/photo/2017/11/10/05/24/add-2935429_960_720.png',
-        height: 100,
-        width: 100,
-      );
-    } else {
-      return FloatingActionButton(
-        heroTag: null,
-        onPressed: getImage,
-        tooltip: 'Pick Image',
-        child: const Icon(Icons.add_a_photo),
-      );
-    }
-  }
+  late String imageUrl = ''; //source của hình ảnh
 
   final _formKey = GlobalKey<FormBuilderState>();
   late FocusScopeNode node;
@@ -58,7 +32,6 @@ class _PostItemOneState extends State<PostItemOne> {
   TextEditingController itemDescriptionController = TextEditingController();
   TextEditingController itemNumberController = TextEditingController();
   TextEditingController itemCountryController = TextEditingController();
-
   //Add data
   CollectionReference items = FirebaseFirestore.instance
       .collection('thientin')
@@ -74,6 +47,38 @@ class _PostItemOneState extends State<PostItemOne> {
     });
   }
 
+  Future<void> uploadImage() async {
+    final _storage = FirebaseStorage.instance; // kết nối firebase storage
+    final _picker = ImagePicker(); // chọn hình ảnh từ thiết bị
+    PickedFile image;
+    await Permission.photos
+        .request(); // request cho phép truy cập thư viện của thiết bị
+    final permissonStatus = await Permission.photos.status;
+
+    if (permissonStatus.isGranted) {
+      //select image
+      image = (await _picker.getImage(
+          source: ImageSource.gallery))!; // lấy nguồn ảnh từ thiết bị 'gallery'
+      final file = File(image.path); //tạo file từ nguồn ảnh vừa lấy
+
+      if (image.path.isNotEmpty) {
+        //upload to firebase
+        final snapshot = await _storage.ref().child('folderName/imageName').putFile(
+            file); // lưu ảnh lên Firebase Storage, imageName là tên hình ảnh sẽ lưu
+        final downloadUrl =
+            await snapshot.ref.getDownloadURL(); // lấy hình ảnh về để hiển thị
+        setState(() {
+          imageUrl = downloadUrl;
+        });
+      } else {
+        // ignore: avoid_print
+        print('no path receive');
+      }
+    } else {
+      // ignore: avoid_print
+      print('Try again ');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -107,12 +112,18 @@ class _PostItemOneState extends State<PostItemOne> {
               ),
               Row(
                 children: [
-                  Expanded(child: imageAdded()),
-                  Expanded(child: imageAdded()),
-                  Expanded(child: imageAdded()),
-                  Expanded(child: imageAdded()),
+                  // ignore: unnecessary_null_comparison
+                  if (imageUrl != null)
+                    Image.network(imageUrl, fit: BoxFit.fitWidth)
+                  else
+                    const Placeholder(fallbackHeight: 20, fallbackWidth: 20),
                 ],
               ),
+              const SizedBox(
+                height: 15,
+              ),
+              TextButton(
+                  onPressed: uploadImage, child: const Text('Upload Image')),
               const SizedBox(
                 height: 15,
               ),
@@ -239,7 +250,6 @@ class _PostItemOneState extends State<PostItemOne> {
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
     properties.add(DiagnosticsProperty<FocusScopeNode>('node', node));
-    properties.add(DiagnosticsProperty<ImagePicker>('picker', picker));
     properties.add(DiagnosticsProperty<TextEditingController>(
         'itemNameController', itemNameController));
     properties.add(DiagnosticsProperty<TextEditingController>(
@@ -250,5 +260,6 @@ class _PostItemOneState extends State<PostItemOne> {
         'itemCountryController', itemCountryController));
     properties
         .add(DiagnosticsProperty<CollectionReference<Object?>>('items', items));
+    properties.add(StringProperty('imageUrl', imageUrl));
   }
 }
