@@ -1,9 +1,10 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:we_trade/constants/app_colors.dart';
+import 'package:we_trade/constants/app_dimens.dart';
+import 'package:we_trade/models/ui/review/temp_class.dart';
 
-import '../configs/constants/color.dart';
-import '../models/review/temp_class.dart';
 import 'custom_user_avatar.dart';
 
 class ReviewCard extends StatelessWidget {
@@ -19,13 +20,10 @@ class ReviewCard extends StatelessWidget {
     return Container(
       margin: const EdgeInsets.fromLTRB(15, 3, 15, 3),
       padding: const EdgeInsets.all(20),
-      decoration: const BoxDecoration(
+      decoration: BoxDecoration(
         //color: Colors.white,
         border: Border(
-          bottom: BorderSide(
-            color: kTextColor,
-            width: 0.2,
-          ),
+          bottom: AppDimens.kBorderSide(),
         ),
       ),
       child: Column(
@@ -119,7 +117,7 @@ class ReviewCard extends StatelessWidget {
     }
     return Container(
       decoration: BoxDecoration(
-        color: kBackGroundColor,
+        color: const Color(0xFFEFEFEF),
         borderRadius: BorderRadius.circular(5),
       ),
       margin: const EdgeInsets.symmetric(vertical: 10),
@@ -131,7 +129,7 @@ class ReviewCard extends StatelessWidget {
           hintText: '\n',
           hintStyle: TextStyle(height: 2),
           labelStyle: TextStyle(
-            color: kReviewTextLabel,
+            color: AppColors.kReviewTextLabel,
             fontSize: 16,
             fontWeight: FontWeight.normal,
           ),
