@@ -1,6 +1,5 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import '../configs/constants/color.dart';
 
 class CustomMaterialButton extends StatelessWidget {
   const CustomMaterialButton({
@@ -30,11 +29,12 @@ class CustomMaterialButton extends StatelessWidget {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(5),
           side: BorderSide(
-              color: isFilled ? Colors.white : kPrimaryColor,
-              width: isFilled ? 0 : 2.5),
+            color: isFilled ? Colors.white : Theme.of(context).primaryColor,
+            width: isFilled ? 0 : 2.5,
+          ),
         ),
         elevation: isFilled ? 1 : 0,
-        color: isFilled ? kPrimaryColor : Colors.white,
+        color: isFilled ? Theme.of(context).primaryColor : Colors.white,
         onPressed: press,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -46,7 +46,7 @@ class CustomMaterialButton extends StatelessWidget {
             Text(
               text,
               style: TextStyle(
-                color: isFilled ? Colors.white : kPrimaryColor,
+                color: isFilled ? Colors.white : Theme.of(context).primaryColor,
                 fontSize: fontSize,
               ),
             ),
