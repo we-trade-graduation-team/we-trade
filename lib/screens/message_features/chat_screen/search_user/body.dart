@@ -227,10 +227,10 @@ class _BodyState extends State<Body> {
 
 // WIdget ui function ====================================================
   Future<void> initiateSearch() async {
-    setState(() {
-      isLoading = true;
-    });
     if (searchTextController.text.isNotEmpty) {
+      setState(() {
+        isLoading = true;
+      });
       final result = await dataServiceAlgolia
           .searchUserByAlgolia(searchTextController.text);
       setState(() {
