@@ -3,6 +3,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:line_icons/line_icons.dart';
 import 'package:provider/provider.dart';
+import 'package:we_trade/models/chat/temp_class.dart';
+import '../../../../configs/constants/color.dart';
 
 import '../../../../models/authentication/user_model.dart';
 import '../../../../services/message/algolia_message_service.dart';
@@ -16,12 +18,12 @@ import 'body.dart';
 class ChatRoomScreen extends StatefulWidget {
   const ChatRoomScreen({
     Key? key,
-    required this.chatRoomId,
+    required this.chat,
     this.chatRoomName = '',
     this.usersImage = const [],
   }) : super(key: key);
 
-  final String chatRoomId;
+  final Chat chat;
   final String chatRoomName;
   final List<String> usersImage;
   static String routeName = '/chat/chat_room';
@@ -31,104 +33,152 @@ class ChatRoomScreen extends StatefulWidget {
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
-    properties.add(StringProperty('chatRoomId', chatRoomId));
     properties.add(StringProperty('chatRoomName', chatRoomName));
     properties.add(IterableProperty<String>('usersImage', usersImage));
+    properties.add(DiagnosticsProperty<Chat>('chatRoom', chat));
   }
 }
 
 class _ChatRoomScreenState extends State<ChatRoomScreen> {
   MessageServiceFireStore dataServiceFireStore = MessageServiceFireStore();
-  MessageServiceAlgolia dataServiceAlgolia = MessageServiceAlgolia();
   late UserModel thisUser = Provider.of<UserModel?>(context, listen: false)!;
-
-  late List<String> otherUsersId = [];
+  final TextEditingController newChatRoomNameController =
+      TextEditingController();
   late List<String> usersImage = [];
   late String chatRoomName = '';
+  late Map<String, String> userAndAva = {};
 
-  Future<void> getOtherUsersId() async {
-    var isEmpty = false;
+  void getImagesAndChatRoomName() {
     if (widget.usersImage.isNotEmpty && widget.chatRoomName.isNotEmpty) {
       setState(() {
         usersImage = widget.usersImage;
         chatRoomName = widget.chatRoomName;
       });
-      isEmpty = true;
-    }
-    await dataServiceAlgolia
-        .getImagesAndChatRoomNameAndOtherUsersId(
-            widget.chatRoomId, thisUser.uid)
-        .then((mapData) {
+    } else {
       setState(() {
-        if (!isEmpty) {
-          chatRoomName = mapData[chatRoomNameStr].toString();
-          usersImage =
-              (mapData[usersImageStr] as List<dynamic>).cast<String>().toList();
-        }
-        otherUsersId =
-            (mapData[usersIdStr] as List<dynamic>).cast<String>().toList();
+        final mapData =
+            UsersCard.getImagesAndChatRoomName(widget.chat, thisUser.uid);
+        chatRoomName = mapData[chatRoomNameStr].toString();
+        usersImage =
+            (mapData[usersImageStr] as List<dynamic>).cast<String>().toList();
       });
-    });
+    }
+
+    for (var i = 0; i < widget.chat.usersId.length; i++) {
+      userAndAva[widget.chat.usersId[i]] = widget.chat.images[i];
+    }
   }
 
   void changeGroupChatName() {
-    if (otherUsersId.length != 1) {
-      //TODO chạy hàm change name group chat đây
+    if (widget.chat.groupChat) {
+      //chạy hàm change name group chat đây
+      displayTextInputDialog(context);
     }
-    //else ko chạy : ) ko cần thiết lắm
   }
 
   @override
   void initState() {
     super.initState();
-    getOtherUsersId().whenComplete(() {
-      setState(() {});
-    });
+    getImagesAndChatRoomName();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        centerTitle: false,
-        title: UsersCard(
-          chatName: chatRoomName,
-          images: usersImage,
-          press: changeGroupChatName,
-        ),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.phone),
-            onPressed: () {},
+    //getImagesAndChatRoomName();
+    return GestureDetector(
+      onTap: () {
+        FocusScope.of(context).requestFocus(FocusNode());
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          centerTitle: false,
+          title: UsersCard(
+            chatName: chatRoomName,
+            images: usersImage,
+            press: changeGroupChatName,
           ),
-          Builder(builder: (context) {
-            return IconButton(
-              icon: Icon(LineIcons.values['verticalEllipsis']),
-              onPressed: () {
-                showOverlay(
-                  context: context,
-                  chatRoomId: widget.chatRoomId,
-                  type: otherUsersId.length == 1,
-                );
-              },
-            );
-          })
-        ],
-      ),
-      body: Body(
-        chatRoomId: widget.chatRoomId,
+          actions: [
+            IconButton(
+              icon: const Icon(Icons.phone),
+              onPressed: () {},
+            ),
+            Builder(builder: (context) {
+              return IconButton(
+                icon: Icon(LineIcons.values['verticalEllipsis']),
+                onPressed: () {
+                  showOverlay(
+                    context: context,
+                    chatRoomId: widget.chat.chatRoomId,
+                    groupChat: widget.chat.groupChat,
+                  );
+                },
+              );
+            })
+          ],
+        ),
+        body: Body(
+          chatRoomId: widget.chat.chatRoomId,
+          userAndAva: userAndAva,
+        ),
       ),
     );
   }
 
+  Future<void> displayTextInputDialog(BuildContext context) async {
+    newChatRoomNameController.text = chatRoomName;
+    return showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: const Text('Chỉnh sửa tên nhóm'),
+            content: TextFormField(
+              maxLength: 100,
+              controller: newChatRoomNameController,
+            ),
+            actions: <Widget>[
+              TextButton(
+                onPressed: () {
+                  setState(() {
+                    Navigator.pop(context);
+                  });
+                },
+                child: const Text(
+                  'Hủy',
+                  style: TextStyle(color: kTextColor),
+                ),
+              ),
+              TextButton(
+                onPressed: () {
+                  final newChatRoomName = newChatRoomNameController.text;
+                  if (newChatRoomName != chatRoomName) {
+                    dataServiceFireStore.changeGroupChatName(
+                        widget.chat.chatRoomId, newChatRoomNameController.text);
+                    setState(() {
+                      chatRoomName = newChatRoomNameController.text;
+                    });
+                  }
+                  Navigator.pop(context);
+                },
+                child: const Text(
+                  'OK',
+                  style: TextStyle(color: kPrimaryColor),
+                ),
+              ),
+            ],
+          );
+        });
+  }
+
   Future<void> showOverlay(
       {required BuildContext context,
-      required bool type,
+      required bool groupChat,
       required String chatRoomId}) async {
-    if (type) {
+    if (!groupChat) {
+      final otherUsersId =
+          widget.chat.usersId.firstWhere((element) => element != thisUser.uid);
       BotToast.showAttachedWidget(
         attachedBuilder: (_) =>
-            PersonalChatDialog(userId: otherUsersId[0], parentContext: context),
+            PersonalChatDialog(userId: otherUsersId, parentContext: context),
         targetContext: context,
       );
     } else {
@@ -150,8 +200,9 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
     properties.add(DiagnosticsProperty<UserModel>('thisUser', thisUser));
     properties.add(IterableProperty<String>('usersImage', usersImage));
     properties.add(StringProperty('chatRoomName', chatRoomName));
-    properties.add(IterableProperty<String>('usersId', otherUsersId));
-    properties.add(DiagnosticsProperty<MessageServiceAlgolia>(
-        'dataServiceAlgolia', dataServiceAlgolia));
+    properties.add(DiagnosticsProperty<TextEditingController>(
+        'newChatRoomNameController', newChatRoomNameController));
+    properties
+        .add(DiagnosticsProperty<Map<String, String>>('user_ava', userAndAva));
   }
 }

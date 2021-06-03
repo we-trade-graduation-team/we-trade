@@ -6,10 +6,10 @@ import 'package:provider/provider.dart';
 
 import '../../../../../models/authentication/user_model.dart';
 import '../../../../../models/chat/temp_class.dart';
-import '../../../../../services/message/algolia_message_service.dart';
+import '../../../../../services/message/firestore_message_service.dart';
 import '../../../../shared_features/other_user_profile/other_user_profile_screen.dart';
 import '../../../const_string/const_str.dart';
-import '../../add_chat/add_chat_screen.dart';
+import '../../search_user/search_user_screen.dart';
 import '../../widgets/user_card.dart';
 
 class AllMemberScreen extends StatefulWidget {
@@ -27,7 +27,7 @@ class AllMemberScreen extends StatefulWidget {
 }
 
 class _AllMemberScreenState extends State<AllMemberScreen> {
-  final dataServiceAlgolia = MessageServiceAlgolia();
+  final dataServiceFireStore = MessageServiceFireStore();
   List<User> users = <User>[];
 
   @override
@@ -38,7 +38,7 @@ class _AllMemberScreenState extends State<AllMemberScreen> {
 
   Future<void> getAllUser() async {
     final result =
-        await dataServiceAlgolia.getAllUserInChatRoom(widget.chatRoomId);
+        await dataServiceFireStore.getAllUserInChatRoom(widget.chatRoomId);
     setState(() {
       users = result;
     });
@@ -57,9 +57,24 @@ class _AllMemberScreenState extends State<AllMemberScreen> {
           IconButton(
             icon: const Icon(Icons.add),
             onPressed: () {
-              pushNewScreen<void>(
+              final usersId = <String>[];
+              for (final user in users) {
+                usersId.add(user.id);
+              }
+              usersId.add(thisUser.uid);
+
+              pushNewScreenWithRouteSettings<void>(
                 context,
-                screen: const AddChatScreen(),
+                screen: const SearchUserScreen(),
+                settings: RouteSettings(
+                  name: SearchUserScreen.routeName,
+                  arguments: SearchUserScreenArgument(
+                      chatRoomId: widget.chatRoomId,
+                      tittle: 'THÊM THÀNH VIÊN',
+                      addChat: false,
+                      usersId: usersId),
+                ),
+                withNavBar: false, // OPTIONAL VALUE. True by default.
                 pageTransitionAnimation: PageTransitionAnimation.cupertino,
               );
             },
@@ -111,8 +126,8 @@ class _AllMemberScreenState extends State<AllMemberScreen> {
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
     properties.add(IterableProperty<User>('users', users));
-    properties.add(DiagnosticsProperty<MessageServiceAlgolia>(
-        'dataServiceAlgolia', dataServiceAlgolia));
+    properties.add(DiagnosticsProperty<MessageServiceFireStore>(
+        'dataServiceFireStore', dataServiceFireStore));
   }
 }
 

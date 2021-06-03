@@ -6,7 +6,6 @@ import 'package:flutter/services.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 
 import 'configs/constants/color.dart';
-import 'configs/constants/keys.dart';
 import 'models/main_menu/bottom_navigation_bar_item_model.dart';
 import 'screens/account_features/account/account_screen.dart';
 import 'screens/home_features/home_screen/home_screen.dart';
@@ -105,7 +104,7 @@ class _MainMenuState extends State<MainMenu> {
           navBarHeight: MediaQuery.of(context).viewInsets.bottom > 0
               ? 0.0
               : kBottomNavigationBarHeight,
-          bottomScreenMargin: kDefaultBottomNavigationBarHeight,
+          //bottomScreenMargin: kDefaultBottomNavigationBarHeight,
           // selectedTabScreenContext: (context) => testContext = context!,
           hideNavigationBar: _hideNavBar,
           itemAnimationProperties: const ItemAnimationProperties(

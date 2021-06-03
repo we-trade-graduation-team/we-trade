@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../configs/constants/color.dart';
@@ -16,8 +15,10 @@ class Body extends StatefulWidget {
   const Body({
     Key? key,
     required this.chatRoomId,
+    required this.userAndAva,
   }) : super(key: key);
   final String chatRoomId;
+  final Map<String, String> userAndAva;
 
   @override
   _BodyState createState() => _BodyState();
@@ -25,72 +26,67 @@ class Body extends StatefulWidget {
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
     properties.add(StringProperty('chatRoomId', chatRoomId));
+    properties.add(
+        DiagnosticsProperty<Map<String, String>>('userAndAva', userAndAva));
   }
 }
 
 class _BodyState extends State<Body> {
-  MessageServiceFireStore dataService = MessageServiceFireStore();
+  MessageServiceFireStore dataServiceFireStore = MessageServiceFireStore();
   TextEditingController messageTextController = TextEditingController();
-  late List<QueryDocumentSnapshot<Map<String, dynamic>>> chats = [];
   late UserModel thisUser = Provider.of<UserModel?>(context, listen: false)!;
+  // ignore: diagnostic_describe_all_properties
+  late Stream<QuerySnapshot> chats;
 
   Widget chatMessages() {
-    return chats.isNotEmpty
-        ? ListView.builder(
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            itemCount: chats.length,
-            itemBuilder: (context, index) {
-              return MessageTile(
-                senderImage: chats[index].data()[senderImageStr].toString(),
-                message: chats[index].data()[messageStr].toString(),
-                sendByMe:
-                    thisUser.uid == chats[index].data()[senderIdStr].toString(),
-              );
-            })
-        : Center(
-            child: Column(
-              children: [
-                Lottie.network(
-                  messageLoadingStr,
-                  width: 100,
-                  height: 100,
-                  fit: BoxFit.fill,
-                ),
-                const SizedBox(height: 10),
-                const Text(loadingDataStr),
-              ],
-            ),
-          );
-    // StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
-    //   stream: chats,
-    //   builder: (context, snapshot) {
-    //     return snapshot.hasData
-    //         ? ListView.builder(
-    //             physics: const NeverScrollableScrollPhysics(),
-    //             itemCount: snapshot.data!.docs.length,
-    //             itemBuilder: (context, index) {
-    //               return MessageTile(
-    //                 message: snapshot.data!.docs[index]
-    //                     .data()[messageStr]
-    //                     .toString(),
-    //                 sendByMe: thisUser.uid ==
-    //                     snapshot.data!.docs[index].data()[senderIdStr],
-    //               );
-    //             })
-    //         : Container();
-    //   },
-    // );
+    return StreamBuilder<QuerySnapshot>(
+      stream: chats,
+      builder: (context, snapshot) {
+        return snapshot.hasData
+            ? ListView.builder(
+                shrinkWrap: true,
+                //physics: const NeverScrollableScrollPhysics(),
+                itemCount: snapshot.data!.docs.length,
+                reverse: true,
+                itemBuilder: (context, index) {
+                  final data =
+                      snapshot.data!.docs[index].data() as Map<String, dynamic>;
+                  return MessageTile(
+                    time: int.parse(data[timeStr].toString()),
+                    message: data[messageStr].toString(),
+                    senderImage:
+                        widget.userAndAva.containsKey(data[senderIdStr])
+                            ? widget.userAndAva[data[senderIdStr]].toString()
+                            : '',
+                    isOutGroupMessage: data[senderIdStr].toString().isEmpty,
+                    sendByMe: thisUser.uid == data[senderIdStr],
+                  );
+                })
+            : Container();
+      },
+    );
+  }
+
+  Future<void> addMessageToChatRoom() async {
+    if (messageTextController.text.isNotEmpty) {
+      final name = (thisUser.username ?? thisUser.email)!;
+      await dataServiceFireStore
+          .addMessageToChatRoom(thisUser.uid, 0, messageTextController.text,
+              widget.chatRoomId, name)
+          .then((value) => setState(() {
+                messageTextController.text = '';
+              }));
+    }
   }
 
   @override
   void initState() {
-    super.initState();
-    dataService.getChats(widget.chatRoomId).then((result) {
+    dataServiceFireStore.getChats(widget.chatRoomId).then((result) {
       setState(() {
         chats = result;
       });
     });
+    super.initState();
   }
 
   @override
@@ -103,23 +99,21 @@ class _BodyState extends State<Body> {
     const money = 100000;
     final forProduct = allProduct[3];
 
-    return Stack(
+    return Column(
       children: [
-        SingleChildScrollView(
-          child: chatMessages(),
-        ),
-        Align(
-          alignment: Alignment.bottomLeft,
-          child: buildInputChat(),
-        ),
         if (isHaveOfferDeal)
-          Align(
+          Container(
             alignment: Alignment.topCenter,
             child: OfferCard(
                 offerSideProducts: offerSideProducts,
                 forProduct: forProduct,
                 offerSideMoney: money),
           ),
+        Expanded(child: chatMessages()),
+        Container(
+          alignment: Alignment.bottomLeft,
+          child: buildInputChat(),
+        ),
       ],
     );
   }
@@ -146,7 +140,7 @@ class _BodyState extends State<Body> {
                   child: const Icon(
                     Icons.menu,
                     color: kPrimaryColor,
-                    size: 20,
+                    size: 25,
                   ),
                 ),
               ),
@@ -166,7 +160,7 @@ class _BodyState extends State<Body> {
                   child: const Icon(
                     Icons.mic,
                     color: kPrimaryColor,
-                    size: 20,
+                    size: 25,
                   ),
                 ),
               ),
@@ -199,14 +193,14 @@ class _BodyState extends State<Body> {
             height: height,
             child: Center(
               child: GestureDetector(
-                onTap: () {},
+                onTap: addMessageToChatRoom,
                 child: Container(
                   height: 35,
-                  width: 35,
+                  width: 40,
                   child: const Icon(
                     Icons.send_rounded,
                     color: kPrimaryColor,
-                    size: 20,
+                    size: 25,
                   ),
                 ),
               ),
@@ -278,9 +272,6 @@ class _BodyState extends State<Body> {
         'messageTextController', messageTextController));
     properties.add(DiagnosticsProperty<UserModel>('thisUser', thisUser));
     properties.add(DiagnosticsProperty<MessageServiceFireStore>(
-        'dataService', dataService));
-    properties.add(
-        IterableProperty<QueryDocumentSnapshot<Map<String, dynamic>>>(
-            'chats', chats));
+        'dataService', dataServiceFireStore));
   }
 }
