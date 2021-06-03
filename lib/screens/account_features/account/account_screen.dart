@@ -1,8 +1,13 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
+import 'package:we_trade/screens/account_features/account/local_widgets/pickers/user_image_picker.dart';
 import '../../../configs/constants/assets_paths/shared_assets_root.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 
 import '../../../configs/constants/color.dart';
 import '../../wish_list_features/wish_list/wish_list_screen.dart';
@@ -13,7 +18,7 @@ import '../trading_history/trading_history_screen.dart';
 import '../user_info/user_info_screen.dart';
 import './local_widgets/getter.dart';
 
-class AccountScreen extends StatelessWidget {
+class AccountScreen extends StatefulWidget {
   AccountScreen({
     Key? key,
   }) : super(key: key);
@@ -23,7 +28,27 @@ class AccountScreen extends StatelessWidget {
   static final localRefDatabase = FirebaseFirestore.instance
       .collection('quang')
       .doc('h0Z8Hn6XvbtMsP4bwa4P');
-  static const localUserID = 'HClKVm4TTdlx28xCKTxF'; //Duy Quang A
+  static const localUserID = 'HClKVm4TTdlx28xCKTxF';
+
+  @override
+  _AccountScreenState createState() => _AccountScreenState();
+}
+
+class _AccountScreenState extends State<AccountScreen> {
+  late File _userImageFile;
+
+  void _pickedImage(PickedFile image) {
+    _userImageFile = File(image.path);
+  }
+
+  // void _updateUserImage() {
+  //   final ref = FirebaseStorage.instance
+  //       .ref()
+  //       .child('user_image')
+  //       .child('${AccountScreen.localUserID}.jpg');
+
+  //   ref.putFile(_userImageFile);
+  // }
 
   Widget profileNavigationLabel(
       Widget topWid, Widget botWid, Function navigateToScreen) {
@@ -51,7 +76,6 @@ class AccountScreen extends StatelessWidget {
     );
   }
 
-  // ignore: avoid_field_initializers_in_const_classes
   final user = {
     'name': 'Tranf Duy qunag',
     'email': 'asdas@hail.com',
@@ -66,7 +90,7 @@ class AccountScreen extends StatelessWidget {
 
   Future<void> addUser() {
     // Call the user's CollectionReference to add a new user
-    return localRefDatabase
+    return AccountScreen.localRefDatabase
         .collection('users')
         .add(user)
         // ignore: avoid_print
@@ -111,16 +135,12 @@ class AccountScreen extends StatelessWidget {
                         ),
                         Row(
                           children: [
+                            // const UserImagePicker(),
                             Container(
                               margin: const EdgeInsets.only(right: 10),
                               height: 55,
                               width: 55,
-                              child: CircleAvatar(
-                                child: Image.asset(
-                                  '$chatScreenAvaFolder/user.png',
-                                  fit: BoxFit.cover,
-                                ),
-                              ),
+                              child: UserImagePicker(imagePickFn: _pickedImage),
                             ),
                             Column(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -133,7 +153,7 @@ class AccountScreen extends StatelessWidget {
                                     color: kPrimaryLightColor,
                                   ),
                                   child: GetUserName(
-                                    documentId: localUserID,
+                                    documentId: AccountScreen.localUserID,
                                     isStream: true,
                                   ),
                                 ),
@@ -186,7 +206,8 @@ class AccountScreen extends StatelessWidget {
                                       Icons.star_rate_rounded,
                                       color: Colors.yellow,
                                     ),
-                                    GetLegit(documentId: localUserID),
+                                    GetLegit(
+                                        documentId: AccountScreen.localUserID),
                                   ],
                                 ),
                                 const Text('Legit\n'),
@@ -205,7 +226,7 @@ class AccountScreen extends StatelessWidget {
                               ),
                               profileNavigationLabel(
                                 const GetNumberOfFollow(
-                                  documentId: localUserID,
+                                  documentId: AccountScreen.localUserID,
                                   typeOfReturnNumber:
                                       Follow_Screen_Name.following,
                                 ),
@@ -223,7 +244,7 @@ class AccountScreen extends StatelessWidget {
                                           screenName:
                                               Follow_Screen_Name.following,
                                         ),
-                                        'userID': localUserID
+                                        'userID': AccountScreen.localUserID
                                       },
                                     ),
                                     screen: const FollowScreen(),
@@ -235,7 +256,7 @@ class AccountScreen extends StatelessWidget {
                               ),
                               profileNavigationLabel(
                                 const GetNumberOfFollow(
-                                  documentId: localUserID,
+                                  documentId: AccountScreen.localUserID,
                                   typeOfReturnNumber:
                                       Follow_Screen_Name.follower,
                                 ),
@@ -253,7 +274,7 @@ class AccountScreen extends StatelessWidget {
                                           screenName:
                                               Follow_Screen_Name.follower,
                                         ),
-                                        'userID': localUserID
+                                        'userID': AccountScreen.localUserID
                                       },
                                     ),
                                     screen: const FollowScreen(),
@@ -325,7 +346,7 @@ class AccountScreen extends StatelessWidget {
                         settings: const RouteSettings(
                             name: TradingHistoryScreen.routeName,
                             arguments: {
-                              'userID': localUserID,
+                              'userID': AccountScreen.localUserID,
                             }),
                         screen: const TradingHistoryScreen(),
                         withNavBar: false,
@@ -382,7 +403,7 @@ class AccountScreen extends StatelessWidget {
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
     properties.add(DiagnosticsProperty<DocumentReference<Map<String, dynamic>>>(
-        'localRefDatabase', localRefDatabase));
+        'localRefDatabase', AccountScreen.localRefDatabase));
     properties.add(DiagnosticsProperty<Map<String, Object>>('user', user));
   }
 }
