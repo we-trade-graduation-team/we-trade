@@ -1,22 +1,21 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:line_icons/line_icons.dart';
-
-import '../../../../configs/constants/color.dart';
-import '../../../../models/chat/temp_class.dart';
+import '../../../../constants/app_colors.dart';
+import '../../../../models/ui/chat/temp_class.dart';
 
 class UserChoiceChip extends StatelessWidget {
   const UserChoiceChip({Key? key, required this.user, required this.press})
       : super(key: key);
 
-  final User user;
+  final UserTrang user;
   final VoidCallback press;
 
   @override
   Widget build(BuildContext context) {
     return Container(
       decoration: const BoxDecoration(
-        color: kPrimaryLightColor,
+        color: AppColors.kPrimaryLightColor,
         borderRadius: BorderRadius.all(Radius.circular(5)),
       ),
       child: Padding(
@@ -26,17 +25,17 @@ class UserChoiceChip extends StatelessWidget {
           children: [
             Text(
               user.name,
-              style: const TextStyle(
+              style: TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.w500,
-                  color: kPrimaryColor),
+                  color: Theme.of(context).primaryColor),
             ),
             const SizedBox(width: 5),
             GestureDetector(
               onTap: press,
-              child: const Icon(
+              child: Icon(
                 LineIcons.times,
-                color: kPrimaryColor,
+                color: Theme.of(context).primaryColor,
               ),
             )
           ],
@@ -48,7 +47,7 @@ class UserChoiceChip extends StatelessWidget {
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
-    properties.add(DiagnosticsProperty<User>('user', user));
     properties.add(ObjectFlagProperty<VoidCallback>.has('press', press));
+    properties.add(DiagnosticsProperty<UserTrang>('user', user));
   }
 }

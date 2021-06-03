@@ -1,9 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
-import '../../models/chat/temp_class.dart';
-import '../../screens/message_features/chat_screen/widgets/users_card.dart';
+import '../../models/ui/chat/temp_class.dart';
+import '../../ui/message_features/chat_screen/widgets/users_card.dart';
+import '../../ui/message_features/const_string/const_str.dart';
 
-import '../../screens/message_features/const_string/const_str.dart';
 import 'algolia_message_service.dart';
 
 class MessageServiceFireStore {
@@ -129,11 +129,11 @@ class MessageServiceFireStore {
         .snapshots();
   }
 
-  Future<List<User>> getAllUserInChatRoom(String chatRoomId) {
+  Future<List<UserTrang>> getAllUserInChatRoom(String chatRoomId) {
     return getAllUsersIdInChatRoom(chatRoomId).then((usersId) async {
       // final usersId =
       //     (value.data()![usersIdStr] as List<dynamic>).cast<String>().toList();
-      final users = <User>[];
+      final users = <UserTrang>[];
       for (final userid in usersId) {
         final user = await messageServiceAlgolia.getUserById(userid);
         users.add(user);

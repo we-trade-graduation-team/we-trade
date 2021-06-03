@@ -1,3 +1,5 @@
+import 'package:flutter/cupertino.dart';
+
 import '../review/temp_class.dart';
 
 class Chat {
@@ -38,8 +40,9 @@ class Chat {
   final String senderId;
 }
 
-class User {
-  const User({
+@immutable
+class UserTrang {
+  const UserTrang({
     required this.id,
     required this.name,
     required this.image,
@@ -53,7 +56,7 @@ class User {
   final String id;
 
   @override
-  bool operator ==(Object other) => other is User && other.name == name;
+  bool operator ==(Object other) => other is UserTrang && other.name == name;
 
   @override
   int get hashCode => name.hashCode;
@@ -71,7 +74,7 @@ class UserDetail {
       required this.userDescription,
       this.reviews});
 
-  final User user;
+  final UserTrang user;
   final String phone;
   final String email;
   final String address;
@@ -98,8 +101,8 @@ UserDetail userDetailTemp = UserDetail(
   reviews: reviewsData,
 );
 
-List<User> usersData = [
-  const User(
+List<UserTrang> usersData = [
+  const UserTrang(
     id: 'ajhdkjfhakhfkjahdlkfahl',
     email: 'trang2@gmail.com',
     image:
@@ -108,7 +111,7 @@ List<User> usersData = [
     isActive: false,
     activeAt: 'active 3 mins ago',
   ),
-  const User(
+  const UserTrang(
     id: '',
     email: 'trang3@gmail.com',
     image:
@@ -117,7 +120,7 @@ List<User> usersData = [
     isActive: true,
     activeAt: '',
   ),
-  const User(
+  const UserTrang(
     id: '',
     email: 'trang3@gmail.com',
     image: '',

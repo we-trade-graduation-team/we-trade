@@ -3,9 +3,9 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../../../configs/constants/color.dart';
-import '../../../../models/authentication/user_model.dart';
-import '../../../../models/shared_models/product_model.dart';
+import '../../../../constants/app_colors.dart';
+import '../../../../models/cloud_firestore/user/user.dart';
+import '../../../../models/ui/shared_models/product_model.dart';
 import '../../../../services/message/firestore_message_service.dart';
 import '../../const_string/const_str.dart';
 import '../../shared_widgets/offer_card.dart';
@@ -34,7 +34,7 @@ class Body extends StatefulWidget {
 class _BodyState extends State<Body> {
   MessageServiceFireStore dataServiceFireStore = MessageServiceFireStore();
   TextEditingController messageTextController = TextEditingController();
-  late UserModel thisUser = Provider.of<UserModel?>(context, listen: false)!;
+  late User thisUser = Provider.of<User?>(context, listen: false)!;
   // ignore: diagnostic_describe_all_properties
   late Stream<QuerySnapshot> chats;
 
@@ -69,9 +69,9 @@ class _BodyState extends State<Body> {
 
   Future<void> addMessageToChatRoom() async {
     if (messageTextController.text.isNotEmpty) {
-      final name = (thisUser.username ?? thisUser.email)!;
+      final name = (thisUser.displayName ?? thisUser.email)!;
       await dataServiceFireStore
-          .addMessageToChatRoom(thisUser.uid, 0, messageTextController.text,
+          .addMessageToChatRoom(thisUser.uid!, 0, messageTextController.text,
               widget.chatRoomId, name)
           .then((value) => setState(() {
                 messageTextController.text = '';
@@ -137,9 +137,9 @@ class _BodyState extends State<Body> {
                 child: Container(
                   height: 30,
                   width: 30,
-                  child: const Icon(
+                  child: Icon(
                     Icons.menu,
-                    color: kPrimaryColor,
+                    color: Theme.of(context).primaryColor,
                     size: 25,
                   ),
                 ),
@@ -157,9 +157,9 @@ class _BodyState extends State<Body> {
                 child: Container(
                   height: 30,
                   width: 30,
-                  child: const Icon(
+                  child: Icon(
                     Icons.mic,
-                    color: kPrimaryColor,
+                    color: Theme.of(context).primaryColor,
                     size: 25,
                   ),
                 ),
@@ -171,7 +171,7 @@ class _BodyState extends State<Body> {
             child: Container(
               constraints: const BoxConstraints(maxHeight: 14 * 6 + 20),
               decoration: BoxDecoration(
-                color: kBackGroundColor,
+                color: AppColors.kScreenBackgroundColor,
                 borderRadius: BorderRadius.circular(5),
               ),
               child: TextFormField(
@@ -197,9 +197,9 @@ class _BodyState extends State<Body> {
                 child: Container(
                   height: 35,
                   width: 40,
-                  child: const Icon(
+                  child: Icon(
                     Icons.send_rounded,
-                    color: kPrimaryColor,
+                    color: Theme.of(context).primaryColor,
                     size: 25,
                   ),
                 ),
@@ -233,10 +233,10 @@ class _BodyState extends State<Body> {
                 IconButton(
                   onPressed: () {},
                   padding: const EdgeInsets.all(0),
-                  icon: const Icon(
+                  icon: Icon(
                     Icons.photo_camera,
                     size: 45,
-                    color: kPrimaryColor,
+                    color: Theme.of(context).primaryColor,
                   ),
                 ),
                 const SizedBox(height: 0),
@@ -250,10 +250,10 @@ class _BodyState extends State<Body> {
                 IconButton(
                   onPressed: () {},
                   padding: const EdgeInsets.all(0),
-                  icon: const Icon(
+                  icon: Icon(
                     Icons.image,
                     size: 45,
-                    color: kPrimaryColor,
+                    color: Theme.of(context).primaryColor,
                   ),
                 ),
                 const Text('Images'),
@@ -270,8 +270,8 @@ class _BodyState extends State<Body> {
     super.debugFillProperties(properties);
     properties.add(DiagnosticsProperty<TextEditingController>(
         'messageTextController', messageTextController));
-    properties.add(DiagnosticsProperty<UserModel>('thisUser', thisUser));
     properties.add(DiagnosticsProperty<MessageServiceFireStore>(
         'dataService', dataServiceFireStore));
+    properties.add(DiagnosticsProperty<User>('thisUser', thisUser));
   }
 }

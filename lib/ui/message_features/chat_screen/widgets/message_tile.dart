@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import '../../../../configs/constants/color.dart';
+import '../../../../constants/app_colors.dart';
 import '../../../../widgets/custom_user_avatar.dart';
 
 class MessageTile extends StatefulWidget {
@@ -74,14 +74,15 @@ class _MessageTileState extends State<MessageTile> {
                           borderRadius:
                               const BorderRadius.all(Radius.circular(15)),
                           color: widget.sendByMe
-                              ? kPrimaryColor
-                              : kBackGroundColor,
+                              ? Theme.of(context).primaryColor
+                              : AppColors.kScreenBackgroundColor,
                         ),
                         child: Text(widget.message,
                             textAlign: TextAlign.start,
                             style: TextStyle(
-                                color:
-                                    widget.sendByMe ? Colors.white : kTextColor,
+                                color: widget.sendByMe
+                                    ? Colors.white
+                                    : AppColors.kTextColor,
                                 fontSize: 16,
                                 fontFamily: 'OverpassRegular',
                                 fontWeight: FontWeight.w300)),

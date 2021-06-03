@@ -1,9 +1,9 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
-import 'package:we_trade/constants/app_colors.dart';
-import 'package:we_trade/constants/app_dimens.dart';
-import 'package:we_trade/models/ui/review/temp_class.dart';
+import '../constants/app_colors.dart';
+import '../constants/app_dimens.dart';
+import '../models/ui/review/temp_class.dart';
 
 import 'custom_user_avatar.dart';
 
@@ -32,13 +32,8 @@ class ReviewCard extends StatelessWidget {
             children: [
               Container(
                   margin: const EdgeInsets.fromLTRB(0, 0, 20, 0),
-                  child: CustomUserAvatar(image: review.user.image, radius: 20)
-                  //ChatCard.buildAvatarChat(review.user.image, 10),
-                  // CircleAvatar(
-                  //   radius: 100,
-                  //   backgroundImage: NetworkImage(review.user.image),
-                  // ),
-                  ),
+                  child:
+                      CustomUserAvatar(image: review.user.image, radius: 20)),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [

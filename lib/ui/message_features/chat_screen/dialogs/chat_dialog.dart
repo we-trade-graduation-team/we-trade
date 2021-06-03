@@ -2,9 +2,9 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:line_icons/line_icons.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
-import 'package:we_trade/constants/app_colors.dart';
-import 'package:we_trade/constants/app_dimens.dart';
-import 'package:we_trade/utils/routes/routes.dart';
+import '../../../../constants/app_colors.dart';
+import '../../../../constants/app_dimens.dart';
+import '../../../../utils/routes/routes.dart';
 
 import '../../../shared_features/other_user_profile/other_user_profile_screen.dart';
 import '../../../shared_features/report/report_screen.dart';

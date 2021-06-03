@@ -18,10 +18,7 @@ import '../../ui/home_features/notification_screen/detailed_notification_screen.
 import '../../ui/home_features/notification_screen/notification_screen.dart';
 import '../../ui/home_features/post_details_screen/post_details_screen.dart';
 import '../../ui/home_features/searching_screen/search_screen.dart';
-import '../../ui/message_features/chat_screen/add_chat/add_chat_screen.dart';
 import '../../ui/message_features/chat_screen/chat_room/chat_room.dart';
-import '../../ui/message_features/chat_screen/group_chat/chat_screen/group_chat_screen.dart';
-import '../../ui/message_features/chat_screen/personal_chat/personal_chat_screen.dart';
 import '../../ui/message_features/match_post/match_post_screen.dart';
 import '../../ui/message_features/offer_screens/make_offer_screen.dart';
 import '../../ui/message_features/offer_screens/offer_detail_screen.dart';
@@ -113,10 +110,7 @@ class Routes {
   };
 
   static final Map<String, WidgetBuilder> messageFeaturesRoutes = {
-    addChatScreenRouteName: (_) => const AddChatScreen(),
-    groupChatScreenRouteName: (_) => const GroupChatScreen(),
     chatRoomScreenRouteName: (_) => ChatRoomScreen(chat: Chat.nullChat()),
-    personChatScreenRouteName: (_) => const PersonalChatScreen(),
     matchPostsScreenRouteName: (_) => const MatchPostsScreen(),
     makeOfferScreenRouteName: (_) => const MakeOfferScreen(),
     offerDetailScreenRouteName: (_) => const OfferDetailScreen(),

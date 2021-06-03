@@ -1,6 +1,6 @@
 import 'package:algolia/algolia.dart';
-import '../../models/chat/temp_class.dart';
-import '../../screens/message_features/const_string/const_str.dart';
+import '../../models/ui/chat/temp_class.dart';
+import '../../ui/message_features/const_string/const_str.dart';
 import '../algolia/algolia.dart';
 
 class MessageServiceAlgolia {
@@ -14,13 +14,13 @@ class MessageServiceAlgolia {
         .then((result) => result.hits);
   }
 
-  Future<User> getUserById(String id) async {
+  Future<UserTrang> getUserById(String id) async {
     return algolia.instance
         .index(trangUsers)
         .object(id)
         .getObject()
         .then((value) {
-      final user = User(
+      final user = UserTrang(
           id: id,
           name: value.data[nameStr].toString(),
           image: value.data[imageStr].toString(),

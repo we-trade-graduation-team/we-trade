@@ -4,9 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:line_icons/line_icons.dart';
 import 'package:provider/provider.dart';
 
-import '../../../../configs/constants/color.dart';
-import '../../../../models/authentication/user_model.dart';
-import '../../../../models/chat/temp_class.dart';
+import '../../../../constants/app_colors.dart';
+import '../../../../models/cloud_firestore/user/user.dart';
+import '../../../../models/ui/chat/temp_class.dart';
 import '../../../../services/message/firestore_message_service.dart';
 import '../../const_string/const_str.dart';
 import '../dialogs/chat_dialog.dart';
@@ -40,7 +40,7 @@ class ChatRoomScreen extends StatefulWidget {
 
 class _ChatRoomScreenState extends State<ChatRoomScreen> {
   MessageServiceFireStore dataServiceFireStore = MessageServiceFireStore();
-  late UserModel thisUser = Provider.of<UserModel?>(context, listen: false)!;
+  late User thisUser = Provider.of<User?>(context, listen: false)!;
   final TextEditingController newChatRoomNameController =
       TextEditingController();
   late List<String> usersImage = [];
@@ -56,7 +56,7 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
     } else {
       setState(() {
         final mapData =
-            UsersCard.getImagesAndChatRoomName(widget.chat, thisUser.uid);
+            UsersCard.getImagesAndChatRoomName(widget.chat, thisUser.uid!);
         chatRoomName = mapData[chatRoomNameStr].toString();
         usersImage =
             (mapData[usersImageStr] as List<dynamic>).cast<String>().toList();
@@ -143,7 +143,7 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
                 },
                 child: const Text(
                   'Hủy',
-                  style: TextStyle(color: kTextColor),
+                  style: TextStyle(color: AppColors.kTextColor),
                 ),
               ),
               TextButton(
@@ -158,9 +158,9 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
                   }
                   Navigator.pop(context);
                 },
-                child: const Text(
+                child: Text(
                   'OK',
-                  style: TextStyle(color: kPrimaryColor),
+                  style: TextStyle(color: Theme.of(context).primaryColor),
                 ),
               ),
             ],
@@ -196,12 +196,12 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
     super.debugFillProperties(properties);
     properties.add(DiagnosticsProperty<MessageServiceFireStore>(
         'dataService', dataServiceFireStore));
-    properties.add(DiagnosticsProperty<UserModel>('thisUser', thisUser));
     properties.add(IterableProperty<String>('usersImage', usersImage));
     properties.add(StringProperty('chatRoomName', chatRoomName));
     properties.add(DiagnosticsProperty<TextEditingController>(
         'newChatRoomNameController', newChatRoomNameController));
     properties
         .add(DiagnosticsProperty<Map<String, String>>('user_ava', userAndAva));
+    properties.add(DiagnosticsProperty<User>('thisUser', thisUser));
   }
 }

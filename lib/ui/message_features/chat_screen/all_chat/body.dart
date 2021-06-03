@@ -3,11 +3,10 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
-import 'package:we_trade/models/cloud_firestore/user/user.dart';
-import 'package:we_trade/models/ui/chat/temp_class.dart';
+import '../../../../constants/app_colors.dart';
+import '../../../../models/cloud_firestore/user/user.dart';
+import '../../../../models/ui/chat/temp_class.dart';
 
-import '../../../../configs/constants/color.dart';
-import '../../../../models/authentication/user_model.dart';
 import '../../../../services/message/algolia_message_service.dart';
 import '../../../../services/message/firestore_message_service.dart';
 import '../../const_string/const_str.dart';
@@ -61,13 +60,13 @@ class _BodyState extends State<Body> {
                 itemCount: snapshot.data!.docs.length,
                 shrinkWrap: true,
                 itemBuilder: (context, index) {
-                  final Chat chat = dataServiceFireStore.createChatFromData(
+                  final chat = dataServiceFireStore.createChatFromData(
                       snapshot.data!.docs[index].data() as Map<String, dynamic>,
                       snapshot.data!.docs[index].id);
                   if (isInSearchList(chat)) {
                     return ChatCard(
                       chat: chat,
-                      isSendByMe: chat.senderId == thisUser.uid,
+                      isSendByMe: chat.senderId == thisUser.uid!,
                       typeFunction: navigateToChatRoomStr,
                     );
                   } else {
@@ -82,7 +81,7 @@ class _BodyState extends State<Body> {
   @override
   void initState() {
     dataServiceFireStore
-        .getAllChatRooms2(thisUser.uid)
+        .getAllChatRooms2(thisUser.uid!)
         .then((value) => chatRooms2 = value)
         .whenComplete(() => setState(() {
               isLoading = false;
@@ -154,7 +153,7 @@ class _BodyState extends State<Body> {
               ),
               style: const TextStyle(
                 fontSize: 14,
-                color: kTextLightColor,
+                color: AppColors.kTextLightColor,
               ),
             ),
           ),
@@ -166,9 +165,9 @@ class _BodyState extends State<Body> {
             },
             child: Container(
               margin: const EdgeInsets.fromLTRB(10, 0, 20, 0),
-              child: const Icon(
+              child: Icon(
                 Icons.search,
-                color: kPrimaryColor,
+                color: Theme.of(context).primaryColor,
               ),
             ),
           ),
@@ -189,5 +188,6 @@ class _BodyState extends State<Body> {
     properties.add(DiagnosticsProperty<bool>('isLoading', isLoading));
     properties.add(DiagnosticsProperty<bool>('isSearching', isSearching));
     properties.add(StringProperty('queryStr', queryStr));
+    properties.add(DiagnosticsProperty<User>('thisUser', thisUser));
   }
 }

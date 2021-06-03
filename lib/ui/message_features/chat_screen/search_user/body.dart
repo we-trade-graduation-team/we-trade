@@ -5,9 +5,9 @@ import 'package:lottie/lottie.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 import 'package:provider/provider.dart';
 
-import '../../../../configs/constants/color.dart';
-import '../../../../models/authentication/user_model.dart';
-import '../../../../models/chat/temp_class.dart';
+import '../../../../constants/app_colors.dart';
+import '../../../../models/cloud_firestore/user/user.dart';
+import '../../../../models/ui/chat/temp_class.dart';
 import '../../../../services/message/algolia_message_service.dart';
 import '../../../../services/message/firestore_message_service.dart';
 import '../../../../widgets/custom_material_button.dart';
@@ -42,13 +42,13 @@ class _BodyState extends State<Body> {
   MessageServiceFireStore dataServiceFireStore = MessageServiceFireStore();
   MessageServiceAlgolia dataServiceAlgolia = MessageServiceAlgolia();
   TextEditingController searchTextController = TextEditingController();
-  late UserModel thisUser;
+  late User thisUser;
   late bool isLoading = false;
 
   late List<AlgoliaObjectSnapshot> querySnapshot = [];
-  late List<User> choosedUsers = [];
+  late List<UserTrang> choosedUsers = [];
 
-  void addUserToList(User user) {
+  void addUserToList(UserTrang user) {
     setState(() {
       if (!choosedUsers.contains(user) && !widget.usersId.contains(user.id)) {
         choosedUsers.add(user);
@@ -128,9 +128,9 @@ class _BodyState extends State<Body> {
   }
 
   Future<void> startNewChatRoom(String chatRoomId) async {
-    final name = thisUser.username ?? thisUser.email;
+    final name = thisUser.displayName ?? thisUser.email;
     await dataServiceFireStore.addMessageToChatRoom(
-        thisUser.uid, 0, 'hi, cùng chat nào', chatRoomId, name!);
+        thisUser.uid!, 0, 'hi, cùng chat nào', chatRoomId, name!);
   }
 
   void navigateToChatRoom({required Chat chatRoom, required bool chatGroup}) {
@@ -149,13 +149,13 @@ class _BodyState extends State<Body> {
     );
   }
 
-  String createChatRoomId(List<User> users) {
+  String createChatRoomId(List<UserTrang> users) {
     final chatRoomId = StringBuffer();
     final usersId = <String>[];
     for (final user in users) {
       usersId.add(user.id);
     }
-    usersId.add(thisUser.uid);
+    usersId.add(thisUser.uid!);
     usersId.sort();
     usersId.forEach(chatRoomId.write);
     return chatRoomId.toString();
@@ -174,10 +174,10 @@ class _BodyState extends State<Body> {
       usersAva.add(user.image);
       usersEmail.add(user.email);
     }
-    usersId.add(thisUser.uid);
-    usersName
-        .add(thisUser.username == null ? thisUser.email! : thisUser.username!);
-    usersAva.add(thisUser.image == null ? '' : thisUser.image!);
+    usersId.add(thisUser.uid!);
+    usersName.add(
+        thisUser.displayName == null ? thisUser.email! : thisUser.displayName!);
+    usersAva.add(thisUser.photoURL == null ? '' : thisUser.photoURL!);
     usersEmail.add(thisUser.email == null ? '' : thisUser.email!);
 
     if (choosedUsers.length > 1) {
@@ -210,7 +210,7 @@ class _BodyState extends State<Body> {
     }
 
     final myName =
-        thisUser.username == null ? thisUser.email! : thisUser.username!;
+        thisUser.displayName == null ? thisUser.email! : thisUser.displayName!;
 
     // ignore: unawaited_futures
     dataServiceFireStore
@@ -265,7 +265,7 @@ class _BodyState extends State<Body> {
                     itemCount: querySnapshot.length,
                     itemBuilder: (context, index) {
                       final object = querySnapshot[index];
-                      final user = User(
+                      final user = UserTrang(
                           id: object.objectID,
                           name: object.data[nameStr].toString(),
                           image: object.data[imageStr].toString(),
@@ -311,7 +311,7 @@ class _BodyState extends State<Body> {
   @override
   void initState() {
     super.initState();
-    thisUser = Provider.of<UserModel?>(context, listen: false)!;
+    thisUser = Provider.of<User?>(context, listen: false)!;
   }
 
   @override
@@ -353,7 +353,7 @@ class _BodyState extends State<Body> {
                     ),
                     style: const TextStyle(
                       fontSize: 14,
-                      color: kTextLightColor,
+                      color: AppColors.kTextLightColor,
                     ),
                   ),
                 ),
@@ -361,9 +361,9 @@ class _BodyState extends State<Body> {
                   onTap: initiateSearch,
                   child: Container(
                     margin: const EdgeInsets.fromLTRB(10, 0, 20, 0),
-                    child: const Icon(
+                    child: Icon(
                       Icons.search,
-                      color: kPrimaryColor,
+                      color: Theme.of(context).primaryColor,
                     ),
                   ),
                 )
@@ -395,10 +395,10 @@ class _BodyState extends State<Body> {
         'searchText', searchTextController));
     properties.add(IterableProperty<AlgoliaObjectSnapshot>(
         'querySnapshot', querySnapshot));
-    properties.add(IterableProperty<User>('choosedUsers', choosedUsers));
-    properties.add(DiagnosticsProperty<UserModel>('thisUser', thisUser));
     properties.add(DiagnosticsProperty<MessageServiceAlgolia>(
         'dataServiceAlgolia', dataServiceAlgolia));
     properties.add(DiagnosticsProperty<bool>('isLoading', isLoading));
+    properties.add(DiagnosticsProperty<User>('thisUser', thisUser));
+    properties.add(IterableProperty<UserTrang>('choosedUsers', choosedUsers));
   }
 }

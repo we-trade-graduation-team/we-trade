@@ -344,6 +344,17 @@ class _OtherUserProfileScreenState extends State<OtherUserProfileScreen> {
       targetContext: context,
     );
   }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(IterableProperty<String>('tabData', tabData));
+    properties.add(DiagnosticsProperty<GlobalKey<State<StatefulWidget>>>(
+        'mainInfoKey', mainInfoKey));
+    properties.add(DiagnosticsProperty<Size>(
+        'flexibleSpaceBarSize', flexibleSpaceBarSize));
+    properties.add(DiagnosticsProperty<bool>('visible', visible));
+  }
 }
 
 class MyDelegate extends SliverPersistentHeaderDelegate {

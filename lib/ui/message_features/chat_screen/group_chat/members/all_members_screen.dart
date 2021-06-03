@@ -1,12 +1,13 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 import 'package:provider/provider.dart';
-import 'package:we_trade/utils/routes/routes.dart';
+import '../../../../../models/cloud_firestore/user/user.dart';
 
+import '../../../../../models/ui/chat/temp_class.dart';
 import '../../../../../services/message/firestore_message_service.dart';
+import '../../../../../utils/routes/routes.dart';
 import '../../../../shared_features/other_user_profile/other_user_profile_screen.dart';
 import '../../../const_string/const_str.dart';
 import '../../search_user/search_user_screen.dart';
@@ -28,7 +29,7 @@ class AllMemberScreen extends StatefulWidget {
 
 class _AllMemberScreenState extends State<AllMemberScreen> {
   final dataServiceFireStore = MessageServiceFireStore();
-  List<User> users = <User>[];
+  List<UserTrang> users = <UserTrang>[];
 
   @override
   void initState() {
@@ -61,7 +62,7 @@ class _AllMemberScreenState extends State<AllMemberScreen> {
               for (final user in users) {
                 usersId.add(user.id);
               }
-              usersId.add(thisUser.uid);
+              usersId.add(thisUser.uid!);
 
               pushNewScreenWithRouteSettings<void>(
                 context,
@@ -125,9 +126,9 @@ class _AllMemberScreenState extends State<AllMemberScreen> {
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
-    properties.add(IterableProperty<User>('users', users));
     properties.add(DiagnosticsProperty<MessageServiceFireStore>(
         'dataServiceFireStore', dataServiceFireStore));
+    properties.add(IterableProperty<UserTrang>('users', users));
   }
 }
 

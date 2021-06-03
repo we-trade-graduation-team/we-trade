@@ -23,7 +23,6 @@ dependencies:
   connectivity: ^3.0.3
   cupertino_icons: ^1.0.2
   date_format: ^2.0.2
-  device_preview: ^0.7.1
   dots_indicator: ^2.0.0
   eva_icons_flutter: ^3.0.0
   expand_widget: ^2.0.0

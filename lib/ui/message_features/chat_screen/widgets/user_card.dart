@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:we_trade/models/ui/chat/temp_class.dart';
+import '../../../../constants/app_colors.dart';
+import '../../../../models/ui/chat/temp_class.dart';
 
 import '../../../../widgets/custom_user_avatar.dart';
 
@@ -12,7 +13,7 @@ class UserCard extends StatelessWidget {
       this.showActiveAt = false})
       : super(key: key);
 
-  final User user;
+  final UserTrang user;
   final VoidCallback press;
   final bool showActiveAt;
 
@@ -62,7 +63,7 @@ class UserCard extends StatelessWidget {
                         style: const TextStyle(
                           fontSize: 12,
                           fontWeight: FontWeight.w200,
-                          color: kTextColor,
+                          color: AppColors.kTextColor,
                         ),
                       ),
                     ),
@@ -78,7 +79,7 @@ class UserCard extends StatelessWidget {
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
-    properties.add(DiagnosticsProperty<User>('user', user));
+    properties.add(DiagnosticsProperty<UserTrang>('user', user));
     properties.add(ObjectFlagProperty<VoidCallback>.has('press', press));
     properties.add(DiagnosticsProperty<bool>('showActiveAt', showActiveAt));
   }

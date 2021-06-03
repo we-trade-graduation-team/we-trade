@@ -3,18 +3,18 @@ import 'package:flutter/material.dart';
 import 'package:line_icons/line_icons.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 import 'package:provider/provider.dart';
-import 'package:we_trade/constants/app_colors.dart';
-import 'package:we_trade/constants/app_dimens.dart';
-import 'package:we_trade/models/cloud_firestore/user/user.dart';
-import 'package:we_trade/utils/routes/routes.dart';
 
+import '../../../../constants/app_colors.dart';
+import '../../../../constants/app_dimens.dart';
+import '../../../../models/cloud_firestore/user/user.dart';
 import '../../../../services/message/firestore_message_service.dart';
+import '../../../../utils/routes/routes.dart';
 import '../../../shared_features/report/report_screen.dart';
 import '../group_chat/members/all_members_screen.dart';
 import '../widgets/users_card.dart';
 
 class GroupChatDialog extends StatelessWidget {
-  GroupChatDialog({
+  const GroupChatDialog({
     Key? key,
     required this.parentContext,
     required this.chatRoomId,
@@ -53,7 +53,7 @@ class GroupChatDialog extends StatelessWidget {
                       onTap: () {
                         pushNewScreenWithRouteSettings<void>(
                           parentContext,
-                          settings: RouteSettings(
+                          settings: const RouteSettings(
                             name: Routes.allMemberScreenRouteName,
                           ),
                           screen: AllMemberScreen(chatRoomId: chatRoomId),

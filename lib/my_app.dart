@@ -1,5 +1,4 @@
 import 'package:bot_toast/bot_toast.dart';
-import 'package:device_preview/device_preview.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flash/flash.dart';
 import 'package:flutter/foundation.dart';
@@ -77,8 +76,8 @@ class _MyAppState extends State<MyApp> {
   Widget _somethingWentWrong() {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      locale: DevicePreview.locale(context), // Add the locale here
-      builder: DevicePreview.appBuilder, // Add the builder here
+      // locale: DevicePreview.locale(context), // Add the locale here
+      // builder: DevicePreview.appBuilder, // Add the builder here
       home: const Scaffold(
         backgroundColor: Colors.white,
         body: Center(
@@ -107,7 +106,7 @@ class _MyAppState extends State<MyApp> {
           builder: (context, _) {
             var child = _!;
             final navigatorKey = child.key as GlobalKey<NavigatorState>;
-            child = DevicePreview.appBuilder(context, _);
+            //child = DevicePreview.appBuilder(context, _);
             final theme = Theme.of(context);
             final isThemeDark = theme.brightness == Brightness.dark;
             // Wrap with toast.
@@ -127,7 +126,7 @@ class _MyAppState extends State<MyApp> {
           },
           navigatorObservers: [BotToastNavigatorObserver()],
           // locale: DevicePreview.locale(context),
-          locale: _languageProvider.appLocale,
+          // locale: _languageProvider.appLocale,
           //List of all supported locales
           supportedLocales: const [
             Locale('en', 'US'),
@@ -158,9 +157,9 @@ class _MyAppState extends State<MyApp> {
           },
           title: _flavor.toString(),
           routes: Routes.authenticationFeaturesRoutes,
-          // theme: themeData(),
-          theme: AppThemes.lightTheme,
-          darkTheme: AppThemes.darkTheme,
+          theme: themeData(),
+          // theme: AppThemes.lightTheme,
+          // darkTheme: AppThemes.darkTheme,
           themeMode:
               _themeProvider.isDarkModeOn ? ThemeMode.dark : ThemeMode.light,
           home: user != null ? const MainMenu() : const Authentication(),
@@ -188,8 +187,8 @@ class _MyAppState extends State<MyApp> {
         'https://assets9.lottiefiles.com/packages/lf20_l2kZFi.json';
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      locale: DevicePreview.locale(context), // Add the locale here
-      builder: DevicePreview.appBuilder, // Add the builder here
+      // locale: DevicePreview.locale(context), // Add the locale here
+      // builder: DevicePreview.appBuilder, // Add the builder here
       home: Scaffold(
         body: LayoutBuilder(
           builder: (_, constraints) => ListView(
