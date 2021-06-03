@@ -128,7 +128,9 @@ class _BodyState extends State<Body> {
   }
 
   Future<void> startNewChatRoom(String chatRoomId) async {
-    final name = thisUser.displayName ?? thisUser.email;
+    final name = (thisUser.displayName!.isNotEmpty
+        ? thisUser.displayName
+        : thisUser.email)!;
     await dataServiceFireStore.addMessageToChatRoom(
         thisUser.uid!, 0, 'hi, cùng chat nào', chatRoomId, name!);
   }
@@ -175,8 +177,10 @@ class _BodyState extends State<Body> {
       usersEmail.add(user.email);
     }
     usersId.add(thisUser.uid!);
-    usersName.add(
-        thisUser.displayName == null ? thisUser.email! : thisUser.displayName!);
+
+    usersName.add((thisUser.displayName!.isNotEmpty
+        ? thisUser.displayName
+        : thisUser.email)!);
     usersAva.add(thisUser.photoURL == null ? '' : thisUser.photoURL!);
     usersEmail.add(thisUser.email == null ? '' : thisUser.email!);
 
@@ -209,8 +213,9 @@ class _BodyState extends State<Body> {
       usersEmail.add(user.email);
     }
 
-    final myName =
-        thisUser.displayName == null ? thisUser.email! : thisUser.displayName!;
+    final myName = (thisUser.displayName!.isNotEmpty
+        ? thisUser.displayName
+        : thisUser.email)!;
 
     // ignore: unawaited_futures
     dataServiceFireStore

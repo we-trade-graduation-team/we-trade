@@ -69,7 +69,9 @@ class _BodyState extends State<Body> {
 
   Future<void> addMessageToChatRoom() async {
     if (messageTextController.text.isNotEmpty) {
-      final name = (thisUser.displayName ?? thisUser.email)!;
+      final name = (thisUser.displayName!.isNotEmpty
+          ? thisUser.displayName
+          : thisUser.email)!;
       await dataServiceFireStore
           .addMessageToChatRoom(thisUser.uid!, 0, messageTextController.text,
               widget.chatRoomId, name)
