@@ -3,11 +3,10 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:line_icons/line_icons.dart';
 import 'package:provider/provider.dart';
-import 'package:we_trade/models/chat/temp_class.dart';
-import '../../../../configs/constants/color.dart';
 
+import '../../../../configs/constants/color.dart';
 import '../../../../models/authentication/user_model.dart';
-import '../../../../services/message/algolia_message_service.dart';
+import '../../../../models/chat/temp_class.dart';
 import '../../../../services/message/firestore_message_service.dart';
 import '../../const_string/const_str.dart';
 import '../dialogs/chat_dialog.dart';
