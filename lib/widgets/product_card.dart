@@ -19,7 +19,7 @@ class ProductCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
+    // final size = MediaQuery.of(context).size;
     return GestureDetector(
       onTap: () => pushNewScreenWithRouteSettings<void>(
         context,
@@ -33,7 +33,7 @@ class ProductCard extends StatelessWidget {
       ),
       child: Container(
         // color: Colors.blue,
-        width: size.width * 0.4,
+        width: 160,
         height: 260,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,

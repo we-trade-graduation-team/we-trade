@@ -1,34 +1,49 @@
-import '../../configs/constants/assets_paths/shared_assets_root.dart';
+import 'package:flutter/material.dart';
 
 import '../review/temp_class.dart';
 
 class Chat {
   Chat({
-    required this.id,
-    required this.users,
+    required this.usersId,
+    required this.names,
+    required this.images,
+    required this.chatRoomId,
+    required this.chatRoomName,
     required this.lastMessage,
-    this.lastMessageByUser,
-    this.chatName,
+    required this.senderName,
+    required this.senderId,
     required this.time,
   });
 
-  int id;
-  final String lastMessage, time;
-  User? lastMessageByUser;
-  String? chatName;
-  final List<User> users;
+  final String chatRoomId;
+  final List<String> images, usersId, names;
+  final String chatRoomName;
+  final String time;
+  final String lastMessage;
+  final String senderName;
+  final String senderId;
 }
 
+@immutable
 class User {
-  User({
+  const User({
+    required this.id,
     required this.name,
     required this.image,
     required this.isActive,
     required this.activeAt,
+    required this.email,
   });
 
-  final String name, image, activeAt;
+  final String name, image, activeAt, email;
   final bool isActive;
+  final String id;
+
+  @override
+  bool operator ==(Object other) => other is User && other.name == name;
+
+  @override
+  int get hashCode => name.hashCode;
 }
 
 class UserDetail {
@@ -71,152 +86,30 @@ UserDetail userDetailTemp = UserDetail(
 );
 
 List<User> usersData = [
-  User(
-    image: '$chatScreenAvaFolder/user.png',
+  const User(
+    id: 'ajhdkjfhakhfkjahdlkfahl',
+    email: 'trang2@gmail.com',
+    image:
+        'https://media1.popsugar-assets.com/files/thumbor/cv5OP-R3W-eyDn0GcGLLCJJWLmg/fit-in/728xorig/filters:format_auto-!!-:strip_icc-!!-/2019/06/19/950/n/1922153/1e5067d35d0aadb3e2ecf9.02908622_/i/Best-Celebrity-Makeup-Artists.jpg',
     name: 'Jenny Wilson',
     isActive: false,
     activeAt: 'active 3 mins ago',
   ),
-  User(
-    image: '$chatScreenAvaFolder/user_2.png',
+  const User(
+    id: '',
+    email: 'trang3@gmail.com',
+    image:
+        'https://www.usmagazine.com/wp-content/uploads/2020/01/Kobe-Bryant-Dead-Shocking-Celebrity-Deaths.jpg?quality=86&strip=all',
     name: 'Esther Howard',
     isActive: true,
     activeAt: '',
   ),
-  User(
-    image: '$chatScreenAvaFolder/user_3.png',
+  const User(
+    id: '',
+    email: 'trang3@gmail.com',
+    image: '',
     name: 'Ralph Edwards',
     isActive: true,
     activeAt: '',
-  ),
-  User(
-    image: '$chatScreenAvaFolder/user_4.png',
-    name: 'Jacob Jones',
-    isActive: false,
-    activeAt: 'active 3 mins ago',
-  ),
-  User(
-    name: 'Albert Flores',
-    image: '$chatScreenAvaFolder/user_5.png',
-    isActive: false,
-    activeAt: 'active 3 mins ago',
-  ),
-  User(
-    image: '$chatScreenAvaFolder/user.png',
-    name: 'Jenny Wilson',
-    isActive: true,
-    activeAt: '',
-  ),
-  User(
-    image: '$chatScreenAvaFolder/user_2.png',
-    name: 'Esther Howard',
-    isActive: true,
-    activeAt: '',
-  ),
-  User(
-    image: '$chatScreenAvaFolder/user_3.png',
-    name: 'Ralph Edwards',
-    isActive: false,
-    activeAt: 'active 3 mins ago',
-  ),
-  User(
-    image: '$chatScreenAvaFolder/user_4.png',
-    name: 'Jacob Jones',
-    isActive: true,
-    activeAt: '',
-  ),
-  User(
-    name: 'Albert Flores',
-    image: '$chatScreenAvaFolder/user_5.png',
-    isActive: false,
-    activeAt: 'active 3 mins ago',
-  ),
-];
-
-List<Chat> chatsData = [
-  Chat(
-    id: 0,
-    users: [usersData[0], usersData[2]],
-    lastMessage: 'Hope you are doing well...',
-    lastMessageByUser: usersData[0],
-    chatName: 'Group săn hàng',
-    time: '3m ago',
-  ),
-  Chat(
-    id: 1,
-    users: [usersData[1]],
-    lastMessage: 'Hello Abdullah! I am...',
-    time: '8m ago',
-  ),
-  Chat(
-    id: 2,
-    users: [usersData[2]],
-    lastMessage: 'Do you have update...',
-    time: '5d ago',
-  ),
-  Chat(
-    id: 3,
-    users: [usersData[3]],
-    lastMessage: 'You’re welcome :)',
-    lastMessageByUser: usersData[3],
-    time: '5d ago',
-  ),
-  Chat(
-    id: 4,
-    users: [usersData[4]],
-    lastMessage: 'Thanks',
-    time: '6d ago',
-  ),
-  Chat(
-    id: 5,
-    users: [usersData[8], usersData[9], usersData[4]],
-    lastMessage: 'Hope you are doing well...',
-    lastMessageByUser: usersData[5],
-    time: '3m ago',
-  ),
-  Chat(
-    id: 6,
-    users: [usersData[1], usersData[2], usersData[3]],
-    lastMessage: 'Hello Abdullah! I am...',
-    chatName: 'Sample Group Chat',
-    time: '8m ago',
-  ),
-  Chat(
-    id: 7,
-    users: [usersData[2]],
-    lastMessage: 'Do you have update...',
-    time: '5d ago',
-  ),
-  Chat(
-    id: 8,
-    users: [usersData[3]],
-    lastMessage: 'Hope you are doing well...',
-    lastMessageByUser: usersData[3],
-    time: '3m ago',
-  ),
-  Chat(
-    id: 9,
-    users: [usersData[4]],
-    lastMessage: 'Hello Abdullah! I am...',
-    lastMessageByUser: usersData[4],
-    time: '8m ago',
-  ),
-  Chat(
-    id: 10,
-    users: [usersData[0]],
-    lastMessage: 'Do you have update...',
-    time: '5d ago',
-  ),
-  Chat(
-    id: 11,
-    users: [usersData[1]],
-    lastMessage: 'You’re welcome :)',
-    time: '5d ago',
-  ),
-  Chat(
-    id: 12,
-    users: [usersData[2]],
-    lastMessage: 'Thanks',
-    time: '6d ago',
   ),
 ];

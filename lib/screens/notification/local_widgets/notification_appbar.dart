@@ -7,28 +7,32 @@ class NotificationAppBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
-    return Table(children: <TableRow>[
-      TableRow(children: <Widget>[
-        SizedBox(
-          height: size.height * 0.05,
-        )
-      ]),
-      TableRow(
-        children: <Widget>[
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              IconButton(
-                icon: const Icon(
-                  LineIcons.angleLeft,
-                  color: Colors.grey,
+    return Table(
+      children: [
+        TableRow(
+          children: [
+            SizedBox(
+              height: size.height * 0.05,
+            )
+          ],
+        ),
+        TableRow(
+          children: [
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                IconButton(
+                  icon: const Icon(
+                    LineIcons.angleLeft,
+                    color: Colors.grey,
+                  ),
+                  onPressed: () => Navigator.pop(context),
                 ),
-                onPressed: () => Navigator.pop(context),
-              ),
-            ],
-          ),
-        ],
-      ),
-    ]);
+              ],
+            ),
+          ],
+        ),
+      ],
+    );
   }
 }

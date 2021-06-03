@@ -1,15 +1,17 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+
 import '../../../../configs/constants/color.dart';
 import '../../../../models/chat/temp_class.dart';
+import '../../../../widgets/custom_user_avatar.dart';
 
 class UserCard extends StatelessWidget {
-  const UserCard({
-    Key? key,
-    required this.user,
-    required this.press,
-    this.showActiveAt = false,
-  }) : super(key: key);
+  const UserCard(
+      {Key? key,
+      required this.user,
+      required this.press,
+      this.showActiveAt = false})
+      : super(key: key);
 
   final User user;
   final VoidCallback press;
@@ -20,15 +22,12 @@ class UserCard extends StatelessWidget {
     return InkWell(
       onTap: press,
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+        padding: const EdgeInsets.symmetric(vertical: 15),
         child: Row(
           children: [
             Stack(
               children: [
-                CircleAvatar(
-                  radius: 24,
-                  backgroundImage: AssetImage(user.image),
-                ),
+                CustomUserAvatar(image: user.image, radius: 24),
                 if (user.isActive)
                   Positioned(
                     right: 0,
@@ -45,32 +44,30 @@ class UserCard extends StatelessWidget {
                   )
               ],
             ),
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    Text(
-                      user.name,
-                      style: const TextStyle(
-                          fontSize: 16, fontWeight: FontWeight.w500),
-                    ),
-                    if (user.isActive == false)
-                      Container(
-                        margin: const EdgeInsets.fromLTRB(0, 3, 0, 3),
-                        child: Text(
-                          user.activeAt,
-                          style: const TextStyle(
-                            fontSize: 12,
-                            fontWeight: FontWeight.w200,
-                            color: kTextColor,
-                          ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Text(
+                    user.name,
+                    style: const TextStyle(
+                        fontSize: 16, fontWeight: FontWeight.w500),
+                  ),
+                  if (user.isActive == false)
+                    Container(
+                      margin: const EdgeInsets.fromLTRB(0, 3, 0, 3),
+                      child: Text(
+                        user.activeAt,
+                        style: const TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.w200,
+                          color: kTextColor,
                         ),
                       ),
-                  ],
-                ),
+                    ),
+                ],
               ),
             ),
           ],

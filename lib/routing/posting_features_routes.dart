@@ -3,7 +3,6 @@ import '../screens/posting_features/post_items/step2.dart';
 import '../screens/posting_features/post_items/step3.dart';
 import '../screens/posting_features/post_items/step4.dart';
 
-// ignore: non_constant_identifier_names
 final Map<String, WidgetBuilder> postingFeaturesRoutes = {
   //PostItems1.routeName: (context) => const PostItems1(),
   PostItem_2.routeName: (context) => const PostItem_2(),

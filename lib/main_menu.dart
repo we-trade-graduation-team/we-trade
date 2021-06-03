@@ -19,20 +19,20 @@ import 'screens/wish_list_features/wish_list/wish_list_screen.dart';
 class MainMenu extends StatefulWidget {
   const MainMenu({
     Key? key,
-    required this.menuScreenContext,
+    // required this.menuScreenContext,
   }) : super(key: key);
 
-  final BuildContext menuScreenContext;
+  // final BuildContext menuScreenContext;
 
   @override
   _MainMenuState createState() => _MainMenuState();
 
-  @override
-  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
-    super.debugFillProperties(properties);
-    properties.add(DiagnosticsProperty<BuildContext>(
-        'menuScreenContext', menuScreenContext));
-  }
+  // @override
+  // void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+  //   super.debugFillProperties(properties);
+  //   properties.add(DiagnosticsProperty<BuildContext>(
+  //       'menuScreenContext', menuScreenContext));
+  // }
 }
 
 class _MainMenuState extends State<MainMenu> {

@@ -2,27 +2,34 @@ name: we_trade
 
 description: A new Flutter project.
 
-publish_to: 'none'
+publish_to: "none"
 
 version: 1.0.0+1
 
 environment:
-  sdk: '>=2.12.0-259.16.beta <3.0.0'
+  sdk: ">=2.12.0-259.16.beta <3.0.0"
 
 dependencies:
   flutter:
     sdk: flutter
   flutter_localizations:
     sdk: flutter
+  algolia: ^1.0.1
   auto_size_text: ^3.0.0-nullsafety.0
   bot_toast: ^4.0.1
   carousel_slider: ^4.0.0-nullsafety.0
+  cloud_firestore: ^2.1.0
+  connectivity: ^3.0.3
   cupertino_icons: ^1.0.2
+  date_format: ^2.0.2
   dots_indicator: ^2.0.0
   double_back_to_close_app: ^2.0.1
   eva_icons_flutter: ^3.0.0
   expand_widget: ^2.0.0
   extended_sliver: ^2.0.0
+  firebase_auth: ^1.1.4
+  firebase_core: ^1.1.1
+  flash: ^1.5.2+2
   flutter_card_swipper: ^0.4.0
   flutter_form_builder: ^6.0.0
   flutter_launcher_icons: ^0.9.0
@@ -31,6 +38,7 @@ dependencies:
   flutter_svg: ^0.22.0
   freezed: ^0.14.1+3
   freezed_annotation: ^0.14.1
+  firebase_storage: ^8.1.0
   group_button: ^2.1.0
   http: ^0.13.2
   intl: ^0.17.0
@@ -46,8 +54,6 @@ dependencies:
   shared_preferences: ^2.0.5
   toggle_switch: ^0.1.9
   image_picker: ^0.7.5+3
-  cloud_firestore: ^2.0.0
-  firebase_storage: ^8.1.0
 
 dev_dependencies:
   flutter_test:
@@ -56,9 +62,9 @@ dev_dependencies:
   flutter_native_splash: ^1.1.8+4
 
 flutter_icons:
-  android: 'launcher_icon'
+  android: "launcher_icon"
   ios: true
-  image_path: 'assets/images/logos/logo.png'
+  image_path: "assets/images/logos/logo.png"
 
 flutter:
   uses-material-design: true
@@ -72,3 +78,5 @@ flutter:
     - assets/images/chat_screen_ava/
     - assets/images/products_images_temp/
     - assets/images/on_boarding_screen/
+    - assets/images/secondary_splash_screen/
+    - assets/images/message/

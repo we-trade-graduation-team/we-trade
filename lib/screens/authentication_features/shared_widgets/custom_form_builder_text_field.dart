@@ -14,6 +14,7 @@ class CustomFormBuilderTextField extends StatefulWidget {
     this.autovalidateMode = AutovalidateMode.disabled,
     this.keyboardType = TextInputType.text,
     this.validator,
+    this.textEditingController,
   }) : super(key: key);
 
   final String name, labelText;
@@ -23,6 +24,7 @@ class CustomFormBuilderTextField extends StatefulWidget {
   final VoidCallback onEditingComplete;
   final AutovalidateMode autovalidateMode;
   final TextInputType keyboardType;
+  final TextEditingController? textEditingController;
 
   @override
   _CustomFormBuilderTextFieldState createState() =>
@@ -72,6 +74,7 @@ class _CustomFormBuilderTextFieldState
     tempValue.text = 'qwwww123@gmai.com';
 
     return FormBuilderTextField(
+      // controller: widget.textEditingController,
       focusNode: myFocusNode,
       name: widget.name,
       decoration: InputDecoration(
