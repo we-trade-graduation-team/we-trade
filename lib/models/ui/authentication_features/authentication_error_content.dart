@@ -1,8 +1,9 @@
 class AuthenticationErrorContent {
   AuthenticationErrorContent({
     required this.title,
-    required this.message,
+    required this.content,
   });
 
-  final String title, message;
+  final String title;
+  final String content;
 }

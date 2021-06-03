@@ -1,5 +1,3 @@
-import '../../configs/constants/assets_paths/shared_assets_root.dart';
-
 class Product {
   Product({required this.name, required this.images});
 
@@ -8,15 +6,15 @@ class Product {
 }
 
 List<String> imagesLaptopData = [
-  '$productImagesTempFolder/product1.jpg',
-  '$productImagesTempFolder/product2.jpg',
-  '$productImagesTempFolder/product3.jpg',
+  'assets/images/products_images_temp/product1.jpg',
+  'assets/images/products_images_temp/product2.jpg',
+  'assets/images/products_images_temp/product3.jpg',
 ];
 
 List<String> imagesBagData = [
-  '$productImagesTempFolder/product4.jpg',
-  '$productImagesTempFolder/product5.jpg',
-  '$productImagesTempFolder/product6.jpg',
+  'assets/images/products_images_temp/product4.jpg',
+  'assets/images/products_images_temp/product5.jpg',
+  'assets/images/products_images_temp/product6.jpg',
 ];
 
 List<Product> productsData = [

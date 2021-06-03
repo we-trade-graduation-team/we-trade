@@ -1,5 +1,5 @@
-// import 'package:json_annotation/json_annotation.dart';
-import '../detail_screen/question_model.dart';
+import '../home_features/detail_screen/question_model.dart';
+
 import 'account_model.dart';
 
 // @JsonSerializable()
@@ -159,7 +159,7 @@ List<Product> demoProducts = [
     productLocation: location,
     ownerLocation: location,
     isFavourite: true,
-    owner: demoUsers[0],
+    owner: demoUsers[0],  
   ),
   Product(
     id: 9,
@@ -182,7 +182,7 @@ List<Product> demoProducts = [
 
 List<Product> recommendedProducts = [
   Product(
-    id: 5,
+    id: 10,
     images: [
       'https://images.unsplash.com/photo-1580910051074-3eb694886505?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=701&q=80'
     ],
@@ -198,7 +198,7 @@ List<Product> recommendedProducts = [
     owner: demoUsers[0],
   ),
   Product(
-    id: 6,
+    id: 11,
     images: [
       'https://images.unsplash.com/photo-1565849904461-04a58ad377e0?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=676&q=80'
     ],
@@ -213,7 +213,7 @@ List<Product> recommendedProducts = [
     owner: demoUsers[0],
   ),
   Product(
-    id: 7,
+    id: 12,
     images: [
       'https://images.unsplash.com/photo-1525598912003-663126343e1f?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1050&q=80'
     ],
@@ -229,7 +229,7 @@ List<Product> recommendedProducts = [
     owner: demoUsers[0],
   ),
   Product(
-    id: 8,
+    id: 13,
     images: [
       'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80'
     ],
@@ -244,7 +244,7 @@ List<Product> recommendedProducts = [
     owner: demoUsers[0],
   ),
   Product(
-    id: 9,
+    id: 14,
     images: [
       'https://images.unsplash.com/photo-1523206489230-c012c64b2b48?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80',
       'https://images.unsplash.com/photo-1523206489230-c012c64b2b48?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80',
@@ -263,7 +263,7 @@ List<Product> recommendedProducts = [
     owner: demoUsers[0],
   ),
   Product(
-    id: 10,
+    id: 15,
     images: [
       'https://images.unsplash.com/photo-1588058365548-9efe5acb8077?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1050&q=80'
     ],
@@ -281,11 +281,11 @@ List<Product> recommendedProducts = [
 
 List<Product> demoUserProducts = [
   Product(
-    id: 1,
+    id: 16,
     images: [
-      'https://images.unsplash.com/photo-1605899435973-ca2d1a8861cf?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=675&q=80',
-      'https://images.unsplash.com/photo-1509198397868-475647b2a1e5?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=598&q=80',
-      'https://images.unsplash.com/photo-1529448155365-b176d2c6906b?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=675&q=80',
+      'https://images.unsplash.com/photo-1605899435973-ca2d1a8861cf?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=675&q=80 ',
+      'https://images.unsplash.com/photo-1509198397868-475647b2a1e5?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=598&q=80 ',
+      'https://images.unsplash.com/photo-1529448155365-b176d2c6906b?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=675&q=80 ',
       'https://images.unsplash.com/photo-1529154691717-3306083d869e?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1050&q=80',
     ],
     tradeForCategory: tradeForList,
@@ -300,7 +300,7 @@ List<Product> demoUserProducts = [
     owner: demoUsers[1],
   ),
   Product(
-    id: 11,
+    id: 17,
     images: [
       'https://images.unsplash.com/photo-1590736704728-f4730bb30770?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=708&q=80',
     ],
@@ -316,7 +316,7 @@ List<Product> demoUserProducts = [
     owner: demoUsers[1],
   ),
   Product(
-    id: 12,
+    id: 18,
     images: [
       'https://images.unsplash.com/photo-1523293182086-7651a899d37f?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1050&q=80'
     ],
@@ -331,7 +331,7 @@ List<Product> demoUserProducts = [
     owner: demoUsers[1],
   ),
   Product(
-    id: 13,
+    id: 19,
     images: [
       'https://images.unsplash.com/photo-1595535373192-fc8935bacd89?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1050&q=80',
     ],

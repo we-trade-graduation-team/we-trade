@@ -1,10 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
-import '../../routing/account_features_routes.dart';
-import '../../routing/home_features_routes.dart';
-import '../../routing/message_features_routes.dart';
-import '../../routing/posting_features_routes.dart';
-import '../../routing/wish_list_features_routes.dart';
+import '../../../utils/routes/routes.dart';
 
 class BottomNavigationBarItemSource {
   BottomNavigationBarItemSource({
@@ -24,7 +20,7 @@ List<BottomNavigationBarItemSource> navBarItemSourceList = [
     iconData: Icons.home,
     routeAndNavigatorSettings: RouteAndNavigatorSettings(
       initialRoute: '/',
-      routes: homeFeaturesRoutes,
+      routes: Routes.homeFeaturesRoutes,
     ),
   ),
   BottomNavigationBarItemSource(
@@ -32,7 +28,7 @@ List<BottomNavigationBarItemSource> navBarItemSourceList = [
     iconData: Icons.message,
     routeAndNavigatorSettings: RouteAndNavigatorSettings(
       initialRoute: '/',
-      routes: messageFeaturesRoutes,
+      routes: Routes.messageFeaturesRoutes,
     ),
   ),
   BottomNavigationBarItemSource(
@@ -40,15 +36,15 @@ List<BottomNavigationBarItemSource> navBarItemSourceList = [
     iconData: Icons.add,
     routeAndNavigatorSettings: RouteAndNavigatorSettings(
       initialRoute: '/',
-      routes: postingFeaturesRoutes,
+      routes: Routes.postingFeaturesRoutes,
     ),
   ),
   BottomNavigationBarItemSource(
     title: 'Favourite',
     iconData: Icons.favorite,
-    routeAndNavigatorSettings: RouteAndNavigatorSettings(
+    routeAndNavigatorSettings: const RouteAndNavigatorSettings(
       initialRoute: '/',
-      routes: wishListFeaturesRoutes,
+      // routes: wishListFeaturesRoutes,
     ),
   ),
   BottomNavigationBarItemSource(
@@ -56,7 +52,7 @@ List<BottomNavigationBarItemSource> navBarItemSourceList = [
     iconData: Icons.person,
     routeAndNavigatorSettings: RouteAndNavigatorSettings(
       initialRoute: '/',
-      routes: accountFeaturesRoutes,
+      routes: Routes.accountFeaturesRoutes,
     ),
   ),
 ];

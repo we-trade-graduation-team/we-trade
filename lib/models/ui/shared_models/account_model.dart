@@ -1,4 +1,4 @@
-import '../detail_screen/user_rating_model.dart';
+import '../home_features/detail_screen/user_rating_model.dart';
 
 class Account {
   Account({

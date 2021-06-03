@@ -1,5 +1,3 @@
-import '../../configs/constants/assets_paths/shared_assets_root.dart';
-
 import '../review/temp_class.dart';
 
 class Chat {
@@ -72,62 +70,62 @@ UserDetail userDetailTemp = UserDetail(
 
 List<User> usersData = [
   User(
-    image: '$chatScreenAvaFolder/user.png',
+    image: 'assets/images/chat_screen_ava/user.png',
     name: 'Jenny Wilson',
     isActive: false,
     activeAt: 'active 3 mins ago',
   ),
   User(
-    image: '$chatScreenAvaFolder/user_2.png',
+    image: 'assets/images/chat_screen_ava/user_2.png',
     name: 'Esther Howard',
     isActive: true,
     activeAt: '',
   ),
   User(
-    image: '$chatScreenAvaFolder/user_3.png',
+    image: 'assets/images/chat_screen_ava/user_3.png',
     name: 'Ralph Edwards',
     isActive: true,
     activeAt: '',
   ),
   User(
-    image: '$chatScreenAvaFolder/user_4.png',
+    image: 'assets/images/chat_screen_ava/user_4.png',
     name: 'Jacob Jones',
     isActive: false,
     activeAt: 'active 3 mins ago',
   ),
   User(
     name: 'Albert Flores',
-    image: '$chatScreenAvaFolder/user_5.png',
+    image: 'assets/images/chat_screen_ava/user_5.png',
     isActive: false,
     activeAt: 'active 3 mins ago',
   ),
   User(
-    image: '$chatScreenAvaFolder/user.png',
+    image: 'assets/images/chat_screen_ava/user.png',
     name: 'Jenny Wilson',
     isActive: true,
     activeAt: '',
   ),
   User(
-    image: '$chatScreenAvaFolder/user_2.png',
+    image: 'assets/images/chat_screen_ava/user_2.png',
     name: 'Esther Howard',
     isActive: true,
     activeAt: '',
   ),
   User(
-    image: '$chatScreenAvaFolder/user_3.png',
+    image: 'assets/images/chat_screen_ava/user_3.png',
     name: 'Ralph Edwards',
     isActive: false,
     activeAt: 'active 3 mins ago',
   ),
   User(
-    image: '$chatScreenAvaFolder/user_4.png',
+    image: 'assets/images/chat_screen_ava/user_4.png',
     name: 'Jacob Jones',
     isActive: true,
     activeAt: '',
   ),
   User(
     name: 'Albert Flores',
-    image: '$chatScreenAvaFolder/user_5.png',
+    image: 'assets/images/chat_screen_ava/user_5.png',
     isActive: false,
     activeAt: 'active 3 mins ago',
   ),
