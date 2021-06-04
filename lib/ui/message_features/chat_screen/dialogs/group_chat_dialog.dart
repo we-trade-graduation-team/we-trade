@@ -10,8 +10,8 @@ import '../../../../models/cloud_firestore/user/user.dart';
 import '../../../../services/message/firestore_message_service.dart';
 import '../../../../utils/routes/routes.dart';
 import '../../../shared_features/report/report_screen.dart';
+import '../../ulti.dart';
 import '../group_chat/members/all_members_screen.dart';
-import '../widgets/users_card.dart';
 
 class GroupChatDialog extends StatelessWidget {
   const GroupChatDialog({
@@ -211,7 +211,7 @@ Future<Widget?> showAlertDialogOutGroup(
   final Widget continueButton = TextButton(
     onPressed: () async {
       Navigator.of(context).pop();
-      UsersCard.showBottomSheet(context);
+      HelperClass.showBottomSheet(context);
       await Future.delayed(const Duration(milliseconds: 1000), () async {});
       final thisUser = Provider.of<User?>(context, listen: false)!;
       final messageServiceFireStore = MessageServiceFireStore();

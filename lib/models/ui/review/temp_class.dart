@@ -14,7 +14,7 @@ class Review {
   final String comment;
   final double stars;
   final DateTime dateTime;
-  final UserTrang user;
+  final UserAlgolia user;
 
   final Product product;
   final String? replie;

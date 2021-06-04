@@ -73,7 +73,7 @@ class _BodyState extends State<Body> {
                     return Container();
                   }
                 })
-            : Container();
+            : const Center(child: Text('No result'));
       },
     );
   }

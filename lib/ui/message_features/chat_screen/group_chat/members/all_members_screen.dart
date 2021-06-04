@@ -29,7 +29,7 @@ class AllMemberScreen extends StatefulWidget {
 
 class _AllMemberScreenState extends State<AllMemberScreen> {
   final dataServiceFireStore = MessageServiceFireStore();
-  List<UserTrang> users = <UserTrang>[];
+  List<UserAlgolia> users = <UserAlgolia>[];
 
   @override
   void initState() {
@@ -128,7 +128,7 @@ class _AllMemberScreenState extends State<AllMemberScreen> {
     super.debugFillProperties(properties);
     properties.add(DiagnosticsProperty<MessageServiceFireStore>(
         'dataServiceFireStore', dataServiceFireStore));
-    properties.add(IterableProperty<UserTrang>('users', users));
+    properties.add(IterableProperty<UserAlgolia>('users', users));
   }
 }
 

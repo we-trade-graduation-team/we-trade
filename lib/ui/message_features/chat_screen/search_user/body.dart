@@ -12,10 +12,10 @@ import '../../../../services/message/algolia_message_service.dart';
 import '../../../../services/message/firestore_message_service.dart';
 import '../../../../widgets/custom_material_button.dart';
 import '../../const_string/const_str.dart';
+import '../../ulti.dart';
 import '../chat_room/chat_room.dart';
 import '../widgets/user_card.dart';
 import '../widgets/user_choice_chip.dart';
-import '../widgets/users_card.dart';
 
 class Body extends StatefulWidget {
   const Body(
@@ -46,9 +46,9 @@ class _BodyState extends State<Body> {
   late bool isLoading = false;
 
   late List<AlgoliaObjectSnapshot> querySnapshot = [];
-  late List<UserTrang> choosedUsers = [];
+  late List<UserAlgolia> choosedUsers = [];
 
-  void addUserToList(UserTrang user) {
+  void addUserToList(UserAlgolia user) {
     setState(() {
       if (!choosedUsers.contains(user) && !widget.usersId.contains(user.id)) {
         choosedUsers.add(user);
@@ -76,8 +76,9 @@ class _BodyState extends State<Body> {
           ],
         ),
       );
+      return;
     }
-    UsersCard.showBottomSheet(context);
+    HelperClass.showBottomSheet(context);
     if (widget.addChat) {
       // nếu là add new chat
       if (choosedUsers.length == 1) {
@@ -128,9 +129,11 @@ class _BodyState extends State<Body> {
   }
 
   Future<void> startNewChatRoom(String chatRoomId) async {
-    final name = thisUser.displayName ?? thisUser.email;
+    final name = (thisUser.displayName!.isNotEmpty
+        ? thisUser.displayName
+        : thisUser.email)!;
     await dataServiceFireStore.addMessageToChatRoom(
-        thisUser.uid!, 0, 'hi, cùng chat nào', chatRoomId, name!);
+        thisUser.uid!, 0, 'hi, cùng chat nào', chatRoomId, name);
   }
 
   void navigateToChatRoom({required Chat chatRoom, required bool chatGroup}) {
@@ -149,7 +152,7 @@ class _BodyState extends State<Body> {
     );
   }
 
-  String createChatRoomId(List<UserTrang> users) {
+  String createChatRoomId(List<UserAlgolia> users) {
     final chatRoomId = StringBuffer();
     final usersId = <String>[];
     for (final user in users) {
@@ -175,8 +178,10 @@ class _BodyState extends State<Body> {
       usersEmail.add(user.email);
     }
     usersId.add(thisUser.uid!);
-    usersName.add(
-        thisUser.displayName == null ? thisUser.email! : thisUser.displayName!);
+
+    usersName.add((thisUser.displayName!.isNotEmpty
+        ? thisUser.displayName
+        : thisUser.email)!);
     usersAva.add(thisUser.photoURL == null ? '' : thisUser.photoURL!);
     usersEmail.add(thisUser.email == null ? '' : thisUser.email!);
 
@@ -209,8 +214,9 @@ class _BodyState extends State<Body> {
       usersEmail.add(user.email);
     }
 
-    final myName =
-        thisUser.displayName == null ? thisUser.email! : thisUser.displayName!;
+    final myName = (thisUser.displayName!.isNotEmpty
+        ? thisUser.displayName
+        : thisUser.email)!;
 
     // ignore: unawaited_futures
     dataServiceFireStore
@@ -265,7 +271,7 @@ class _BodyState extends State<Body> {
                     itemCount: querySnapshot.length,
                     itemBuilder: (context, index) {
                       final object = querySnapshot[index];
-                      final user = UserTrang(
+                      final user = UserAlgolia(
                           id: object.objectID,
                           name: object.data[nameStr].toString(),
                           image: object.data[imageStr].toString(),
@@ -399,6 +405,6 @@ class _BodyState extends State<Body> {
         'dataServiceAlgolia', dataServiceAlgolia));
     properties.add(DiagnosticsProperty<bool>('isLoading', isLoading));
     properties.add(DiagnosticsProperty<User>('thisUser', thisUser));
-    properties.add(IterableProperty<UserTrang>('choosedUsers', choosedUsers));
+    properties.add(IterableProperty<UserAlgolia>('choosedUsers', choosedUsers));
   }
 }
