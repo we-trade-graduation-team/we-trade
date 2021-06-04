@@ -17,6 +17,7 @@ import '../../const_string/const_str.dart';
 import '../../shared_widgets/offer_card.dart';
 import '../widgets/message_tile.dart';
 
+//TODO : T đây nè Tín ớiiiiii
 // loadAsset() --> hàm chạy lấy ảnh các kiểu nè
 // chạy xong sẽ trả ra resultImages ---> setState images = resultImages để
 // show buildGridView() lên, tùy theo m custom cho thêm nút bấm ok load

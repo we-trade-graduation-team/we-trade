@@ -164,12 +164,8 @@ class _MessageTileState extends State<MessageTile> {
               zoomedBackgroundColor: Colors.black.withOpacity(0.5),
               //resetDuration: const Duration(milliseconds: 100),
               maxScale: 5,
-              onZoomStart: () {
-                print('Start zooming');
-              },
-              onZoomEnd: () {
-                print('Stop zooming');
-              },
+              onZoomStart: () {},
+              onZoomEnd: () {},
               image: CachedNetworkImage(
                 placeholder: (context, url) => Container(
                   width: 200,
