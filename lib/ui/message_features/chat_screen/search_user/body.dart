@@ -76,6 +76,7 @@ class _BodyState extends State<Body> {
           ],
         ),
       );
+      return;
     }
     UsersCard.showBottomSheet(context);
     if (widget.addChat) {

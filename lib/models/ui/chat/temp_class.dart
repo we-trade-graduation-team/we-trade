@@ -41,8 +41,8 @@ class Chat {
 }
 
 @immutable
-class UserTrang {
-  const UserTrang({
+class UserAlgolia {
+  const UserAlgolia({
     required this.id,
     required this.name,
     required this.image,
@@ -56,7 +56,7 @@ class UserTrang {
   final String id;
 
   @override
-  bool operator ==(Object other) => other is UserTrang && other.name == name;
+  bool operator ==(Object other) => other is UserAlgolia && other.name == name;
 
   @override
   int get hashCode => name.hashCode;
@@ -74,7 +74,7 @@ class UserDetail {
       required this.userDescription,
       this.reviews});
 
-  final UserTrang user;
+  final UserAlgolia user;
   final String phone;
   final String email;
   final String address;
@@ -101,8 +101,8 @@ UserDetail userDetailTemp = UserDetail(
   reviews: reviewsData,
 );
 
-List<UserTrang> usersData = [
-  const UserTrang(
+List<UserAlgolia> usersData = [
+  const UserAlgolia(
     id: 'ajhdkjfhakhfkjahdlkfahl',
     email: 'trang2@gmail.com',
     image:
@@ -111,7 +111,7 @@ List<UserTrang> usersData = [
     isActive: false,
     activeAt: 'active 3 mins ago',
   ),
-  const UserTrang(
+  const UserAlgolia(
     id: '',
     email: 'trang3@gmail.com',
     image:
@@ -120,7 +120,7 @@ List<UserTrang> usersData = [
     isActive: true,
     activeAt: '',
   ),
-  const UserTrang(
+  const UserAlgolia(
     id: '',
     email: 'trang3@gmail.com',
     image: '',
