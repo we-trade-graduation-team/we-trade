@@ -1,12 +1,13 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import '../../../models/ui/shared_models/product_model.dart';
-// import '../../../widgets/item_post_card.dart';
 
 class WishListScreen extends StatelessWidget {
   const WishListScreen({
     Key? key,
   }) : super(key: key);
+
+  static const routeName = '/wish_list';
 
   List<Widget> buildProductsList(String title, List<Product> products) {
     return [
@@ -25,14 +26,13 @@ class WishListScreen extends StatelessWidget {
           // alignment: WrapAlignment.spaceAround,
           spacing: 20,
           runSpacing: 15,
-          // TODO: <Tin> Replace List<Product> with List<PostCard>
-          // children: [
-          //   ...products
-          //       .map(
-          //         (product) => ItemPostCard(postCard: product),
-          //       )
-          //       .toList(),
-          // ],
+          children: [
+            // ...products
+            //     .map(
+            //       (product) => ProductCard(product: product),
+            //     )
+            //     .toList(),
+          ],
         ),
       ),
       const SizedBox(height: 20),

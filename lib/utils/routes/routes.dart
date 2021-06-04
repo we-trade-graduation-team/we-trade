@@ -5,7 +5,7 @@ import '../../ui/account_features/follow_screen/follow_screen.dart';
 import '../../ui/account_features/my_rate_screen/my_rate_screen.dart';
 import '../../ui/account_features/post_management/hide_post_screen.dart';
 import '../../ui/account_features/post_management/post_management_screen.dart';
-import '../../ui/account_features/trading_history/rate_for_trading.dart';
+// import '../../ui/account_features/trading_history/rate_for_trading.dart';
 import '../../ui/account_features/trading_history/trading_history_screen.dart';
 import '../../ui/account_features/user_info/change_password_screen.dart';
 import '../../ui/account_features/user_info/user_info_screen.dart';
@@ -77,10 +77,10 @@ class Routes {
 
   static final Map<String, WidgetBuilder> accountFeaturesRoutes = {
     followScreenRouteName: (_) => const FollowScreen(),
-    myRateScreenRouteName: (_) => const MyRateScreen(),
+    myRateScreenRouteName: (_) => MyRateScreen(),
     hidePostScreenRouteName: (_) => const HidePostScreen(),
-    postManagementScreenRouteName: (_) => const PostManagementScreen(),
-    rateForTradingScreenRouteName: (_) => const RateForTrading(),
+    postManagementScreenRouteName: (_) => PostManagementScreen(),
+    // rateForTradingScreenRouteName: (_) => const RateForTrading(),
     tradingHistoryScreenRouteName: (_) => const TradingHistoryScreen(),
     changePasswordScreenRouteName: (_) => const ChangePasswordScreen(),
     userInfoScreenRouteName: (_) => const UserInfoScreen(),

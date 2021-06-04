@@ -1,42 +1,144 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 
-import '../../../constants/app_dimens.dart';
-import '../../../models/ui/review/temp_class.dart';
-import '../../../ui/account_features/post_management/hide_post_screen.dart';
+import '../../../models/ui/product/temp_class.dart';
 import '../../../utils/routes/routes.dart';
+import '../account_screen/account_screen.dart';
+import '../post_management/hide_post_screen.dart';
+import '../utils.dart';
 import 'custom_overlay_icon_button.dart';
 import 'trading_prod_overlay.dart';
 
 class TradingProductCard extends StatelessWidget {
-  const TradingProductCard({
+  TradingProductCard({
     Key? key,
-    required this.review,
+    required this.id,
+    required this.name,
+    required this.price,
+    required this.dateTime,
+    required this.isHiddenPost,
   }) : super(key: key);
 
-  final Review review;
+  final String id;
+  final String name;
+  final String price;
+  final DateTime dateTime;
+  final bool isHiddenPost;
+
+  final referenceDatabase = AccountScreen.localRefDatabase;
+  final userID = AccountScreen.localUserID;
+
+  Future<void> _removePost(String postID) async {
+    try {
+      await referenceDatabase
+          .collection('users')
+          .doc(userID)
+          .get()
+          .then((documentSnapshot) async {
+        final _user = documentSnapshot.data();
+        final hiddenPosts = _user!['hiddenPosts'] as List;
+        final posts = _user['posts'] as List;
+
+        hiddenPosts.remove(postID);
+        posts.remove(postID);
+        await referenceDatabase.collection('users').doc(userID).update({
+          'hiddenPosts': hiddenPosts,
+          'posts': posts,
+        });
+      });
+    } catch (error) {
+      rethrow;
+    }
+  }
+
+  Future<void> _reShowPost(String postID) async {
+    try {
+      await referenceDatabase
+          .collection('users')
+          .doc(userID)
+          .get()
+          .then((documentSnapshot) async {
+        final _user = documentSnapshot.data();
+        final hiddenPosts = _user!['hiddenPosts'] as List;
+        final posts = _user['posts'] as List;
+        final res = hiddenPosts.remove(postID);
+
+        if (res) {
+          posts.add(postID);
+        }
+        await referenceDatabase.collection('users').doc(userID).update({
+          'hiddenPosts': hiddenPosts,
+          'posts': posts,
+        });
+      });
+    } catch (error) {
+      rethrow;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
+    final deletePostOverlayItem = OverlayItem(
+      text: 'Xóa',
+      iconData: Icons.delete,
+      handleFunction: () async {
+        await showMyConfirmationDialog(
+            context: context,
+            title: 'Thông báo',
+            content: 'Bạn có chắc muốn xóa bài đăng này không?',
+            onConfirmFunction: () {
+              _removePost(id);
+              Navigator.of(context).pop();
+            },
+            onCancelFunction: () {
+              Navigator.of(context).pop();
+            });
+      },
+    );
     final width = MediaQuery.of(context).size.width;
     final height = MediaQuery.of(context).size.height;
 
-    final overlayItems = <OverlayItem>[
+    final overlayItemsOfVisiblePosts = [
       OverlayItem(
         text: 'Ẩn tin',
         iconData: Icons.visibility_off,
         handleFunction: () {
           pushNewScreenWithRouteSettings<void>(
             context,
-            settings: const RouteSettings(name: Routes.hidePostScreenRouteName),
+            settings:
+                RouteSettings(name: Routes.hidePostScreenRouteName, arguments: {
+              'id': id,
+            }),
             screen: const HidePostScreen(),
-            // withNavBar: true,
             pageTransitionAnimation: PageTransitionAnimation.cupertino,
           );
-          // Navigator.of(context).pushNamed(HidePostScreen.routeName);
         },
       ),
+      deletePostOverlayItem,
+    ];
+    final overlayItemsOfHiddenPosts = [
+      OverlayItem(
+        text: 'Hiện tin',
+        iconData: Icons.visibility,
+        handleFunction: () async {
+          await showMyConfirmationDialog(
+              context: context,
+              title: 'Thông báo',
+              content:
+                  'Bạn có chắc muốn hiển thị bài đăng này không? Người dùng khác có thể xem bài đăng này của bạn.',
+              onConfirmFunction: () {
+                _reShowPost(id);
+                Navigator.of(context).pop();
+              },
+              onCancelFunction: () {
+                Navigator.of(context).pop();
+              });
+        },
+      ),
+      deletePostOverlayItem,
     ];
 
     return GestureDetector(
@@ -44,13 +146,15 @@ class TradingProductCard extends StatelessWidget {
         // print('product tapped');
       },
       child: Container(
-        // margin: const EdgeInsets.fromLTRB(15, 3, 15, 3),
-        margin: const EdgeInsets.fromLTRB(15, 3, 0, 3),
+        margin: const EdgeInsets.fromLTRB(15, 3, 8, 3),
         padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 10),
         decoration: BoxDecoration(
           //color: Colors.white,
           border: Border(
-            bottom: AppDimens.kBorderSide(),
+            bottom: BorderSide(
+              color: Theme.of(context).primaryColor,
+              width: 0.2,
+            ),
           ),
         ),
         child: Column(
@@ -64,7 +168,8 @@ class TradingProductCard extends StatelessWidget {
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(10),
                     child: Image.asset(
-                      review.product.images[0],
+                      //TODO:change image source
+                      productsData[0].images[0],
                       fit: BoxFit.cover,
                     ),
                   ),
@@ -75,11 +180,11 @@ class TradingProductCard extends StatelessWidget {
                   children: [
                     Container(
                       width: width * 0.45,
-                      child: const Text(
-                        'LApTop moiw 12 12sqwrqwq eqweqwe qweqt qwrqmua2121212121222121qwq qwxcvf',
+                      child: Text(
+                        name,
                         overflow: TextOverflow.ellipsis,
                         maxLines: 2,
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.w600,
                         ),
@@ -87,7 +192,7 @@ class TradingProductCard extends StatelessWidget {
                     ),
                     const SizedBox(height: 10),
                     Text(
-                      r'$200-$300',
+                      '\$ $price',
                       style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.w400,
@@ -96,9 +201,16 @@ class TradingProductCard extends StatelessWidget {
                     ),
                   ],
                 ),
-                CustomOverlayIconButton(
-                  iconData: Icons.more_vert,
-                  overlayItems: overlayItems,
+                Expanded(
+                  child: Align(
+                    alignment: Alignment.topRight,
+                    child: CustomOverlayIconButton(
+                      iconData: Icons.more_vert,
+                      overlayItems: isHiddenPost
+                          ? overlayItemsOfHiddenPosts
+                          : overlayItemsOfVisiblePosts,
+                    ),
+                  ),
                 ),
               ],
             ),
@@ -107,9 +219,12 @@ class TradingProductCard extends StatelessWidget {
               child: Container(
                 margin: const EdgeInsets.fromLTRB(0, 10, 0, 0),
                 child: Text(
-                  review.dateTime.toString(),
+                  DateFormat.yMMMMd('en_US')
+                      .add_jm()
+                      .format(dateTime)
+                      .toString(),
                   style: const TextStyle(
-                    fontSize: 10,
+                    fontSize: 11,
                     fontWeight: FontWeight.w300,
                   ),
                 ),
@@ -124,6 +239,13 @@ class TradingProductCard extends StatelessWidget {
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
-    properties.add(DiagnosticsProperty<Review>('review', review));
+    properties.add(DiagnosticsProperty<bool>('isHiddenPost', isHiddenPost));
+    properties.add(StringProperty('name', name));
+    properties.add(StringProperty('price', price));
+    properties.add(DiagnosticsProperty<DateTime>('dateTime', dateTime));
+    properties.add(DiagnosticsProperty<DocumentReference<Map<String, dynamic>>>(
+        'referenceDatabase', referenceDatabase));
+    properties.add(StringProperty('userID', userID));
+    properties.add(StringProperty('postID', id));
   }
 }

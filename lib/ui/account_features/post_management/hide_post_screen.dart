@@ -1,5 +1,9 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import '../account_screen/account_screen.dart';
+
+import '../utils.dart';
 
 enum HidePostReasonValue {
   stopTrading,
@@ -41,44 +45,82 @@ class HidePostScreen extends StatefulWidget {
 }
 
 class _HidePostScreenState extends State<HidePostScreen> {
-  // List<Reason> reasons = [];
+  final referenceDatabase = AccountScreen.localRefDatabase;
+  final userID = AccountScreen.localUserID;
 
-  Reason _selectedReason = Reason(
-    title: 'title',
-    value: HidePostReasonValue.stopTrading,
-  );
+  List<Reason> reasons = [];
+  Reason selectedReason = Reason(
+      title: 'Tôi không muốn bán nữa.', value: HidePostReasonValue.stopTrading);
+  bool isSelected = false;
 
   @override
   void initState() {
     super.initState();
+    reasons = Reason.getReasons();
   }
 
   void setSelectedReason(Reason reason) {
     setState(() {
-      _selectedReason = reason;
+      selectedReason = reason;
     });
   }
 
   List<Widget> buildRadioReasonList() {
-    final reasons = Reason.getReasons();
-    return reasons.map((reason) {
-      return RadioListTile(
-        title: Text(reason.title),
-        value: reason,
-        groupValue: _selectedReason,
-        onChanged: (currentReason) {
-          setState(() {
-            // print(currentReason!.title);
-            setSelectedReason(currentReason as Reason);
-          });
-        },
-        selected: _selectedReason == reason,
+    final widgets = <Widget>[];
+    for (final reason in reasons) {
+      widgets.add(
+        RadioListTile(
+          title: Text(reason.title),
+          value: reason,
+          groupValue: selectedReason,
+          onChanged: (currentReason) {
+            setState(() {
+              // print(currentReason!.title);
+              setSelectedReason(currentReason as Reason);
+              isSelected = true;
+            });
+          },
+          selected: selectedReason == reason,
+        ),
       );
-    }).toList();
+    }
+    return widgets;
+  }
+
+  Future<bool> _hidePost(String postID) async {
+    try {
+      await referenceDatabase
+          .collection('users')
+          .doc(userID)
+          .get()
+          .then((documentSnapshot) async {
+        final _user = documentSnapshot.data();
+        final hiddenPosts = _user!['hiddenPosts'] as List;
+        final posts = _user['posts'] as List;
+        final res = posts.remove(postID);
+
+        if (res) {
+          hiddenPosts.add(postID);
+        }
+        await referenceDatabase.collection('users').doc(userID).update({
+          'hiddenPosts': hiddenPosts,
+          'posts': posts,
+        }).then((value) {
+          return true;
+        });
+      });
+    } catch (error) {
+      rethrow;
+    }
+    return false;
   }
 
   @override
   Widget build(BuildContext context) {
+    final arguments =
+        ModalRoute.of(context)!.settings.arguments as Map<String, String>;
+    final postID = arguments['id'].toString();
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Ẩn tin'),
@@ -106,11 +148,23 @@ class _HidePostScreenState extends State<HidePostScreen> {
           children: [
             Expanded(
               child: ElevatedButton(
-                onPressed: () {},
-                // ? Should be delete?
-                // style: ElevatedButton.styleFrom(
-                //   primary: Theme.of(context).primaryColor,
-                // ),
+                onPressed: () {
+                  if (!isSelected) {
+                    showMyNotificationDialog(
+                        context: context,
+                        title: 'Thông báo',
+                        content: 'Bạn chưa chọn lí do.',
+                        handleFunction: () {
+                          Navigator.of(context).pop();
+                        });
+                  } else {
+                    _hidePost(postID);
+                    Navigator.of(context).pop();
+                  }
+                },
+                style: ElevatedButton.styleFrom(
+                  primary: Theme.of(context).primaryColor,
+                ),
                 child: const Text('Ẩn'),
               ),
             ),
@@ -118,5 +172,17 @@ class _HidePostScreenState extends State<HidePostScreen> {
         ),
       ),
     );
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(IterableProperty<Reason>('reasons', reasons));
+    properties
+        .add(DiagnosticsProperty<Reason>('selectedReason', selectedReason));
+    properties.add(DiagnosticsProperty<DocumentReference<Map<String, dynamic>>>(
+        'referenceDatabase', referenceDatabase));
+    properties.add(StringProperty('userID', userID));
+    properties.add(DiagnosticsProperty<bool>('isSelected', isSelected));
   }
 }

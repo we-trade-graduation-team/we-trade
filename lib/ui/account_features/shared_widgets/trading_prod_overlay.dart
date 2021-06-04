@@ -1,13 +1,10 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import '../../../constants/app_colors.dart';
 
 class TradingProdOverlay extends StatelessWidget {
-  const TradingProdOverlay({
-    Key? key,
-    required this.overlayItems,
-  }) : super(key: key);
-
+  const TradingProdOverlay({Key? key, required this.overlayItems})
+      : super(key: key);
+//  final double itemHeight;
   final List<OverlayItem> overlayItems;
 
   @override
@@ -44,7 +41,9 @@ class OverlayItem extends StatelessWidget {
   }) : super(key: key);
 
   final String text;
+
   final IconData iconData;
+
   final VoidCallback handleFunction;
 
   @override
@@ -76,7 +75,7 @@ class OverlayItem extends StatelessWidget {
                 ),
               ],
             ),
-            const Divider(color: AppColors.kTextColor)
+            Divider(color: Theme.of(context).primaryColor)
           ],
         ),
       ),
