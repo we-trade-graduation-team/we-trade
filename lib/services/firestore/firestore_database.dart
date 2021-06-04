@@ -1,13 +1,13 @@
 import 'dart:async';
 
 import '../../models/cloud_firestore/category_card/category_card.dart';
-import '../../models/cloud_firestore/post_card/post_card.dart';
-import '../../models/cloud_firestore/special_offer_card/special_offer_card.dart';
+import '../../models/cloud_firestore/post_card_models/post_card/post_card.dart';
+import '../../models/cloud_firestore/post_card_models/user_recommended_post_card/user_recommended_post_card.dart';
+import '../../models/cloud_firestore/special_offer_card_models/special_offer_card/special_offer_card.dart';
+import '../../models/cloud_firestore/special_offer_card_models/user_special_offer_cards/user_special_offer_card.dart';
 import '../../models/cloud_firestore/user/user.dart' as user_model;
 import 'firestore_path.dart';
 import 'firestore_service.dart';
-
-// String documentIdFromCurrentDate() => DateTime.now().toIso8601String();
 
 /*
 This is the main class access/call for any UI widgets that require to perform
@@ -30,6 +30,17 @@ class FirestoreDatabase {
   final String uid;
 
   final _fireStoreService = FirestoreService.instance;
+
+  //Method to update user info
+  Future<void> updateUser({
+    required String uid,
+    required Map<String, dynamic> newData,
+  }) async {
+    await _fireStoreService.updateData(
+      path: FirestorePath.user(uid: uid),
+      data: newData,
+    );
+  }
 
   // Method to retrieve all user details from Firestore
   Stream<List<user_model.User>> usersStream() {
@@ -56,7 +67,7 @@ class FirestoreDatabase {
   }
 
   // Method to retrieve all Special Offer Cards from the same user based on uid
-  Stream<List<SpecialOfferCard>> userSpecialOfferCardsStream() {
+  Stream<List<UserSpecialOfferCard>> userSpecialOfferCardsStream() {
     return _fireStoreService.collectionStream(
       path: FirestorePath.userSpecialOfferCards(uid: uid),
       queryBuilder: (query) {
@@ -67,15 +78,15 @@ class FirestoreDatabase {
             )
             .limit(10);
       },
-      builder: (data) => SpecialOfferCard.fromDocumentSnapshot(data),
+      builder: (data) => UserSpecialOfferCard.fromDocumentSnapshot(data),
     );
   }
 
   // Method to retrieve all Recommended Post Cards from the same user based on uid
-  Stream<List<PostCard>> userRecommendedPostCardsStream() {
+  Stream<List<UserRecommendedPostCard>> userRecommendedPostCardsStream() {
     return _fireStoreService.collectionStream(
       path: FirestorePath.userRecommendedPostCards(uid: uid),
-      builder: (data) => PostCard.fromDocumentSnapshot(data),
+      builder: (data) => UserRecommendedPostCard.fromDocumentSnapshot(data),
     );
   }
 
@@ -92,6 +103,36 @@ class FirestoreDatabase {
     return _fireStoreService.collectionStream(
       path: FirestorePath.categoryCards(),
       builder: (data) => CategoryCard.fromDocumentSnapshot(data),
+    );
+  }
+
+  // Method to retrieve top 10 Special Offer Cards
+  Stream<List<SpecialOfferCard>> specialOfferCardsStream() {
+    return _fireStoreService.collectionStream(
+      path: FirestorePath.specialOfferCards(),
+      queryBuilder: (query) {
+        return query
+            .orderBy(
+              'view',
+              descending: true,
+            )
+            .limit(10);
+      },
+      builder: (data) => SpecialOfferCard.fromDocumentSnapshot(data),
+    );
+  }
+
+  // Method to retrieve Recommended Post Cards
+  Stream<List<PostCard>> recommendedPostCardsStream() {
+    return _fireStoreService.collectionStream(
+      path: FirestorePath.postCards(),
+      queryBuilder: (query) {
+        return query.orderBy(
+          'view',
+          descending: true,
+        );
+      },
+      builder: (data) => PostCard.fromDocumentSnapshot(data),
     );
   }
 
