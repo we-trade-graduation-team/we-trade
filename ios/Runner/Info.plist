@@ -47,6 +47,7 @@
 		<string>Permission to access photo gallery</string>
 		<key>NSCameraUsageDescription</key>
 		<string>Permission to access camera</string>
+		<string>NSMicrophoneUsageDescription</string>
 
 	</dict>
 </plist>

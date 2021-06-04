@@ -60,7 +60,6 @@ class _PostItemOneState extends State<PostItemOne> {
       image = (await _picker.getImage(
           source: ImageSource.gallery))!; // lấy nguồn ảnh từ thiết bị 'gallery'
       final file = File(image.path); //tạo file từ nguồn ảnh vừa lấy
-
       if (image.path.isNotEmpty) {
         //upload to firebase
         final snapshot = await _storage.ref().child('folderName/imageName').putFile(

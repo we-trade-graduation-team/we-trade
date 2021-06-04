@@ -2,14 +2,14 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 import 'package:provider/provider.dart';
+
 import '../../../../models/cloud_firestore/user/user.dart';
 import '../../../../models/ui/chat/temp_class.dart';
-
 import '../../../../services/message/algolia_message_service.dart';
 import '../../../../widgets/custom_user_avatar.dart';
 import '../../const_string/const_str.dart';
+import '../../ulti.dart';
 import '../chat_room/chat_room.dart';
-import 'users_card.dart';
 
 class ChatCard extends StatefulWidget {
   const ChatCard({
@@ -107,7 +107,7 @@ class _ChatCardState extends State<ChatCard> {
   @override
   Widget build(BuildContext context) {
     final imagesAndChatRoomName =
-        UsersCard.getImagesAndChatRoomName(widget.chat, thisUser.uid!);
+        HelperClass.getImagesAndChatRoomName(widget.chat, thisUser.uid!);
     images = (imagesAndChatRoomName[usersImageStr] as List<dynamic>)
         .cast<String>()
         .toList();

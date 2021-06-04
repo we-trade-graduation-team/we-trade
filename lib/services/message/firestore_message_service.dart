@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
+import 'package:we_trade/ui/message_features/ulti.dart';
 import '../../models/ui/chat/temp_class.dart';
 import '../../ui/message_features/chat_screen/widgets/users_card.dart';
 import '../../ui/message_features/const_string/const_str.dart';
@@ -180,7 +181,7 @@ class MessageServiceFireStore {
       chatRoomName = snapShot[chatRoomNameStr].toString();
     } else {
       if (snapShot[isGroupChatStr] as bool) {
-        chatRoomName = UsersCard.finalChatName(
+        chatRoomName = HelperClass.finalChatName(
             (snapShot[usersNameStr] as List<dynamic>).cast<String>().toList());
       }
     }

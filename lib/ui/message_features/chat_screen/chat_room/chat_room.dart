@@ -9,6 +9,7 @@ import '../../../../models/cloud_firestore/user/user.dart';
 import '../../../../models/ui/chat/temp_class.dart';
 import '../../../../services/message/firestore_message_service.dart';
 import '../../const_string/const_str.dart';
+import '../../ulti.dart';
 import '../dialogs/chat_dialog.dart';
 import '../dialogs/group_chat_dialog.dart';
 import '../widgets/users_card.dart';
@@ -56,7 +57,7 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
     } else {
       setState(() {
         final mapData =
-            UsersCard.getImagesAndChatRoomName(widget.chat, thisUser.uid!);
+            HelperClass.getImagesAndChatRoomName(widget.chat, thisUser.uid!);
         chatRoomName = mapData[chatRoomNameStr].toString();
         usersImage =
             (mapData[usersImageStr] as List<dynamic>).cast<String>().toList();

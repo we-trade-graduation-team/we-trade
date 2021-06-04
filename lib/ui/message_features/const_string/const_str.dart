@@ -28,6 +28,11 @@ const String usersImageStr = 'images';
 const String usersNameStr = 'names';
 const String emailsStr = 'emails';
 
+const int textType = 0;
+const int imageType = 1;
+const int videoType = 2;
+const int voiceType = 3;
+
 const String navigateToChatRoomStr = 'chatRoom';
 const String loadingDataStr = 'Loading  ...';
 const String messageLoadingStr =

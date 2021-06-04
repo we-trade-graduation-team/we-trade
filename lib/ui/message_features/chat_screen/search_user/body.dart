@@ -12,10 +12,10 @@ import '../../../../services/message/algolia_message_service.dart';
 import '../../../../services/message/firestore_message_service.dart';
 import '../../../../widgets/custom_material_button.dart';
 import '../../const_string/const_str.dart';
+import '../../ulti.dart';
 import '../chat_room/chat_room.dart';
 import '../widgets/user_card.dart';
 import '../widgets/user_choice_chip.dart';
-import '../widgets/users_card.dart';
 
 class Body extends StatefulWidget {
   const Body(
@@ -78,7 +78,7 @@ class _BodyState extends State<Body> {
       );
       return;
     }
-    UsersCard.showBottomSheet(context);
+    HelperClass.showBottomSheet(context);
     if (widget.addChat) {
       // nếu là add new chat
       if (choosedUsers.length == 1) {
@@ -133,7 +133,7 @@ class _BodyState extends State<Body> {
         ? thisUser.displayName
         : thisUser.email)!;
     await dataServiceFireStore.addMessageToChatRoom(
-        thisUser.uid!, 0, 'hi, cùng chat nào', chatRoomId, name!);
+        thisUser.uid!, 0, 'hi, cùng chat nào', chatRoomId, name);
   }
 
   void navigateToChatRoom({required Chat chatRoom, required bool chatGroup}) {
