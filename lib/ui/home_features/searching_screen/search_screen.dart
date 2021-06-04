@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:material_floating_search_bar/material_floating_search_bar.dart';
 import 'package:provider/provider.dart';
@@ -32,7 +33,7 @@ class _SearchScreenState extends State<SearchScreen> {
   late List<String> _searchHistory;
 
   // The filtered & ordered history that's accessed from the UI
-  late List<String> _filteredSearchHistory;
+  late List<String> filteredSearchHistory;
 
   void loadSearchHistory() {
     final user = context.read<User?>();
@@ -66,12 +67,12 @@ class _SearchScreenState extends State<SearchScreen> {
     }
 
     // Changes in _searchHistory mean that we have to update the filteredSearchHistory
-    _filteredSearchHistory = filterSearchTerms(filter: null);
+    filteredSearchHistory = filterSearchTerms(filter: null);
   }
 
   void deleteSearchTerm(String term) {
     _searchHistory.removeWhere((t) => t == term);
-    _filteredSearchHistory = filterSearchTerms(filter: null);
+    filteredSearchHistory = filterSearchTerms(filter: null);
   }
 
   void putSearchTermFirst(String term) {
@@ -93,7 +94,7 @@ class _SearchScreenState extends State<SearchScreen> {
 
   void onQueryChanged(String query) {
     setState(() {
-      _filteredSearchHistory = filterSearchTerms(filter: query);
+      filteredSearchHistory = filterSearchTerms(filter: query);
     });
   }
 
@@ -101,7 +102,7 @@ class _SearchScreenState extends State<SearchScreen> {
   void initState() {
     super.initState();
     _controller = FloatingSearchBarController();
-    _filteredSearchHistory = filterSearchTerms(filter: null);
+    filteredSearchHistory = filterSearchTerms(filter: null);
     Timer(const Duration(milliseconds: 300), _controller.open);
   }
 
@@ -181,5 +182,12 @@ class _SearchScreenState extends State<SearchScreen> {
       context: context,
       builder: (_) => const FilterOverlay(),
     );
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(IterableProperty<String>(
+        'filteredSearchHistory', filteredSearchHistory));
   }
 }
