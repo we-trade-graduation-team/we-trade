@@ -9,8 +9,8 @@ import 'package:provider/provider.dart';
 
 import '../../../app_localizations.dart';
 import '../../../constants/app_assets.dart';
-import '../../../models/ui/authentication_features/authentication_error_content.dart';
 import '../../../providers/auth_provider.dart';
+import '../../../utils/helper/authentication/dialog_content_helper/dialog_content_helper.dart';
 import '../../../utils/helper/flash/flash_helper.dart';
 import '../../../utils/routes/routes.dart';
 import '../shared_widgets/auth_custom_background.dart';
@@ -65,8 +65,6 @@ class _SignInScreenState extends State<SignInScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final _authProvider = context.watch<AuthProvider>();
-
     SystemChrome.setSystemUIOverlayStyle(
       const SystemUiOverlayStyle(
         statusBarIconBrightness: Brightness.light,
@@ -181,66 +179,58 @@ class _SignInScreenState extends State<SignInScreen> {
           formKey: _formKey,
           inputFormChildren: inputFormChildren,
           footerChildren: footerChildren,
-          onSubmit: () async {
-            // start the modal progress HUD
-            setState(() {
-              _isLoading = true;
-            });
-
-            final result = await _authProvider.signInWithEmailAndPassword(
-              email: _emailController.text.trim(),
-              password: _passwordController.text.trim(),
-            );
-
-            if (!mounted) {
-              return;
-            }
-
-            // stop the modal progress HUD
-            setState(() {
-              _isLoading = false;
-            });
-
-            final _appLocalizations = AppLocalizations.of(context);
-
-            final signInDialogContents = {
-              'invalid-email': AuthenticationErrorContent(
-                title: _appLocalizations
-                    .translate('loginAlertTxtErrorInvalidEmailTitle'),
-                content: _appLocalizations
-                    .translate('loginAlertTxtErrorInvalidEmailContent'),
-              ),
-              'wrong-password': AuthenticationErrorContent(
-                title: _appLocalizations
-                    .translate('loginAlertTxtErrorWrongPasswordTitle'),
-                content: _appLocalizations
-                    .translate('loginAlertTxtErrorWrongPasswordContent'),
-              ),
-              'user-not-found': AuthenticationErrorContent(
-                title: _appLocalizations
-                    .translate('loginAlertTxtErrorUserNotFoundTitle'),
-                content: _appLocalizations
-                    .translate('loginAlertTxtErrorUserNotFoundContent'),
-              ),
-              'user-disabled': AuthenticationErrorContent(
-                title: _appLocalizations
-                    .translate('loginAlertTxtErrorUserDisabledTitle'),
-                content: _appLocalizations
-                    .translate('loginAlertTxtErrorUserDisabledContent'),
-              ),
-            };
-
-            if (result != null) {
-              // print(signInDialogContents[result]);
-              await FlashHelper.showDialogFlash(
-                context,
-                content: signInDialogContents[result],
-              );
-            }
-          },
+          onSubmit: signIn,
         ),
       ),
     );
+  }
+
+  Future<void> signIn() async {
+    final _authProvider = context.read<AuthProvider>();
+
+    // start the modal progress HUD
+    setState(() {
+      _isLoading = true;
+    });
+
+    final result = await _authProvider.signInWithEmailAndPassword(
+      email: _emailController.text.trim(),
+      password: _passwordController.text.trim(),
+    );
+
+    if (!mounted) {
+      return;
+    }
+
+    // stop the modal progress HUD
+    setState(() {
+      _isLoading = false;
+    });
+
+    if (result != null) {
+      final _appLocalizations = AppLocalizations.of(context);
+
+      final _contentHelper = DialogContentHelper(_appLocalizations);
+
+      final signInDialogContents = _contentHelper.signInDialogContents;
+
+      final myDialogContent = signInDialogContents[result];
+
+      final dialogTitleText = myDialogContent != null
+          ? myDialogContent.title
+          : _appLocalizations.translate('authenticationAlertTxtErrorTitle');
+
+      final dialogContentText = myDialogContent != null
+          ? myDialogContent.content
+          : _appLocalizations.translate('authenticationAlertTxtErrorContent');
+
+      await FlashHelper.showDialogFlash(
+        context,
+        title: Text(dialogTitleText),
+        content: Text(dialogContentText),
+        showBothAction: false,
+      );
+    }
   }
 
   FormFieldValidator<String> _validatePassword(BuildContext context) {
