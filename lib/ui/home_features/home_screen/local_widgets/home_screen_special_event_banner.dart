@@ -1,8 +1,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-class SpecialEventBanner extends StatelessWidget {
-  const SpecialEventBanner({
+class HomeScreenSpecialEventBanner extends StatelessWidget {
+  const HomeScreenSpecialEventBanner({
     Key? key,
     required this.backgroundColor,
     required this.child,

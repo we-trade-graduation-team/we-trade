@@ -4,8 +4,8 @@ import '../../../../constants/app_dimens.dart';
 import '../../../../widgets/custom_animation_limiter_for_list_view.dart';
 import 'home_screen_category_cards.dart';
 import 'home_screen_popular_post_cards.dart';
-import 'home_screen_recommended_section.dart';
-import 'home_screen_special_offer_cards.dart';
+import 'home_screen_recommended_post_cards_section.dart';
+import 'home_screen_special_offer_cards_section.dart';
 
 class HomeScreenSectionsBox extends StatelessWidget {
   const HomeScreenSectionsBox({
@@ -18,7 +18,7 @@ class HomeScreenSectionsBox extends StatelessWidget {
 
     final homeSections = [
       const HomeScreenCategoryCards(),
-      const HomeScreenSpecialOfferCards(),
+      const HomeScreenSpecialOfferCardsSection(),
       const HomeScreenPopularPostCards(),
       const HomeScreenRecommendedSection(),
     ];

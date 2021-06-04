@@ -2,8 +2,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:line_icons/line_icons.dart';
 
-class IconButtonWithCounter extends StatelessWidget {
-  const IconButtonWithCounter({
+class HomeScreenIconButtonWithCounter extends StatelessWidget {
+  const HomeScreenIconButtonWithCounter({
     Key? key,
     required this.icon,
     required this.press,

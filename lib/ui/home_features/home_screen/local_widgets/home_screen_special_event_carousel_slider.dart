@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
 import '../../shared_widgets/custom_carousel_slider.dart';
-import 'special_event_banner.dart';
+import 'home_screen_special_event_banner.dart';
 
-class SpecialEventCarouselSlider extends StatelessWidget {
-  const SpecialEventCarouselSlider({
+class HomeScreenSpecialEventCarouselSlider extends StatelessWidget {
+  const HomeScreenSpecialEventCarouselSlider({
     Key? key,
   }) : super(key: key);
 
@@ -12,7 +12,7 @@ class SpecialEventCarouselSlider extends StatelessWidget {
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     final demoEventBanners = [
-      SpecialEventBanner(
+      HomeScreenSpecialEventBanner(
         backgroundColor: Theme.of(context).primaryColor,
         child: Text.rich(
           TextSpan(
@@ -38,7 +38,7 @@ class SpecialEventCarouselSlider extends StatelessWidget {
           ),
         ),
       ),
-      SpecialEventBanner(
+      HomeScreenSpecialEventBanner(
         backgroundColor: Colors.amber,
         child: Text.rich(
           TextSpan(
@@ -64,7 +64,7 @@ class SpecialEventCarouselSlider extends StatelessWidget {
           ),
         ),
       ),
-      SpecialEventBanner(
+      HomeScreenSpecialEventBanner(
         backgroundColor: Colors.red,
         child: Text.rich(
           TextSpan(
@@ -90,7 +90,7 @@ class SpecialEventCarouselSlider extends StatelessWidget {
           ),
         ),
       ),
-      SpecialEventBanner(
+      HomeScreenSpecialEventBanner(
         backgroundColor: Colors.green,
         child: Text.rich(
           TextSpan(

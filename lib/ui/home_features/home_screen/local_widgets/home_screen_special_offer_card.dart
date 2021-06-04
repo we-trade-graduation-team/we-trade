@@ -1,6 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import '../../../../models/cloud_firestore/special_offer_card/special_offer_card.dart';
+import '../../../../models/cloud_firestore/special_offer_card_models/my_special_offer_card/my_special_offer_card.dart';
 
 class HomeScreenSpecialOfferCard extends StatelessWidget {
   const HomeScreenSpecialOfferCard({
@@ -10,7 +10,8 @@ class HomeScreenSpecialOfferCard extends StatelessWidget {
     required this.cardHeight,
   }) : super(key: key);
 
-  final SpecialOfferCard specialOfferCard;
+  final MySpecialOfferCard specialOfferCard;
+
   final VoidCallback press;
   final double cardHeight;
 
@@ -88,8 +89,8 @@ class HomeScreenSpecialOfferCard extends StatelessWidget {
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
     properties.add(ObjectFlagProperty<VoidCallback>.has('press', press));
-    properties.add(DiagnosticsProperty<SpecialOfferCard>(
-        'specialOfferCard', specialOfferCard));
     properties.add(DoubleProperty('cardHeight', cardHeight));
+    properties.add(DiagnosticsProperty<MySpecialOfferCard>(
+        'specialOfferCard', specialOfferCard));
   }
 }

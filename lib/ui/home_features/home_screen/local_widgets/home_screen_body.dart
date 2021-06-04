@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'home_screen_app_bar.dart';
 import 'home_screen_sections_box.dart';
 
-class Body extends StatelessWidget {
-  const Body({
+class HomeScreenBody extends StatelessWidget {
+  const HomeScreenBody({
     Key? key,
   }) : super(key: key);
 
