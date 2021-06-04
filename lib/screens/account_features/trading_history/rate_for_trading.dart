@@ -423,7 +423,7 @@ class _RateForTradingState extends State<RateForTrading> {
             )
           : const Center(
               child: CircularProgressIndicator(
-                valueColor: AlwaysStoppedAnimation<Color>(Colors.blue),
+                valueColor: AlwaysStoppedAnimation<Color>(kPrimaryColor),
               ),
             ),
       bottomNavigationBar: Padding(

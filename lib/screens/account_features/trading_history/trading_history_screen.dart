@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 
 import '../../../models/shared_models/product_model.dart';
 import '../account/account_screen.dart';
+import '../shared_widgets/geting_data_status.dart';
 import '../shared_widgets/history_prod_card.dart';
 import '../utils.dart';
 
@@ -28,7 +29,7 @@ class _TradingHistoryScreenState extends State<TradingHistoryScreen> {
     const money = 100000;
     final forProduct = allProduct[3];
 
-  return Scaffold(
+    return Scaffold(
       appBar: AppBar(
         title: const Text('Lịch sử giao dịch'),
       ),
@@ -50,7 +51,9 @@ class _TradingHistoryScreenState extends State<TradingHistoryScreen> {
                   Navigator.of(context).pop();
                 });
             return const Center(
-              child: CircularProgressIndicator(),
+              child: CircularProgressIndicator(
+                valueColor: AlwaysStoppedAnimation<Color>(Colors.black26),
+              ),
             );
           }
           final data = snapshot.data!.data() as Map<String, dynamic>;
@@ -66,19 +69,11 @@ class _TradingHistoryScreenState extends State<TradingHistoryScreen> {
                       .get(),
                   builder: (context, snapshot) {
                     if (snapshot.hasError) {
-                      return Text('Something went wrong',
-                          style: TextStyle(
-                            fontWeight: FontWeight.normal,
-                            color: Colors.red.withOpacity(0.6),
-                          ));
+                      return const  WentWrong();
                     }
 
                     if (snapshot.hasData && !snapshot.data!.exists) {
-                      return Text('Document does not exist',
-                          style: TextStyle(
-                            fontWeight: FontWeight.normal,
-                            color: Colors.red.withOpacity(0.6),
-                          ));
+                      return const  DataDoesNotExist();
                     }
                     if (snapshot.connectionState == ConnectionState.done) {
                       return Padding(
@@ -92,11 +87,8 @@ class _TradingHistoryScreenState extends State<TradingHistoryScreen> {
                         ),
                       );
                     }
-                    return const Center(
-                      child: CircularProgressIndicator(
-                        valueColor: AlwaysStoppedAnimation<Color>(Colors.blue),
-                      ),
-                    );
+                    return const CustomLinearProgressIndicator(
+                        verticalPadding: 30, horizontalPadding: 30);
                   },
                 );
               },

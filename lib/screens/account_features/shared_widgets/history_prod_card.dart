@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
+import 'package:we_trade/screens/account_features/shared_widgets/geting_data_status.dart';
 
 import '../../../configs/constants/color.dart';
 import '../../../models/shared_models/product_model.dart';
@@ -297,11 +298,8 @@ class _HistoryProductCardState extends State<HistoryProductCard> {
               ),
             ),
           )
-        : const Center(
-            child: CircularProgressIndicator(
-              valueColor: AlwaysStoppedAnimation<Color>(Colors.blue),
-            ),
-          );
+        : const CustomLinearProgressIndicator(
+            verticalPadding: 30, horizontalPadding: 20);
   }
 
   @override

@@ -70,11 +70,8 @@ class _CustomFormBuilderTextFieldState
 
   @override
   Widget build(BuildContext context) {
-    final tempValue = TextEditingController();
-    tempValue.text = 'qwwww123@gmai.com';
-
     return FormBuilderTextField(
-      // controller: widget.textEditingController,
+      controller: widget.textEditingController,
       focusNode: myFocusNode,
       name: widget.name,
       decoration: InputDecoration(
@@ -93,7 +90,6 @@ class _CustomFormBuilderTextFieldState
       obscureText: widget.obscureText,
       autovalidateMode: widget.autovalidateMode,
       keyboardType: widget.keyboardType,
-      controller: tempValue,
     );
   }
 
