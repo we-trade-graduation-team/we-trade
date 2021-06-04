@@ -1,6 +1,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import '../../../constants/app_colors.dart';
 
+<<<<<<< HEAD:lib/screens/posting_features/post_items/postitem_stepfour.dart
 import '../../../configs/constants/color.dart';
 //import '../../home_features/detail_screen/detail_screen.dart';
 
@@ -10,23 +12,26 @@ class PostItemFour extends StatelessWidget {
   static const routeName = '/PostItemFour';
 
   late FocusScopeNode node;
+=======
+class PostItemStepFour extends StatelessWidget {
+  const PostItemStepFour({
+    Key? key,
+  }) : super(key: key);
+>>>>>>> master:lib/ui/posting_features/post_items/post_item_step_four.dart
 
   @override
   Widget build(BuildContext context) {
-    node = FocusScope.of(context);
+    final node = FocusScope.of(context);
     return Scaffold(
-      backgroundColor: kScreenBackgroundColor,
+      backgroundColor: AppColors.kScreenBackgroundColor,
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
         // Here we take the value from the Post_Item_1 object that was created by
         // the App.build method, and use it to set our appbar title.
-        title: const Text('Đăng sản phẩm mới - 4',
-            style: TextStyle(color: kTextColor)),
+        title: const Text('Đăng sản phẩm mới - 4'),
       ),
       body: GestureDetector(
-        onTap: () {
-          node.unfocus();
-        },
+        onTap: node.unfocus,
         child: Container(
           margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
           child: ListView(
@@ -132,10 +137,10 @@ class PostItemFour extends StatelessWidget {
               //button
               TextButton(
                 style: ButtonStyle(
-                    foregroundColor:
-                        MaterialStateProperty.all<Color>(kPrimaryLightColor),
-                    backgroundColor:
-                        MaterialStateProperty.all<Color>(kPrimaryColor)),
+                    foregroundColor: MaterialStateProperty.all<Color>(
+                        Theme.of(context).primaryColorLight),
+                    backgroundColor: MaterialStateProperty.all<Color>(
+                        Theme.of(context).primaryColor)),
                 onPressed: () {
                   //  pushNewScreenWithRouteSettings<void>(
                   //     context,
@@ -154,11 +159,5 @@ class PostItemFour extends StatelessWidget {
         ),
       ),
     );
-  }
-
-  @override
-  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
-    super.debugFillProperties(properties);
-    properties.add(DiagnosticsProperty<FocusScopeNode>('node', node));
   }
 }

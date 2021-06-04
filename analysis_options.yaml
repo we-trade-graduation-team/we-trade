@@ -1,10 +1,10 @@
 include: all_lint_rules.yaml
 analyzer:
   exclude:
-    - "**/*.g.dart"
-    - "**/*.freezed.dart"
+    - '**/*.g.dart'
+    - '**/*.freezed.dart'
     # This is generated from the i18n vscode extension
-    - "**/i18n.dart"
+    - '**/i18n.dart'
   strong-mode:
     implicit-casts: false
     implicit-dynamic: false
