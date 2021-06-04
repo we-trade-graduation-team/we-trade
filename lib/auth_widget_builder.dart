@@ -27,7 +27,7 @@ class AuthWidgetBuilder extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final authService = context.read<AuthProvider>();
+    final authService = context.watch<AuthProvider>();
 
     return StreamProvider<User?>.value(
       initialData: null,
