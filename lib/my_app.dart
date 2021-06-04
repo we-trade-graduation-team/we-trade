@@ -75,11 +75,11 @@ class _MyAppState extends State<MyApp> {
   }
 
   Widget _somethingWentWrong() {
-    return MaterialApp(
+    return const MaterialApp(
       debugShowCheckedModeBanner: false,
-      locale: DevicePreview.locale(context), // Add the locale here
-      builder: DevicePreview.appBuilder, // Add the builder here
-      home: const Scaffold(
+      // locale: DevicePreview.locale(context), // Add the locale here
+      // builder: DevicePreview.appBuilder, // Add the builder here
+      home: Scaffold(
         backgroundColor: Colors.white,
         body: Center(
           child: Text('Something went wrong...'),
@@ -158,26 +158,12 @@ class _MyAppState extends State<MyApp> {
           },
           title: _flavor.toString(),
           routes: Routes.authenticationFeaturesRoutes,
-          // theme: themeData(),
-          theme: AppThemes.lightTheme,
-          darkTheme: AppThemes.darkTheme,
+          theme: themeData(),
+          // theme: AppThemes.lightTheme,
+          // darkTheme: AppThemes.darkTheme,
           themeMode:
               _themeProvider.isDarkModeOn ? ThemeMode.dark : ThemeMode.light,
           home: user != null ? const MainMenu() : const Authentication(),
-
-          // home: Consumer<AuthProvider>(
-          //   builder: (_, authProviderRef, __) {
-          //     if (user.connectionState == ConnectionState.active) {
-          //       return user.hasData
-          //           ? const MainMenu()
-          //           : const Authentication();
-          //     }
-
-          //     return const Material(
-          //       child: CircularProgressIndicator(),
-          //     );
-          //   },
-          // ),
         );
       },
     );
@@ -188,8 +174,8 @@ class _MyAppState extends State<MyApp> {
         'https://assets9.lottiefiles.com/packages/lf20_l2kZFi.json';
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      locale: DevicePreview.locale(context), // Add the locale here
-      builder: DevicePreview.appBuilder, // Add the builder here
+      // locale: DevicePreview.locale(context), // Add the locale here
+      // builder: DevicePreview.appBuilder, // Add the builder here
       home: Scaffold(
         body: LayoutBuilder(
           builder: (_, constraints) => ListView(
@@ -212,16 +198,3 @@ class _MyAppState extends State<MyApp> {
     );
   }
 }
-
-// class AuthenticationWrapper extends StatelessWidget {
-//   const AuthenticationWrapper({
-//     Key? key,
-//   }) : super(key: key);
-
-//   @override
-//   Widget build(BuildContext context) {
-//     final user = context.watch<User?>();
-
-//     return user != null ? const MainMenu() : const Authentication();
-//   }
-// }
