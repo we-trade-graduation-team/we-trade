@@ -8,7 +8,7 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:image_picker/image_picker.dart'; // import cho upload image
 import 'package:permission_handler/permission_handler.dart'; // import cho upload image
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
-import 'package:we_trade/constants/app_colors.dart';
+import '../../../../constants/app_colors.dart';
 
 import 'post_item_step_two.dart';
 
@@ -211,7 +211,7 @@ class _PostItemOneState extends State<PostItemOne> {
                             foregroundColor: MaterialStateProperty.all<Color>(
                                 AppColors.kPrimaryLightColor),
                             backgroundColor: MaterialStateProperty.all<Color>(
-                                AppColors.kScreenBackgroundColor)),
+                                Theme.of(context).primaryColor)),
                         onPressed: () {
                           node.unfocus();
                           if (_formKey.currentState?.saveAndValidate() ??

@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
-import 'package:we_trade/constants/app_colors.dart';
+import '../../../../constants/app_colors.dart';
 
 import 'post_item_step_four.dart';
 
@@ -170,7 +170,7 @@ class _PostItemThreeState extends State<PostItemThree> {
                             foregroundColor: MaterialStateProperty.all<Color>(
                                 AppColors.kPrimaryLightColor),
                             backgroundColor: MaterialStateProperty.all<Color>(
-                                AppColors.kScreenBackgroundColor)),
+                                Theme.of(context).primaryColor)),
                         onPressed: () {
                           pushNewScreenWithRouteSettings<void>(
                             context,

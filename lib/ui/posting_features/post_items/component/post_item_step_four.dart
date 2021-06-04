@@ -1,6 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:we_trade/constants/app_colors.dart';
+import '../../../../constants/app_colors.dart';
 
 //import '../../home_features/detail_screen/detail_screen.dart';
 

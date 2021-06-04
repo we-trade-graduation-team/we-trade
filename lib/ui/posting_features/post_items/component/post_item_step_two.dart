@@ -204,7 +204,7 @@ class _PostItemTwoState extends State<PostItemTwo> {
                             foregroundColor: MaterialStateProperty.all<Color>(
                                 AppColors.kPrimaryLightColor),
                             backgroundColor: MaterialStateProperty.all<Color>(
-                                AppColors.kScreenBackgroundColor)),
+                                Theme.of(context).primaryColor)),
                         onPressed: () {
                           pushNewScreenWithRouteSettings<void>(
                             context,
