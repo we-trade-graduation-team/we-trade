@@ -12,8 +12,7 @@ PostCard _$PostCardFromJson(Map<String, dynamic> json) {
     'title',
     'condition',
     'price',
-    'district',
-    'view'
+    'district'
   ]);
   return PostCard(
     title: json['title'] as String,
@@ -21,7 +20,7 @@ PostCard _$PostCardFromJson(Map<String, dynamic> json) {
     itemCondition: json['condition'] as String,
     itemPrice: (json['price'] as num).toDouble(),
     district: json['district'] as String,
-    view: json['view'] as int,
+    view: json['view'] as int?,
   );
 }
 

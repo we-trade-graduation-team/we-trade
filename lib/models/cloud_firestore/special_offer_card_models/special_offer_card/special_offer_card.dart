@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:json_annotation/json_annotation.dart';
+import '../my_special_offer_card/my_special_offer_card.dart';
 
 /// This allows the `SpecialOfferCard` class to access private members in
 /// the generated file. The value for this is *.g.dart, where
@@ -12,13 +13,15 @@ part 'special_offer_card.g.dart';
 
 /// Represents some descriptive information about a Category
 /// which has a special offer.
-class SpecialOfferCard {
+class SpecialOfferCard extends MySpecialOfferCard {
   SpecialOfferCard({
-    required this.category,
-    required this.photoUrl,
-    this.numberOfBrands = 0,
-    this.categoryId,
-  });
+    required String category,
+    required String photoUrl,
+    int numberOfBrands = 0,
+  }) : super(
+            category: category,
+            photoUrl: photoUrl,
+            numberOfBrands: numberOfBrands);
 
   /// A necessary factory constructor for creating a new SpecialOfferCard instance
   /// from a map. Pass the map to the generated `_$SpecialOfferCardFromJson()` constructor.
@@ -30,20 +33,6 @@ class SpecialOfferCard {
       _$SpecialOfferCardFromJson(snapshot.data() as Map<String, dynamic>)
         ..categoryId = snapshot.id;
 
-  @JsonKey(ignore: true)
-  String? categoryId;
-
-  @JsonKey(required: true)
-  final String category;
-
-  @JsonKey(required: true)
-  final String photoUrl;
-
-  /// Tell json_serializable to use "defaultValue" if the JSON doesn't
-  /// contain this key or if the value is `null`.
-  @JsonKey(defaultValue: 0)
-  final int numberOfBrands;
-
   /// `toJson` is the convention for a class to declare support for serialization
   /// to JSON. The implementation simply calls the private, generated
   /// helper method `_$SpecialOfferCardToJson`.
@@ -52,9 +41,4 @@ class SpecialOfferCard {
     json.removeWhere((key, dynamic value) => key == 'categoryId');
     return json;
   }
-
-  // /// `toJson` is the convention for a class to declare support for serialization
-  // /// to JSON. The implementation simply calls the private, generated
-  // /// helper method `_$SpecialOfferCardToJson`.
-  // Map<String, dynamic> toJson() => _$SpecialOfferCardToJson(this);
 }

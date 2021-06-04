@@ -16,7 +16,7 @@ class User {
     required this.email,
     this.firstName,
     this.lastName,
-    this.displayName,
+    this.username,
     this.uid,
     this.photoURL,
     this.phoneNumber,
@@ -24,6 +24,9 @@ class User {
     this.presence,
     this.lastSeen,
     this.searchHistory,
+    this.isEmailVerified = false,
+    // this.recommendedPostCards,
+    // this.specialOfferCards,
   });
 
   /// A necessary factory constructor for creating a new User instance
@@ -41,10 +44,8 @@ class User {
   @JsonKey(required: true)
   final String? email;
 
-  // Tell json_serializable that "username" should be
-  /// mapped to this property.
-  @JsonKey(name: 'username')
-  final String? displayName;
+  @JsonKey(required: true)
+  String? username;
 
   /// Tell json_serializable that "avatarUrl" should be
   /// mapped to this property.
@@ -63,12 +64,13 @@ class User {
   final DateTime? dob;
 
   @JsonKey(required: true)
-  final bool? presence;
+  bool? presence;
 
   @JsonKey(required: true)
   final int? lastSeen;
 
-  @JsonKey(required: true)
+  final bool? isEmailVerified;
+
   final List<String>? searchHistory;
 
   /// `toJson` is the convention for a class to declare support for serialization

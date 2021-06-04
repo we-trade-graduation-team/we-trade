@@ -3,7 +3,7 @@ import 'package:json_annotation/json_annotation.dart';
 
 import '../../ui/home_features/detail_screen/user_rating_card.dart';
 import '../address/address.dart';
-import '../post_card/post_card.dart';
+import '../post_card_models/post_card/post_card.dart';
 import '../post_question/post_question.dart';
 
 /// This allows the `PostDetails` class to access private members in
