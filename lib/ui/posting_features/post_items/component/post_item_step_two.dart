@@ -2,9 +2,9 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 
-import '../../../configs/constants/color.dart';
-import '../../../services/post_feature/post_service_firestore.dart';
-import 'postitem_stepthree.dart';
+import '../../../../constants/app_colors.dart';
+import '../../../../services/post_feature/post_service_firestore.dart';
+import 'post_item_step_three.dart';
 
 class PostItemTwo extends StatefulWidget {
   const PostItemTwo({Key? key}) : super(key: key);
@@ -145,11 +145,11 @@ class _PostItemTwoState extends State<PostItemTwo> {
       }
     });
     return Scaffold(
-      backgroundColor: kScreenBackgroundColor,
+      backgroundColor: AppColors.kScreenBackgroundColor,
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
         title: const Text('Đăng sản phẩm mới - 2',
-            style: TextStyle(color: kTextColor)),
+            style: TextStyle(color: AppColors.kTextColor)),
       ),
       body: Container(
           margin: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
@@ -202,9 +202,9 @@ class _PostItemTwoState extends State<PostItemTwo> {
                       child: TextButton(
                         style: ButtonStyle(
                             foregroundColor: MaterialStateProperty.all<Color>(
-                                kPrimaryLightColor),
+                                AppColors.kPrimaryLightColor),
                             backgroundColor: MaterialStateProperty.all<Color>(
-                                kPrimaryColor)),
+                                AppColors.kScreenBackgroundColor)),
                         onPressed: () {
                           pushNewScreenWithRouteSettings<void>(
                             context,

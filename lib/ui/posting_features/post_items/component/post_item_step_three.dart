@@ -2,9 +2,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
+import 'package:we_trade/constants/app_colors.dart';
 
-import '../../../configs/constants/color.dart';
-import 'postitem_stepfour.dart';
+import 'post_item_step_four.dart';
 
 class PostItemThree extends StatefulWidget {
   const PostItemThree({Key? key}) : super(key: key);
@@ -129,11 +129,11 @@ class _PostItemThreeState extends State<PostItemThree> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: kScreenBackgroundColor,
+      backgroundColor: AppColors.kScreenBackgroundColor,
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
         title: const Text('Đăng sản phẩm mới - 3',
-            style: TextStyle(color: kTextColor)),
+            style: TextStyle(color: AppColors.kTextColor)),
       ),
       body: Container(
           margin: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
@@ -168,9 +168,9 @@ class _PostItemThreeState extends State<PostItemThree> {
                       child: TextButton(
                         style: ButtonStyle(
                             foregroundColor: MaterialStateProperty.all<Color>(
-                                kPrimaryLightColor),
+                                AppColors.kPrimaryLightColor),
                             backgroundColor: MaterialStateProperty.all<Color>(
-                                kPrimaryColor)),
+                                AppColors.kScreenBackgroundColor)),
                         onPressed: () {
                           pushNewScreenWithRouteSettings<void>(
                             context,

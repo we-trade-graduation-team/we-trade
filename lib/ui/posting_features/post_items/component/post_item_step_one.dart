@@ -8,9 +8,9 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:image_picker/image_picker.dart'; // import cho upload image
 import 'package:permission_handler/permission_handler.dart'; // import cho upload image
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
+import 'package:we_trade/constants/app_colors.dart';
 
-import '../../../configs/constants/color.dart';
-import 'postitem_steptwo.dart';
+import 'post_item_step_two.dart';
 
 class PostItemOne extends StatefulWidget {
   const PostItemOne({
@@ -84,13 +84,13 @@ class _PostItemOneState extends State<PostItemOne> {
   Widget build(BuildContext context) {
     node = FocusScope.of(context);
     return Scaffold(
-      backgroundColor: kScreenBackgroundColor,
+      backgroundColor: AppColors.kScreenBackgroundColor,
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
         // Here we take the value from the PostItemOne object that was created by
         // the App.build method, and use it to set our appbar title.
         title: const Text('Đăng sản phẩm mới',
-            style: TextStyle(color: kTextColor)),
+            style: TextStyle(color: AppColors.kTextColor)),
       ),
       body: GestureDetector(
         onTap: () {
@@ -114,7 +114,8 @@ class _PostItemOneState extends State<PostItemOne> {
                 children: [
                   // ignore: unnecessary_null_comparison
                   if (imageUrl != null)
-                    Image.network(imageUrl, fit: BoxFit.fitWidth)
+                    Image.network(imageUrl,
+                        height: 100, width: 100, fit: BoxFit.scaleDown)
                   else
                     const Placeholder(fallbackHeight: 20, fallbackWidth: 20),
                 ],
@@ -140,7 +141,7 @@ class _PostItemOneState extends State<PostItemOne> {
                       decoration: const InputDecoration(
                         labelText: 'Tên sản phẩm',
                         labelStyle: TextStyle(
-                          color: kTextColor,
+                          color: AppColors.kTextColor,
                           fontWeight: FontWeight.w600,
                         ),
                         floatingLabelBehavior: FloatingLabelBehavior.auto,
@@ -157,7 +158,7 @@ class _PostItemOneState extends State<PostItemOne> {
                       decoration: const InputDecoration(
                         labelText: 'Mô tả sản phẩm',
                         labelStyle: TextStyle(
-                          color: kTextColor,
+                          color: AppColors.kTextColor,
                           fontWeight: FontWeight.w600,
                         ),
                         floatingLabelBehavior: FloatingLabelBehavior.auto,
@@ -174,7 +175,7 @@ class _PostItemOneState extends State<PostItemOne> {
                       decoration: const InputDecoration(
                         labelText: 'Số lượng trao đổi',
                         labelStyle: TextStyle(
-                          color: kTextColor,
+                          color: AppColors.kTextColor,
                           fontWeight: FontWeight.w600,
                         ),
                         floatingLabelBehavior: FloatingLabelBehavior.auto,
@@ -192,7 +193,7 @@ class _PostItemOneState extends State<PostItemOne> {
                       decoration: const InputDecoration(
                         labelText: 'Xuất xứ',
                         labelStyle: TextStyle(
-                          color: kTextColor,
+                          color: AppColors.kTextColor,
                           fontWeight: FontWeight.w600,
                         ),
                         floatingLabelBehavior: FloatingLabelBehavior.auto,
@@ -208,9 +209,9 @@ class _PostItemOneState extends State<PostItemOne> {
                       child: TextButton(
                         style: ButtonStyle(
                             foregroundColor: MaterialStateProperty.all<Color>(
-                                kPrimaryLightColor),
+                                AppColors.kPrimaryLightColor),
                             backgroundColor: MaterialStateProperty.all<Color>(
-                                kPrimaryColor)),
+                                AppColors.kScreenBackgroundColor)),
                         onPressed: () {
                           node.unfocus();
                           if (_formKey.currentState?.saveAndValidate() ??

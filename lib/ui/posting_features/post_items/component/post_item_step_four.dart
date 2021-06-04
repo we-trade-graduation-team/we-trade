@@ -1,9 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import '../../../constants/app_colors.dart';
+import 'package:we_trade/constants/app_colors.dart';
 
-<<<<<<< HEAD:lib/screens/posting_features/post_items/postitem_stepfour.dart
-import '../../../configs/constants/color.dart';
 //import '../../home_features/detail_screen/detail_screen.dart';
 
 // ignore: must_be_immutable
@@ -12,12 +10,6 @@ class PostItemFour extends StatelessWidget {
   static const routeName = '/PostItemFour';
 
   late FocusScopeNode node;
-=======
-class PostItemStepFour extends StatelessWidget {
-  const PostItemStepFour({
-    Key? key,
-  }) : super(key: key);
->>>>>>> master:lib/ui/posting_features/post_items/post_item_step_four.dart
 
   @override
   Widget build(BuildContext context) {
@@ -159,5 +151,10 @@ class PostItemStepFour extends StatelessWidget {
         ),
       ),
     );
+  }
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(DiagnosticsProperty<FocusScopeNode>('node', node));
   }
 }
