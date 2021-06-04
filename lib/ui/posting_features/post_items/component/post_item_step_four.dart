@@ -1,11 +1,15 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import '../../../constants/app_colors.dart';
+import '../../../../constants/app_colors.dart';
 
-class PostItemStepFour extends StatelessWidget {
-  const PostItemStepFour({
-    Key? key,
-  }) : super(key: key);
+//import '../../home_features/detail_screen/detail_screen.dart';
+
+// ignore: must_be_immutable
+class PostItemFour extends StatelessWidget {
+  PostItemFour({Key? key}) : super(key: key);
+  static const routeName = '/PostItemFour';
+
+  late FocusScopeNode node;
 
   @override
   Widget build(BuildContext context) {
@@ -130,7 +134,15 @@ class PostItemStepFour extends StatelessWidget {
                     backgroundColor: MaterialStateProperty.all<Color>(
                         Theme.of(context).primaryColor)),
                 onPressed: () {
-                  //Navigator.of(context).pushNamed(DetailScreen.routeName);
+                  //  pushNewScreenWithRouteSettings<void>(
+                  //     context,
+                  //     settings:
+                  //         const RouteSettings(name: PostItemFour.routeName),
+                  //     screen: const PostItemFour(),
+                  //     withNavBar: true,
+                  //     pageTransitionAnimation:
+                  //         PageTransitionAnimation.cupertino,
+                  //   );
                 },
                 child: const Text('Hoàn thành'),
               ),
@@ -139,5 +151,10 @@ class PostItemStepFour extends StatelessWidget {
         ),
       ),
     );
+  }
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(DiagnosticsProperty<FocusScopeNode>('node', node));
   }
 }

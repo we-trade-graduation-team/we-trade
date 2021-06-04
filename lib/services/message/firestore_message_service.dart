@@ -129,11 +129,11 @@ class MessageServiceFireStore {
         .snapshots();
   }
 
-  Future<List<UserTrang>> getAllUserInChatRoom(String chatRoomId) {
+  Future<List<UserAlgolia>> getAllUserInChatRoom(String chatRoomId) {
     return getAllUsersIdInChatRoom(chatRoomId).then((usersId) async {
       // final usersId =
       //     (value.data()![usersIdStr] as List<dynamic>).cast<String>().toList();
-      final users = <UserTrang>[];
+      final users = <UserAlgolia>[];
       for (final userid in usersId) {
         final user = await messageServiceAlgolia.getUserById(userid);
         users.add(user);

@@ -46,9 +46,9 @@ class _BodyState extends State<Body> {
   late bool isLoading = false;
 
   late List<AlgoliaObjectSnapshot> querySnapshot = [];
-  late List<UserTrang> choosedUsers = [];
+  late List<UserAlgolia> choosedUsers = [];
 
-  void addUserToList(UserTrang user) {
+  void addUserToList(UserAlgolia user) {
     setState(() {
       if (!choosedUsers.contains(user) && !widget.usersId.contains(user.id)) {
         choosedUsers.add(user);
@@ -152,7 +152,7 @@ class _BodyState extends State<Body> {
     );
   }
 
-  String createChatRoomId(List<UserTrang> users) {
+  String createChatRoomId(List<UserAlgolia> users) {
     final chatRoomId = StringBuffer();
     final usersId = <String>[];
     for (final user in users) {
@@ -271,7 +271,7 @@ class _BodyState extends State<Body> {
                     itemCount: querySnapshot.length,
                     itemBuilder: (context, index) {
                       final object = querySnapshot[index];
-                      final user = UserTrang(
+                      final user = UserAlgolia(
                           id: object.objectID,
                           name: object.data[nameStr].toString(),
                           image: object.data[imageStr].toString(),
@@ -405,6 +405,6 @@ class _BodyState extends State<Body> {
         'dataServiceAlgolia', dataServiceAlgolia));
     properties.add(DiagnosticsProperty<bool>('isLoading', isLoading));
     properties.add(DiagnosticsProperty<User>('thisUser', thisUser));
-    properties.add(IterableProperty<UserTrang>('choosedUsers', choosedUsers));
+    properties.add(IterableProperty<UserAlgolia>('choosedUsers', choosedUsers));
   }
 }
