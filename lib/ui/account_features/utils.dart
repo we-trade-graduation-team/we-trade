@@ -52,7 +52,7 @@ Future<void> showMyConfirmationDialog({
             ],
           ),
         ),
-        actions: <Widget>[
+        actions: [
           TextButton(
             onPressed: () {
               onConfirmFunction();
@@ -66,6 +66,45 @@ Future<void> showMyConfirmationDialog({
             child: const Text('Cancel'),
           ),
         ],
+      );
+    },
+  );
+}
+
+Future<void> showMyPickerMethodDialog({
+  required BuildContext context,
+  required String mainTitle,
+  required String fromGalleryTitle,
+  required Function fromGalleryHandler,
+  required String fromCameraTitle,
+  required Function fromCameraHandler,
+}) async {
+  return showDialog<void>(
+    context: context,
+    builder: (context) {
+      return AlertDialog(
+        // title: Text('Chọn ảnh từ'),
+        content: SingleChildScrollView(
+          child: ListBody(
+            children: [
+              Text(mainTitle),
+              TextButton(
+                onPressed: () {
+                  fromGalleryHandler();
+                  Navigator.of(context).pop();
+                },
+                child: Text(fromGalleryTitle),
+              ),
+              TextButton(
+                onPressed: () {
+                  fromCameraHandler();
+                  Navigator.of(context).pop();
+                },
+                child: Text(fromCameraTitle),
+              ),
+            ],
+          ),
+        ),
       );
     },
   );
