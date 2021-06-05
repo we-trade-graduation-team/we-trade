@@ -1,9 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
-import '../../models/ui/chat/temp_class.dart';
-import '../../ui/message_features/chat_screen/widgets/users_card.dart';
-import '../../ui/message_features/const_string/const_str.dart';
 
+import '../../models/ui/chat/temp_class.dart';
+import '../../ui/message_features/const_string/const_str.dart';
+import '../../ui/message_features/ulti.dart';
 import 'algolia_message_service.dart';
 
 class MessageServiceFireStore {
@@ -129,11 +129,11 @@ class MessageServiceFireStore {
         .snapshots();
   }
 
-  Future<List<UserTrang>> getAllUserInChatRoom(String chatRoomId) {
+  Future<List<UserAlgolia>> getAllUserInChatRoom(String chatRoomId) {
     return getAllUsersIdInChatRoom(chatRoomId).then((usersId) async {
       // final usersId =
       //     (value.data()![usersIdStr] as List<dynamic>).cast<String>().toList();
-      final users = <UserTrang>[];
+      final users = <UserAlgolia>[];
       for (final userid in usersId) {
         final user = await messageServiceAlgolia.getUserById(userid);
         users.add(user);
@@ -180,7 +180,7 @@ class MessageServiceFireStore {
       chatRoomName = snapShot[chatRoomNameStr].toString();
     } else {
       if (snapShot[isGroupChatStr] as bool) {
-        chatRoomName = UsersCard.finalChatName(
+        chatRoomName = HelperClass.finalChatName(
             (snapShot[usersNameStr] as List<dynamic>).cast<String>().toList());
       }
     }

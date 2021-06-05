@@ -2,12 +2,12 @@ name: we_trade
 
 description: A new Flutter project.
 
-publish_to: "none"
+publish_to: 'none'
 
 version: 1.0.0+1
 
 environment:
-  sdk: ">=2.12.0-259.16.beta <3.0.0"
+  sdk: '>=2.12.0-259.16.beta <3.0.0'
 
 dependencies:
   flutter:
@@ -44,7 +44,6 @@ dependencies:
   google_sign_in: ^5.0.4
   group_button: ^2.1.0
   http: ^0.13.2
-  image_picker: ^0.7.4
   implicitly_animated_reorderable_list: ^0.4.0
   intl: ^0.17.0
   introduction_screen: ^2.1.0
@@ -60,6 +59,13 @@ dependencies:
   shared_preferences: ^2.0.5
   timeago: ^3.0.2
   toggle_switch: ^0.1.9
+  image_picker: ^0.7.4
+  dropdown_formfield: ^0.1.3
+  permission_handler: ^8.0.0+2
+  multi_image_picker2: ^5.0.0
+  path_provider: ^2.0.2
+  cached_network_image: ^3.0.0
+  pinch_zoom: ^0.1.0
 
 dev_dependencies:
   flutter_test:
@@ -68,9 +74,9 @@ dev_dependencies:
   flutter_native_splash: ^1.1.8+4
 
 flutter_icons:
-  android: "launcher_icon"
+  android: 'launcher_icon'
   ios: true
-  image_path: "assets/images/logos/logo.png"
+  image_path: 'assets/images/logos/logo.png'
 
 flutter:
   uses-material-design: true
@@ -82,7 +88,6 @@ flutter:
     - assets/icons/auth/
     - assets/images/
     - assets/images/logos/
-    - assets/images/chat_screen_ava/
     - assets/images/products_images_temp/
     - assets/images/on_boarding_screen/
     - assets/images/secondary_splash_screen/

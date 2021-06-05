@@ -8,7 +8,7 @@ class UserChoiceChip extends StatelessWidget {
   const UserChoiceChip({Key? key, required this.user, required this.press})
       : super(key: key);
 
-  final UserTrang user;
+  final UserAlgolia user;
   final VoidCallback press;
 
   @override
@@ -48,6 +48,6 @@ class UserChoiceChip extends StatelessWidget {
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
     properties.add(ObjectFlagProperty<VoidCallback>.has('press', press));
-    properties.add(DiagnosticsProperty<UserTrang>('user', user));
+    properties.add(DiagnosticsProperty<UserAlgolia>('user', user));
   }
 }

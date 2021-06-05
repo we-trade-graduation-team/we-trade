@@ -14,13 +14,13 @@ class MessageServiceAlgolia {
         .then((result) => result.hits);
   }
 
-  Future<UserTrang> getUserById(String id) async {
+  Future<UserAlgolia> getUserById(String id) async {
     return algolia.instance
         .index(trangUsers)
         .object(id)
         .getObject()
         .then((value) {
-      final user = UserTrang(
+      final user = UserAlgolia(
           id: id,
           name: value.data[nameStr].toString(),
           image: value.data[imageStr].toString(),

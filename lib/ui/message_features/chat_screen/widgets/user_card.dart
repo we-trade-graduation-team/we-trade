@@ -13,7 +13,7 @@ class UserCard extends StatelessWidget {
       this.showActiveAt = false})
       : super(key: key);
 
-  final UserTrang user;
+  final UserAlgolia user;
   final VoidCallback press;
   final bool showActiveAt;
 
@@ -79,7 +79,7 @@ class UserCard extends StatelessWidget {
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
-    properties.add(DiagnosticsProperty<UserTrang>('user', user));
+    properties.add(DiagnosticsProperty<UserAlgolia>('user', user));
     properties.add(ObjectFlagProperty<VoidCallback>.has('press', press));
     properties.add(DiagnosticsProperty<bool>('showActiveAt', showActiveAt));
   }
