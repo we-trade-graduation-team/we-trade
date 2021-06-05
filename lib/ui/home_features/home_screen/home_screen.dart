@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-import 'local_widgets/body.dart';
+import 'local_widgets/home_screen_body.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({
@@ -16,7 +16,7 @@ class HomeScreen extends StatelessWidget {
     return const Scaffold(
       extendBodyBehindAppBar: true,
       resizeToAvoidBottomInset: false,
-      body: Body(),
+      body: HomeScreenBody(),
     );
   }
 }

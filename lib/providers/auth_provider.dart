@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -53,8 +54,8 @@ class AuthProvider extends ChangeNotifier {
     return user_model.User(
       uid: user.uid,
       email: user.email,
-      displayName: user.displayName,
-      phoneNumber: user.phoneNumber,
+      username: user.displayName,
+      isEmailVerified: user.emailVerified,
       photoURL: user.photoURL,
     );
   }
@@ -82,12 +83,24 @@ class AuthProvider extends ChangeNotifier {
 
       notifyListeners();
 
-      await _auth.signInWithEmailAndPassword(
+      final _result = await _auth.signInWithEmailAndPassword(
         email: email,
         password: password,
       );
 
-      // return true;
+      final _firebaseAuthUser = _result.user;
+
+      final _newUser = _userFromFirebase(_firebaseAuthUser);
+
+      if (_newUser != null) {
+        final _presenceData = {
+          'presence': true,
+        };
+
+        // Add new user to users Collection
+        final _usersRef = FirebaseFirestore.instance.collection('users');
+        await _usersRef.doc(_newUser.uid).update(_presenceData);
+      }
     } on FirebaseAuthException catch (e) {
       // print("Error on the sign in = " + e.toString());
       _status = Status.unauthenticated;
@@ -102,21 +115,34 @@ class AuthProvider extends ChangeNotifier {
   Future<String?> registerWithEmailAndPassword({
     required String email,
     required String password,
+    required String username,
   }) async {
     try {
       _status = Status.registering;
 
       notifyListeners();
 
-      final result = await _auth.createUserWithEmailAndPassword(
+      final _result = await _auth.createUserWithEmailAndPassword(
         email: email,
         password: password,
       );
 
-      final user = _userFromFirebase(result.user);
+      final _firebaseAuthUser = _result.user;
 
-      if (user != null) {
-        // TODO: <Phuc> Add new user to users Collection
+      await _firebaseAuthUser?.updateProfile(
+        displayName: username,
+      );
+
+      final _newUser = _userFromFirebase(_firebaseAuthUser);
+
+      if (_newUser != null) {
+        // Set username for new user
+        _newUser.username = username;
+        _newUser.presence = true;
+
+        // Add new user to users Collection
+        final _usersRef = FirebaseFirestore.instance.collection('users');
+        await _usersRef.doc(_newUser.uid).set(_newUser.toJson());
       }
     } on FirebaseAuthException catch (e) {
       // print("Error on the new user registration = " + e.toString());

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+// TODO: <Vu> Add this file to Provider folder
 class ReportBloc extends ChangeNotifier {
   bool _unlockTextField = false;
   bool _confirmed = false;

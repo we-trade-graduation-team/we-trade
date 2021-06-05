@@ -14,7 +14,7 @@ class HomeScreenCategoryCards extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final _firestoreDatabase = context.read<FirestoreDatabase>();
+    final _firestoreDatabase = context.watch<FirestoreDatabase>();
 
     final size = MediaQuery.of(context).size;
     return ConstrainedBox(

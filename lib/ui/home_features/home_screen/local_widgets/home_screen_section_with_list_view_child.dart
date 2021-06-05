@@ -4,8 +4,8 @@ import '../../../../models/ui/home_features/home_screen/section_column_model.dar
 
 import 'home_screen_section_column.dart';
 
-class HomeSectionWithListViewChild extends StatelessWidget {
-  const HomeSectionWithListViewChild({
+class HomeScreenSectionWithListViewChild extends StatelessWidget {
+  const HomeScreenSectionWithListViewChild({
     Key? key,
     required this.sectionColumnModel,
   }) : super(key: key);

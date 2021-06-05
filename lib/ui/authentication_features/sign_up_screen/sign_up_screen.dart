@@ -7,8 +7,8 @@ import 'package:loading_overlay/loading_overlay.dart';
 import 'package:provider/provider.dart';
 
 import '../../../app_localizations.dart';
-import '../../../models/ui/authentication_features/authentication_error_content.dart';
 import '../../../providers/auth_provider.dart';
+import '../../../utils/helper/authentication/dialog_content_helper/dialog_content_helper.dart';
 import '../../../utils/helper/flash/flash_helper.dart';
 import '../shared_widgets/auth_custom_background.dart';
 import '../shared_widgets/custom_form_builder_text_field.dart';
@@ -35,6 +35,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
   final _formKey = GlobalKey<FormBuilderState>();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
+  final _confirmPasswordController = TextEditingController();
+  final _usernameController = TextEditingController();
   final _scaffoldKey = GlobalKey<ScaffoldState>();
 
   // manage state of modal progress HUD widget
@@ -60,8 +62,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final _authProvider = context.watch<AuthProvider>();
-
     SystemChrome.setSystemUIOverlayStyle(
       const SystemUiOverlayStyle(
         statusBarIconBrightness: Brightness.light,
@@ -110,6 +110,18 @@ class _SignUpScreenState extends State<SignUpScreen> {
         ),
         obscureText: true,
         onEditingComplete: node.nextFocus,
+        textEditingController: _confirmPasswordController,
+      ),
+      CustomFormBuilderTextField(
+        name: 'username',
+        labelText: _appLocalizations.translate('registerTxtUsername'),
+        validator: FormBuilderValidators.compose([
+          FormBuilderValidators.required(context),
+          FormBuilderValidators.minLength(context, 4),
+          FormBuilderValidators.maxLength(context, 20),
+        ]),
+        onEditingComplete: node.nextFocus,
+        textEditingController: _usernameController,
       ),
       // ! Have a issue, maybe use later
       // FormBuilderCheckbox(
@@ -175,64 +187,58 @@ class _SignUpScreenState extends State<SignUpScreen> {
           formKey: _formKey,
           inputFormChildren: inputFormChildren,
           footerChildren: footerChildren,
-          onSubmit: () async {
-            // start the modal progress HUD
-            setState(() {
-              _isLoading = true;
-            });
-
-            final result = await _authProvider.registerWithEmailAndPassword(
-              email: _emailController.text.trim(),
-              password: _passwordController.text.trim(),
-            );
-
-            if (!mounted) {
-              return;
-            }
-
-            // stop the modal progress HUD
-            setState(() {
-              _isLoading = false;
-            });
-
-            final _appLocalizations = AppLocalizations.of(context);
-
-            final signUpDialogContents = {
-              'email-already-in-use': AuthenticationErrorContent(
-                title: _appLocalizations
-                    .translate('registerAlertTxtErrorEmailAlreadyInUseTitle'),
-                content: _appLocalizations
-                    .translate('registerAlertTxtErrorEmailAlreadyInUseContent'),
-              ),
-              'invalid-email': AuthenticationErrorContent(
-                title: _appLocalizations
-                    .translate('registerAlertTxtErrorInvalidEmailTitle'),
-                content: _appLocalizations
-                    .translate('registerAlertTxtErrorInvalidEmailContent'),
-              ),
-              'operation-not-allowed': AuthenticationErrorContent(
-                title: _appLocalizations
-                    .translate('registerAlertTxtErrorOperationNotAllowedTitle'),
-                content: _appLocalizations.translate(
-                    'registerAlertTxtErrorOperationNotAllowedContent'),
-              ),
-              'weak-password': AuthenticationErrorContent(
-                title: _appLocalizations
-                    .translate('registerAlertTxtErrorWeakPasswordTitle'),
-                content: _appLocalizations
-                    .translate('registerAlertTxtErrorWeakPasswordContent'),
-              ),
-            };
-
-            if (result != null) {
-              await FlashHelper.showDialogFlash(
-                context,
-                content: signUpDialogContents[result],
-              );
-            }
-          },
+          onSubmit: signUp,
         ),
       ),
     );
+  }
+
+  Future<void> signUp() async {
+    final _authProvider = context.read<AuthProvider>();
+
+    // start the modal progress HUD
+    setState(() {
+      _isLoading = true;
+    });
+
+    final result = await _authProvider.registerWithEmailAndPassword(
+      email: _emailController.text.trim(),
+      password: _passwordController.text.trim(),
+      username: _usernameController.text.trim(),
+    );
+
+    if (!mounted) {
+      return;
+    }
+
+    // stop the modal progress HUD
+    setState(() {
+      _isLoading = false;
+    });
+
+    if (result != null) {
+      final _appLocalizations = AppLocalizations.of(context);
+
+      final _contentHelper = DialogContentHelper(_appLocalizations);
+
+      final signUpDialogContents = _contentHelper.signUpDialogContents;
+
+      final myDialogContent = signUpDialogContents[result];
+
+      final dialogTitleText = myDialogContent != null
+          ? myDialogContent.title
+          : _appLocalizations.translate('authenticationAlertTxtErrorTitle');
+
+      final dialogContentText = myDialogContent != null
+          ? myDialogContent.content
+          : _appLocalizations.translate('authenticationAlertTxtErrorContent');
+
+      await FlashHelper.showDialogFlash(
+        context,
+        title: Text(dialogTitleText),
+        content: Text(dialogContentText),
+        showBothAction: false,
+      );
+    }
   }
 }

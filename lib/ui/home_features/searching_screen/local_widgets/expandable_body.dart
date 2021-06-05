@@ -2,8 +2,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:implicitly_animated_reorderable_list/implicitly_animated_reorderable_list.dart';
 import 'package:implicitly_animated_reorderable_list/transitions.dart';
+import '../../../../models/cloud_firestore/post_card_models/post_card/post_card.dart';
 
-import '../../../../models/cloud_firestore/post_card/post_card.dart';
 import '../../../../models/cloud_firestore/search_model/search_model.dart';
 import 'item.dart';
 

@@ -8,12 +8,12 @@ part of 'user.dart';
 
 User _$UserFromJson(Map<String, dynamic> json) {
   $checkKeys(json,
-      requiredKeys: const ['email', 'presence', 'lastSeen', 'searchHistory']);
+      requiredKeys: const ['email', 'username', 'presence', 'lastSeen']);
   return User(
     email: json['email'] as String?,
     firstName: json['firstName'] as String?,
     lastName: json['lastName'] as String?,
-    displayName: json['username'] as String?,
+    username: json['username'] as String?,
     photoURL: json['avatarUrl'] as String?,
     phoneNumber: json['phone'] as String?,
     dob: json['dob'] == null ? null : DateTime.parse(json['dob'] as String),
@@ -22,12 +22,13 @@ User _$UserFromJson(Map<String, dynamic> json) {
     searchHistory: (json['searchHistory'] as List<dynamic>?)
         ?.map((e) => e as String)
         .toList(),
+    isEmailVerified: json['isEmailVerified'] as bool?,
   );
 }
 
 Map<String, dynamic> _$UserToJson(User instance) => <String, dynamic>{
       'email': instance.email,
-      'username': instance.displayName,
+      'username': instance.username,
       'avatarUrl': instance.photoURL,
       'firstName': instance.firstName,
       'lastName': instance.lastName,
@@ -35,5 +36,6 @@ Map<String, dynamic> _$UserToJson(User instance) => <String, dynamic>{
       'dob': instance.dob?.toIso8601String(),
       'presence': instance.presence,
       'lastSeen': instance.lastSeen,
+      'isEmailVerified': instance.isEmailVerified,
       'searchHistory': instance.searchHistory,
     };

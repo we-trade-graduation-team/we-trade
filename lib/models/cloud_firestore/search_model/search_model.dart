@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../post_card/post_card.dart';
+import '../post_card_models/post_card/post_card.dart';
 
 class SearchModel extends ChangeNotifier {
   SearchModel() {
