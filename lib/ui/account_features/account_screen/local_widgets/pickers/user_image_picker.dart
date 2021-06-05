@@ -8,11 +8,8 @@ import 'package:permission_handler/permission_handler.dart';
 import '../../../utils.dart';
 
 class UserImagePicker extends StatefulWidget {
-  const UserImagePicker(
-      {Key? key, required this.imagePickFn, required this.userID})
-      : super(key: key);
+  const UserImagePicker({Key? key, required this.userID}) : super(key: key);
 
-  final void Function(PickedFile pickedImage) imagePickFn;
   final String userID;
 
   @override
@@ -20,14 +17,32 @@ class UserImagePicker extends StatefulWidget {
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
-    properties.add(DiagnosticsProperty<void Function(PickedFile pickedImage)>(
-        'imagePickFn', imagePickFn));
+
     properties.add(StringProperty('userID', userID));
   }
 }
 
 class _UserImagePickerState extends State<UserImagePicker> {
-  PickedFile _pickedImage = PickedFile('');
+  PickedFile pickedUploadImage = PickedFile('');
+  late String firstLoadImageUrl;
+  bool isLoading = true;
+
+  @override
+  void initState() {
+    final _storage = FirebaseStorage.instance;
+    _storage
+        .ref()
+        .child('user_image')
+        .child(widget.userID)
+        .getDownloadURL()
+        .then((downloadURL) {
+      setState(() {
+        firstLoadImageUrl = downloadURL;
+        isLoading = false;
+      });
+    });
+    super.initState();
+  }
 
   Future<void> uploadImageFromGallery() async {
     final _storage = FirebaseStorage.instance;
@@ -44,7 +59,7 @@ class _UserImagePickerState extends State<UserImagePicker> {
         await _storage.ref().child('user_image/$userID').putFile(file);
 
         setState(() {
-          _pickedImage = pickedImageFile;
+          pickedUploadImage = pickedImageFile;
         });
       }
     }
@@ -62,15 +77,16 @@ class _UserImagePickerState extends State<UserImagePicker> {
       if (pickedImageFile.path.isNotEmpty) {
         final userID = widget.userID;
         await storage.ref().child('user_image/$userID').putFile(file);
+
         setState(() {
-          _pickedImage = pickedImageFile;
+          pickedUploadImage = pickedImageFile;
         });
       }
     }
   }
 
   Future uploadImage() async {
-    return showMyPickerMethodDialog(
+    await showMyPickerMethodDialog(
       context: context,
       mainTitle: 'Đăng ảnh lên từ',
       fromGalleryTitle: 'Thư viện ảnh',
@@ -82,12 +98,27 @@ class _UserImagePickerState extends State<UserImagePicker> {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: uploadImage,
-      child: CircleAvatar(
-        // radius: 25,
-        backgroundImage: FileImage(File(_pickedImage.path)),
-      ),
-    );
+    return isLoading
+        ? const Center(
+            child: CircularProgressIndicator(
+              valueColor: AlwaysStoppedAnimation<Color>(Colors.black26),
+            ),
+          )
+        : GestureDetector(
+            onTap: uploadImage,
+            child: pickedUploadImage.path.isEmpty
+                ? CircleAvatar(backgroundImage: NetworkImage(firstLoadImageUrl))
+                : CircleAvatar(
+                    backgroundImage: FileImage(File(pickedUploadImage.path))),
+          );
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(StringProperty('firstLoadImageUrl', firstLoadImageUrl));
+    properties.add(DiagnosticsProperty<PickedFile>(
+        'pickedUploadImage', pickedUploadImage));
+    properties.add(DiagnosticsProperty<bool>('isLoading', isLoading));
   }
 }

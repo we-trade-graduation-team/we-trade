@@ -47,21 +47,6 @@ class AccountScreen extends StatefulWidget {
 }
 
 class _AccountScreenState extends State<AccountScreen> {
-  // ignore: unused_field
-  late File _userImageFile;
-
-  void _pickedImage(PickedFile image) {
-    _userImageFile = File(image.path);
-  }
-
-  // void _updateUserImage() {
-  //   final ref = FirebaseStorage.instance
-  //       .ref()
-  //       .child('user_image')
-  //       .child('${AccountScreen.localUserID}.jpg');
-
-  //   ref.putFile(_userImageFile);
-  // }
 
   Widget profileNavigationLabel(
       Widget topWid, Widget botWid, Function navigateToScreen) {
@@ -243,12 +228,11 @@ class _AccountScreenState extends State<AccountScreen> {
                         ),
                         Row(
                           children: [
-                            // const UserImagePicker(),
                             Container(
                               margin: const EdgeInsets.only(right: 10),
                               height: 55,
                               width: 55,
-                              child: UserImagePicker(imagePickFn: _pickedImage),
+                              child: const UserImagePicker(userID: AccountScreen.localUserID,),
                             ),
                             Column(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
