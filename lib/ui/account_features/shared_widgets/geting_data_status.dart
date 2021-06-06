@@ -12,11 +12,12 @@ class CustomLinearProgressIndicator extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Padding(
-        padding: EdgeInsets.symmetric(vertical: 30, horizontal: 30),
-        child: Center(
+    return Padding(
+        padding: EdgeInsets.symmetric(
+            vertical: verticalPadding, horizontal: horizontalPadding),
+        child: const Center(
           child: LinearProgressIndicator(
-            valueColor: AlwaysStoppedAnimation<Color>(Colors.black26),
+            valueColor: AlwaysStoppedAnimation<Color>(Colors.black12),
           ),
         ));
   }
@@ -28,8 +29,6 @@ class CustomLinearProgressIndicator extends StatelessWidget {
     properties.add(DoubleProperty('horizontalPadding', horizontalPadding));
   }
 }
-
-
 
 class DataDoesNotExist extends StatelessWidget {
   const DataDoesNotExist({Key? key}) : super(key: key);
