@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
 import '../../../utils.dart';
+import '../../account_screen.dart';
 
 class UserImagePicker extends StatefulWidget {
   const UserImagePicker({Key? key, required this.userID}) : super(key: key);
@@ -23,24 +24,42 @@ class UserImagePicker extends StatefulWidget {
 }
 
 class _UserImagePickerState extends State<UserImagePicker> {
+  final referenceDatabase = AccountScreen.localRefDatabase;
+
   PickedFile pickedUploadImage = PickedFile('');
-  late String firstLoadImageUrl;
+  String firstLoadImageUrl = '';
   bool isLoading = true;
 
   @override
   void initState() {
-    final _storage = FirebaseStorage.instance;
-    _storage
-        .ref()
-        .child('user_image')
-        .child(widget.userID)
-        .getDownloadURL()
-        .then((downloadURL) {
-      setState(() {
-        firstLoadImageUrl = downloadURL;
-        isLoading = false;
+    // final _storage = FirebaseStorage.instance;
+
+    try {
+      referenceDatabase
+          .collection('users')
+          .doc(widget.userID)
+          .get()
+          .then((documentSnapshot) {
+        final user = documentSnapshot.data();
+
+        setState(() {
+          firstLoadImageUrl = user!['avatarUrl'].toString();
+          isLoading = false;
+        });
       });
-    });
+    } on FirebaseException catch (_) {}
+
+    // _storage
+    //     .ref()
+    //     .child('user_image')
+    //     .child(widget.userID)
+    //     .getDownloadURL()
+    //     .then((downloadURL) {
+    //   setState(() {
+    //     firstLoadImageUrl = downloadURL;
+    //     isLoading = false;
+    //   });
+    // });
     super.initState();
   }
 
@@ -55,12 +74,27 @@ class _UserImagePickerState extends State<UserImagePicker> {
           (await _picker.getImage(source: ImageSource.gallery))!;
       final file = File(pickedImageFile.path);
       if (pickedImageFile.path.isNotEmpty) {
-        final userID = widget.userID;
-        await _storage.ref().child('user_image/$userID').putFile(file);
-
-        setState(() {
-          pickedUploadImage = pickedImageFile;
-        });
+        try {
+          final userID = widget.userID;
+          final snapshot =
+              await _storage.ref().child('user_image/$userID').putFile(file);
+          setState(() {
+            pickedUploadImage = pickedImageFile;
+          });
+          final downloadUrl = await snapshot.ref.getDownloadURL();
+          await referenceDatabase
+              .collection('users')
+              .doc(widget.userID)
+              .update({'avatarUrl': downloadUrl});
+        } on FirebaseException catch (_) {
+          await showMyNotificationDialog(
+              context: context,
+              title: 'Lỗi',
+              content: 'Tải dữ liệu không thành công. Vui lòng thử lại!',
+              handleFunction: () {
+                Navigator.of(context).pop();
+              });
+        }
       }
     }
   }
@@ -76,11 +110,17 @@ class _UserImagePickerState extends State<UserImagePicker> {
       final file = File(pickedImageFile!.path);
       if (pickedImageFile.path.isNotEmpty) {
         final userID = widget.userID;
-        await storage.ref().child('user_image/$userID').putFile(file);
+        final snapshot =
+            await storage.ref().child('user_image/$userID').putFile(file);
 
         setState(() {
           pickedUploadImage = pickedImageFile;
         });
+        final downloadUrl = await snapshot.ref.getDownloadURL();
+        await referenceDatabase
+            .collection('users')
+            .doc(widget.userID)
+            .update({'avatarUrl': downloadUrl});
       }
     }
   }
@@ -98,7 +138,7 @@ class _UserImagePickerState extends State<UserImagePicker> {
 
   @override
   Widget build(BuildContext context) {
-    return isLoading
+    return (isLoading || firstLoadImageUrl.isEmpty)
         ? const Center(
             child: CircularProgressIndicator(
               valueColor: AlwaysStoppedAnimation<Color>(Colors.black26),
@@ -107,7 +147,8 @@ class _UserImagePickerState extends State<UserImagePicker> {
         : GestureDetector(
             onTap: uploadImage,
             child: pickedUploadImage.path.isEmpty
-                ? CircleAvatar(backgroundImage: NetworkImage(firstLoadImageUrl))
+                ? CircleAvatar(
+                    backgroundImage: NetworkImage(firstLoadImageUrl, scale: 1))
                 : CircleAvatar(
                     backgroundImage: FileImage(File(pickedUploadImage.path))),
           );
