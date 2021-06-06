@@ -68,7 +68,6 @@ class _RateTabState extends State<RateTab> {
           );
         }
         final ratings = querySnapshot.data!.docs;
-
         return ratings.isNotEmpty
             ? ListView.builder(
                 itemCount: ratings.length,
@@ -78,8 +77,10 @@ class _RateTabState extends State<RateTab> {
                       ? rating['userMakeRating'].toString()
                       : rating['userBeRated'].toString();
                   final timeData = rating['createAt'] as Timestamp;
+                  final showingPost = rating['post'].toString();
 
                   return RateCard(
+                    key: ValueKey(rating['trading'].toString()),
                     otherSideUserID: otherSideUserID,
                     tradingID: rating['trading'].toString(),
                     star: rating['star'] as int,
@@ -87,6 +88,7 @@ class _RateTabState extends State<RateTab> {
                     reply: rating['reply'].toString(),
                     dateTime: timeData.toDate(),
                     isMyRateFromOther: widget.isMyRateFromOther,
+                    showingPost: showingPost,
                   );
                 })
             : const Center(
