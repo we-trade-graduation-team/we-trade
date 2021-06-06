@@ -101,13 +101,18 @@ class _HidePostScreenState extends State<HidePostScreen> {
 
         if (res) {
           hiddenPosts.add(postID);
+          await referenceDatabase
+              .collection('posts')
+              .doc(postID)
+              .update({'isHidden': true});
+
+          await referenceDatabase.collection('users').doc(userID).update({
+            'hiddenPosts': hiddenPosts,
+            'posts': posts,
+          }).then((value) {
+            return true;
+          });
         }
-        await referenceDatabase.collection('users').doc(userID).update({
-          'hiddenPosts': hiddenPosts,
-          'posts': posts,
-        }).then((value) {
-          return true;
-        });
       });
     } catch (error) {
       rethrow;

@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 
-import '../../../models/ui/product/temp_class.dart';
 import '../../../utils/routes/routes.dart';
 import '../account_screen/account_screen.dart';
 import '../post_management/hide_post_screen.dart';
@@ -18,6 +17,7 @@ class TradingProductCard extends StatelessWidget {
     required this.id,
     required this.name,
     required this.price,
+    required this.imageUrl,
     required this.dateTime,
     required this.isHiddenPost,
   }) : super(key: key);
@@ -25,6 +25,7 @@ class TradingProductCard extends StatelessWidget {
   final String id;
   final String name;
   final String price;
+  final String imageUrl;
   final DateTime dateTime;
   final bool isHiddenPost;
 
@@ -68,11 +69,16 @@ class TradingProductCard extends StatelessWidget {
 
         if (res) {
           posts.add(postID);
+          await referenceDatabase
+              .collection('posts')
+              .doc(postID)
+              .update({'isHidden': false});
+
+          await referenceDatabase.collection('users').doc(userID).update({
+            'hiddenPosts': hiddenPosts,
+            'posts': posts,
+          });
         }
-        await referenceDatabase.collection('users').doc(userID).update({
-          'hiddenPosts': hiddenPosts,
-          'posts': posts,
-        });
       });
     } catch (error) {
       rethrow;
@@ -167,9 +173,8 @@ class TradingProductCard extends StatelessWidget {
                   height: height * 0.15,
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(10),
-                    child: Image.asset(
-                      //TODO:change image source
-                      productsData[0].images[0],
+                    child: Image.network(
+                      imageUrl,
                       fit: BoxFit.cover,
                     ),
                   ),
@@ -247,5 +252,6 @@ class TradingProductCard extends StatelessWidget {
         'referenceDatabase', referenceDatabase));
     properties.add(StringProperty('userID', userID));
     properties.add(StringProperty('postID', id));
+    properties.add(StringProperty('imageUrl', imageUrl));
   }
 }

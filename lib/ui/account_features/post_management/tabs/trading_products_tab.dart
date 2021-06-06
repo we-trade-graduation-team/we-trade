@@ -1,8 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import '../../account_screen/account_screen.dart';
 
+import '../../account_screen/account_screen.dart';
+import '../../shared_widgets/geting_data_status.dart';
 import '../../shared_widgets/trading_prod_card.dart';
 import '../../utils.dart';
 
@@ -66,19 +67,11 @@ class _TradingProductsTabState extends State<TradingProductsTab> {
                           .get(),
                       builder: (context, snapshot) {
                         if (snapshot.hasError) {
-                          return Text('Something went wrong',
-                              style: TextStyle(
-                                fontWeight: FontWeight.normal,
-                                color: Colors.red.withOpacity(0.6),
-                              ));
+                          return const WentWrong();
                         }
 
                         if (snapshot.hasData && !snapshot.data!.exists) {
-                          return Text('Document does not exist',
-                              style: TextStyle(
-                                fontWeight: FontWeight.normal,
-                                color: Colors.red.withOpacity(0.6),
-                              ));
+                          return const DataDoesNotExist();
                         }
                         if (snapshot.connectionState == ConnectionState.done) {
                           final post =
@@ -86,21 +79,19 @@ class _TradingProductsTabState extends State<TradingProductsTab> {
                           post['id'] = snapshot.data!.id;
                           final temp = post['createAt'] as Timestamp;
                           final dateTime = temp.toDate();
-
                           return TradingProductCard(
                             key: ValueKey(post['id'].toString()),
                             id: post['id'].toString(),
                             name: post['name'].toString(),
                             price: post['price'].toString(),
+                            imageUrl: post['imagesUrl'][0].toString(),
                             dateTime: dateTime,
                             isHiddenPost: widget.isHiddenPosts,
                           );
                         }
                         return const Center(
-                          child: CircularProgressIndicator(
-                            valueColor:
-                                AlwaysStoppedAnimation<Color>(Colors.blue),
-                          ),
+                          child: CustomLinearProgressIndicator(
+                              verticalPadding: 80, horizontalPadding: 30),
                         );
                       },
                     );
