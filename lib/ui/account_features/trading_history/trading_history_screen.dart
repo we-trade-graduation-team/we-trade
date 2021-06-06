@@ -86,7 +86,7 @@ class _TradingHistoryScreenState extends State<TradingHistoryScreen> {
                       );
                     }
                     return const CustomLinearProgressIndicator(
-                        verticalPadding: 30, horizontalPadding: 30);
+                        verticalPadding: 65, horizontalPadding: 30);
                   },
                 );
               },

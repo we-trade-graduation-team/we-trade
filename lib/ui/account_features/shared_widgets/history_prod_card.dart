@@ -55,6 +55,7 @@ class _HistoryProductCardState extends State<HistoryProductCard> {
   final userID = AccountScreen.localUserID;
 
   late String otherSideUserID;
+  late String ownerPostID;
   late int status;
   late String statusText;
   late Color statusTextColor;
@@ -107,7 +108,7 @@ class _HistoryProductCardState extends State<HistoryProductCard> {
             otherSideUserID = _trading!['owner'].toString() == userID
                 ? _trading!['makeOfferUser'].toString()
                 : _trading!['owner'].toString();
-
+            ownerPostID = _trading!['ownerPosts'][0].toString();
             final temp = _trading!['createAt'] as Timestamp;
             final d = temp.toDate();
             dateTime = DateFormat.yMMMMd('en_US').add_jm().format(d);
@@ -212,15 +213,32 @@ class _HistoryProductCardState extends State<HistoryProductCard> {
                     children: [
                       Container(
                         width: width * 0.25,
-                        height: width * 0.18,
-                        // child: ClipRRect(
-                        //   borderRadius: BorderRadius.circular(10),
-                        //   child: Image.asset(
-                        //     productsData[0].images[0],
-                        //     fit: BoxFit.cover,
-                        //   ),
-                        // ),
-                        color: Colors.red,
+                        height: width * 0.19,
+                        decoration: BoxDecoration(
+                            color: Colors.black26,
+                            borderRadius: BorderRadius.circular(10)),
+                        child: FutureBuilder<DocumentSnapshot>(
+                            future: referenceDatabase
+                                .collection('posts')
+                                .doc(ownerPostID)
+                                .get(),
+                            builder: (context, snapshot) {
+                              if (snapshot.connectionState ==
+                                  ConnectionState.done) {
+                                final post = snapshot.data!;
+                                return ClipRRect(
+                                  borderRadius: BorderRadius.circular(10),
+                                  child: Image.network(
+                                    post['imagesUrl'][0].toString(),
+                                    fit: BoxFit.cover,
+                                  ),
+                                );
+                              }
+                              return const Center(
+                                  child: CircularProgressIndicator(
+                                color: Colors.black45,
+                              ));
+                            }),
                       ),
                       const SizedBox(width: 15),
                       Column(
@@ -319,5 +337,6 @@ class _HistoryProductCardState extends State<HistoryProductCard> {
     properties.add(StringProperty('dateTime', dateTime));
     properties.add(StringProperty('status', statusText));
     properties.add(IntProperty('status', status));
+    properties.add(StringProperty('ownerPostID', ownerPostID));
   }
 }
