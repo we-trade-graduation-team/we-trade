@@ -2,7 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-import '../../../constants/app_assets.dart';
 import '../../../constants/app_colors.dart';
 import '../account_screen/account_screen.dart';
 import '../account_screen/local_widgets/getter.dart';
@@ -70,6 +69,7 @@ class _FollowScreenState extends State<FollowScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final width = MediaQuery.of(context).size.width;
     final routeArguments =
         ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
     final screen = routeArguments['screenArgument'] as FollowScreenArguments;
@@ -169,26 +169,56 @@ class _FollowScreenState extends State<FollowScreen> {
           ? (usersRender.isNotEmpty
               ? ListView.builder(
                   itemBuilder: (ctx, index) => Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 5),
-                    child: ListTile(
-                      leading: Image.asset(
-                        AppAssets.firstWalkThroughImage,
-                        height: 60,
-                        fit: BoxFit.cover,
-                      ),
-                      title: GetUserName(
-                        key: ValueKey(usersRender[index].toString()),
-                        documentId: usersRender[index].toString(),
-                        isStream: false,
-                      ),
-                      trailing: screen.screenName ==
-                              Follow_Screen_Name.following
-                          ? buildUnfollowButton(usersRender[index] as String)
-                          : (followingUsers.contains(usersRender[index])
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 10, horizontal: 15),
+                    child: Row(
+                      children: [
+                        FutureBuilder<DocumentSnapshot>(
+                            future: referenceDatabase
+                                .collection('users')
+                                .doc(usersRender[index].toString())
+                                .get(),
+                            builder: (context, snapshot) {
+                              if (snapshot.connectionState ==
+                                  ConnectionState.done) {
+                                final user = snapshot.data!;
+                                return CircleAvatar(
+                                  backgroundColor: Colors.black26,
+                                  backgroundImage: NetworkImage(
+                                    user['avatarUrl'].toString(),
+                                  ),
+                                  radius: width * 0.085,
+                                );
+                              }
+
+                              return const Center(
+                                  child: CircularProgressIndicator(
+                                color: Colors.black45,
+                              ));
+                            }),
+                        const SizedBox(width: 15),
+                        Expanded(
+                          child: DefaultTextStyle(
+                            style: const TextStyle(
+                                fontSize: 18,
+                                color: AppColors.kTextColor,
+                                fontWeight: FontWeight.w500),
+                            child: GetUserName(
+                              key: ValueKey(usersRender[index].toString()),
+                              documentId: usersRender[index].toString(),
+                              isStream: false,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 15),
+                        if (screen.screenName == Follow_Screen_Name.following)
+                          buildUnfollowButton(usersRender[index] as String)
+                        else
+                          followingUsers.contains(usersRender[index])
                               ? buildUnfollowButton(
                                   usersRender[index] as String)
-                              : buildFollowButton(
-                                  usersRender[index] as String)),
+                              : buildFollowButton(usersRender[index] as String),
+                      ],
                     ),
                   ),
                   itemCount: usersRender.length,
@@ -203,9 +233,7 @@ class _FollowScreenState extends State<FollowScreen> {
                   ),
                 ))
           : const Center(
-              child: CircularProgressIndicator(
-                valueColor: AlwaysStoppedAnimation<Color>(Colors.blue),
-              ),
+              child: CircularProgressIndicator(),
             ),
     );
   }
