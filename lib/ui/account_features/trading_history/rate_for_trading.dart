@@ -2,10 +2,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+
 import '../../../constants/app_assets.dart';
+import '../../../constants/app_colors.dart';
 import '../account_screen/account_screen.dart';
 import '../account_screen/local_widgets/getter.dart';
-
 import '../shared_widgets/rating_bar.dart';
 import '../utils.dart';
 
@@ -42,8 +43,10 @@ class _RateForTradingState extends State<RateForTrading> {
   late List<Widget> postTexts = <Widget>[];
   late List<Widget> postImages = <Widget>[];
   late Map<String, dynamic> rating;
+  late String post; //ngo nha chang
 
-  List<Widget> buildPostsList(List<Widget> postTexts, List<Widget> postImages) {
+  List<Widget> _buildPostsList(
+      List<Widget> postTexts, List<Widget> postImages) {
     final postsList = <Widget>[];
 
     for (var i = 0; i < postTexts.length; i++) {
@@ -55,20 +58,13 @@ class _RateForTradingState extends State<RateForTrading> {
               width: 70,
               height: 70,
               color: Colors.amberAccent,
-              // child: ClipRRect(
-              //   borderRadius: BorderRadius.circular(10),
-              //   child: Image.asset(
-              //     products[0].images[0],
-              //     fit: BoxFit.cover,
-              //   ),
-              // ),
-              // child: postImages[i],
+              child: postImages[i],
             ),
             const SizedBox(width: 30),
             Expanded(
               child: DefaultTextStyle(
-                style: TextStyle(
-                    fontSize: 16, color: Theme.of(context).primaryColor),
+                style:
+                    const TextStyle(fontSize: 16, color: AppColors.kTextColor),
                 child: postTexts[i],
               ),
             ),
@@ -134,11 +130,35 @@ class _RateForTradingState extends State<RateForTrading> {
           final posts = amIOwner
               ? trading['offerUserPosts'] as List
               : trading['ownerPosts'] as List;
+          post = posts[0].toString(); //ngo nha chang
 
           for (var i = 0; i < posts.length; i++) {
             final Widget name =
                 GetPostName(documentId: posts[i].toString(), isStream: false);
             postTexts.add(name);
+
+            final Widget image = FutureBuilder<DocumentSnapshot>(
+                future: referenceDatabase
+                    .collection('posts')
+                    .doc(posts[i].toString())
+                    .get(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.done) {
+                    final post = snapshot.data!;
+                    return ClipRRect(
+                      borderRadius: BorderRadius.circular(10),
+                      child: Image.network(
+                        post['imagesUrl'][0].toString(),
+                        fit: BoxFit.cover,
+                      ),
+                    );
+                  }
+                  return const Center(
+                      child: CircularProgressIndicator(
+                    color: Colors.black45,
+                  ));
+                });
+            postImages.add(image);
           }
 
           await referenceDatabase
@@ -183,6 +203,7 @@ class _RateForTradingState extends State<RateForTrading> {
     required String userBeRated,
     required int star,
     required String comment,
+    required String post,
   }) {
     final rating = {
       'trading': tradingID,
@@ -191,6 +212,8 @@ class _RateForTradingState extends State<RateForTrading> {
       'star': star,
       'comment': comment,
       'createAt': DateTime.now(),
+      'reply': '',
+      'post': post,
     };
 
     return referenceDatabase.collection('ratings').add(rating).then((_) {
@@ -310,7 +333,7 @@ class _RateForTradingState extends State<RateForTrading> {
                             const SizedBox(
                               height: 15,
                             ),
-                            ...buildPostsList(postTexts, postImages),
+                            ..._buildPostsList(postTexts, postImages),
                             const SizedBox(
                               height: 10,
                             ),
@@ -417,9 +440,7 @@ class _RateForTradingState extends State<RateForTrading> {
               ),
             )
           : const Center(
-              child: CircularProgressIndicator(
-                valueColor: AlwaysStoppedAnimation<Color>(Colors.blue),
-              ),
+              child: CircularProgressIndicator(),
             ),
       bottomNavigationBar: Padding(
         padding: const EdgeInsets.all(11),
@@ -443,6 +464,7 @@ class _RateForTradingState extends State<RateForTrading> {
                                 userBeRated: widget.otherSideUserID,
                                 star: star,
                                 comment: _commentController.text,
+                                post: post,
                               );
                               Navigator.of(context).pop();
                             },
@@ -473,5 +495,6 @@ class _RateForTradingState extends State<RateForTrading> {
     properties.add(IntProperty('timeOut', timeOut));
     properties.add(DiagnosticsProperty<Map<String, dynamic>>('rating', rating));
     properties.add(IntProperty('star', star));
+    properties.add(StringProperty('post', post));
   }
 }

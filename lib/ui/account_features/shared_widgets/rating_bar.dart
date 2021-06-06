@@ -40,6 +40,7 @@ class _MyRatingBarState extends State<MyRatingBar> {
         padding: EdgeInsets.symmetric(horizontal: 5),
         child: Icon(
           Icons.star_border_outlined,
+          color: Colors.grey,
         ),
       );
     }
