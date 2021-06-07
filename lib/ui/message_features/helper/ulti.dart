@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
-import '../../models/ui/chat/temp_class.dart';
+import '../../../models/ui/chat/temp_class.dart';
 
-import 'const_string/const_str.dart';
+import '../const_string/const_str.dart';
 
 class HelperClass {
   static void showBottomSheet(BuildContext context) {
@@ -34,6 +34,13 @@ class HelperClass {
     );
   }
 
+  static String finalSenderName(String? name, String? email) {
+    if (name == null) {
+      return email!;
+    }
+    return (name.isNotEmpty ? name : email)!;
+  }
+
   static String finalChatName(List<String> names) {
     final chatName = StringBuffer();
     for (final user in names) {
@@ -54,12 +61,13 @@ class HelperClass {
         }
       }
       return <String, dynamic>{
-        usersImageStr: [chat.images[otherUserIndex]],
-        chatRoomNameStr: chat.names[otherUserIndex],
+        imagesStr: [chat.images[otherUserIndex]],
+        chatRoomNameStr: finalSenderName(
+            chat.names[otherUserIndex], chat.emails[otherUserIndex]),
       };
     } else {
       return <String, dynamic>{
-        usersImageStr: chat.images,
+        imagesStr: chat.images,
         chatRoomNameStr: chat.chatRoomName,
       };
     }

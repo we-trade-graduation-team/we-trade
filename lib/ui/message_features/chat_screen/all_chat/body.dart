@@ -7,7 +7,6 @@ import '../../../../constants/app_colors.dart';
 import '../../../../models/cloud_firestore/user/user.dart';
 import '../../../../models/ui/chat/temp_class.dart';
 
-import '../../../../services/message/algolia_message_service.dart';
 import '../../../../services/message/firestore_message_service.dart';
 import '../../const_string/const_str.dart';
 import '../widgets/chat_card.dart';
@@ -20,15 +19,14 @@ class Body extends StatefulWidget {
 }
 
 class _BodyState extends State<Body> {
-  MessageServiceFireStore dataServiceFireStore = MessageServiceFireStore();
-  MessageServiceAlgolia dataServiceAlgolia = MessageServiceAlgolia();
+  MessageServiceFireStore messageServiceFireStore = MessageServiceFireStore();
   late User thisUser = Provider.of<User?>(context, listen: false)!;
   TextEditingController searchTextController = TextEditingController();
   bool isLoading = true;
   bool isSearching = false;
   String queryStr = '';
   // ignore: diagnostic_describe_all_properties
-  late Stream<QuerySnapshot> chatRooms2;
+  late Stream<QuerySnapshot> chatRooms;
 
   bool isContain(List<String> src, String queryStr) {
     var result = false;
@@ -53,14 +51,14 @@ class _BodyState extends State<Body> {
 
   Widget chatRoomsList() {
     return StreamBuilder<QuerySnapshot>(
-      stream: chatRooms2,
+      stream: chatRooms,
       builder: (context, snapshot) {
         return snapshot.hasData
             ? ListView.builder(
                 itemCount: snapshot.data!.docs.length,
                 shrinkWrap: true,
                 itemBuilder: (context, index) {
-                  final chat = dataServiceFireStore.createChatFromData(
+                  final chat = messageServiceFireStore.createChatFromData(
                       snapshot.data!.docs[index].data() as Map<String, dynamic>,
                       snapshot.data!.docs[index].id);
                   if (isInSearchList(chat)) {
@@ -80,9 +78,9 @@ class _BodyState extends State<Body> {
 
   @override
   void initState() {
-    dataServiceFireStore
-        .getAllChatRooms2(thisUser.uid!)
-        .then((value) => chatRooms2 = value)
+    messageServiceFireStore
+        .getAllChatRooms(thisUser.uid!)
+        .then((value) => chatRooms = value)
         .whenComplete(() => setState(() {
               isLoading = false;
             }));
@@ -179,15 +177,13 @@ class _BodyState extends State<Body> {
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
-    properties.add(DiagnosticsProperty<MessageServiceFireStore>(
-        'dataServiceFireStore', dataServiceFireStore));
-    properties.add(DiagnosticsProperty<MessageServiceAlgolia>(
-        'dataServiceAlgolia', dataServiceAlgolia));
     properties.add(DiagnosticsProperty<TextEditingController>(
         'searchTextController', searchTextController));
     properties.add(DiagnosticsProperty<bool>('isLoading', isLoading));
     properties.add(DiagnosticsProperty<bool>('isSearching', isSearching));
     properties.add(StringProperty('queryStr', queryStr));
     properties.add(DiagnosticsProperty<User>('thisUser', thisUser));
+    properties.add(DiagnosticsProperty<MessageServiceFireStore>(
+        'messageServiceFireStore', messageServiceFireStore));
   }
 }

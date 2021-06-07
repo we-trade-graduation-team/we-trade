@@ -5,10 +5,10 @@ import 'package:provider/provider.dart';
 
 import '../../../../models/cloud_firestore/user/user.dart';
 import '../../../../models/ui/chat/temp_class.dart';
-import '../../../../services/message/algolia_message_service.dart';
+import '../../../../services/message/algolia_user_service.dart';
 import '../../../../widgets/custom_user_avatar.dart';
 import '../../const_string/const_str.dart';
-import '../../ulti.dart';
+import '../../helper/ulti.dart';
 import '../chat_room/chat_room.dart';
 
 class ChatCard extends StatefulWidget {
@@ -32,7 +32,6 @@ class ChatCard extends StatefulWidget {
     super.debugFillProperties(properties);
     properties.add(DiagnosticsProperty<bool>('isSendByMe', isSendByMe));
     properties.add(DiagnosticsProperty<Chat>('chat', chat));
-    //properties.add(ObjectFlagProperty<VoidCallback>.has('press', press));
     properties.add(DiagnosticsProperty<bool>('isActive', isActive));
     properties.add(StringProperty('typeFunction', typeFunction));
   }
@@ -40,7 +39,7 @@ class ChatCard extends StatefulWidget {
 
 class _ChatCardState extends State<ChatCard> {
   late User thisUser = Provider.of<User?>(context, listen: false)!;
-  MessageServiceAlgolia dataServiceAlgolia = MessageServiceAlgolia();
+  UserServiceAlgolia userServiceAlgolia = UserServiceAlgolia();
   late List<String> images = [];
   late String chatRoomName = '';
 
@@ -108,7 +107,7 @@ class _ChatCardState extends State<ChatCard> {
   Widget build(BuildContext context) {
     final imagesAndChatRoomName =
         HelperClass.getImagesAndChatRoomName(widget.chat, thisUser.uid!);
-    images = (imagesAndChatRoomName[usersImageStr] as List<dynamic>)
+    images = (imagesAndChatRoomName[imagesStr] as List<dynamic>)
         .cast<String>()
         .toList();
     chatRoomName = imagesAndChatRoomName[chatRoomNameStr].toString();
@@ -191,10 +190,10 @@ class _ChatCardState extends State<ChatCard> {
     //properties.add(ObjectFlagProperty<VoidCallback>.has('press', widget.press));
     properties.add(DiagnosticsProperty<bool>('isActive', widget.isActive));
     properties.add(DiagnosticsProperty<bool>('isSendByMe', widget.isSendByMe));
-    properties.add(DiagnosticsProperty<MessageServiceAlgolia>(
-        'dataServiceAlgolia', dataServiceAlgolia));
     properties.add(IterableProperty<String>('images', images));
     properties.add(StringProperty('chatRoomName', chatRoomName));
     properties.add(DiagnosticsProperty<User>('thisUser', thisUser));
+    properties.add(DiagnosticsProperty<UserServiceAlgolia>(
+        'userServiceAlgolia', userServiceAlgolia));
   }
 }

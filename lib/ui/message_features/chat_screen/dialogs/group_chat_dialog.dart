@@ -10,7 +10,7 @@ import '../../../../models/cloud_firestore/user/user.dart';
 import '../../../../services/message/firestore_message_service.dart';
 import '../../../../utils/routes/routes.dart';
 import '../../../shared_features/report/report_screen.dart';
-import '../../ulti.dart';
+import '../../helper/ulti.dart';
 import '../group_chat/members/all_members_screen.dart';
 
 class GroupChatDialog extends StatelessWidget {

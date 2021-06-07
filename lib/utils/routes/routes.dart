@@ -105,7 +105,9 @@ class Routes {
   };
 
   static final Map<String, WidgetBuilder> sharedFeaturesRoutes = {
-    otherProfileScreenRouteName: (_) => const OtherUserProfileScreen(),
+    otherProfileScreenRouteName: (_) => const OtherUserProfileScreen(
+          userId: '',
+        ),
     reportScreenRouteName: (_) => const ReportScreen(),
   };
 
@@ -120,6 +122,6 @@ class Routes {
   static final Map<String, WidgetBuilder> postingFeaturesRoutes = {
     postItemStepTwoScreenRouteName: (_) => const PostItemTwo(),
     postItemStepThreeScreenRouteName: (_) => const PostItemThree(),
-    postItemStepFourScreenRouteName: (_) =>  PostItemFour(),
+    postItemStepFourScreenRouteName: (_) => PostItemFour(),
   };
 }

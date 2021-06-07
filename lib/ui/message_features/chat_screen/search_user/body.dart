@@ -1,19 +1,19 @@
 import 'package:algolia/algolia.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:lottie/lottie.dart';
-import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../constants/app_colors.dart';
 import '../../../../models/cloud_firestore/user/user.dart';
 import '../../../../models/ui/chat/temp_class.dart';
-import '../../../../services/message/algolia_message_service.dart';
-import '../../../../services/message/firestore_message_service.dart';
+import '../../../../services/message/algolia_user_service.dart';
 import '../../../../widgets/custom_material_button.dart';
 import '../../const_string/const_str.dart';
-import '../../ulti.dart';
-import '../chat_room/chat_room.dart';
+import '../../helper/helper_add_member_group_chat.dart';
+import '../../helper/helper_navigate_chat_room.dart';
+import '../../helper/ulti.dart';
 import '../widgets/user_card.dart';
 import '../widgets/user_choice_chip.dart';
 
@@ -39,8 +39,7 @@ class Body extends StatefulWidget {
 }
 
 class _BodyState extends State<Body> {
-  MessageServiceFireStore dataServiceFireStore = MessageServiceFireStore();
-  MessageServiceAlgolia dataServiceAlgolia = MessageServiceAlgolia();
+  UserServiceAlgolia userServiceAlgolia = UserServiceAlgolia();
   TextEditingController searchTextController = TextEditingController();
   late User thisUser;
   late bool isLoading = false;
@@ -86,150 +85,24 @@ class _BodyState extends State<Body> {
         //nếu có thì chuyển hướng thẳng vói chat room đó
         //nếu không thì push data chat room mới lên firestore và algolia
         //id userId1userId2
-        checkAndSendNewChatRoomoOneUser();
+        HelperNavigateChatRoom.checkAndSendChatRoomOneUser(
+            user: choosedUsers[0], thisUser: thisUser, context: context);
       } else {
         //group auto taọ group mới,
         //id tự generate dù là có trùng thành viên group có sẵn
         //send new chat message
-        sendNewChatRoomGroup();
+        HelperNavigateChatRoom.sendNewChatRoomGroup(
+            users: choosedUsers, thisUser: thisUser, context: context);
       }
     } else {
       // add user vào group chat
-      addUserToGroupChat();
+      HelperAddMemberGroupChat.addUserToGroupChat(
+          chatRoomId: widget.chatRoomId,
+          context: context,
+          thisUser: thisUser,
+          users: choosedUsers);
     }
   }
-
-// function handle create Add chat feature =============================
-  void checkAndSendNewChatRoomoOneUser() {
-    final chatRoomId = createChatRoomId(choosedUsers);
-    dataServiceFireStore
-        .getChatRoomByChatRoomId(chatRoomId)
-        .then((result) async {
-      if (!result.exists) {
-        final mapData = createChatRoomMap();
-        await dataServiceFireStore.createPeerToPeerChatRoomFireStore(
-            mapData, chatRoomId);
-        await startNewChatRoom(chatRoomId);
-      }
-      await dataServiceFireStore.getChatRoom(chatRoomId).then((value) {
-        navigateToChatRoom(chatRoom: value, chatGroup: false);
-      });
-    });
-  }
-
-  void sendNewChatRoomGroup() {
-    final mapData = createChatRoomMap();
-    dataServiceFireStore
-        .createChatRoomGenerateIdFireStore(mapData)
-        .then((chatRoom) async {
-      await startNewChatRoom(chatRoom.chatRoomId);
-      navigateToChatRoom(chatRoom: chatRoom, chatGroup: true);
-      //});
-    });
-  }
-
-  Future<void> startNewChatRoom(String chatRoomId) async {
-    final name = (thisUser.displayName!.isNotEmpty
-        ? thisUser.displayName
-        : thisUser.email)!;
-    await dataServiceFireStore.addMessageToChatRoom(
-        thisUser.uid!, 0, 'hi, cùng chat nào', chatRoomId, name);
-  }
-
-  void navigateToChatRoom({required Chat chatRoom, required bool chatGroup}) {
-    Navigator.of(context).popUntil(ModalRoute.withName('/'));
-
-    pushNewScreenWithRouteSettings<void>(
-      context,
-      screen: ChatRoomScreen(
-        chat: chatRoom,
-      ),
-      settings: RouteSettings(
-        name: ChatRoomScreen.routeName,
-      ),
-      withNavBar: false, // OPTIONAL VALUE. True by default.
-      pageTransitionAnimation: PageTransitionAnimation.cupertino,
-    );
-  }
-
-  String createChatRoomId(List<UserAlgolia> users) {
-    final chatRoomId = StringBuffer();
-    final usersId = <String>[];
-    for (final user in users) {
-      usersId.add(user.id);
-    }
-    usersId.add(thisUser.uid!);
-    usersId.sort();
-    usersId.forEach(chatRoomId.write);
-    return chatRoomId.toString();
-  }
-
-  Map<String, dynamic> createChatRoomMap() {
-    final usersId = <String>[];
-    final usersName = <String>[];
-    final usersAva = <String>[];
-    final usersEmail = <String>[];
-    var isGroupChat = false;
-
-    for (final user in choosedUsers) {
-      usersId.add(user.id);
-      usersName.add(user.name);
-      usersAva.add(user.image);
-      usersEmail.add(user.email);
-    }
-    usersId.add(thisUser.uid!);
-
-    usersName.add((thisUser.displayName!.isNotEmpty
-        ? thisUser.displayName
-        : thisUser.email)!);
-    usersAva.add(thisUser.photoURL == null ? '' : thisUser.photoURL!);
-    usersEmail.add(thisUser.email == null ? '' : thisUser.email!);
-
-    if (choosedUsers.length > 1) {
-      isGroupChat = true;
-    }
-
-    return <String, dynamic>{
-      isGroupChatStr: isGroupChat,
-      chatRoomNameStr: '',
-      usersIdStr: usersId,
-      usersImageStr: usersAva,
-      usersNameStr: usersName,
-      emailsStr: usersEmail,
-    };
-  }
-// end ==================================================================
-
-// function handle add user to group chat feature =======================
-  Future<void> addUserToGroupChat() async {
-    final usersId = <String>[];
-    final usersName = <String>[];
-    final usersImage = <String>[];
-    final usersEmail = <String>[];
-
-    for (final user in choosedUsers) {
-      usersId.add(user.id);
-      usersName.add(user.name);
-      usersImage.add(user.image);
-      usersEmail.add(user.email);
-    }
-
-    final myName = (thisUser.displayName!.isNotEmpty
-        ? thisUser.displayName
-        : thisUser.email)!;
-
-    // ignore: unawaited_futures
-    dataServiceFireStore
-        .addUsersToGroupChat(widget.chatRoomId, myName, usersId, usersImage,
-            usersEmail, usersName)
-        .then((value) {
-      Navigator.of(context).popUntil((route) {
-        return route.settings.name == ChatRoomScreen.routeName;
-      });
-    });
-  }
-
-//end ===================================================================
 
 // WIdget ui function ====================================================
   Future<void> initiateSearch() async {
@@ -237,7 +110,7 @@ class _BodyState extends State<Body> {
       setState(() {
         isLoading = true;
       });
-      final result = await dataServiceAlgolia
+      final result = await userServiceAlgolia
           .searchUserByAlgolia(searchTextController.text);
       setState(() {
         querySnapshot = result;
@@ -271,13 +144,17 @@ class _BodyState extends State<Body> {
                     itemCount: querySnapshot.length,
                     itemBuilder: (context, index) {
                       final object = querySnapshot[index];
+                      final lastActive = DateFormat.yMd('en_US')
+                          .add_jm()
+                          .format(DateTime.fromMillisecondsSinceEpoch(int.parse(
+                              object.data[lastActiveStr].toString())));
                       final user = UserAlgolia(
                           id: object.objectID,
                           name: object.data[nameStr].toString(),
-                          image: object.data[imageStr].toString(),
+                          image: object.data[avatarURLStr].toString(),
                           email: object.data[emailStr].toString(),
-                          isActive: object.data[isActiveStr] as bool,
-                          activeAt: object.data[activeAtStr].toString());
+                          isActive: object.data[presenceStr] as bool,
+                          activeAt: lastActive);
                       return UserCard(
                           user: user,
                           press: () {
@@ -395,16 +272,14 @@ class _BodyState extends State<Body> {
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
-    properties.add(DiagnosticsProperty<MessageServiceFireStore>(
-        'dataService', dataServiceFireStore));
     properties.add(DiagnosticsProperty<TextEditingController>(
         'searchText', searchTextController));
     properties.add(IterableProperty<AlgoliaObjectSnapshot>(
         'querySnapshot', querySnapshot));
-    properties.add(DiagnosticsProperty<MessageServiceAlgolia>(
-        'dataServiceAlgolia', dataServiceAlgolia));
     properties.add(DiagnosticsProperty<bool>('isLoading', isLoading));
     properties.add(DiagnosticsProperty<User>('thisUser', thisUser));
     properties.add(IterableProperty<UserAlgolia>('choosedUsers', choosedUsers));
+    properties.add(DiagnosticsProperty<UserServiceAlgolia>(
+        'userServiceAlgolia', userServiceAlgolia));
   }
 }

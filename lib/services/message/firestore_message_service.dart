@@ -1,13 +1,14 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
+import '../../models/cloud_firestore/user/user.dart';
 
 import '../../models/ui/chat/temp_class.dart';
 import '../../ui/message_features/const_string/const_str.dart';
-import '../../ui/message_features/ulti.dart';
-import 'algolia_message_service.dart';
+import '../../ui/message_features/helper/ulti.dart';
+import 'algolia_user_service.dart';
 
 class MessageServiceFireStore {
-  MessageServiceAlgolia messageServiceAlgolia = MessageServiceAlgolia();
+  UserServiceAlgolia userServiceAlgolia = UserServiceAlgolia();
 
   Future<DocumentSnapshot<Map<String, dynamic>>> getChatRoomByChatRoomId(
       String chatRoomId) {
@@ -42,7 +43,7 @@ class MessageServiceFireStore {
         .catchError((dynamic onError) {});
   }
 
-  Future<Chat> createChatRoomGenerateIdFireStore(
+  Future<String> createChatRoomGenerateIdFireStore(
       Map<String, dynamic> chatData) {
     return FirebaseFirestore.instance
         .collection('trang')
@@ -50,9 +51,7 @@ class MessageServiceFireStore {
         .collection(chatRoomCollection)
         .add(chatData)
         .then((returnData) {
-      return returnData
-          .get()
-          .then((value) => createChatFromData(value.data()!, value.id));
+      return returnData.get().then((value) => value.id);
     });
   }
 
@@ -101,7 +100,7 @@ class MessageServiceFireStore {
       lastMessageStr: lastMessage,
       senderIdStr: senderId,
       senderNameStr: name,
-      timeStr: DateFormat.yMd().add_jm().format(DateTime.now())
+      timeStr: DateTime.now().millisecondsSinceEpoch
     });
   }
 
@@ -131,34 +130,12 @@ class MessageServiceFireStore {
 
   Future<List<UserAlgolia>> getAllUserInChatRoom(String chatRoomId) {
     return getAllUsersIdInChatRoom(chatRoomId).then((usersId) async {
-      // final usersId =
-      //     (value.data()![usersIdStr] as List<dynamic>).cast<String>().toList();
       final users = <UserAlgolia>[];
       for (final userid in usersId) {
-        final user = await messageServiceAlgolia.getUserById(userid);
+        final user = await userServiceAlgolia.getUserById(userid);
         users.add(user);
       }
       return users;
-    });
-  }
-
-  Future<List<Chat>> getAllChatRooms(String userId) {
-    final chats = <Chat>[];
-    return FirebaseFirestore.instance
-        .collection('trang')
-        .doc('nzTptOzmSw1IbLfKHxOT')
-        .collection(chatRoomCollection)
-        .where(usersIdStr, arrayContains: userId)
-        .get()
-        .then((value) {
-      for (final snapShot in value.docs) {
-        chats.add(createChatFromData(snapShot.data(), snapShot.id));
-      }
-      chats.sort((a, b) => DateFormat.yMd()
-          .add_jm()
-          .parse(b.time)
-          .compareTo(DateFormat.yMd('en_US').add_jm().parse(a.time)));
-      return chats;
     });
   }
 
@@ -179,24 +156,26 @@ class MessageServiceFireStore {
     if (snapShot[chatRoomNameStr].toString().isNotEmpty) {
       chatRoomName = snapShot[chatRoomNameStr].toString();
     } else {
-      if (snapShot[isGroupChatStr] as bool) {
+      if (snapShot[groupChatStr] as bool) {
         chatRoomName = HelperClass.finalChatName(
-            (snapShot[usersNameStr] as List<dynamic>).cast<String>().toList());
+            (snapShot[namesStr] as List<dynamic>).cast<String>().toList());
       }
     }
+    final lastActive = DateFormat.yMd('en_US').add_jm().format(
+        DateTime.fromMillisecondsSinceEpoch(
+            int.parse(snapShot[timeStr].toString())));
     return Chat(
       chatRoomId: id,
-      images:
-          (snapShot[usersImageStr] as List<dynamic>).cast<String>().toList(),
+      images: (snapShot[imagesStr] as List<dynamic>).cast<String>().toList(),
       lastMessage: snapShot[lastMessageStr].toString(),
       chatRoomName: chatRoomName,
       senderName: snapShot[senderNameStr].toString(),
-      time: snapShot[timeStr].toString(),
+      time: lastActive,
       senderId: snapShot[senderIdStr].toString(),
       usersId: (snapShot[usersIdStr] as List<dynamic>).cast<String>().toList(),
-      names: (snapShot[usersNameStr] as List<dynamic>).cast<String>().toList(),
+      names: (snapShot[namesStr] as List<dynamic>).cast<String>().toList(),
       emails: (snapShot[emailsStr] as List<dynamic>).cast<String>().toList(),
-      groupChat: snapShot[isGroupChatStr] as bool,
+      groupChat: snapShot[groupChatStr] as bool,
     );
   }
 
@@ -210,21 +189,19 @@ class MessageServiceFireStore {
         .then((value) {
       final usersId =
           (value.data()![usersIdStr] as List<dynamic>).cast<String>().toList();
-      final allImages = (value.data()![usersImageStr] as List<dynamic>)
-          .cast<String>()
-          .toList();
-      final allNames = (value.data()![usersNameStr] as List<dynamic>)
-          .cast<String>()
-          .toList();
+      final allImages =
+          (value.data()![imagesStr] as List<dynamic>).cast<String>().toList();
+      final allNames =
+          (value.data()![namesStr] as List<dynamic>).cast<String>().toList();
       final allEmails =
           (value.data()![emailsStr] as List<dynamic>).cast<String>().toList();
 
       var thisUserName = '';
       for (var i = 0; i < usersId.length; i++) {
         if (usersId[i] == userId) {
+          thisUserName = HelperClass.finalSenderName(allNames[i], allEmails[i]);
           usersId.removeAt(i);
           allImages.removeAt(i);
-          thisUserName = allNames[i];
           allNames.removeAt(i);
           allEmails.removeAt(i);
           break;
@@ -233,9 +210,9 @@ class MessageServiceFireStore {
 
       value.reference.update(<String, dynamic>{
         usersIdStr: usersId,
-        usersImageStr: allImages,
-        usersNameStr: allNames,
-        emailStr: allEmails,
+        imagesStr: allImages,
+        namesStr: allNames,
+        emailsStr: allEmails,
       });
       final contentToSend = '$thisUserName đã rời group';
       addMessageToChatRoom('', 0, contentToSend, chatRoomId, '');
@@ -280,9 +257,9 @@ class MessageServiceFireStore {
             .collection(chatRoomCollection)
             .doc(chatRoomId)
             .update({
-          emailStr: chatRoom.emails,
-          usersNameStr: chatRoom.names,
-          usersImageStr: chatRoom.images,
+          emailsStr: chatRoom.emails,
+          namesStr: chatRoom.names,
+          imagesStr: chatRoom.images,
           usersIdStr: chatRoom.usersId,
         });
 
@@ -294,13 +271,42 @@ class MessageServiceFireStore {
     });
   }
 
-  Future<Stream<QuerySnapshot<Map<String, dynamic>>>> getAllChatRooms2(
+  Future<Stream<QuerySnapshot<Map<String, dynamic>>>> getAllChatRooms(
       String userId) async {
     return FirebaseFirestore.instance
         .collection('trang')
         .doc('nzTptOzmSw1IbLfKHxOT')
         .collection(chatRoomCollection)
         .where(usersIdStr, arrayContains: userId)
+        //.orderBy(timeStr)
         .snapshots();
+  }
+
+  Future<void> updateChatRoomsWhenUpdateUser(User user) async {
+    await FirebaseFirestore.instance
+        .collection('trang')
+        .doc('nzTptOzmSw1IbLfKHxOT')
+        .collection(chatRoomCollection)
+        .where(usersIdStr, arrayContains: user.uid)
+        .get()
+        .then((value) {
+      for (final snapShot in value.docs) {
+        final chat = createChatFromData(snapShot.data(), snapShot.id);
+        for (var i = 0; i < chat.usersId.length; i++) {
+          if (chat.usersId[i] == user.uid) {
+            chat.images[i] = user.photoURL!;
+            chat.names[i] = user.displayName!;
+            chat.emails[i] = user.email!;
+            break;
+          }
+        }
+
+        snapShot.reference.update(<String, dynamic>{
+          imagesStr: chat.images,
+          namesStr: chat.names,
+          emailsStr: chat.emails,
+        });
+      }
+    });
   }
 }
