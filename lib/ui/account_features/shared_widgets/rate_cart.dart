@@ -7,11 +7,13 @@ import 'package:intl/intl.dart';
 import '../../../constants/app_colors.dart';
 import '../account_screen/account_screen.dart';
 import '../account_screen/local_widgets/getter.dart';
+import 'reply_button.dart';
 
 class RateCard extends StatelessWidget {
   const RateCard({
     Key? key,
     required this.otherSideUserID,
+    required this.ratingID,
     required this.tradingID,
     required this.star,
     required this.comment,
@@ -21,6 +23,7 @@ class RateCard extends StatelessWidget {
     required this.showingPost,
   }) : super(key: key);
   final String otherSideUserID;
+  final String ratingID;
   final String tradingID;
   final int star;
   final String comment;
@@ -153,7 +156,14 @@ class RateCard extends StatelessWidget {
               const SizedBox(width: 15),
               Expanded(
                 flex: 3,
-                child: Text(comment),
+                child: Container(
+                    padding:
+                        const EdgeInsets.symmetric(vertical: 5, horizontal: 8),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(5),
+                      color: Colors.black12,
+                    ),
+                    child: Text(comment)),
               ),
             ],
           ),
@@ -170,7 +180,10 @@ class RateCard extends StatelessWidget {
               ),
             ),
           ),
-          if (reply != '') getWidgetReplie(reply),
+          if (reply.isNotEmpty)
+            getWidgetReplie(reply)
+          else if (isMyRateFromOther)
+            ReplyButton(ratingID: ratingID),
         ],
       ),
     );
@@ -219,5 +232,6 @@ class RateCard extends StatelessWidget {
     properties
         .add(DiagnosticsProperty<bool>('isMyRateFromOther', isMyRateFromOther));
     properties.add(StringProperty('showingPost', showingPost));
+    properties.add(StringProperty('ratingID', ratingID));
   }
 }

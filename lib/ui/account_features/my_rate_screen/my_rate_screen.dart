@@ -34,49 +34,60 @@ class _MyRateScreenState extends State<MyRateScreen> {
     'TÔI ĐÁNH GIÁ',
     'ĐƯỢC ĐÁNH GIÁ',
   ];
+  late FocusScopeNode node;
+
+  @override
+  void dispose() {
+    node.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
+    node = FocusScope.of(context);
     final width = MediaQuery.of(context).size.width;
     final height = MediaQuery.of(context).size.height;
 
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Đánh giá của tôi'),
-      ),
-      body: DefaultTabController(
-        length: tabData.length,
-        child: NestedScrollView(
-            physics: const NeverScrollableScrollPhysics(),
-            headerSliverBuilder: (context, isScolled) {
-              return [
-                SliverAppBar(
-                  backgroundColor: Colors.white,
-                  collapsedHeight: height * 0.25,
-                  expandedHeight: height * 0.25,
-                  flexibleSpace: MainInfo(width: width, widget: widget),
-                  automaticallyImplyLeading: false,
-                ),
-                SliverPersistentHeader(
-                  delegate: MyDelegate(
-                    TabBar(
-                      tabs: tabData
-                          .map(
-                            (item) => Tab(
-                              child: Text(item),
-                            ),
-                          )
-                          .toList(),
-                    ),
+    return GestureDetector(
+      onTap: () => node.unfocus(),
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text('Đánh giá của tôi'),
+        ),
+        body: DefaultTabController(
+          length: tabData.length,
+          child: NestedScrollView(
+              physics: const NeverScrollableScrollPhysics(),
+              headerSliverBuilder: (context, isScolled) {
+                return [
+                  SliverAppBar(
+                    backgroundColor: Colors.white,
+                    collapsedHeight: height * 0.25,
+                    expandedHeight: height * 0.25,
+                    flexibleSpace: MainInfo(width: width, widget: widget),
+                    automaticallyImplyLeading: false,
                   ),
-                  floating: true,
-                  pinned: true,
-                )
-              ];
-            },
-            body: TabBarView(
-              children: getTabContent(),
-            )),
+                  SliverPersistentHeader(
+                    delegate: MyDelegate(
+                      TabBar(
+                        tabs: tabData
+                            .map(
+                              (item) => Tab(
+                                child: Text(item),
+                              ),
+                            )
+                            .toList(),
+                      ),
+                    ),
+                    floating: true,
+                    pinned: true,
+                  )
+                ];
+              },
+              body: TabBarView(
+                children: getTabContent(),
+              )),
+        ),
       ),
     );
   }
@@ -94,6 +105,7 @@ class _MyRateScreenState extends State<MyRateScreen> {
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
     properties.add(IterableProperty<String>('tabData', tabData));
+    properties.add(DiagnosticsProperty<FocusScopeNode>('node', node));
   }
 }
 

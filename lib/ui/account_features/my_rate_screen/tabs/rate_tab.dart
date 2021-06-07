@@ -27,80 +27,96 @@ class RateTab extends StatefulWidget {
 class _RateTabState extends State<RateTab> {
   final userID = AccountScreen.localUserID;
 
+  late FocusScopeNode node;
+
+  @override
+  void dispose() {
+    node.unfocus();
+    node.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
+    node = FocusScope.of(context);
+
     final referenceDatabase = AccountScreen.localRefDatabase;
     final field = widget.isMyRateFromOther ? 'userBeRated' : 'userMakeRating';
 
-    return FutureBuilder<QuerySnapshot>(
-      future: referenceDatabase
-          .collection('ratings')
-          // .orderBy('createAt',  descending: true)
-          .where(field, isEqualTo: userID)
-          .get(),
-      builder: (ctx, querySnapshot) {
-        if (querySnapshot.connectionState == ConnectionState.waiting) {
-          return const Center(
-            child: CircularProgressIndicator(),
-          );
-        }
-        if (querySnapshot.hasError) {
-          return Center(
-            child: Container(
-              padding: const EdgeInsets.symmetric(vertical: 20),
-              child: DefaultTextStyle(
-                style: const TextStyle(
-                  fontSize: 30,
-                  color: Colors.black54,
-                ),
-                child: Column(
-                  children: const [
-                    Text(
-                      'Có lỗi xảy ra.',
-                    ),
-                    Text(
-                      'Vui lòng thử lại sau.',
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          );
-        }
-        final ratings = querySnapshot.data!.docs;
-        return ratings.isNotEmpty
-            ? ListView.builder(
-                itemCount: ratings.length,
-                itemBuilder: (context, index) {
-                  final rating = ratings[index];
-                  final otherSideUserID = widget.isMyRateFromOther
-                      ? rating['userMakeRating'].toString()
-                      : rating['userBeRated'].toString();
-                  final timeData = rating['createAt'] as Timestamp;
-                  final showingPost = rating['post'].toString();
-
-                  return RateCard(
-                    key: ValueKey(rating['trading'].toString()),
-                    otherSideUserID: otherSideUserID,
-                    tradingID: rating['trading'].toString(),
-                    star: rating['star'] as int,
-                    comment: rating['comment'].toString(),
-                    reply: rating['reply'].toString(),
-                    dateTime: timeData.toDate(),
-                    isMyRateFromOther: widget.isMyRateFromOther,
-                    showingPost: showingPost,
-                  );
-                })
-            : const Center(
-                child: Text(
-                  'Chưa có dữ liệu.',
-                  style: TextStyle(
-                    fontSize: 35,
-                    color: Colors.black45,
+    return GestureDetector(
+      onTap: () => node.unfocus(),
+      child: FutureBuilder<QuerySnapshot>(
+        future: referenceDatabase
+            .collection('ratings')
+            // .orderBy('createAt',  descending: true)
+            .where(field, isEqualTo: userID)
+            .get(),
+        builder: (ctx, querySnapshot) {
+          if (querySnapshot.connectionState == ConnectionState.waiting) {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+          if (querySnapshot.hasError) {
+            return Center(
+              child: Container(
+                padding: const EdgeInsets.symmetric(vertical: 20),
+                child: DefaultTextStyle(
+                  style: const TextStyle(
+                    fontSize: 30,
+                    color: Colors.black54,
+                  ),
+                  child: Column(
+                    children: const [
+                      Text(
+                        'Có lỗi xảy ra.',
+                      ),
+                      Text(
+                        'Vui lòng thử lại sau.',
+                      ),
+                    ],
                   ),
                 ),
-              );
-      },
+              ),
+            );
+          }
+          final ratings = querySnapshot.data!.docs;
+
+          return ratings.isNotEmpty
+              ? ListView.builder(
+                  itemCount: ratings.length,
+                  itemBuilder: (context, index) {
+                    final rating = ratings[index];
+                    final otherSideUserID = widget.isMyRateFromOther
+                        ? rating['userMakeRating'].toString()
+                        : rating['userBeRated'].toString();
+                    final timeData = rating['createAt'] as Timestamp;
+                    final showingPost = rating['post'].toString();
+
+                    return RateCard(
+                      key: ValueKey(ratings[index].id.toString()),
+                      ratingID: ratings[index].id.toString(),
+                      otherSideUserID: otherSideUserID,
+                      tradingID: rating['trading'].toString(),
+                      star: rating['star'] as int,
+                      comment: rating['comment'].toString(),
+                      reply: rating['reply'].toString(),
+                      dateTime: timeData.toDate(),
+                      isMyRateFromOther: widget.isMyRateFromOther,
+                      showingPost: showingPost,
+                    );
+                  })
+              : const Center(
+                  child: Text(
+                    'Chưa có dữ liệu.',
+                    style: TextStyle(
+                      fontSize: 35,
+                      color: Colors.black45,
+                    ),
+                  ),
+                );
+        },
+      ),
     );
 
     // return ListView.builder(
@@ -121,5 +137,6 @@ class _RateTabState extends State<RateTab> {
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
     properties.add(StringProperty('userID', userID));
+    properties.add(DiagnosticsProperty<FocusScopeNode>('node', node));
   }
 }

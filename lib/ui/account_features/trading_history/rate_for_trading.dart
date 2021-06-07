@@ -463,7 +463,7 @@ class _RateForTradingState extends State<RateForTrading> {
                                 userMakeRating: userID,
                                 userBeRated: widget.otherSideUserID,
                                 star: star,
-                                comment: _commentController.text,
+                                comment: _commentController.text.trim(),
                                 post: post,
                               );
                               Navigator.of(context).pop();
