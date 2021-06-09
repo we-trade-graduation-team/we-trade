@@ -111,7 +111,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
 
         showMyNotificationDialog(
             context: context,
-            title: 'Thành công',
+            title: 'Thông báo',
             content: 'Thông tin thay đổi thành công!',
             handleFunction: () {
               Navigator.of(context).pop();
@@ -122,7 +122,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
       print('Lỗi khi lưu: $error');
       await showMyNotificationDialog(
           context: context,
-          title: 'Thất bại',
+          title: 'Thông báo',
           content: 'Thao tác Không thành công. Vui lòng thử lại sau.',
           handleFunction: () {
             Navigator.of(context).pop();
@@ -252,9 +252,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
               ),
             )
           : const Center(
-              child: CircularProgressIndicator(
-                valueColor: AlwaysStoppedAnimation<Color>(Colors.blue),
-              ),
+              child: CircularProgressIndicator(),
             ),
       bottomNavigationBar: Padding(
         padding: const EdgeInsets.all(10),
@@ -291,11 +289,8 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                     settings: const RouteSettings(
                         name: ChangePasswordScreen.routeName),
                     screen: const ChangePasswordScreen(),
-                    // withNavBar: true,
                     pageTransitionAnimation: PageTransitionAnimation.cupertino,
                   );
-                  // Navigator.of(context)
-                  //     .pushNamed(ChangePasswordScreen.routeName);
                 },
                 style: ElevatedButton.styleFrom(
                   primary: AppColors.kPrimaryLightColor,
