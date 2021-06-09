@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
@@ -113,12 +114,12 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
           children: [
             Expanded(
               child: ElevatedButton(
-                onPressed: () {
+                onPressed: () async {
                   _formKey.currentState!.save();
                   if (_formKey.currentState!.validate()) {
                     if (_confirmPasswordController.text !=
                         _newPasswordController.text) {
-                      showMyNotificationDialog(
+                      await showMyNotificationDialog(
                           context: context,
                           title: 'Thông báo',
                           content: 'Xác nhận mật khẩu không chính xác.',
@@ -126,15 +127,37 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                             Navigator.of(context).pop();
                           });
                     } else {
-                      //TODO: compare pw in db
-                      showMyNotificationDialog(
-                          context: context,
-                          title: 'Thông báo',
-                          content: 'Thay đổi mật khẩu thành công.',
-                          handleFunction: () {
-                            Navigator.of(context).pop();
-                            Navigator.of(context).pop();
-                          });
+                      final user = FirebaseAuth.instance.currentUser;
+
+                      if (user != null && !user.emailVerified) {
+                        try {
+                          final username = user.email.toString();
+                          final credential = EmailAuthProvider.credential(
+                              email: username,
+                              password: _oldPasswordController.text);
+                          await FirebaseAuth.instance.currentUser!
+                              .reauthenticateWithCredential(credential);
+                          await user
+                              .updatePassword(_newPasswordController.text);
+                          await showMyNotificationDialog(
+                              context: context,
+                              title: 'Thông báo',
+                              content: 'Thay đổi mật khẩu thành công.',
+                              handleFunction: () {
+                                Navigator.of(context).pop();
+                                Navigator.of(context).pop();
+                              });
+                        } on FirebaseAuthException catch (_) {
+                          await showMyNotificationDialog(
+                              context: context,
+                              title: 'Thông báo',
+                              content:
+                                  'Mật khẩu cũ không đúng hoặc có lỗi xảy ra. Vui lòng thử lại.',
+                              handleFunction: () {
+                                Navigator.of(context).pop();
+                              });
+                        }
+                      }
                     }
                   }
                 },
