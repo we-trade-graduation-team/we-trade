@@ -101,17 +101,15 @@ class _ChatCardState extends State<ChatCard> {
     return '$name ${widget.chat.lastMessage}';
   }
 
-  Future<void> getIsSeen() async {
+  Future<bool> getIsSeen() {
     var myLastMessageId = '';
-    await widget.doc.reference
+    return widget.doc.reference
         .collection(seenHistoryCollection)
         .doc(widget.chat.chatRoomId)
         .get()
         .then((value) {
       myLastMessageId = value.data()![widget.thisUserId].toString();
-      setState(() {
-        isSeen = myLastMessageId == widget.chat.lastMessageId;
-      });
+      return myLastMessageId == widget.chat.lastMessageId;
     });
   }
 
@@ -122,7 +120,11 @@ class _ChatCardState extends State<ChatCard> {
 
   @override
   Widget build(BuildContext context) {
-    getIsSeen();
+    getIsSeen().then((value) {
+      setState(() {
+        isSeen = value;
+      });
+    });
     setState(() {
       isSendByMe = widget.chat.senderId == widget.thisUserId;
     });
@@ -223,5 +225,7 @@ class _ChatCardState extends State<ChatCard> {
     properties.add(StringProperty('chatRoomName', chatRoomName));
     properties.add(DiagnosticsProperty<UserServiceAlgolia>(
         'userServiceAlgolia', userServiceAlgolia));
+    properties.add(DiagnosticsProperty<bool>('isSeen', isSeen));
+    properties.add(DiagnosticsProperty<bool>('isSendByMe', isSendByMe));
   }
 }

@@ -91,8 +91,15 @@ class _BodyState extends State<Body> {
                 final data =
                     snapshot.data!.docs[index].data() as Map<String, dynamic>;
                 // TODO : add images seen do
+                final usersImageWhoSeen = <String>[];
+                seenHistoryMap.forEach((key, value) {
+                  if (value == snapshot.data!.docs[index].id &&
+                      key != thisUser.uid) {
+                    usersImageWhoSeen.add(widget.userAndAva[key].toString());
+                  }
+                });
                 return MessageTile(
-                  testing: seenHistoryMap.isNotEmpty,
+                  usersImageWhoSeen: usersImageWhoSeen,
                   type: int.parse(data[typeStr].toString()),
                   time: int.parse(data[timeStr].toString()),
                   message: data[messageStr].toString(),

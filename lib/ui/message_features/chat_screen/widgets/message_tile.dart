@@ -1,9 +1,8 @@
-import 'dart:developer';
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
+import 'package:intl/intl.dart' as date_time;
+
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 import 'package:pinch_zoom/pinch_zoom.dart';
 
@@ -21,13 +20,13 @@ class MessageTile extends StatefulWidget {
       this.senderImage = '',
       required this.time,
       required this.type,
-      required this.testing})
+      required this.usersImageWhoSeen})
       : super(key: key);
 
   final String message, senderImage;
   final int time, type;
   final bool sendByMe, isOutGroupMessage;
-  final bool testing;
+  final List<String> usersImageWhoSeen;
 
   @override
   State<MessageTile> createState() => _MessageTileState();
@@ -41,53 +40,65 @@ class MessageTile extends StatefulWidget {
     properties.add(IntProperty('time', time));
     properties.add(StringProperty('senderImage', senderImage));
     properties.add(IntProperty('type', type));
+    properties
+        .add(IterableProperty<String>('usersImageWhoSeen', usersImageWhoSeen));
   }
 }
 
 class _MessageTileState extends State<MessageTile> {
   bool isVisible = false;
+
   @override
   Widget build(BuildContext context) {
     return !widget.isOutGroupMessage
-        ? Container(
-            color: widget.testing ? Colors.red : Colors.white,
-            margin: widget.sendByMe
-                ? const EdgeInsets.only(left: 40)
-                : const EdgeInsets.only(right: 40),
-            padding: EdgeInsets.only(
-                top: 8,
-                bottom: 8,
-                left: widget.sendByMe ? 0 : 10,
-                right: widget.sendByMe ? 10 : 0),
-            alignment:
-                widget.sendByMe ? Alignment.centerRight : Alignment.centerLeft,
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                if (!widget.sendByMe)
-                  CustomUserAvatar(image: widget.senderImage, radius: 13),
-                const SizedBox(width: 5),
-                Column(
-                  crossAxisAlignment: widget.sendByMe
-                      ? CrossAxisAlignment.end
-                      : CrossAxisAlignment.start,
+        ? Column(
+            children: [
+              Container(
+                margin: widget.sendByMe
+                    ? const EdgeInsets.only(left: 40)
+                    : const EdgeInsets.only(right: 40),
+                padding: EdgeInsets.only(
+                    top: 8,
+                    bottom: 8,
+                    left: widget.sendByMe ? 0 : 10,
+                    right: widget.sendByMe ? 10 : 0),
+                alignment: widget.sendByMe
+                    ? Alignment.centerRight
+                    : Alignment.centerLeft,
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
-                    buildContentSend(),
-                    if (isVisible || widget.type == imageType)
-                      const SizedBox(height: 5),
-                    if (isVisible || widget.type == imageType)
-                      Text(
-                        DateFormat('mm-dd-yy kk:mm').format(
-                            DateTime.fromMillisecondsSinceEpoch(widget.time)),
-                        style: const TextStyle(
-                            fontSize: 10, fontWeight: FontWeight.w300),
-                      ),
+                    if (!widget.sendByMe)
+                      CustomUserAvatar(image: widget.senderImage, radius: 13),
+                    const SizedBox(width: 5),
+                    Column(
+                      crossAxisAlignment: widget.sendByMe
+                          ? CrossAxisAlignment.end
+                          : CrossAxisAlignment.start,
+                      children: [
+                        buildContentSend(),
+                        if (isVisible || widget.type == imageType)
+                          const SizedBox(height: 5),
+                        if (isVisible || widget.type == imageType)
+                          Text(
+                            date_time.DateFormat('mm-dd-yy kk:mm').format(
+                                DateTime.fromMillisecondsSinceEpoch(
+                                    widget.time)),
+                            style: const TextStyle(
+                                fontSize: 10, fontWeight: FontWeight.w300),
+                          ),
+                      ],
+                    ),
+                    const SizedBox(width: 5),
                   ],
                 ),
-                const SizedBox(width: 5),
-              ],
-            ),
+              ),
+              Container(
+                  padding: const EdgeInsets.only(right: 10),
+                  alignment: Alignment.centerRight,
+                  child: buildSeenImages()),
+            ],
           )
         : Container(
             alignment: Alignment.center,
@@ -98,7 +109,7 @@ class _MessageTileState extends State<MessageTile> {
             child: Column(
               children: [
                 Text(
-                  DateFormat('mm-dd-yy kk:mm')
+                  date_time.DateFormat('mm-dd-yy kk:mm')
                       .format(DateTime.fromMillisecondsSinceEpoch(widget.time)),
                   style: const TextStyle(
                       fontSize: 10, fontWeight: FontWeight.w300),
@@ -110,6 +121,29 @@ class _MessageTileState extends State<MessageTile> {
                 ),
               ],
             ));
+  }
+
+  Widget buildSeenImages() {
+    if (widget.usersImageWhoSeen.isNotEmpty) {
+      final width = MediaQuery.of(context).size.width;
+      return Directionality(
+        textDirection: TextDirection.rtl,
+        child: Container(
+          height: 20,
+          width: width / 2,
+          child: GridView.count(
+            crossAxisCount: 10,
+            crossAxisSpacing: 2,
+            mainAxisSpacing: 2,
+            children: List.generate(widget.usersImageWhoSeen.length, (index) {
+              final asset = widget.usersImageWhoSeen[index];
+              return CustomUserAvatar(image: asset, radius: 10);
+            }),
+          ),
+        ),
+      );
+    }
+    return Container();
   }
 
   Widget buildContentSend() {
@@ -142,12 +176,11 @@ class _MessageTileState extends State<MessageTile> {
       final themeColor = Theme.of(context).primaryColor;
       return GestureDetector(
         onTap: () {
-          log('hi');
           pushNewScreen<void>(
             context,
             screen: ImageZoomScreen(
               photoURL: widget.message,
-              tittle: DateFormat('mm-dd-yy kk:mm')
+              tittle: date_time.DateFormat('mm-dd-yy kk:mm')
                   .format(DateTime.fromMillisecondsSinceEpoch(widget.time)),
             ),
             withNavBar: false,
