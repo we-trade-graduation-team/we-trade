@@ -53,37 +53,58 @@ class _BodyState extends State<Body> {
   late User thisUser = Provider.of<User?>(context, listen: false)!;
   // ignore: diagnostic_describe_all_properties
   late Stream<QuerySnapshot> chats;
+  // ignore: diagnostic_describe_all_properties
+  late Stream<DocumentSnapshot<Map<String, dynamic>>> seenHistory;
+  late Map<String, String> seenHistoryMap = {};
   late bool isHaveOfferDeal = false;
   late bool isShowGallery = false;
   late bool isLoadingImage = false;
   List<Asset> images = <Asset>[];
 
 //UI =======================================
+  Widget buildSeenHistory() {
+    return StreamBuilder<DocumentSnapshot<Map<String, dynamic>>>(
+        stream: seenHistory,
+        builder: (context, snapshot) {
+          seenHistoryMap = {};
+          if (snapshot.hasData) {
+            seenHistoryMap = (snapshot.data!.data() as Map<String, dynamic>)
+                .cast<String, String>();
+          }
+          return Container();
+        });
+  }
+
   Widget buildMessageTile() {
     return StreamBuilder<QuerySnapshot>(
       stream: chats,
       builder: (context, snapshot) {
-        return snapshot.hasData
-            ? ListView.builder(
-                shrinkWrap: true,
-                itemCount: snapshot.data!.docs.length,
-                reverse: true,
-                itemBuilder: (context, index) {
-                  final data =
-                      snapshot.data!.docs[index].data() as Map<String, dynamic>;
-                  return MessageTile(
-                    type: int.parse(data[typeStr].toString()),
-                    time: int.parse(data[timeStr].toString()),
-                    message: data[messageStr].toString(),
-                    senderImage:
-                        widget.userAndAva.containsKey(data[senderIdStr])
-                            ? widget.userAndAva[data[senderIdStr]].toString()
-                            : '',
-                    isOutGroupMessage: data[senderIdStr].toString().isEmpty,
-                    sendByMe: thisUser.uid == data[senderIdStr],
-                  );
-                })
-            : Container();
+        if (snapshot.hasData) {
+          final lastMessageId = snapshot.data!.docs.first.id;
+          messageServiceFireStore.updateMySeenHistory(
+              widget.chatRoomId, thisUser.uid!, lastMessageId);
+          return ListView.builder(
+              shrinkWrap: true,
+              itemCount: snapshot.data!.docs.length,
+              reverse: true,
+              itemBuilder: (context, index) {
+                final data =
+                    snapshot.data!.docs[index].data() as Map<String, dynamic>;
+                // TODO : add images seen do
+                return MessageTile(
+                  testing: seenHistoryMap.isNotEmpty,
+                  type: int.parse(data[typeStr].toString()),
+                  time: int.parse(data[timeStr].toString()),
+                  message: data[messageStr].toString(),
+                  senderImage: widget.userAndAva.containsKey(data[senderIdStr])
+                      ? widget.userAndAva[data[senderIdStr]].toString()
+                      : '',
+                  isOutGroupMessage: data[senderIdStr].toString().isEmpty,
+                  sendByMe: thisUser.uid == data[senderIdStr],
+                );
+              });
+        }
+        return Container();
       },
     );
   }
@@ -312,6 +333,11 @@ class _BodyState extends State<Body> {
         chats = result;
       });
     });
+    messageServiceFireStore.getSeenHistory(widget.chatRoomId).then((result) {
+      setState(() {
+        seenHistory = result;
+      });
+    });
     focusNode.addListener(onFocusChange);
     isShowGallery = false;
     images.clear();
@@ -326,6 +352,7 @@ class _BodyState extends State<Body> {
         children: [
           Column(
             children: [
+              buildSeenHistory(),
               buildOfferDealCard(),
               Expanded(child: buildMessageTile()),
               if (isShowGallery) buildGallery() else Container(),

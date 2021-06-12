@@ -55,6 +55,22 @@ class MessageServiceFireStore {
     });
   }
 
+  Future<void> createSeenHistory(
+      String chatRoomId, List<String> usersId) async {
+    final mapData = <String, String>{};
+    for (final element in usersId) {
+      mapData[element] = '';
+    }
+    await FirebaseFirestore.instance
+        .collection('trang')
+        .doc('nzTptOzmSw1IbLfKHxOT')
+        .collection(chatRoomCollection)
+        .doc(chatRoomId)
+        .collection(seenHistoryCollection)
+        .doc(chatRoomId)
+        .set(mapData);
+  }
+
   Future<void> addMessageToChatRoom(String senderId, int type,
       String contentToSend, String chatRoomId, String senderName) async {
     final mapData = <String, dynamic>{
@@ -64,13 +80,14 @@ class MessageServiceFireStore {
       timeStr: DateTime.now().millisecondsSinceEpoch
     };
 
-    await addMessageToFireStore(chatRoomId, mapData);
-
-    updateChatRoom(chatRoomId, contentToSend, senderId, senderName, type);
+    await addMessageToFireStore(chatRoomId, mapData).then((lastMessageId) {
+      updateChatRoom(
+          chatRoomId, contentToSend, senderId, senderName, type, lastMessageId);
+    });
   }
 
   void updateChatRoom(String chatRoomId, String contentToSend, String senderId,
-      String name, int type) {
+      String name, int type, String lastMessageId) {
     var lastMessage = '';
     switch (type) {
       case 0:
@@ -97,6 +114,7 @@ class MessageServiceFireStore {
         .collection(chatRoomCollection)
         .doc(chatRoomId)
         .update({
+      lastMessageIdStr: lastMessageId,
       lastMessageStr: lastMessage,
       senderIdStr: senderId,
       senderNameStr: name,
@@ -104,16 +122,16 @@ class MessageServiceFireStore {
     });
   }
 
-  Future<void> addMessageToFireStore(
+  Future<String> addMessageToFireStore(
       String chatRoomId, Map<String, dynamic> mapData) async {
-    await FirebaseFirestore.instance
+    return FirebaseFirestore.instance
         .collection('trang')
         .doc('nzTptOzmSw1IbLfKHxOT')
         .collection(chatRoomCollection)
         .doc(chatRoomId)
         .collection(chatCollection)
         .add(mapData)
-        .catchError((dynamic e) {});
+        .then((value) => value.id);
   }
 
   Future<Stream<QuerySnapshot<Map<String, dynamic>>>> getChats(
@@ -126,6 +144,30 @@ class MessageServiceFireStore {
         .collection(chatCollection)
         .orderBy(timeStr, descending: true)
         .snapshots();
+  }
+
+  Future<Stream<DocumentSnapshot<Map<String, dynamic>>>> getSeenHistory(
+      String chatRoomId) async {
+    return FirebaseFirestore.instance
+        .collection('trang')
+        .doc('nzTptOzmSw1IbLfKHxOT')
+        .collection(chatRoomCollection)
+        .doc(chatRoomId)
+        .collection(seenHistoryCollection)
+        .doc(chatRoomId)
+        .snapshots();
+  }
+
+  Future<void> updateMySeenHistory(
+      String chatRoomId, String userId, String lastMessageId) async {
+    await FirebaseFirestore.instance
+        .collection('trang')
+        .doc('nzTptOzmSw1IbLfKHxOT')
+        .collection(chatRoomCollection)
+        .doc(chatRoomId)
+        .collection(seenHistoryCollection)
+        .doc(chatRoomId)
+        .update({userId: lastMessageId});
   }
 
   Future<List<UserAlgolia>> getAllUserInChatRoom(String chatRoomId) {
@@ -151,6 +193,18 @@ class MessageServiceFireStore {
     });
   }
 
+  Future<void> updateSeenHistoryOfChatRoom(
+      String chatRoomId, String thisUserId, String lastMessageId) {
+    return FirebaseFirestore.instance
+        .collection('trang')
+        .doc('nzTptOzmSw1IbLfKHxOT')
+        .collection(chatRoomCollection)
+        .doc(chatRoomId)
+        .collection(seenHistoryCollection)
+        .doc(chatRoomId)
+        .update({thisUserId: lastMessageId});
+  }
+
   Chat createChatFromData(Map<String, dynamic> snapShot, String id) {
     var chatRoomName = '';
     if (snapShot[chatRoomNameStr].toString().isNotEmpty) {
@@ -168,6 +222,7 @@ class MessageServiceFireStore {
       chatRoomId: id,
       images: (snapShot[imagesStr] as List<dynamic>).cast<String>().toList(),
       lastMessage: snapShot[lastMessageStr].toString(),
+      lastMessageId: snapShot[lastMessageIdStr].toString(),
       chatRoomName: chatRoomName,
       senderName: snapShot[senderNameStr].toString(),
       time: lastActive,
@@ -278,7 +333,7 @@ class MessageServiceFireStore {
         .doc('nzTptOzmSw1IbLfKHxOT')
         .collection(chatRoomCollection)
         .where(usersIdStr, arrayContains: userId)
-        //.orderBy(timeStr)
+        .orderBy(timeStr, descending: true)
         .snapshots();
   }
 

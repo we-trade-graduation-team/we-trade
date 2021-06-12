@@ -24,6 +24,8 @@ class HelperNavigateChatRoom {
         final mapData = createChatRoomMap(users: [user], thisUser: thisUser);
         await messageServiceFireStore.createPeerToPeerChatRoomFireStore(
             mapData, chatRoomId);
+        final usersId = mapData[usersIdStr] as List<String>;
+        await messageServiceFireStore.createSeenHistory(chatRoomId, usersId);
         final name =
             HelperClass.finalSenderName(thisUser.displayName, thisUser.email);
 
@@ -54,6 +56,8 @@ class HelperNavigateChatRoom {
         final mapData = createChatRoomMap(users: [user], thisUser: thisUser);
         await messageServiceFireStore.createPeerToPeerChatRoomFireStore(
             mapData, chatRoomId);
+        final usersId = mapData[usersIdStr] as List<String>;
+        await messageServiceFireStore.createSeenHistory(chatRoomId, usersId);
         final name =
             HelperClass.finalSenderName(thisUser.displayName, thisUser.email);
 
@@ -79,7 +83,8 @@ class HelperNavigateChatRoom {
         .then((chatRoomId) async {
       final name =
           HelperClass.finalSenderName(thisUser.displayName, thisUser.email);
-
+      final usersId = mapData[usersIdStr] as List<String>;
+      await messageServiceFireStore.createSeenHistory(chatRoomId, usersId);
       await startNewChatRoom(
           chatRoomId: chatRoomId,
           thisUserId: thisUser.uid!,

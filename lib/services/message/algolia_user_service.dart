@@ -12,7 +12,7 @@ class UserServiceAlgolia {
 
   Future<List<AlgoliaObjectSnapshot>> searchUserByAlgolia(String query) {
     return algolia.instance
-        .index(trangUsersAlogliaIndex)
+        .index(trangUsersAlgoliaIndex)
         .query(query)
         .getObjects()
         .then((result) => result.hits);
@@ -20,7 +20,7 @@ class UserServiceAlgolia {
 
   Future<UserAlgolia> getUserById(String id) async {
     return algolia.instance
-        .index(trangUsersAlogliaIndex)
+        .index(trangUsersAlgoliaIndex)
         .object(id)
         .getObject()
         .then((value) {
@@ -53,7 +53,7 @@ class UserServiceAlgolia {
   //lúc sign up chỉ có 2 trường {name, email}
   Future<void> addUser(User newUser) async {
     final newUserMap = createUserMapAlgolia(newUser);
-    await algolia.instance.index(trangUsersAlogliaIndex).addObject(newUserMap);
+    await algolia.instance.index(trangUsersAlgoliaIndex).addObject(newUserMap);
   }
 
   //update nè :v
@@ -61,7 +61,7 @@ class UserServiceAlgolia {
     final updateUserMap = createUserMapAlgolia(updateUser);
     final messageServiceFireStore = MessageServiceFireStore();
     await algolia.instance
-        .index(trangUsersAlogliaIndex)
+        .index(trangUsersAlgoliaIndex)
         .object(updateUserMap['objectID'].toString())
         .updateData(updateUserMap);
     // ignore: unawaited_futures

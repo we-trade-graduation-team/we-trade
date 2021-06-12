@@ -150,7 +150,9 @@ class _BodyState extends State<Body> {
                               object.data[lastActiveStr].toString())));
                       final user = UserAlgolia(
                           id: object.objectID,
-                          name: object.data[nameStr].toString(),
+                          name: object.data[nameStr].toString().isNotEmpty
+                              ? object.data[nameStr].toString()
+                              : object.data[emailStr].toString(),
                           image: object.data[avatarURLStr].toString(),
                           email: object.data[emailStr].toString(),
                           isActive: object.data[presenceStr] as bool,

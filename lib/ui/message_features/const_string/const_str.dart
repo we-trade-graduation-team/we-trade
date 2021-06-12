@@ -1,7 +1,9 @@
-const String trangUsersAlogliaIndex = 'trang_users';
+const String trangUsersAlgoliaIndex = 'trang_users';
+const String trangPostAlgoliaIndex = 'posts';
 
 const String chatRoomCollection = 'chat_rooms';
 const String chatCollection = 'chats';
+const String seenHistoryCollection = 'seen_history';
 
 const String emailStr = 'email';
 const String lastActiveStr = 'lastActive';
@@ -20,6 +22,7 @@ const String groupChatStr = 'group_chat';
 const String senderIdStr = 'sender_id';
 const String senderNameStr = 'sender_name';
 const String lastMessageStr = 'last_message';
+const String lastMessageIdStr = 'last_message_id';
 const String timeStr = 'time';
 
 const String messageStr = 'message';

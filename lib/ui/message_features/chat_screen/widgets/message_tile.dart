@@ -20,12 +20,14 @@ class MessageTile extends StatefulWidget {
       this.isOutGroupMessage = false,
       this.senderImage = '',
       required this.time,
-      required this.type})
+      required this.type,
+      required this.testing})
       : super(key: key);
 
   final String message, senderImage;
   final int time, type;
   final bool sendByMe, isOutGroupMessage;
+  final bool testing;
 
   @override
   State<MessageTile> createState() => _MessageTileState();
@@ -48,6 +50,7 @@ class _MessageTileState extends State<MessageTile> {
   Widget build(BuildContext context) {
     return !widget.isOutGroupMessage
         ? Container(
+            color: widget.testing ? Colors.red : Colors.white,
             margin: widget.sendByMe
                 ? const EdgeInsets.only(left: 40)
                 : const EdgeInsets.only(right: 40),

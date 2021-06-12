@@ -62,10 +62,23 @@ class _BodyState extends State<Body> {
                       snapshot.data!.docs[index].data() as Map<String, dynamic>,
                       snapshot.data!.docs[index].id);
                   if (isInSearchList(chat)) {
+                    // TODO fix here, ko lấy được my lastMessageId
+                    // var myLastMessageId = '';
+                    // snapshot.data!.docs[index].reference
+                    //     .collection(seenHistoryCollection)
+                    //     .doc(chat.chatRoomId)
+                    //     .get()
+                    //     .then((value) {
+                    //   setState(() {
+                    //     myLastMessageId =
+                    //         value.data()![thisUser.uid].toString();
+                    //   });
+                    // });
                     return ChatCard(
                       chat: chat,
-                      isSendByMe: chat.senderId == thisUser.uid!,
+                      thisUserId: thisUser.uid!,
                       typeFunction: navigateToChatRoomStr,
+                      doc: snapshot.data!.docs[index],
                     );
                   } else {
                     return Container();
