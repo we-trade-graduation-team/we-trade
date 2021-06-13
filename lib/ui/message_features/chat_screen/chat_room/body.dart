@@ -185,9 +185,8 @@ class _BodyState extends State<Body> {
 
 // function Message send ============================
   Future<void> addMessageToChatRoom(String contentToSend, int type) async {
-    final name = (thisUser.displayName!.isNotEmpty
-        ? thisUser.displayName
-        : thisUser.email)!;
+    final name =
+        (thisUser.username!.isNotEmpty ? thisUser.username : thisUser.email)!;
     await dataServiceFireStore.addMessageToChatRoom(
         thisUser.uid!, type, contentToSend, widget.chatRoomId, name);
   }

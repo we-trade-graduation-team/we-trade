@@ -22,9 +22,9 @@ import '../../ui/message_features/chat_screen/chat_room/chat_room.dart';
 import '../../ui/message_features/match_post/match_post_screen.dart';
 import '../../ui/message_features/offer_screens/make_offer_screen.dart';
 import '../../ui/message_features/offer_screens/offer_detail_screen.dart';
-import '../../ui/posting_features/post_items/component/post_item_step_four.dart';
-import '../../ui/posting_features/post_items/component/post_item_step_three.dart';
-import '../../ui/posting_features/post_items/component/post_item_step_two.dart';
+import '../../ui/posting_features/post_items/post_item_step_four.dart';
+import '../../ui/posting_features/post_items/post_item_step_three.dart';
+import '../../ui/posting_features/post_items/post_item_step_two.dart';
 import '../../ui/shared_features/other_user_profile/other_user_profile_screen.dart';
 import '../../ui/shared_features/report/report_screen.dart';
 import '../../ui/wish_list_features/wish_list/wish_list_screen.dart';
@@ -120,6 +120,6 @@ class Routes {
   static final Map<String, WidgetBuilder> postingFeaturesRoutes = {
     postItemStepTwoScreenRouteName: (_) => const PostItemTwo(),
     postItemStepThreeScreenRouteName: (_) => const PostItemThree(),
-    postItemStepFourScreenRouteName: (_) =>  PostItemFour(),
+    postItemStepFourScreenRouteName: (_) => PostItemFour(),
   };
 }
