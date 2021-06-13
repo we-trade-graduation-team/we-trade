@@ -1,22 +1,24 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'question_answer.dart';
+part of 'post_details_question_answer.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-QuestionAnswer _$QuestionAnswerFromJson(Map<String, dynamic> json) {
+PostDetailsQuestionAnswer _$PostDetailsQuestionAnswerFromJson(
+    Map<String, dynamic> json) {
   $checkKeys(json,
       requiredKeys: const ['respondentUsername', 'answer', 'createAt']);
-  return QuestionAnswer(
+  return PostDetailsQuestionAnswer(
     respondentUsername: json['respondentUsername'] as String,
     answer: json['answer'] as String,
     createAt: DateTime.parse(json['createAt'] as String),
   );
 }
 
-Map<String, dynamic> _$QuestionAnswerToJson(QuestionAnswer instance) =>
+Map<String, dynamic> _$PostDetailsQuestionAnswerToJson(
+        PostDetailsQuestionAnswer instance) =>
     <String, dynamic>{
       'respondentUsername': instance.respondentUsername,
       'answer': instance.answer,
