@@ -12,6 +12,7 @@ class Chat {
     required this.chatRoomId,
     required this.chatRoomName,
     required this.lastMessage,
+    required this.lastMessageId,
     required this.senderName,
     required this.senderId,
     required this.time,
@@ -24,6 +25,7 @@ class Chat {
         groupChat = false,
         images = [],
         lastMessage = '',
+        lastMessageId = '',
         names = [],
         senderId = '',
         senderName = '',
@@ -35,7 +37,7 @@ class Chat {
   final List<String> images, usersId, names, emails;
   final String chatRoomName;
   final String time;
-  final String lastMessage;
+  final String lastMessage, lastMessageId;
   final String senderName;
   final String senderId;
 }

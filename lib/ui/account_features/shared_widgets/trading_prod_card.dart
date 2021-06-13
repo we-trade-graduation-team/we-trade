@@ -64,7 +64,7 @@ class TradingProductCard extends StatelessWidget {
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(10),
                     child: Image.asset(
-                      review.product.images[0],
+                      review.posts![0].images[0],
                       fit: BoxFit.cover,
                     ),
                   ),

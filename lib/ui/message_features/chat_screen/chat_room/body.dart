@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:lottie/lottie.dart';
 import 'package:multi_image_picker2/multi_image_picker2.dart';
 import 'package:provider/provider.dart';
 
@@ -14,6 +15,7 @@ import '../../../../services/message/firestore_message_service.dart';
 import '../../../../utils/helper/image_data_storage_helper/image_data_storage_helper.dart';
 import '../../../../widgets/custom_material_button.dart';
 import '../../const_string/const_str.dart';
+import '../../helper/ulti.dart';
 import '../../shared_widgets/offer_card.dart';
 import '../widgets/message_tile.dart';
 
@@ -29,9 +31,10 @@ class Body extends StatefulWidget {
     Key? key,
     required this.chatRoomId,
     required this.userAndAva,
+    required this.userAndName,
   }) : super(key: key);
   final String chatRoomId;
-  final Map<String, String> userAndAva;
+  final Map<String, String> userAndAva, userAndName;
 
   @override
   _BodyState createState() => _BodyState();
@@ -41,46 +44,80 @@ class Body extends StatefulWidget {
     properties.add(StringProperty('chatRoomId', chatRoomId));
     properties.add(
         DiagnosticsProperty<Map<String, String>>('userAndAva', userAndAva));
+    properties.add(
+        DiagnosticsProperty<Map<String, String>>('userAndName', userAndName));
   }
 }
 
 class _BodyState extends State<Body> {
-  MessageServiceFireStore dataServiceFireStore = MessageServiceFireStore();
+  MessageServiceFireStore messageServiceFireStore = MessageServiceFireStore();
   TextEditingController messageTextController = TextEditingController();
   final FocusNode focusNode = FocusNode();
   late User thisUser = Provider.of<User?>(context, listen: false)!;
   // ignore: diagnostic_describe_all_properties
   late Stream<QuerySnapshot> chats;
+  // ignore: diagnostic_describe_all_properties
+  late Stream<DocumentSnapshot<Map<String, dynamic>>> seenHistory;
+  late Map<String, String> seenHistoryMap = {};
   late bool isHaveOfferDeal = false;
   late bool isShowGallery = false;
+  late bool isLoadingImage = false;
   List<Asset> images = <Asset>[];
 
 //UI =======================================
+  Widget buildSeenHistory() {
+    return StreamBuilder<DocumentSnapshot<Map<String, dynamic>>>(
+        stream: seenHistory,
+        builder: (context, snapshot) {
+          seenHistoryMap = {};
+          if (snapshot.hasData) {
+            seenHistoryMap = (snapshot.data!.data() as Map<String, dynamic>)
+                .cast<String, String>();
+          }
+          return Container();
+        });
+  }
+
   Widget buildMessageTile() {
     return StreamBuilder<QuerySnapshot>(
       stream: chats,
       builder: (context, snapshot) {
-        return snapshot.hasData
-            ? ListView.builder(
-                shrinkWrap: true,
-                itemCount: snapshot.data!.docs.length,
-                reverse: true,
-                itemBuilder: (context, index) {
-                  final data =
-                      snapshot.data!.docs[index].data() as Map<String, dynamic>;
-                  return MessageTile(
-                    type: int.parse(data[typeStr].toString()),
-                    time: int.parse(data[timeStr].toString()),
-                    message: data[messageStr].toString(),
-                    senderImage:
-                        widget.userAndAva.containsKey(data[senderIdStr])
-                            ? widget.userAndAva[data[senderIdStr]].toString()
-                            : '',
-                    isOutGroupMessage: data[senderIdStr].toString().isEmpty,
-                    sendByMe: thisUser.uid == data[senderIdStr],
-                  );
-                })
-            : Container();
+        if (snapshot.hasData) {
+          final lastMessageId = snapshot.data!.docs.first.id;
+          messageServiceFireStore.updateMySeenHistory(
+              widget.chatRoomId, thisUser.uid!, lastMessageId);
+          return ListView.builder(
+              shrinkWrap: true,
+              itemCount: snapshot.data!.docs.length,
+              reverse: true,
+              itemBuilder: (context, index) {
+                final data =
+                    snapshot.data!.docs[index].data() as Map<String, dynamic>;
+                // TODO : add images seen do
+                final usersImageWhoSeen = <String>[];
+                seenHistoryMap.forEach((key, value) {
+                  if (value == snapshot.data!.docs[index].id &&
+                      key != thisUser.uid) {
+                    usersImageWhoSeen.add(widget.userAndAva[key].toString());
+                  }
+                });
+                return MessageTile(
+                  usersImageWhoSeen: usersImageWhoSeen,
+                  type: int.parse(data[typeStr].toString()),
+                  time: int.parse(data[timeStr].toString()),
+                  message: data[messageStr].toString(),
+                  senderName: widget.userAndName.containsKey(data[senderIdStr])
+                      ? widget.userAndName[data[senderIdStr]].toString()
+                      : '',
+                  senderImage: widget.userAndAva.containsKey(data[senderIdStr])
+                      ? widget.userAndAva[data[senderIdStr]].toString()
+                      : '',
+                  isOutGroupMessage: data[senderIdStr].toString().isEmpty,
+                  sendByMe: thisUser.uid == data[senderIdStr],
+                );
+              });
+        }
+        return Container();
       },
     );
   }
@@ -107,37 +144,43 @@ class _BodyState extends State<Body> {
   Widget buildGridViewSelectedImages() {
     // hàm này show list ảnh images lên nè, m có thể chỉnh sửa tùy ý
     final height = MediaQuery.of(context).size.height;
+    final width = MediaQuery.of(context).size.width;
     return images.isNotEmpty
-        ? Stack(
-            children: [
-              SizedBox(
-                height: height / 3,
-                child: GridView.count(
-                  crossAxisCount: 3,
-                  crossAxisSpacing: 5,
-                  mainAxisSpacing: 5,
-                  children: List.generate(images.length, (index) {
-                    final asset = images[index];
-                    return AssetThumb(
-                      asset: asset,
-                      width: 300,
-                      height: 300,
-                    );
-                  }),
+        //isLoadingImage
+        ? Container(
+            height: height / 3,
+            width: width,
+            child: Stack(
+              children: [
+                if (!isLoadingImage)
+                  GridView.count(
+                    crossAxisCount: 3,
+                    crossAxisSpacing: 5,
+                    mainAxisSpacing: 5,
+                    children: List.generate(images.length, (index) {
+                      final asset = images[index];
+                      return AssetThumb(
+                        asset: asset,
+                        width: 300,
+                        height: 300,
+                      );
+                    }),
+                  )
+                else
+                  Lottie.network(messageLoadingStr2, width: 100, height: 100),
+                Positioned(
+                  bottom: 0,
+                  right: 0,
+                  child: CustomMaterialButton(
+                    press:
+                        addMessageImageToChatRoom, // bấm đẩy (F12) để coi hàm chạy push image lên
+                    text: 'GỬI',
+                    width: MediaQuery.of(context).size.width - 200,
+                    height: 30,
+                  ),
                 ),
-              ),
-              Positioned(
-                bottom: 0,
-                right: 0,
-                child: CustomMaterialButton(
-                  press:
-                      addMessageImageToChatRoom, // bấm đẩy (F12) để coi hàm chạy push image lên
-                  text: 'GỬI',
-                  width: MediaQuery.of(context).size.width - 200,
-                  height: 30,
-                ),
-              ),
-            ],
+              ],
+            ),
           )
         : Container();
   }
@@ -161,6 +204,7 @@ class _BodyState extends State<Body> {
       ),
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Column(
             mainAxisSize: MainAxisSize.min,
@@ -185,10 +229,10 @@ class _BodyState extends State<Body> {
 
 // function Message send ============================
   Future<void> addMessageToChatRoom(String contentToSend, int type) async {
-    final name = (thisUser.displayName!.isNotEmpty
-        ? thisUser.displayName
-        : thisUser.email)!;
-    await dataServiceFireStore.addMessageToChatRoom(
+    final name =
+        HelperClass.finalSenderName(thisUser.displayName, thisUser.email);
+
+    await messageServiceFireStore.addMessageToChatRoom(
         thisUser.uid!, type, contentToSend, widget.chatRoomId, name);
   }
 
@@ -204,17 +248,24 @@ class _BodyState extends State<Body> {
   }
 
   void addMessageImageToChatRoom() {
-    for (final image in images) {
-      ImageDataStorageHelper.getImageURL(
-              chatRoomCollection,
-              '${widget.chatRoomId}_${DateTime.now().millisecondsSinceEpoch}',
-              image)
-          .then((imageURL) {
-        addMessageToChatRoom(imageURL, imageType).then((value) => setState(() {
-              images.clear();
-              isShowGallery = false;
-            }));
+    if (images.isNotEmpty) {
+      setState(() {
+        isLoadingImage = true;
       });
+      for (final image in images) {
+        ImageDataStorageHelper.getImageURL(
+                chatRoomCollection,
+                '${widget.chatRoomId}_${DateTime.now().millisecondsSinceEpoch}',
+                image)
+            .then((imageURL) {
+          addMessageToChatRoom(imageURL, imageType)
+              .then((value) => setState(() {
+                    isLoadingImage = false;
+                    images.clear();
+                    isShowGallery = false;
+                  }));
+        });
+      }
     }
   }
 
@@ -290,9 +341,14 @@ class _BodyState extends State<Body> {
 
   @override
   void initState() {
-    dataServiceFireStore.getChats(widget.chatRoomId).then((result) {
+    messageServiceFireStore.getChats(widget.chatRoomId).then((result) {
       setState(() {
         chats = result;
+      });
+    });
+    messageServiceFireStore.getSeenHistory(widget.chatRoomId).then((result) {
+      setState(() {
+        seenHistory = result;
       });
     });
     focusNode.addListener(onFocusChange);
@@ -309,6 +365,7 @@ class _BodyState extends State<Body> {
         children: [
           Column(
             children: [
+              buildSeenHistory(),
               buildOfferDealCard(),
               Expanded(child: buildMessageTile()),
               if (isShowGallery) buildGallery() else Container(),
@@ -418,13 +475,16 @@ class _BodyState extends State<Body> {
     super.debugFillProperties(properties);
     properties.add(DiagnosticsProperty<TextEditingController>(
         'messageTextController', messageTextController));
-    properties.add(DiagnosticsProperty<MessageServiceFireStore>(
-        'dataService', dataServiceFireStore));
     properties.add(DiagnosticsProperty<User>('thisUser', thisUser));
     properties.add(DiagnosticsProperty<FocusNode>('focusNode', focusNode));
     properties
         .add(DiagnosticsProperty<bool>('isHaveOfferDeal', isHaveOfferDeal));
     properties.add(DiagnosticsProperty<bool>('isShowGallery', isShowGallery));
     properties.add(IterableProperty<Asset>('images', images));
+    properties.add(DiagnosticsProperty<MessageServiceFireStore>(
+        'messageServiceFireStore', messageServiceFireStore));
+    properties.add(DiagnosticsProperty<bool>('isLoadingImage', isLoadingImage));
+    properties.add(DiagnosticsProperty<Map<String, String>>(
+        'seenHistoryMap', seenHistoryMap));
   }
 }

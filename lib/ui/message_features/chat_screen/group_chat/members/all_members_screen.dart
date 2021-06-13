@@ -28,7 +28,7 @@ class AllMemberScreen extends StatefulWidget {
 }
 
 class _AllMemberScreenState extends State<AllMemberScreen> {
-  final dataServiceFireStore = MessageServiceFireStore();
+  final messageServiceFireStore = MessageServiceFireStore();
   List<UserAlgolia> users = <UserAlgolia>[];
 
   @override
@@ -39,7 +39,7 @@ class _AllMemberScreenState extends State<AllMemberScreen> {
 
   Future<void> getAllUser() async {
     final result =
-        await dataServiceFireStore.getAllUserInChatRoom(widget.chatRoomId);
+        await messageServiceFireStore.getAllUserInChatRoom(widget.chatRoomId);
     setState(() {
       users = result;
     });
@@ -93,11 +93,14 @@ class _AllMemberScreenState extends State<AllMemberScreen> {
                       if (users[index].id != thisUser.uid) {
                         pushNewScreenWithRouteSettings<void>(
                           context,
-                          settings: RouteSettings(
-                              name: Routes.otherProfileScreenRouteName,
-                              arguments: OtherUserProfileArguments(
-                                  userId: users[index].id)),
-                          screen: const OtherUserProfileScreen(),
+                          settings: const RouteSettings(
+                            name: Routes.otherProfileScreenRouteName,
+                            // arguments: OtherUserProfileArguments(
+                            //     userId: users[index].id)
+                          ),
+                          screen: OtherUserProfileScreen(
+                            userId: users[index].id,
+                          ),
                           withNavBar: false,
                           pageTransitionAnimation:
                               PageTransitionAnimation.cupertino,
@@ -126,9 +129,9 @@ class _AllMemberScreenState extends State<AllMemberScreen> {
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
-    properties.add(DiagnosticsProperty<MessageServiceFireStore>(
-        'dataServiceFireStore', dataServiceFireStore));
     properties.add(IterableProperty<UserAlgolia>('users', users));
+    properties.add(DiagnosticsProperty<MessageServiceFireStore>(
+        'messageServiceFireStore', messageServiceFireStore));
   }
 }
 
