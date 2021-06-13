@@ -232,19 +232,7 @@ class _PostItemFourState extends State<PostItemFour> {
                       height: 25,
                     ),
                     TextButton(
-                        onPressed: () {
-                          updateMap(arguments).then((value) {
-                            if (value) {
-                              //print(post);
-                              dataServiceFireStore
-                                  .addPost(post)
-                                  .then((value) => print(value));
-                            } else {
-                              print('not update argument');
-                            }
-                          });
-                        },
-                        child: const Text('nhap vao day')),
+                        onPressed: () {}, child: const Text('nhap vao day')),
                     // Đường
                     FormBuilder(
                       key: _formKey,
@@ -281,24 +269,27 @@ class _PostItemFourState extends State<PostItemFour> {
                                       MaterialStateProperty.all<Color>(
                                           Theme.of(context).primaryColor)),
                               onPressed: () {
-                                getFullAdress()
-                                    .then((value) {})
-                                    .whenComplete(() {
-                                  if (_formKey.currentState
-                                          ?.saveAndValidate() ??
-                                      false) {
-                                    // pushNewScreenWithRouteSettings<void>(
-                                    //   context,
-                                    //   settings: RouteSettings(
-                                    //     name: PostItemFour.routeName,
-                                    //   ),
-                                    //   screen: PostItemFour(),
-                                    //   withNavBar: true,
-                                    //   pageTransitionAnimation:
-                                    //       PageTransitionAnimation.cupertino,
-                                    // );
-                                  }
-                                });
+                                if (_formKey.currentState?.saveAndValidate() ??
+                                    false) {
+                                  // pushNewScreenWithRouteSettings<void>(
+                                  //   context,
+                                  //   settings: RouteSettings(
+                                  //     name: PostItemFour.routeName,
+                                  //   ),
+                                  //   screen: PostItemFour(),
+                                  //   withNavBar: true,
+                                  //   pageTransitionAnimation:
+                                  //       PageTransitionAnimation.cupertino,
+                                  // );
+                                  updateMap(arguments).then((value) {
+                                    if (value) {
+                                      //print(post);
+                                      dataServiceFireStore
+                                          .addPost(post)
+                                          .then((value) => print(value));
+                                    } else {}
+                                  });
+                                }
                               },
                               child: const Text('Tiếp theo'),
                             ),
