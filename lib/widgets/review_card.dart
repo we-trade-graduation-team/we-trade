@@ -65,11 +65,12 @@ class ReviewCard extends StatelessWidget {
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              //if (review.posts.isNotEmpty)
               Expanded(
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(10),
                   child: Image.network(
-                    review.product.images[0],
+                    review.posts![0].images[0],
                     fit: BoxFit.cover,
                   ),
                 ),

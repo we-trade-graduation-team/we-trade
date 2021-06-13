@@ -105,7 +105,9 @@ class Routes {
   };
 
   static final Map<String, WidgetBuilder> sharedFeaturesRoutes = {
-    otherProfileScreenRouteName: (_) => const OtherUserProfileScreen(),
+    otherProfileScreenRouteName: (_) => const OtherUserProfileScreen(
+          userId: '',
+        ),
     reportScreenRouteName: (_) => const ReportScreen(),
   };
 

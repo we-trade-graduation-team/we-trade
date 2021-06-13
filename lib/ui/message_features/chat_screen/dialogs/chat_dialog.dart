@@ -50,11 +50,14 @@ class PersonalChatDialog extends StatelessWidget {
                       onTap: () {
                         pushNewScreenWithRouteSettings<void>(
                           parentContext,
-                          settings: RouteSettings(
-                              name: Routes.otherProfileScreenRouteName,
-                              arguments:
-                                  OtherUserProfileArguments(userId: userId)),
-                          screen: const OtherUserProfileScreen(),
+                          settings: const RouteSettings(
+                            name: Routes.otherProfileScreenRouteName,
+                            // arguments:
+                            //     OtherUserProfileArguments(userId: userId)
+                          ),
+                          screen: OtherUserProfileScreen(
+                            userId: userId,
+                          ),
                           withNavBar: false,
                           pageTransitionAnimation:
                               PageTransitionAnimation.cupertino,

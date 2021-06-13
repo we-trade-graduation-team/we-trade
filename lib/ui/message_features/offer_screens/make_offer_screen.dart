@@ -214,7 +214,7 @@ class _MakeOfferScreenState extends State<MakeOfferScreen> {
                                 contentPadding: EdgeInsets.fromLTRB(0, 0, 0, 5),
                                 hintText: 'VND',
                                 hintStyle: TextStyle(height: 2),
-                                labelText: 'Nhấp số tiền',
+                                labelText: 'Nhập số tiền',
                                 labelStyle: TextStyle(
                                   fontSize: 20,
                                   fontWeight: FontWeight.bold,
