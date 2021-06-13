@@ -18,12 +18,13 @@ class MessageTile extends StatefulWidget {
       required this.sendByMe,
       this.isOutGroupMessage = false,
       this.senderImage = '',
+      this.senderName = '',
       required this.time,
       required this.type,
       required this.usersImageWhoSeen})
       : super(key: key);
 
-  final String message, senderImage;
+  final String message, senderImage, senderName;
   final int time, type;
   final bool sendByMe, isOutGroupMessage;
   final List<String> usersImageWhoSeen;
@@ -42,6 +43,7 @@ class MessageTile extends StatefulWidget {
     properties.add(IntProperty('type', type));
     properties
         .add(IterableProperty<String>('usersImageWhoSeen', usersImageWhoSeen));
+    properties.add(StringProperty('senderName', senderName));
   }
 }
 
@@ -77,6 +79,17 @@ class _MessageTileState extends State<MessageTile> {
                           ? CrossAxisAlignment.end
                           : CrossAxisAlignment.start,
                       children: [
+                        if (!widget.sendByMe)
+                          Padding(
+                            padding: const EdgeInsets.only(left: 8),
+                            child: Text(
+                              widget.senderName,
+                              style: const TextStyle(
+                                fontSize: 10,
+                                fontWeight: FontWeight.w200,
+                              ),
+                            ),
+                          ),
                         buildContentSend(),
                         if (isVisible || widget.type == imageType)
                           const SizedBox(height: 5),

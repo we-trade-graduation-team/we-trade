@@ -31,9 +31,10 @@ class Body extends StatefulWidget {
     Key? key,
     required this.chatRoomId,
     required this.userAndAva,
+    required this.userAndName,
   }) : super(key: key);
   final String chatRoomId;
-  final Map<String, String> userAndAva;
+  final Map<String, String> userAndAva, userAndName;
 
   @override
   _BodyState createState() => _BodyState();
@@ -43,6 +44,8 @@ class Body extends StatefulWidget {
     properties.add(StringProperty('chatRoomId', chatRoomId));
     properties.add(
         DiagnosticsProperty<Map<String, String>>('userAndAva', userAndAva));
+    properties.add(
+        DiagnosticsProperty<Map<String, String>>('userAndName', userAndName));
   }
 }
 
@@ -103,6 +106,9 @@ class _BodyState extends State<Body> {
                   type: int.parse(data[typeStr].toString()),
                   time: int.parse(data[timeStr].toString()),
                   message: data[messageStr].toString(),
+                  senderName: widget.userAndName.containsKey(data[senderIdStr])
+                      ? widget.userAndName[data[senderIdStr]].toString()
+                      : '',
                   senderImage: widget.userAndAva.containsKey(data[senderIdStr])
                       ? widget.userAndAva[data[senderIdStr]].toString()
                       : '',
@@ -478,5 +484,7 @@ class _BodyState extends State<Body> {
     properties.add(DiagnosticsProperty<MessageServiceFireStore>(
         'messageServiceFireStore', messageServiceFireStore));
     properties.add(DiagnosticsProperty<bool>('isLoadingImage', isLoadingImage));
+    properties.add(DiagnosticsProperty<Map<String, String>>(
+        'seenHistoryMap', seenHistoryMap));
   }
 }

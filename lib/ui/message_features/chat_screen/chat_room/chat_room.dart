@@ -47,6 +47,7 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
   late List<String> usersImage = [];
   late String chatRoomName = '';
   late Map<String, String> userAndAva = {};
+  late Map<String, String> userAndName = {};
 
   void getImagesAndChatRoomName() {
     if (widget.usersImage.isNotEmpty && widget.chatRoomName.isNotEmpty) {
@@ -66,6 +67,7 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
 
     for (var i = 0; i < widget.chat.usersId.length; i++) {
       userAndAva[widget.chat.usersId[i]] = widget.chat.images[i];
+      userAndName[widget.chat.usersId[i]] = widget.chat.names[i];
     }
   }
 
@@ -119,6 +121,7 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
         body: Body(
           chatRoomId: widget.chat.chatRoomId,
           userAndAva: userAndAva,
+          userAndName: userAndName,
         ),
       ),
     );

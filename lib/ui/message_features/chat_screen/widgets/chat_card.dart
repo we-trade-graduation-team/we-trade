@@ -2,10 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
-import 'package:provider/provider.dart';
-import 'package:we_trade/constants/app_colors.dart';
 
-import '../../../../models/cloud_firestore/user/user.dart';
 import '../../../../models/ui/chat/temp_class.dart';
 import '../../../../services/message/algolia_user_service.dart';
 import '../../../../widgets/custom_user_avatar.dart';
@@ -36,6 +33,9 @@ class ChatCard extends StatefulWidget {
     properties.add(DiagnosticsProperty<Chat>('chat', chat));
     properties.add(DiagnosticsProperty<bool>('isActive', isActive));
     properties.add(StringProperty('typeFunction', typeFunction));
+    properties
+        .add(DiagnosticsProperty<QueryDocumentSnapshot<Object?>>('doc', doc));
+    properties.add(StringProperty('thisUserId', thisUserId));
   }
 }
 
