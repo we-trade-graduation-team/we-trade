@@ -32,7 +32,7 @@
   "registerTxtEmail": "Email",
   "registerTxtPassword": "Password",
   "registerTxtConfirmPassword": "Nhập lại Password",
-  "registerTxtUsername": "Tên người dùng",
+  "registerTxtName": "Tên của bạn",
   "registerTxtErrorNotMatchPassword": "Passwords không trùng khớp",
   "registerAlertTxtErrorEmailAlreadyInUseTitle": "Email đã được sử dụng",
   "registerAlertTxtErrorEmailAlreadyInUseContent": "Đã tồn tại tài khoản cho email này.",
