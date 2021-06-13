@@ -19,35 +19,14 @@ class FirestorePath {
   }) =>
       '${user(uid: uid)}/postCards';
 
-  static String userSpecialOfferCards({
-    required String uid,
-  }) =>
-      '${user(uid: uid)}/specialOfferCards';
-
-  static String userRecommendedPostCards({
-    required String uid,
-  }) =>
-      '${user(uid: uid)}/recommendedPostCards';
-
-  static String userSearchHistory({
-    required String uid,
-  }) =>
-      '${user(uid: uid)}/searchHistory';
-
-  static String userFavoritePostCards({
-    required String uid,
-  }) =>
-      '${user(uid: uid)}/favoritePostCards';
-
-  // static String userPostCard({
-  //   required String uid,
-  //   required String postId,
-  // }) =>
-  //     'userPostCards/$uid/postCards/$postId';
-
   static String categoryCards() => 'categoryCards';
-  
-  static String specialOfferCards() => 'specialOfferCards';
+
+  static String specialCategoryCards() => 'specialCategoryCards';
+
+  static String specialCategoryCard({
+    required String categoryId,
+  }) =>
+      '${specialCategoryCards()}/$categoryId';
 
   static String postCards() => 'postCards';
 
@@ -55,4 +34,13 @@ class FirestorePath {
     required String postId,
   }) =>
       '${postCards()}/$postId';
+
+  static String keywords() => 'keywords';
+
+  static String keyword({
+    required String keywordId,
+  }) =>
+      '${keywords()}/$keywordId';
+
+  static String junctionKeywordPost() => 'junctionKeywordPost';
 }
