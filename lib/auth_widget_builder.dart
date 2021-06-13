@@ -2,7 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'models/cloud_firestore/user/user.dart';
+import 'models/cloud_firestore/user_model/user/user.dart';
 import 'providers/auth_provider.dart';
 import 'services/firestore/firestore_database.dart';
 
@@ -30,8 +30,10 @@ class AuthWidgetBuilder extends StatelessWidget {
     final authService = context.watch<AuthProvider>();
 
     return StreamProvider<User?>.value(
+      // initialData: User.initialData(),
       initialData: null,
       value: authService.user,
+      catchError: (_, __) => null,
       child: Consumer<User?>(
         builder: (_, user, __) {
           if (user != null) {
