@@ -3,8 +3,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import '../../follow_screen/follow_screen.dart';
 
-import '../account_screen.dart';
-
 class GetUserName extends StatelessWidget {
   const GetUserName(
       {Key? key, required this.documentId, required this.isStream})
@@ -14,8 +12,8 @@ class GetUserName extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final CollectionReference users =
-        AccountScreen.localRefDatabase.collection('users');
+    final referenceDatabase = FirebaseFirestore.instance;
+    final CollectionReference users = referenceDatabase.collection('users');
 
     return isStream
         ? StreamBuilder<DocumentSnapshot>(
@@ -114,8 +112,8 @@ class GetNumberOfFollow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final CollectionReference users =
-        AccountScreen.localRefDatabase.collection('users');
+    final referenceDatabase = FirebaseFirestore.instance;
+    final CollectionReference users = referenceDatabase.collection('users');
 
     return StreamBuilder<DocumentSnapshot>(
       stream: users.doc(documentId).snapshots(),
@@ -168,8 +166,8 @@ class GetLegit extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final CollectionReference users =
-        AccountScreen.localRefDatabase.collection('users');
+    final referenceDatabase = FirebaseFirestore.instance;
+    final CollectionReference users = referenceDatabase.collection('users');
 
     return FutureBuilder<DocumentSnapshot>(
       future: users.doc(documentId).get(),
@@ -225,8 +223,8 @@ class GetPostName extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final CollectionReference posts =
-        AccountScreen.localRefDatabase.collection('posts');
+    final referenceDatabase = FirebaseFirestore.instance;
+    final CollectionReference posts = referenceDatabase.collection('posts');
 
     return isStream
         ? StreamBuilder<DocumentSnapshot>(

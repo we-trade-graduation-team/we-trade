@@ -1,11 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 
 import '../../../utils/routes/routes.dart';
-import '../account_screen/account_screen.dart';
 import '../post_management/hide_post_screen.dart';
 import '../utils.dart';
 import 'custom_overlay_icon_button.dart';
@@ -29,8 +29,8 @@ class TradingProductCard extends StatelessWidget {
   final DateTime dateTime;
   final bool isHiddenPost;
 
-  final referenceDatabase = AccountScreen.localRefDatabase;
-  final userID = AccountScreen.localUserID;
+  final referenceDatabase = FirebaseFirestore.instance;
+  final userID = FirebaseAuth.instance.currentUser!.uid;
 
   Future<void> _removePost(String postID) async {
     try {
@@ -248,10 +248,10 @@ class TradingProductCard extends StatelessWidget {
     properties.add(StringProperty('name', name));
     properties.add(StringProperty('price', price));
     properties.add(DiagnosticsProperty<DateTime>('dateTime', dateTime));
-    properties.add(DiagnosticsProperty<DocumentReference<Map<String, dynamic>>>(
-        'referenceDatabase', referenceDatabase));
     properties.add(StringProperty('userID', userID));
     properties.add(StringProperty('postID', id));
     properties.add(StringProperty('imageUrl', imageUrl));
+    properties.add(DiagnosticsProperty<FirebaseFirestore>(
+        'referenceDatabase', referenceDatabase));
   }
 }

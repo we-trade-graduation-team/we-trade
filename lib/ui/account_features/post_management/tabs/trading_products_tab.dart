@@ -1,8 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-import '../../account_screen/account_screen.dart';
 import '../../shared_widgets/geting_data_status.dart';
 import '../../shared_widgets/trading_prod_card.dart';
 import '../../utils.dart';
@@ -24,11 +24,11 @@ class TradingProductsTab extends StatefulWidget {
 }
 
 class _TradingProductsTabState extends State<TradingProductsTab> {
-  final userID = AccountScreen.localUserID;
+  final userID = FirebaseAuth.instance.currentUser!.uid;
 
   @override
   Widget build(BuildContext context) {
-    final referenceDatabase = AccountScreen.localRefDatabase;
+    final referenceDatabase = FirebaseFirestore.instance;
 
     return StreamBuilder<DocumentSnapshot>(
         stream: referenceDatabase.collection('users').doc(userID).snapshots(),

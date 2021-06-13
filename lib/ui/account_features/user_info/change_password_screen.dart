@@ -47,7 +47,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
         });
 
         final user = FirebaseAuth.instance.currentUser;
-        if (user != null && !user.emailVerified) {
+        if (user != null) {
           try {
             final username = user.email.toString();
             final credential = EmailAuthProvider.credential(

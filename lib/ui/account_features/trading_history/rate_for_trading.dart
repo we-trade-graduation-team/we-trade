@@ -1,11 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
 import '../../../constants/app_assets.dart';
 import '../../../constants/app_colors.dart';
-import '../account_screen/account_screen.dart';
 import '../account_screen/local_widgets/getter.dart';
 import '../shared_widgets/rating_bar.dart';
 import '../utils.dart';
@@ -31,8 +31,8 @@ class RateForTrading extends StatefulWidget {
 }
 
 class _RateForTradingState extends State<RateForTrading> {
-  final userID = AccountScreen.localUserID;
-  final referenceDatabase = AccountScreen.localRefDatabase;
+  final userID = FirebaseAuth.instance.currentUser!.uid;
+  final referenceDatabase = FirebaseFirestore.instance;
 
   final _commentController = TextEditingController();
   int star = 0;
@@ -490,11 +490,11 @@ class _RateForTradingState extends State<RateForTrading> {
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
     properties.add(StringProperty('userID', userID));
-    properties.add(DiagnosticsProperty<DocumentReference<Map<String, dynamic>>>(
-        'referenceDatabase', referenceDatabase));
     properties.add(IntProperty('timeOut', timeOut));
     properties.add(DiagnosticsProperty<Map<String, dynamic>>('rating', rating));
     properties.add(IntProperty('star', star));
     properties.add(StringProperty('post', post));
+    properties.add(DiagnosticsProperty<FirebaseFirestore>(
+        'referenceDatabase', referenceDatabase));
   }
 }

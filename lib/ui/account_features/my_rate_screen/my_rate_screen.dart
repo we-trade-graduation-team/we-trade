@@ -1,9 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import '../../../models/ui/chat/temp_class.dart';
-import '../account_screen/account_screen.dart';
 
 import 'tabs/rate_tab.dart';
 
@@ -14,8 +14,8 @@ class MyRateScreen extends StatefulWidget {
 
   static const routeName = '/myrate';
   final UserDetail userDetail = userDetailTemp;
-  final referenceDatabase = AccountScreen.localRefDatabase;
-  final userID = AccountScreen.localUserID;
+  final referenceDatabase = FirebaseFirestore.instance;
+  final userID = FirebaseAuth.instance.currentUser!.uid;
 
   @override
   _MyRateScreenState createState() => _MyRateScreenState();
@@ -23,9 +23,9 @@ class MyRateScreen extends StatefulWidget {
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
     properties.add(DiagnosticsProperty<UserDetail>('userDetail', userDetail));
-    properties.add(DiagnosticsProperty<DocumentReference<Map<String, dynamic>>>(
-        'referenceDatabase', referenceDatabase));
     properties.add(StringProperty('userID', userID));
+    properties.add(DiagnosticsProperty<FirebaseFirestore>(
+        'referenceDatabase', referenceDatabase));
   }
 }
 
@@ -163,8 +163,8 @@ class MainInfo extends StatefulWidget {
 }
 
 class _MainInfoState extends State<MainInfo> {
-  final referenceDatabase = AccountScreen.localRefDatabase;
-  final userID = AccountScreen.localUserID;
+  final referenceDatabase = FirebaseFirestore.instance;
+  final userID = FirebaseAuth.instance.currentUser!.uid;
 
   double legit = 0;
   String avatarUrl = '';
@@ -257,9 +257,9 @@ class _MainInfoState extends State<MainInfo> {
     super.debugFillProperties(properties);
     properties.add(DoubleProperty('width', widget.width));
     properties.add(DoubleProperty('legit', legit));
-    properties.add(DiagnosticsProperty<DocumentReference<Map<String, dynamic>>>(
-        'referenceDatabase', referenceDatabase));
     properties.add(StringProperty('userID', userID));
     properties.add(StringProperty('avatarUrl', avatarUrl));
+    properties.add(DiagnosticsProperty<FirebaseFirestore>(
+        'referenceDatabase', referenceDatabase));
   }
 }

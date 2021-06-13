@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import '../../account_screen/account_screen.dart';
 
 import '../../shared_widgets/rate_cart.dart';
 
@@ -25,7 +25,7 @@ class RateTab extends StatefulWidget {
 }
 
 class _RateTabState extends State<RateTab> {
-  final userID = AccountScreen.localUserID;
+  final userID = FirebaseAuth.instance.currentUser!.uid;
 
   late FocusScopeNode node;
 
@@ -40,7 +40,7 @@ class _RateTabState extends State<RateTab> {
   Widget build(BuildContext context) {
     node = FocusScope.of(context);
 
-    final referenceDatabase = AccountScreen.localRefDatabase;
+    final referenceDatabase = FirebaseFirestore.instance;
     final field = widget.isMyRateFromOther ? 'userBeRated' : 'userMakeRating';
 
     return GestureDetector(

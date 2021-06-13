@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -7,7 +8,6 @@ import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 import '../../../models/ui/shared_models/product_model.dart';
 import '../../../utils/routes/routes.dart';
 import '../../message_features/offer_screens/offer_detail_screen.dart';
-import '../account_screen/account_screen.dart';
 import '../account_screen/local_widgets/getter.dart';
 import '../trading_history/rate_for_trading.dart';
 import '../utils.dart';
@@ -51,8 +51,8 @@ class HistoryProductCard extends StatefulWidget {
 }
 
 class _HistoryProductCardState extends State<HistoryProductCard> {
-  final referenceDatabase = AccountScreen.localRefDatabase;
-  final userID = AccountScreen.localUserID;
+  final referenceDatabase = FirebaseFirestore.instance;
+  final userID = FirebaseAuth.instance.currentUser!.uid;
 
   late String otherSideUserID;
   late String ownerPostID;

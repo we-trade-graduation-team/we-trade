@@ -5,7 +5,6 @@ import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:intl/intl.dart';
 
 import '../../../constants/app_colors.dart';
-import '../account_screen/account_screen.dart';
 import '../account_screen/local_widgets/getter.dart';
 import 'reply_button.dart';
 
@@ -34,7 +33,7 @@ class RateCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final referenceDatabase = AccountScreen.localRefDatabase;
+    final referenceDatabase = FirebaseFirestore.instance;
     final width = MediaQuery.of(context).size.width;
     final dateFormat = DateFormat.yMMMMd('en_US').add_jm().format(dateTime);
 

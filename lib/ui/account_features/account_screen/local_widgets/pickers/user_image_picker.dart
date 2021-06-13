@@ -1,12 +1,12 @@
 import 'dart:io';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
 import '../../../utils.dart';
-import '../../account_screen.dart';
 
 class UserImagePicker extends StatefulWidget {
   const UserImagePicker({Key? key, required this.userID}) : super(key: key);
@@ -24,7 +24,7 @@ class UserImagePicker extends StatefulWidget {
 }
 
 class _UserImagePickerState extends State<UserImagePicker> {
-  final referenceDatabase = AccountScreen.localRefDatabase;
+  final referenceDatabase = FirebaseFirestore.instance;
 
   PickedFile pickedUploadImage = PickedFile('');
   String firstLoadImageUrl = '';
@@ -32,8 +32,6 @@ class _UserImagePickerState extends State<UserImagePicker> {
 
   @override
   void initState() {
-    // final _storage = FirebaseStorage.instance;
-
     try {
       referenceDatabase
           .collection('users')
@@ -49,17 +47,6 @@ class _UserImagePickerState extends State<UserImagePicker> {
       });
     } on FirebaseException catch (_) {}
 
-    // _storage
-    //     .ref()
-    //     .child('user_image')
-    //     .child(widget.userID)
-    //     .getDownloadURL()
-    //     .then((downloadURL) {
-    //   setState(() {
-    //     firstLoadImageUrl = downloadURL;
-    //     isLoading = false;
-    //   });
-    // });
     super.initState();
   }
 
@@ -161,5 +148,7 @@ class _UserImagePickerState extends State<UserImagePicker> {
     properties.add(DiagnosticsProperty<PickedFile>(
         'pickedUploadImage', pickedUploadImage));
     properties.add(DiagnosticsProperty<bool>('isLoading', isLoading));
+    properties.add(DiagnosticsProperty<FirebaseFirestore>(
+        'referenceDatabase', referenceDatabase));
   }
 }

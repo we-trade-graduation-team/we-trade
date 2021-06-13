@@ -22,7 +22,7 @@ class ReplyButton extends StatefulWidget {
 }
 
 class _ReplyButtonState extends State<ReplyButton> {
-  final referenceDatabase = AccountScreen.localRefDatabase;
+  final referenceDatabase = FirebaseFirestore.instance;
 
   bool showReplyTextField = false;
   bool hasReplySent = false;

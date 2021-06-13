@@ -1,10 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 import '../../../constants/app_colors.dart';
-import '../account_screen/account_screen.dart';
 
 import '../utils.dart';
 import './change_password_screen.dart';
@@ -21,10 +21,8 @@ class UserInfoScreen extends StatefulWidget {
 }
 
 class _UserInfoScreenState extends State<UserInfoScreen> {
-  // ignore: diagnostic_describe_all_properties
-  final quangDocID = 'h0Z8Hn6XvbtMsP4bwa4P';
-  final referenceDatabase = AccountScreen.localRefDatabase;
-  final userID = AccountScreen.localUserID;
+  final referenceDatabase = FirebaseFirestore.instance;
+  final userID = FirebaseAuth.instance.currentUser!.uid;
 
   final _nameController = TextEditingController();
   final _phoneNumController = TextEditingController();
@@ -312,8 +310,8 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
     super.debugFillProperties(properties);
     properties.add(IntProperty('timeOut', timeOut));
     properties.add(DiagnosticsProperty<FocusScopeNode>('node', node));
-    properties.add(DiagnosticsProperty<DocumentReference<Map<String, dynamic>>>(
-        'referenceDatabase', referenceDatabase));
     properties.add(StringProperty('userID', userID));
+    properties.add(DiagnosticsProperty<FirebaseFirestore>(
+        'referenceDatabase', referenceDatabase));
   }
 }

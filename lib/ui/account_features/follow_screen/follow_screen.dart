@@ -1,9 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import '../../../constants/app_colors.dart';
-import '../account_screen/account_screen.dart';
 import '../account_screen/local_widgets/getter.dart';
 import '../utils.dart';
 
@@ -19,8 +19,8 @@ class FollowScreen extends StatefulWidget {
 }
 
 class _FollowScreenState extends State<FollowScreen> {
-  final referenceDatabase = AccountScreen.localRefDatabase;
-  final String userID = AccountScreen.localUserID;
+  final referenceDatabase = FirebaseFirestore.instance;
+  final String userID = FirebaseAuth.instance.currentUser!.uid;
 
   late Map<String, dynamic>? _user;
   bool _isLoaded = false;
@@ -241,10 +241,10 @@ class _FollowScreenState extends State<FollowScreen> {
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
-    properties.add(DiagnosticsProperty<DocumentReference<Map<String, dynamic>>>(
-        'referenceDatabase', referenceDatabase));
     properties.add(IntProperty('timeOut', timeOut));
     properties.add(StringProperty('userID', userID));
+    properties.add(DiagnosticsProperty<FirebaseFirestore>(
+        'referenceDatabase', referenceDatabase));
   }
 }
 
