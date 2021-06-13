@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../app_localizations.dart';
-import '../../../../models/cloud_firestore/post_card_models/post_card/post_card.dart';
-import '../../../../models/cloud_firestore/post_card_models/user_recommended_post_card/user_recommended_post_card.dart';
+import '../../../../models/cloud_firestore/post_card_model/post_card/post_card.dart';
 import '../../../../models/ui/home_features/home_screen/section_column_model.dart';
 import '../../../../models/ui/home_features/home_screen/section_title_row_model.dart';
 import '../../../../services/firestore/firestore_database.dart';
@@ -29,18 +28,13 @@ class HomeScreenRecommendedSection extends StatelessWidget {
           seeMore: false,
           press: () {},
         ),
-        child: MultiProvider(
-          providers: [
-            StreamProvider<List<UserRecommendedPostCard>>.value(
-              initialData: const [],
-              value: _firestoreDatabase.userRecommendedPostCardsStream(),
-            ),
-            StreamProvider<List<PostCard>>.value(
-              initialData: const [],
-              value: _firestoreDatabase.recommendedPostCardsStream(),
-            ),
-          ],
-          child: const Center(child: HomeScreenRecommendedPostCards()),
+        child: FutureProvider<List<PostCard>>.value(
+          value: _firestoreDatabase.recommendedPostCardsFuture(),
+          initialData: const [],
+          catchError: (_, __) => const [],
+          child: const Center(
+            child: HomeScreenRecommendedPostCards(),
+          ),
         ),
       ),
     );
