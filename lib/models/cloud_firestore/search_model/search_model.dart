@@ -1,26 +1,42 @@
 import 'package:flutter/material.dart';
-import '../post_card_models/post_card/post_card.dart';
+import '../post_card_model/post_card/post_card.dart';
 
 class SearchModel extends ChangeNotifier {
   SearchModel() {
-    _doneLoading = _init();
+    _init();
+    // _doneLoading = _init();
   }
-  late Future<void> _doneLoading;
 
-  Future<void> get initializationDone => _doneLoading;
+  // final User currentUser;
+
+  // late Future<void> _doneLoading;
+  // Future<void> get initializationDone => _doneLoading;
 
   bool _isLoading = false;
   bool get isLoading => _isLoading;
 
-  // late List<PostCard> _history;
-  late List<PostCard> _suggestions;
-  List<PostCard> get suggestions => _suggestions;
-
   String _query = '';
   String get query => _query;
 
+  late List<PostCard> _suggestions; // = history;
+  List<PostCard> get suggestions => _suggestions;
+
+  late List<String> _searchHistory;
+  List<String> get searchHistory => _searchHistory;
+
   Future<void> _init() async {
-    // TODO Load History
+    // Load History
+
+    // final _searchHistoryRef = FirebaseFirestore.instance.doc(
+    //   FirestorePath.userSearchHistory(
+    //     uid: currentUser.uid!,
+    //   ),
+    // );
+    // final _snapshots = await _searchHistoryRef.get();
+
+    // return snapshots.map(
+    //   (snapshot) => builder(snapshot),
+    // );
   }
 
   Future<void> onQueryChanged(String query) async {
