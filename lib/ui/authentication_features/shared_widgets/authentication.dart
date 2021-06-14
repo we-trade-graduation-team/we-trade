@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import '../sign_in_screen/sign_in.dart';
-import '../sign_up_screen/sign_up.dart';
+import '../sign_in_screen/sign_in_screen.dart';
+import '../sign_up_screen/sign_up_screen.dart';
 
 class Authentication extends StatefulWidget {
   const Authentication({

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 import 'package:provider/provider.dart';
-import '../../../../../models/cloud_firestore/user/user.dart';
+import '../../../../../models/cloud_firestore/user_model/user/user.dart';
 
 import '../../../../../models/ui/chat/temp_class.dart';
 import '../../../../../services/message/firestore_message_service.dart';

@@ -6,7 +6,7 @@ import 'package:provider/provider.dart';
 
 import '../../../../constants/app_colors.dart';
 import '../../../../constants/app_dimens.dart';
-import '../../../../models/cloud_firestore/user/user.dart';
+import '../../../../models/cloud_firestore/user_model/user/user.dart';
 import '../../../../services/message/firestore_message_service.dart';
 import '../../../../utils/routes/routes.dart';
 import '../../../shared_features/report/report_screen.dart';

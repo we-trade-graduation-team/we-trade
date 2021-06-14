@@ -6,7 +6,7 @@ import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../constants/app_colors.dart';
-import '../../../../models/cloud_firestore/user/user.dart';
+import '../../../../models/cloud_firestore/user_model/user/user.dart';
 import '../../../../models/ui/chat/temp_class.dart';
 import '../../../../services/message/algolia_user_service.dart';
 import '../../../../widgets/custom_material_button.dart';

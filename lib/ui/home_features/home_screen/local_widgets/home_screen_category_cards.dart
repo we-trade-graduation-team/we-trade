@@ -14,17 +14,23 @@ class HomeScreenCategoryCards extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final _firestoreDatabase = context.read<FirestoreDatabase>();
+    final _firestoreDatabase = context.watch<FirestoreDatabase>();
 
     final size = MediaQuery.of(context).size;
     return ConstrainedBox(
-      constraints: BoxConstraints.loose(Size(size.width, size.height * 0.25)),
+      constraints: BoxConstraints.loose(
+        Size(
+          size.width,
+          size.height * 0.25,
+        ),
+      ),
       child: Swiper(
         itemBuilder: (_, index) {
           return Center(
             child: StreamProvider<List<CategoryCard>>.value(
               initialData: const [],
               value: _firestoreDatabase.categoryCardsStream(),
+              catchError: (_, __) => const [],
               child: Consumer<List<CategoryCard>>(
                 builder: (_, categoryCardList, __) {
                   return Wrap(

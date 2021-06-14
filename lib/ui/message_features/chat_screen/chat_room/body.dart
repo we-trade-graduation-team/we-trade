@@ -9,7 +9,7 @@ import 'package:multi_image_picker2/multi_image_picker2.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../constants/app_colors.dart';
-import '../../../../models/cloud_firestore/user/user.dart';
+import '../../../../models/cloud_firestore/user_model/user/user.dart';
 import '../../../../models/ui/shared_models/product_model.dart';
 import '../../../../services/message/firestore_message_service.dart';
 import '../../../../utils/helper/image_data_storage_helper/image_data_storage_helper.dart';
@@ -19,7 +19,7 @@ import '../../helper/ulti.dart';
 import '../../shared_widgets/offer_card.dart';
 import '../widgets/message_tile.dart';
 
-//TODO : T đây nè Tín ớiiiiii
+// TODO : T đây nè Tín ớiiiiii
 // loadAsset() --> hàm chạy lấy ảnh các kiểu nè
 // chạy xong sẽ trả ra resultImages ---> setState images = resultImages để
 // show buildGridView() lên, tùy theo m custom cho thêm nút bấm ok load
@@ -229,8 +229,7 @@ class _BodyState extends State<Body> {
 
 // function Message send ============================
   Future<void> addMessageToChatRoom(String contentToSend, int type) async {
-    final name =
-        HelperClass.finalSenderName(thisUser.displayName, thisUser.email);
+    final name = HelperClass.finalSenderName(thisUser.name, thisUser.email);
 
     await messageServiceFireStore.addMessageToChatRoom(
         thisUser.uid!, type, contentToSend, widget.chatRoomId, name);

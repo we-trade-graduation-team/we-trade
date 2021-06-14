@@ -1,5 +1,5 @@
-const String trangUsersAlgoliaIndex = 'trang_users';
-const String trangPostAlgoliaIndex = 'posts';
+const String usersAlgoliaIndex = 'users';
+const String postsAlgoliaIndex = 'posts';
 
 const String chatRoomCollection = 'chat_rooms';
 const String chatCollection = 'chats';

@@ -80,7 +80,8 @@ class _CustomCarouselSliderState extends State<CustomCarouselSlider> {
                 activeColor: widget.dotActiveColor ?? Colors.lightBlue,
                 activeSize: const Size(18, 9),
                 activeShape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(5)),
+                  borderRadius: BorderRadius.circular(5),
+                ),
               ),
             ),
           ),
