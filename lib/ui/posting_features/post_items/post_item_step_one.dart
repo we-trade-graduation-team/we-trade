@@ -8,11 +8,8 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:multi_image_picker2/multi_image_picker2.dart';
 // import cho upload image
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
-import 'package:provider/provider.dart';
 
 import '../../../../constants/app_colors.dart';
-import '../../../models/cloud_firestore/user/user.dart';
-import '../../../utils/helper/image_data_storage_helper/image_data_storage_helper.dart';
 import 'post_item_step_two.dart';
 
 class PostItemOne extends StatefulWidget {
@@ -29,7 +26,6 @@ class PostItemOne extends StatefulWidget {
 class _PostItemOneState extends State<PostItemOne> {
   List<Asset> images = <Asset>[]; //hiển thị danh sách images;
   final _formKey = GlobalKey<FormBuilderState>();
-  late User thisUser = Provider.of<User?>(context, listen: false)!;
 
   late FocusScopeNode node;
   TextEditingController itemNameController = TextEditingController();
@@ -71,17 +67,6 @@ class _PostItemOneState extends State<PostItemOne> {
     });
   }
 
-  void addMessageImageToChatRoom() {
-    final name =
-        (thisUser.username!.isNotEmpty ? thisUser.username : thisUser.email)!;
-    for (final image in images) {
-      ImageDataStorageHelper.getImageURL('postImageID',
-              '${name}_${DateTime.now().millisecondsSinceEpoch}', image)
-          .then(
-              (imageURL) {}); //lưu ảnh lên fire storage và trả về list imageURL
-    }
-  }
-
   Widget buildGridViewSelectedImages() {
     // hàm này show list ảnh images lên nè, m có thể chỉnh sửa tùy ý
     if (images.isNotEmpty) {
@@ -108,6 +93,29 @@ class _PostItemOneState extends State<PostItemOne> {
     } else {
       return Container();
     }
+  }
+
+  void _showMessgage() {
+    // flutter defined function
+    showDialog<dynamic>(
+      context: context,
+      builder: (arlertContext) {
+        // return object of type Dialog
+        return AlertDialog(
+          //title: const Text(''),
+          content: const Text('Bạn chưa chọn ảnh minh họa'),
+          actions: <Widget>[
+            // usually buttons at the bottom of the dialog
+            TextButton(
+              onPressed: () {
+                Navigator.of(arlertContext).pop();
+              },
+              child: const Text('Đóng'),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
@@ -143,7 +151,10 @@ class _PostItemOneState extends State<PostItemOne> {
               //hiển thị hình ảnh
               Container(
                   height: screenHeight / 5,
-                  child: buildGridViewSelectedImages()),
+                  child: images.isNotEmpty
+                      ? buildGridViewSelectedImages()
+                      : Image.network(
+                          'https://firebasestorage.googleapis.com/v0/b/wetrade-1712.appspot.com/o/Static%20Image%2Fno-image-available.jpg?alt=media&token=e2f6c48f-ec18-4f56-8b54-f3f537c840d7')),
               const SizedBox(
                 height: 15,
               ),
@@ -219,20 +230,24 @@ class _PostItemOneState extends State<PostItemOne> {
                           node.unfocus();
                           if (_formKey.currentState?.saveAndValidate() ??
                               false) {
-                            pushNewScreenWithRouteSettings<void>(
-                              context,
-                              settings: RouteSettings(
-                                  name: PostItemTwo.routeName,
-                                  arguments: {
-                                    'name': itemNameController.text,
-                                    'description':
-                                        itemDescriptionController.text,
-                                    'imageURL': images,
-                                  }),
-                              screen: const PostItemTwo(),
-                              pageTransitionAnimation:
-                                  PageTransitionAnimation.cupertino,
-                            );
+                            if (images.isEmpty) {
+                              _showMessgage();
+                            } else {
+                              pushNewScreenWithRouteSettings<void>(
+                                context,
+                                settings: RouteSettings(
+                                    name: PostItemTwo.routeName,
+                                    arguments: {
+                                      'name': itemNameController.text,
+                                      'description':
+                                          itemDescriptionController.text,
+                                      'imageURL': images,
+                                    }),
+                                screen: const PostItemTwo(),
+                                pageTransitionAnimation:
+                                    PageTransitionAnimation.cupertino,
+                              );
+                            }
                           }
                         },
                         child: const Text('Tiếp theo'),
@@ -257,6 +272,5 @@ class _PostItemOneState extends State<PostItemOne> {
     properties.add(DiagnosticsProperty<TextEditingController>(
         'itemDescriptionController', itemDescriptionController));
     properties.add(IterableProperty<Asset>('images', images));
-    properties.add(DiagnosticsProperty<User>('thisUser', thisUser));
   }
 }

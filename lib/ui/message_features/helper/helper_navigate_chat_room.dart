@@ -27,7 +27,7 @@ class HelperNavigateChatRoom {
         final usersId = mapData[usersIdStr] as List<String>;
         await messageServiceFireStore.createSeenHistory(chatRoomId, usersId);
         final name =
-            HelperClass.finalSenderName(thisUser.displayName, thisUser.email);
+            HelperClass.finalSenderName(thisUser.username, thisUser.email);
 
         await startNewChatRoom(
             chatRoomId: chatRoomId,
@@ -59,7 +59,7 @@ class HelperNavigateChatRoom {
         final usersId = mapData[usersIdStr] as List<String>;
         await messageServiceFireStore.createSeenHistory(chatRoomId, usersId);
         final name =
-            HelperClass.finalSenderName(thisUser.displayName, thisUser.email);
+            HelperClass.finalSenderName(thisUser.username, thisUser.email);
 
         await startNewChatRoom(
             chatRoomId: chatRoomId,
@@ -82,7 +82,7 @@ class HelperNavigateChatRoom {
         .createChatRoomGenerateIdFireStore(mapData)
         .then((chatRoomId) async {
       final name =
-          HelperClass.finalSenderName(thisUser.displayName, thisUser.email);
+          HelperClass.finalSenderName(thisUser.username, thisUser.email);
       final usersId = mapData[usersIdStr] as List<String>;
       await messageServiceFireStore.createSeenHistory(chatRoomId, usersId);
       await startNewChatRoom(
@@ -148,7 +148,7 @@ class HelperNavigateChatRoom {
     }
     usersId.add(thisUser.uid!);
 
-    usersName.add((thisUser.displayName ?? thisUser.email)!);
+    usersName.add((thisUser.username ?? thisUser.email)!);
     usersAva.add(thisUser.photoURL ?? '');
     usersEmail.add(thisUser.email ?? '');
 

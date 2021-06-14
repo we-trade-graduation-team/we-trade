@@ -134,7 +134,7 @@ class _PostItemThreeState extends State<PostItemThree> {
                     const Text('Ưu tiên 2: '),
                     categoryDropDown(category2, 2),
                     const Text('Ưu tiên 3: '),
-                    categoryDropDown(category3, 4),
+                    categoryDropDown(category3, 3),
                     const SizedBox(
                       height: 10,
                     ),

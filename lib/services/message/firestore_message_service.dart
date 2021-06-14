@@ -350,7 +350,7 @@ class MessageServiceFireStore {
         for (var i = 0; i < chat.usersId.length; i++) {
           if (chat.usersId[i] == user.uid) {
             chat.images[i] = user.photoURL!;
-            chat.names[i] = user.displayName!;
+            chat.names[i] = user.username!;
             chat.emails[i] = user.email!;
             break;
           }

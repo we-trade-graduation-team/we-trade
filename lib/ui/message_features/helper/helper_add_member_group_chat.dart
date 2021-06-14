@@ -26,7 +26,7 @@ class HelperAddMemberGroupChat {
     }
 
     final name =
-        HelperClass.finalSenderName(thisUser.displayName, thisUser.email);
+        HelperClass.finalSenderName(thisUser.username, thisUser.email);
 
     // ignore: unawaited_futures
     await messageServiceFireStore

@@ -122,6 +122,6 @@ class Routes {
   static final Map<String, WidgetBuilder> postingFeaturesRoutes = {
     postItemStepTwoScreenRouteName: (_) => const PostItemTwo(),
     postItemStepThreeScreenRouteName: (_) => const PostItemThree(),
-    postItemStepFourScreenRouteName: (_) => PostItemFour(),
+    postItemStepFourScreenRouteName: (_) => const PostItemFour(),
   };
 }

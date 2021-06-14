@@ -96,9 +96,20 @@ class PostServiceFireStore {
 
   Future<String> addPost(Map arguments) async {
     try {
-      final CollectionReference keywordDB =
+      final CollectionReference postDB =
           FirebaseFirestore.instance.collection('post');
-      final doc = await keywordDB.add(arguments);
+      final doc = await postDB.add(arguments);
+      return doc.id;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<String> addPostCard(Map arguments) async {
+    try {
+      final CollectionReference postCard =
+          FirebaseFirestore.instance.collection('postCards');
+      final doc = await postCard.add(arguments);
       return doc.id;
     } catch (e) {
       rethrow;

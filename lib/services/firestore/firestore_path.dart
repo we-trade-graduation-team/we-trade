@@ -9,6 +9,8 @@ class FirestorePath {
 
   static String users() => 'users';
 
+  static String post() => 'post';
+
   static String user({
     required String uid,
   }) =>
@@ -46,7 +48,7 @@ class FirestorePath {
   //     'userPostCards/$uid/postCards/$postId';
 
   static String categoryCards() => 'categoryCards';
-  
+
   static String specialOfferCards() => 'specialOfferCards';
 
   static String postCards() => 'postCards';

@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'package:we_trade/models/post/post.dart';
+
 import '../../models/cloud_firestore/category_card/category_card.dart';
 import '../../models/cloud_firestore/post_card_models/post_card/post_card.dart';
 import '../../models/cloud_firestore/post_card_models/user_recommended_post_card/user_recommended_post_card.dart';
@@ -173,7 +175,12 @@ class FirestoreDatabase {
       builder: (data) => PostCard.fromDocumentSnapshot(data),
     );
   }
-
+  Stream<List<Post>> postsStream() {
+    return _fireStoreService.collectionStream(
+      path: FirestorePath.post(),
+      builder: (data) => Post.fromDocumentSnapshot(data),
+    );
+  }
   // //Method to create/update todoModel
   // Future<void> setTodo(TodoModel todo) async {
   //   await _fireStoreService.setData(

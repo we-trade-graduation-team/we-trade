@@ -43,7 +43,7 @@ class UserServiceAlgolia {
       'objectID': user.uid,
       emailStr: user.email,
       phoneNumberStr: user.phoneNumber ?? '',
-      nameStr: user.displayName ?? '',
+      nameStr: user.username ?? '',
       presenceStr: user.presence ?? false,
       avatarURLStr: user.photoURL ?? '',
       lastActiveStr: user.lastSeen ?? 0

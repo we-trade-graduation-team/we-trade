@@ -87,14 +87,14 @@ class _TradingProductsTabState extends State<TradingProductsTab> {
                           final temp = post['createAt'] as Timestamp;
                           final dateTime = temp.toDate();
 
-                          return TradingProductCard(
-                            key: ValueKey(post['id'].toString()),
-                            id: post['id'].toString(),
-                            name: post['name'].toString(),
-                            price: post['price'].toString(),
-                            dateTime: dateTime,
-                            isHiddenPost: widget.isHiddenPosts,
-                          );
+                          // return TradingProductCard(
+                          //   key: ValueKey(post['id'].toString()),
+                          //   id: post['id'].toString(),
+                          //   name: post['name'].toString(),
+                          //   price: post['price'].toString(),
+                          //   dateTime: dateTime,
+                          //   isHiddenPost: widget.isHiddenPosts,
+                          // );
                         }
                         return const Center(
                           child: CircularProgressIndicator(
