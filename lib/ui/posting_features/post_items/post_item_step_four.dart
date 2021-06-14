@@ -4,6 +4,8 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:multi_image_picker2/multi_image_picker2.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 import 'package:provider/provider.dart';
+import 'package:we_trade/services/post_feature/post_service_algolia.dart';
+import 'package:we_trade/ui/posting_features/post_items/post_item_step_one.dart';
 import '../../../utils/routes/routes.dart';
 
 import './component/class.dart';
@@ -26,6 +28,7 @@ class _PostItemFourState extends State<PostItemFour> {
   bool isLoading = true;
   late FocusScopeNode node;
   PostServiceFireStore dataServiceFireStore = PostServiceFireStore();
+  PostServiceAlgolia dataServiceAlgolia = PostServiceAlgolia();
   final _formKey = GlobalKey<FormBuilderState>();
   TextEditingController addressController = TextEditingController();
 
@@ -52,10 +55,6 @@ class _PostItemFourState extends State<PostItemFour> {
       }
       return _tempCities;
     });
-  }
-
-  Future<String> getFullAdress() async {
-    return '${addressController.text.replaceAll('  ', ' ').replaceAll(',,', ',').replaceAll('.', ',')}, ${districtSelected.name}, ${citySelected.name}';
   }
 
   Future<List<Cities>> getDistrict(String city) {
@@ -89,19 +88,19 @@ class _PostItemFourState extends State<PostItemFour> {
 
       //Category
       final categoryMap = <dynamic, dynamic>{};
-      categoryMap['mainCategory'] = arguments['mainCategory'];
-      categoryMap['subCategory'] = arguments['subCategory'];
+      categoryMap['mainCategoryId'] = arguments['mainCategoryId'];
+      categoryMap['subCategoryId'] = arguments['subCategoryId'];
       //post
       post['name'] = arguments['name'];
       post['item'] = item;
-      post['owner'] = thisUser.uid;
+      post['ownerId'] = thisUser.uid;
       post['category'] = categoryMap;
-      post['tradeForList'] = arguments['wishMainCategory'];
+      post['tradeForListId'] = arguments['tradeForListId'];
       post['isHidden'] = false;
       post['createAt'] = DateTime.now();
 
       final tempImageURL = <String>[];
-      for (final image in arguments['imageURL'] as List<Asset>) {
+      for (final image in arguments['imagesUrl'] as List<Asset>) {
         await ImageDataStorageHelper.getImageURL(
                 thisUser.uid.toString(),
                 '${arguments['name']}_${DateTime.now().millisecondsSinceEpoch}',
@@ -111,6 +110,7 @@ class _PostItemFourState extends State<PostItemFour> {
       }
       post['imagesUrl'] = tempImageURL;
       postCardImage = tempImageURL.first;
+
       return true;
     } catch (e) {
       rethrow;
@@ -188,60 +188,79 @@ class _PostItemFourState extends State<PostItemFour> {
               }).toList()
             : [],
       );
-
-  void _onLoading(Map<dynamic, dynamic> arguments) {
+  void _showMessgage() {
     showDialog<dynamic>(
       context: context,
-      barrierDismissible: false,
-      builder: (loadingcontext) {
-        return Dialog(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const CircularProgressIndicator(),
-              const SizedBox(
-                height: 10,
-              ),
-              const Text('Loading'),
-              TextButton(
-                  onPressed: () {
-                    Navigator.pop(loadingcontext);
-                    // pushDynamicScreen<PostManagementScreen>(
-                    //   context,
-                    //   screen: PostManagementScreen(),
-                    //   withNavBar: true,
-                    // );
-
-                    Navigator.pushAndRemoveUntil<void>(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => PostManagementScreen()),
-                      (route) => false,
-                    );
-                  },
-                  child: const Text('Tro ve')),
-            ],
-          ),
+      builder: (arlertContext) {
+        return AlertDialog(
+          //title: const Text(''),
+          content: const Text('Đăng sản phẩm thành công'),
+          actions: <Widget>[
+            // usually buttons at the bottom of the dialog
+            TextButton(
+              onPressed: () {
+                Navigator.of(arlertContext).pop();
+                Navigator.pushAndRemoveUntil<void>(
+                  context,
+                  MaterialPageRoute(builder: (context) => const PostItemOne()),
+                  (route) => false,
+                );
+              },
+              child: const Text('Xác nhận'),
+            ),
+          ],
         );
       },
     );
-    // updatePost(arguments).then((value) {
-    //   if (value) {
-    //     dataServiceFireStore.addPost(post).then((postID) {
-    //       updatePostCard(arguments, postID).then((value) {
-    //         if (value) {
-    //           dataServiceFireStore.addPostCard(postCard);
-    //         }
-    //       });
-    //     });
-    //   } else {}
-    // }).whenComplete(() {
-    //   Navigator.pushAndRemoveUntil<void>(
-    //     context,
-    //     MaterialPageRoute(builder: (context) => PostManagementScreen()),
-    //     (route)=>false,
-    //   );
-    // });
+  }
+
+  void _onLoading(Map<dynamic, dynamic> arguments) {
+    // BuildContext tempContext;
+    // showDialog<dynamic>(
+    //   context: context,
+    //   barrierDismissible: false,
+    //   builder: (loadingcontext) {
+    //     return Dialog(
+    //       child: Column(
+    //         mainAxisAlignment: MainAxisAlignment.center,
+    //         children: [
+    //           const CircularProgressIndicator(),
+    //           const SizedBox(
+    //             height: 10,
+    //           ),
+    //           const Text('Loading'),
+    //           TextButton(
+    //               onPressed: () {
+    //                 Navigator.pop(loadingcontext);
+    //               },
+    //               child: const Text('Tro ve')),
+    //         ],
+    //       ),
+    //     );
+    //   },
+    // );
+    updatePost(arguments).then((value) {
+      if (value) {
+        dataServiceFireStore.addPost(post).then((postID) {
+          updatePostCard(arguments, postID).then((value) {
+            if (value) {
+              dataServiceFireStore.addPostCard(postCard);
+            }
+          });
+
+          dataServiceAlgolia.addPost(
+              objectID: postID,
+              name: arguments['name'] as String,
+              mainCategoyId: arguments['mainCategoryId'] as int,
+              subCategoryId: arguments['subCategoryId'] as int,
+              tradeForListId: arguments['tradeForListId'] as List<int>,
+              imageURL: post['imagesUrl'][0] as String,
+              condition: arguments['conditions'] as String,
+              price: arguments['price'] as int,
+              district: districtSelected.name);
+        });
+      } else {}
+    }).whenComplete(_showMessgage);
   }
 
   @override
@@ -250,7 +269,6 @@ class _PostItemFourState extends State<PostItemFour> {
     getCities().then((value) {
       citiesList = value;
       citySelected = value.first;
-      //isLoading = false;
     }).whenComplete(() => setState(() {}));
   }
 
@@ -351,39 +369,13 @@ class _PostItemFourState extends State<PostItemFour> {
                               onPressed: () {
                                 if (_formKey.currentState?.saveAndValidate() ??
                                     false) {
-                                  _onLoading(arguments);
-
-                                  // updatePost(arguments).then((value) {
-                                  //   if (value) {
-                                  //     dataServiceFireStore
-                                  //         .addPost(post)
-                                  //         .then((postID) {
-                                  //       updatePostCard(arguments, postID)
-                                  //           .then((value) {
-                                  //         if (value) {
-                                  //           dataServiceFireStore
-                                  //               .addPostCard(postCard);
-                                  //         }
-                                  //       });
-                                  //     });
-                                  //   } else {}
-                                  // }).whenComplete(() {
-                                  //   print('xong roi ne');
-                                  //   pushNewScreenWithRouteSettings<void>(
-                                  //     context,
-                                  //     settings: const RouteSettings(
-                                  //       name: Routes
-                                  //           .postManagementScreenRouteName,
-                                  //     ),
-                                  //     screen: PostManagementScreen(),
-                                  //     withNavBar: false,
-                                  //     pageTransitionAnimation:
-                                  //         PageTransitionAnimation.cupertino,
-                                  //   );
-                                  // });
+                                  setState(() {
+                                    _onLoading(arguments);
+                                    isLoading = true;
+                                  });
                                 }
                               },
-                              child: const Text('Tiếp theo'),
+                              child: const Text('Đăng sản phẩm'),
                             ),
                           ),
                         ],
@@ -415,5 +407,7 @@ class _PostItemFourState extends State<PostItemFour> {
     properties.add(DiagnosticsProperty<Map>('postCard', postCard));
     properties.add(DiagnosticsProperty<Map>('post', post));
     properties.add(StringProperty('postCardImage', postCardImage));
+    properties.add(DiagnosticsProperty<PostServiceAlgolia>(
+        'dataServiceAlgolia', dataServiceAlgolia));
   }
 }

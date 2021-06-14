@@ -195,17 +195,17 @@ class _PostItemThreeState extends State<PostItemThree> {
                                           'description':
                                               arguments['description']
                                                   as String,
-                                          'imageURL': arguments['imageURL']
+                                          'imagesUrl': arguments['imageURL']
                                               as List<Asset>,
-                                          'mainCategory':
+                                          'mainCategoryId':
                                               arguments['mainCategory'] as int,
-                                          'subCategory':
+                                          'subCategoryId':
                                               arguments['subCategory'] as int,
-                                          'conditions': arguments['conditions'] as int,
+                                          'conditions': arguments['conditions'] as String,
                                           'keyword': arguments['keyword']
                                               as List<String>,
-                                          'wishMainCategory': categoriesID,
-                                          'price': priceController.text,
+                                          'tradeForListId': categoriesID,
+                                          'price': int.parse(priceController.text),
                                         },
                                       ),
                                       screen: const PostItemFour(),

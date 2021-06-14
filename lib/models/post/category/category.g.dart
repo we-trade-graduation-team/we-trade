@@ -7,13 +7,14 @@ part of 'category.dart';
 // **************************************************************************
 
 Category _$CategoryFromJson(Map<String, dynamic> json) {
+  $checkKeys(json, requiredKeys: const ['mainCategoryId', 'subCategoryId']);
   return Category(
-    json['mainCategory'] as String,
-    json['subCategory'] as String,
+    mainCategoryId: json['mainCategoryId'] as String,
+    subCategoryId: json['subCategoryId'] as String,
   );
 }
 
 Map<String, dynamic> _$CategoryToJson(Category instance) => <String, dynamic>{
-      'mainCategory': instance.mainCategory,
-      'subCategory': instance.subCategory,
+      'mainCategoryId': instance.mainCategoryId,
+      'subCategoryId': instance.subCategoryId,
     };

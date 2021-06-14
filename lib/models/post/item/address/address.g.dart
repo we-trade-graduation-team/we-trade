@@ -7,10 +7,11 @@ part of 'address.dart';
 // **************************************************************************
 
 Address _$AddressFromJson(Map<String, dynamic> json) {
+  $checkKeys(json, requiredKeys: const ['city', 'district', 'address']);
   return Address(
-    json['city'] as String?,
-    json['district'] as String?,
-    json['address'] as String?,
+    city: json['city'] as String?,
+    district: json['district'] as String?,
+    address: json['address'] as String?,
   );
 }
 

@@ -451,7 +451,7 @@ class _PostItemTwoState extends State<PostItemTwo> {
                                         arguments['imageURL'] as List<Asset>,
                                     'mainCategory': mainCategory.id,
                                     'subCategory': subCategory.id,
-                                    'conditions': conditions.priority,
+                                    'conditions': conditions.description,
                                     'keyword': keywordToSave,
                                   }),
                               screen: const PostItemThree(),

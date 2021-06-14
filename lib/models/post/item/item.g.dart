@@ -7,12 +7,15 @@ part of 'item.dart';
 // **************************************************************************
 
 Item _$ItemFromJson(Map<String, dynamic> json) {
+  $checkKeys(json,
+      requiredKeys: const ['conditions', 'description', 'address', 'price']);
   return Item(
-    (json['keyword'] as List<dynamic>).map((e) => e as String).toList(),
-    json['conditions'] as String,
-    json['description'] as String,
-    Address.fromJson(json['address'] as Map<String, dynamic>),
-    (json['price'] as num).toDouble(),
+    keyword:
+        (json['keyword'] as List<dynamic>?)?.map((e) => e as String).toList(),
+    conditions: json['conditions'] as String,
+    description: json['description'] as String,
+    address: Address.fromJson(json['address'] as Map<String, dynamic>),
+    price: (json['price'] as num).toDouble(),
   );
 }
 
