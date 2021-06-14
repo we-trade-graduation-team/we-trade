@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import '../../../models/cloud_firestore/user_model/user/user.dart';
 
-import '../../../models/cloud_firestore/user/user.dart';
 import '../../../models/ui/chat/temp_class.dart';
 import '../../../services/message/firestore_message_service.dart';
 import '../chat_screen/chat_room/chat_room.dart';
@@ -25,8 +25,7 @@ class HelperAddMemberGroupChat {
       usersEmail.add(user.email);
     }
 
-    final name =
-        HelperClass.finalSenderName(thisUser.displayName, thisUser.email);
+    final name = HelperClass.finalSenderName(thisUser.name, thisUser.email);
 
     // ignore: unawaited_futures
     await messageServiceFireStore

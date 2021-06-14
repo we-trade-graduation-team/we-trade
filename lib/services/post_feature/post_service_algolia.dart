@@ -28,7 +28,7 @@ class PostServiceAlgolia {
       'price': price,
       'district': district,
     };
-    await algolia.instance.index(trangPostAlgoliaIndex).addObject(mapData);
+    await algolia.instance.index(postsAlgoliaIndex).addObject(mapData);
   }
 
   Future<void> updatePost(
@@ -55,7 +55,7 @@ class PostServiceAlgolia {
       'district': district,
     };
     await algolia.instance
-        .index(trangUsersAlgoliaIndex)
+        .index(usersAlgoliaIndex)
         .object(objectID)
         .updateData(mapData);
   }

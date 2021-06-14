@@ -56,11 +56,6 @@ void main() {
                 FirebaseAuth.instance,
               ),
             ),
-            // StreamProvider(
-            //   initialData: null,
-            //   create: (context) =>
-            //       context.read<AuthProvider>().authStateChanges,
-            // )
           ],
           child: MyApp(
             databaseBuilder: (_, uid) => FirestoreDatabase(uid: uid),
