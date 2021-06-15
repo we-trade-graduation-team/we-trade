@@ -17,6 +17,7 @@ class Post {
     required this.item,
     required this.imagesUrl,
     required this.tradeForListId,
+    required this.price,
   });
 
   factory Post.fromJson(Map<String, dynamic> json) => _$PostFromJson(json);
@@ -41,8 +42,8 @@ class Post {
   @JsonKey(required: true)
   final String ownerId;
 
-  @JsonKey(required: true)
-  final String? creatAt;
+  
+  final DateTime? creatAt;
 
   @JsonKey(required: true)
   final Category category;
@@ -58,4 +59,7 @@ class Post {
   
   @JsonKey(required: true)
   final bool isHidden;
+
+  @JsonKey(required: true)
+  final int price;
 }

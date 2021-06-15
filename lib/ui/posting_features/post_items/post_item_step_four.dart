@@ -2,18 +2,17 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:multi_image_picker2/multi_image_picker2.dart';
-import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 import 'package:provider/provider.dart';
-import 'package:we_trade/services/post_feature/post_service_algolia.dart';
-import 'package:we_trade/ui/posting_features/post_items/post_item_step_one.dart';
-import '../../../utils/routes/routes.dart';
+import 'package:we_trade/models/post/post.dart';
 
 import './component/class.dart';
+// ignore: directives_ordering
 import '../../../../constants/app_colors.dart';
-import '../../../models/cloud_firestore/user/user.dart';
+import '../../../models/cloud_firestore/user_model/user/user.dart';
+import '../../../services/post_feature/post_service_algolia.dart';
 import '../../../services/post_feature/post_service_firestore.dart';
 import '../../../utils/helper/image_data_storage_helper/image_data_storage_helper.dart';
-import '../../account_features/post_management/post_management_screen.dart';
+import 'post_item_step_one.dart';
 
 class PostItemFour extends StatefulWidget {
   const PostItemFour({Key? key}) : super(key: key);
@@ -71,7 +70,7 @@ class _PostItemFourState extends State<PostItemFour> {
 
   Future<bool> updatePost(Map<dynamic, dynamic> arguments) async {
     try {
-      final address = <dynamic, dynamic>{};
+      final address = <String, dynamic>{};
       address['city'] = citySelected.name;
       address['district'] = districtSelected.name;
       address['address'] = addressController.text
@@ -79,15 +78,14 @@ class _PostItemFourState extends State<PostItemFour> {
           .replaceAll(',,', ',')
           .replaceAll('.', ',');
       //item
-      final item = <dynamic, dynamic>{};
+      final item = <String, dynamic>{};
       item['description'] = arguments['description'];
-      item['conditions'] = arguments['conditions'];
+      item['condition'] = arguments['condition'];
       item['keyword'] = arguments['keyword'];
-      item['price'] = arguments['price'];
       item['address'] = address;
 
       //Category
-      final categoryMap = <dynamic, dynamic>{};
+      final categoryMap = <String, dynamic>{};
       categoryMap['mainCategoryId'] = arguments['mainCategoryId'];
       categoryMap['subCategoryId'] = arguments['subCategoryId'];
       //post
@@ -97,8 +95,8 @@ class _PostItemFourState extends State<PostItemFour> {
       post['category'] = categoryMap;
       post['tradeForListId'] = arguments['tradeForListId'];
       post['isHidden'] = false;
-      post['createAt'] = DateTime.now();
-
+      post['creatAt'] = DateTime.now();
+      post['price'] = arguments['price'];
       final tempImageURL = <String>[];
       for (final image in arguments['imagesUrl'] as List<Asset>) {
         await ImageDataStorageHelper.getImageURL(
@@ -117,12 +115,11 @@ class _PostItemFourState extends State<PostItemFour> {
     }
   }
 
-  Future<bool> updatePostCard(
-      Map<dynamic, dynamic> arguments, String postID) async {
+  Future<bool> updatePostCard(Map<dynamic, dynamic> arguments) async {
     try {
       //item
       final item = <dynamic, dynamic>{};
-      item['conditions'] = arguments['conditions'];
+      item['condition'] = arguments['condition'];
       item['price'] = arguments['price'];
       item['district'] = districtSelected.name;
       item['image'] = postCardImage;
@@ -130,7 +127,6 @@ class _PostItemFourState extends State<PostItemFour> {
       postCard['item'] = item;
       postCard['title'] = arguments['name'];
       postCard['view'] = 0;
-      postCard['postId'] = postID;
       return true;
     } catch (e) {
       rethrow;
@@ -215,36 +211,14 @@ class _PostItemFourState extends State<PostItemFour> {
   }
 
   void _onLoading(Map<dynamic, dynamic> arguments) {
-    // BuildContext tempContext;
-    // showDialog<dynamic>(
-    //   context: context,
-    //   barrierDismissible: false,
-    //   builder: (loadingcontext) {
-    //     return Dialog(
-    //       child: Column(
-    //         mainAxisAlignment: MainAxisAlignment.center,
-    //         children: [
-    //           const CircularProgressIndicator(),
-    //           const SizedBox(
-    //             height: 10,
-    //           ),
-    //           const Text('Loading'),
-    //           TextButton(
-    //               onPressed: () {
-    //                 Navigator.pop(loadingcontext);
-    //               },
-    //               child: const Text('Tro ve')),
-    //         ],
-    //       ),
-    //     );
-    //   },
-    // );
     updatePost(arguments).then((value) {
       if (value) {
         dataServiceFireStore.addPost(post).then((postID) {
-          updatePostCard(arguments, postID).then((value) {
+          updatePostCard(arguments).then((value) {
             if (value) {
-              dataServiceFireStore.addPostCard(postCard);
+              dataServiceFireStore.addPostCard(postCard, postID);
+              dataServiceFireStore.addJunctionKeywordPost(
+                  arguments['keywordId'] as List<String>, postID);
             }
           });
 
@@ -255,7 +229,7 @@ class _PostItemFourState extends State<PostItemFour> {
               subCategoryId: arguments['subCategoryId'] as int,
               tradeForListId: arguments['tradeForListId'] as List<int>,
               imageURL: post['imagesUrl'][0] as String,
-              condition: arguments['conditions'] as String,
+              condition: arguments['condition'] as String,
               price: arguments['price'] as int,
               district: districtSelected.name);
         });

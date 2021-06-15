@@ -10,8 +10,7 @@ class Item {
       { this.keyword,
       required this.conditions,
       required this.description,
-      required this.address,
-      required this.price,});
+      required this.address,});
   factory Item.fromJson(Map<String, dynamic> json) => _$ItemFromJson(json);
 
   Map<String, dynamic> toJson() => _$ItemToJson(this);
@@ -27,6 +26,4 @@ class Item {
   @JsonKey(required: true)
   final Address address;
 
-  @JsonKey(required: true)
-  final double price;
 }

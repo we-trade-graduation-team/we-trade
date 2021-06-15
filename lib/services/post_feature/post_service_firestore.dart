@@ -105,12 +105,31 @@ class PostServiceFireStore {
     }
   }
 
-  Future<String> addPostCard(Map arguments) async {
+  Future<String> addPostCard(Map arguments, String postId) async {
     try {
       final CollectionReference postCard =
           FirebaseFirestore.instance.collection('postCards');
-      final doc = await postCard.add(arguments);
-      return doc.id;
+      await postCard.doc(postId).set(arguments);
+      return '1';
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<String> addJunctionKeywordPost(
+      List<String> idKeyword, String postId) async {
+    try {
+      final CollectionReference keywordPost =
+          FirebaseFirestore.instance.collection('junctionKeywordPost');
+
+      for (final idKey in idKeyword) {
+        final docId = '${idKey}_$postId';
+        await keywordPost.doc(docId).set({
+          'keywordId': idKey,
+          'postId': postId,
+        });
+      }
+      return '1';
     } catch (e) {
       rethrow;
     }

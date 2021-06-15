@@ -1,8 +1,6 @@
-import 'package:freezed_annotation/freezed_annotation.dart';
-
 class TypeofGoods {
   TypeofGoods({required this.id, required this.name, this.selected = false});
-  final int id;
+  final String id;
   bool selected;
   final String name;
 }
@@ -18,4 +16,14 @@ class Cities {
   final String id;
   bool selected;
   final String name;
+}
+
+class KeyWord {
+  KeyWord({
+    required this.id,
+    required this.value,
+  });
+
+  final String id;
+  final String value;
 }

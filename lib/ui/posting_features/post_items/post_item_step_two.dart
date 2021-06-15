@@ -3,15 +3,16 @@ import 'package:flutter/material.dart';
 import 'package:multi_image_picker2/multi_image_picker2.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 import 'package:search_choices/search_choices.dart';
+
 import './component/class.dart';
 import '../../../../constants/app_colors.dart';
 import '../../../../services/post_feature/post_service_firestore.dart';
 import 'post_item_step_three.dart';
 
 class PostItemTwo extends StatefulWidget {
+  const PostItemTwo({Key? navKey}) : super(key: navKey);
   static final navKey = GlobalKey<NavigatorState>();
 
-  const PostItemTwo({Key? navKey}) : super(key: navKey);
   static const routeName = '/postitem2';
   @override
   _PostItemTwoState createState() => _PostItemTwoState();
@@ -21,23 +22,24 @@ class _PostItemTwoState extends State<PostItemTwo> {
   PostServiceFireStore dataServiceFireStore = PostServiceFireStore();
   bool isLoading = true;
   //argument for next screen
-  late TypeofGoods mainCategory = TypeofGoods(id: -2, name: '');
-  late TypeofGoods subCategory = TypeofGoods(id: -2, name: '');
+  late TypeofGoods mainCategory = TypeofGoods(id: '', name: '');
+  late TypeofGoods subCategory = TypeofGoods(id: '', name: '');
   List<String> newKeywordID = [];
   late Conditions conditions;
   late List<String> keywordToSave = [];
+  late List<String> idKeywordToSave = [];
 
   //Category
   List<TypeofGoods> _type = [];
   List<TypeofGoods> _subType = [];
-  late int previousID = -1;
+  late String previousID = '-1';
 
   //keyWord Choice
   List<DropdownMenuItem> editableItems = [];
   List<int> editableSelectedItems = [];
   final _formKey = GlobalKey<FormState>();
   TextFormField? input;
-  late List<String> listKeyWord = [];
+  late List<KeyWord> listKeyWord = [];
   Function? openDialog;
   String inputString = '';
 
@@ -50,8 +52,7 @@ class _PostItemTwoState extends State<PostItemTwo> {
     return dataServiceFireStore.getMainCategory().then((value) {
       for (final item in value.docs) {
         final itemCate = TypeofGoods(
-            id: int.parse(item.id),
-            name: item.data()['category_name'].toString());
+            id: item.id, name: item.data()['category_name'].toString());
         _tempCategory.add(itemCate);
       }
       return _tempCategory;
@@ -61,22 +62,21 @@ class _PostItemTwoState extends State<PostItemTwo> {
   Future<List<TypeofGoods>> getSubCategoryData(String main) {
     final _typeSubTemp = <TypeofGoods>[];
     return dataServiceFireStore.getSubCategory(main).then((value) {
-      var index = 0;
       for (final item in value.docs) {
         final subCate = TypeofGoods(
-            id: index, name: item.data()['subCategory_name'].toString());
+            id: item.id, name: item.data()['subCategory_name'].toString());
         _typeSubTemp.add(subCate);
-        index++;
       }
       return _typeSubTemp;
     });
   }
 
-  Future<List<String>> getListKeyword() {
-    final _tempCategory = <String>[];
+  Future<List<KeyWord>> getListKeyword() {
+    final _tempCategory = <KeyWord>[];
     return dataServiceFireStore.getKeyword().then((value) {
       for (final item in value.docs) {
-        final keyword = item.data()['keyword'].toString();
+        final keyword =
+            KeyWord(id: item.id, value: item.data()['keyword'].toString());
         _tempCategory.add(keyword);
       }
       return _tempCategory;
@@ -117,7 +117,11 @@ class _PostItemTwoState extends State<PostItemTwo> {
                       ));
                       dataServiceFireStore
                           .addKeyword(inputString)
-                          .then((newkeyword) => newKeywordID.add(newkeyword));
+                          .then((newkeywordId) {
+                        final keyword =
+                            KeyWord(id: newkeywordId, value: inputString);
+                        listKeyWord.add(keyword);
+                      });
                       Navigator.pop(alertContext, inputString);
                     }
                   },
@@ -143,6 +147,9 @@ class _PostItemTwoState extends State<PostItemTwo> {
       for (var i = 0; i < editableSelectedItems.length; i++) {
         tempKeyword
             .add(editableItems[editableSelectedItems[i]].value.toString());
+        idKeywordToSave.add(listKeyWord
+            .firstWhere((element) => tempKeyword[i] == element.value.toString())
+            .id);
       }
       return tempKeyword;
     } catch (e) {
@@ -306,6 +313,29 @@ class _PostItemTwoState extends State<PostItemTwo> {
         });
   }
 
+  void _showMessgage() {
+    // flutter defined function
+    showDialog<dynamic>(
+      context: context,
+      builder: (arlertContext) {
+        // return object of type Dialog
+        return AlertDialog(
+          //title: const Text(''),
+          content: const Text('Bạn chọn keyword'),
+          actions: <Widget>[
+            // usually buttons at the bottom of the dialog
+            TextButton(
+              onPressed: () {
+                Navigator.of(arlertContext).pop();
+              },
+              child: const Text('Đóng'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   void initState() {
     super.initState();
@@ -323,7 +353,7 @@ class _PostItemTwoState extends State<PostItemTwo> {
       listKeyWord = value;
       var wordPair = '';
       for (final word in listKeyWord) {
-        wordPair = word;
+        wordPair = word.value;
         if (editableItems.indexWhere((item) {
               return item.value == wordPair;
             }) ==
@@ -353,7 +383,7 @@ class _PostItemTwoState extends State<PostItemTwo> {
   Widget build(BuildContext context) {
     final arguments = ModalRoute.of(context)!.settings.arguments as Map;
 
-    if (mainCategory.id == -2 || mainCategory.id == previousID) {
+    if (mainCategory.id == '' || mainCategory.id == previousID) {
       //no run getSub when setState
     } else {
       getSubCategoryData(mainCategory.name).then((value) {
@@ -399,7 +429,7 @@ class _PostItemTwoState extends State<PostItemTwo> {
                         alignment: Alignment.topLeft,
                         child: Text('Danh mục chính',
                             style: TextStyle(fontWeight: FontWeight.bold))),
-                    if (mainCategory.id >= 0)
+                    if (mainCategory.id != '')
                       categoryDropDown()
                     else
                       Container(),
@@ -436,30 +466,35 @@ class _PostItemTwoState extends State<PostItemTwo> {
                             backgroundColor: MaterialStateProperty.all<Color>(
                                 Theme.of(context).primaryColor)),
                         onPressed: () {
-                          getKeywordToSave()
-                              .then((keywords) => keywordToSave = keywords)
-                              .whenComplete(() {
-                            pushNewScreenWithRouteSettings<void>(
-                              context,
-                              settings: RouteSettings(
-                                  name: PostItemThree.routeName,
-                                  arguments: {
-                                    'name': arguments['name'] as String,
-                                    'description':
-                                        arguments['description'] as String,
-                                    'imageURL':
-                                        arguments['imageURL'] as List<Asset>,
-                                    'mainCategory': mainCategory.id,
-                                    'subCategory': subCategory.id,
-                                    'conditions': conditions.description,
-                                    'keyword': keywordToSave,
-                                  }),
-                              screen: const PostItemThree(),
-                              withNavBar: true,
-                              pageTransitionAnimation:
-                                  PageTransitionAnimation.cupertino,
-                            );
-                          });
+                          if (editableSelectedItems.isEmpty) {
+                            _showMessgage();
+                          } else {
+                            getKeywordToSave()
+                                .then((keywords) => keywordToSave = keywords)
+                                .whenComplete(() {
+                              pushNewScreenWithRouteSettings<void>(
+                                context,
+                                settings: RouteSettings(
+                                    name: PostItemThree.routeName,
+                                    arguments: {
+                                      'name': arguments['name'] as String,
+                                      'description':
+                                          arguments['description'] as String,
+                                      'imageURL':
+                                          arguments['imageURL'] as List<Asset>,
+                                      'mainCategory': mainCategory.id,
+                                      'subCategory': subCategory.id,
+                                      'condition': conditions.description,
+                                      'keyword': keywordToSave,
+                                      'keywordId': idKeywordToSave,
+                                    }),
+                                screen: const PostItemThree(),
+                                withNavBar: true,
+                                pageTransitionAnimation:
+                                    PageTransitionAnimation.cupertino,
+                              );
+                            });
+                          }
                         },
                         child: const Text('Tiếp theo'),
                       ),
@@ -479,7 +514,6 @@ class _PostItemTwoState extends State<PostItemTwo> {
     properties.add(
         IterableProperty<int>('editableSelectedItems', editableSelectedItems));
     properties.add(StringProperty('inputString', inputString));
-    properties.add(IterableProperty<String>('listKeyWord', listKeyWord));
     properties.add(DiagnosticsProperty<Function?>('openDialog', openDialog));
     properties
         .add(IterableProperty<Conditions>('conditionList', conditionsList));
@@ -488,8 +522,11 @@ class _PostItemTwoState extends State<PostItemTwo> {
         .add(DiagnosticsProperty<TypeofGoods>('mainCategory', mainCategory));
     properties
         .add(DiagnosticsProperty<TypeofGoods>('subCategory', subCategory));
-    properties.add(IntProperty('previousID', previousID));
     properties.add(IterableProperty<String>('newKeywordID', newKeywordID));
     properties.add(IterableProperty<String>('keywordToSave', keywordToSave));
+    properties.add(IterableProperty<KeyWord>('listKeyWord', listKeyWord));
+    properties
+        .add(IterableProperty<String>('idKeywordToSave', idKeywordToSave));
+    properties.add(StringProperty('previousID', previousID));
   }
 }

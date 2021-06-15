@@ -25,17 +25,16 @@ class _PostItemThreeState extends State<PostItemThree> {
 
   PostServiceFireStore dataServiceFireStore = PostServiceFireStore();
   List<TypeofGoods> _type = [];
-  late TypeofGoods category1 = TypeofGoods(id: -2, name: '');
-  late TypeofGoods category2 = TypeofGoods(id: -2, name: '');
-  late TypeofGoods category3 = TypeofGoods(id: -2, name: '');
-  List<int> categoriesID = [];
+  late TypeofGoods category1 = TypeofGoods(id: '', name: '');
+  late TypeofGoods category2 = TypeofGoods(id: '', name: '');
+  late TypeofGoods category3 = TypeofGoods(id: '', name: '');
+  List<String> categoriesID = [];
   Future<List<TypeofGoods>> getMainCategoryData() {
     final _tempCategory = <TypeofGoods>[];
     return dataServiceFireStore.getMainCategory().then((value) {
       for (final item in value.docs) {
         final itemCate = TypeofGoods(
-            id: int.parse(item.id),
-            name: item.data()['category_name'].toString());
+            id: item.id, name: item.data()['category_name'].toString());
         _tempCategory.add(itemCate);
       }
       return _tempCategory;
@@ -91,8 +90,8 @@ class _PostItemThreeState extends State<PostItemThree> {
     }).whenComplete(() => setState(() {}));
   }
 
-  Future<List<int>> getWishCategoriesList() async {
-    final tempList = <int>[];
+  Future<List<String>> getWishCategoriesList() async {
+    final tempList = <String>[];
     try {
       tempList.add(category1.id);
       tempList.add(category2.id);
@@ -114,116 +113,129 @@ class _PostItemThreeState extends State<PostItemThree> {
         title: const Text('Tạo bài đăng mới - 3',
             style: TextStyle(color: AppColors.kTextColor)),
       ),
-      body: Container(
-          margin: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-          child: isLoading
-              ? const Center(
-                  child: CircularProgressIndicator(),
-                )
-              : ListView(
-                  children: [
-                    const Align(
-                        alignment: Alignment.topLeft,
-                        child: Text('Chọn những danh mục sản phẩm bạn muốn đổi',
-                            style: TextStyle(fontWeight: FontWeight.bold))),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    const Text('Ưu tiên 1: '),
-                    categoryDropDown(category1, 1),
-                    const Text('Ưu tiên 2: '),
-                    categoryDropDown(category2, 2),
-                    const Text('Ưu tiên 3: '),
-                    categoryDropDown(category3, 3),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    const Align(
-                        alignment: Alignment.topLeft,
-                        child: Text('Định giá cho sản phẩm (VNĐ): ',
-                            style: TextStyle(fontWeight: FontWeight.bold))),
-                    FormBuilder(
-                      key: _formKey,
-                      onChanged: () {},
-                      autovalidateMode: AutovalidateMode.onUserInteraction,
-                      child: Column(
-                        children: [
-                          FormBuilderTextField(
-                            name: 'price',
-                            controller: priceController,
-                            keyboardType: TextInputType.number,
-                            textCapitalization: TextCapitalization.sentences,
-                            decoration: const InputDecoration(
-                              labelStyle: TextStyle(
-                                color: AppColors.kTextColor,
-                                fontWeight: FontWeight.w600,
-                              ),
-                              floatingLabelBehavior: FloatingLabelBehavior.auto,
-                            ),
-                            validator: FormBuilderValidators.compose([
-                              FormBuilderValidators.required(context),
-                              FormBuilderValidators.numeric(context,
-                                  errorText: 'Nhập giá trị số'),
-                              FormBuilderValidators.min(context, 1000)
-                            ]),
-                            onEditingComplete: () => node.unfocus(),
-                          ),
-                          const SizedBox(height: 30),
-                          SizedBox(
-                            width: double.maxFinite, // set width to maxFinite
-                            child: TextButton(
-                              style: ButtonStyle(
-                                  foregroundColor:
-                                      MaterialStateProperty.all<Color>(
-                                          AppColors.kPrimaryLightColor),
-                                  backgroundColor:
-                                      MaterialStateProperty.all<Color>(
-                                          Theme.of(context).primaryColor)),
-                              onPressed: () {
-                                getWishCategoriesList().then((value) {
-                                  categoriesID = value;
-                                }).whenComplete(() {
-                                  if (_formKey.currentState
-                                          ?.saveAndValidate() ??
-                                      false) {
-                                    pushNewScreenWithRouteSettings<void>(
-                                      context,
-                                      settings: RouteSettings(
-                                        name: PostItemFour.routeName,
-                                        arguments: {
-                                          'name': arguments['name'] as String,
-                                          'description':
-                                              arguments['description']
-                                                  as String,
-                                          'imagesUrl': arguments['imageURL']
-                                              as List<Asset>,
-                                          'mainCategoryId':
-                                              arguments['mainCategory'] as int,
-                                          'subCategoryId':
-                                              arguments['subCategory'] as int,
-                                          'conditions': arguments['conditions'] as String,
-                                          'keyword': arguments['keyword']
-                                              as List<String>,
-                                          'tradeForListId': categoriesID,
-                                          'price': int.parse(priceController.text),
-                                        },
-                                      ),
-                                      screen: const PostItemFour(),
-                                      withNavBar: true,
-                                      pageTransitionAnimation:
-                                          PageTransitionAnimation.cupertino,
-                                    );
-                                  }
-                                });
-                              },
-                              child: const Text('Tiếp theo'),
-                            ),
-                          ),
-                        ],
+      body: GestureDetector(
+        onTap: () {
+          node.unfocus();
+        },
+        child: Container(
+            margin: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+            child: isLoading
+                ? const Center(
+                    child: CircularProgressIndicator(),
+                  )
+                : ListView(
+                    children: [
+                      const Align(
+                          alignment: Alignment.topLeft,
+                          child: Text(
+                              'Chọn những danh mục sản phẩm bạn muốn đổi',
+                              style: TextStyle(fontWeight: FontWeight.bold))),
+                      const SizedBox(
+                        height: 10,
                       ),
-                    ),
-                  ],
-                )),
+                      const Text('Ưu tiên 1: '),
+                      categoryDropDown(category1, 1),
+                      const Text('Ưu tiên 2: '),
+                      categoryDropDown(category2, 2),
+                      const Text('Ưu tiên 3: '),
+                      categoryDropDown(category3, 3),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      const Align(
+                          alignment: Alignment.topLeft,
+                          child: Text('Định giá cho sản phẩm (VNĐ): ',
+                              style: TextStyle(fontWeight: FontWeight.bold))),
+                      FormBuilder(
+                        key: _formKey,
+                        onChanged: () {},
+                        autovalidateMode: AutovalidateMode.onUserInteraction,
+                        child: Column(
+                          children: [
+                            FormBuilderTextField(
+                              name: 'price',
+                              controller: priceController,
+                              keyboardType: TextInputType.number,
+                              textCapitalization: TextCapitalization.sentences,
+                              decoration: const InputDecoration(
+                                labelStyle: TextStyle(
+                                  color: AppColors.kTextColor,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                                floatingLabelBehavior:
+                                    FloatingLabelBehavior.auto,
+                              ),
+                              validator: FormBuilderValidators.compose([
+                                FormBuilderValidators.required(context),
+                                FormBuilderValidators.numeric(context,
+                                    errorText: 'Nhập giá trị số'),
+                                FormBuilderValidators.min(context, 1000)
+                              ]),
+                              onEditingComplete: () => node.unfocus(),
+                            ),
+                            const SizedBox(height: 30),
+                            SizedBox(
+                              width: double.maxFinite, // set width to maxFinite
+                              child: TextButton(
+                                style: ButtonStyle(
+                                    foregroundColor:
+                                        MaterialStateProperty.all<Color>(
+                                            AppColors.kPrimaryLightColor),
+                                    backgroundColor:
+                                        MaterialStateProperty.all<Color>(
+                                            Theme.of(context).primaryColor)),
+                                onPressed: () {
+                                  getWishCategoriesList().then((value) {
+                                    categoriesID = value;
+                                  }).whenComplete(() {
+                                    if (_formKey.currentState
+                                            ?.saveAndValidate() ??
+                                        false) {
+                                      pushNewScreenWithRouteSettings<void>(
+                                        context,
+                                        settings: RouteSettings(
+                                          name: PostItemFour.routeName,
+                                          arguments: {
+                                            'name': arguments['name'] as String,
+                                            'description':
+                                                arguments['description']
+                                                    as String,
+                                            'imagesUrl': arguments['imageURL']
+                                                as List<Asset>,
+                                            'mainCategoryId':
+                                                arguments['mainCategory']
+                                                    as String,
+                                            'subCategoryId':
+                                                arguments['subCategory']
+                                                    as String,
+                                            'condition': arguments['condition']
+                                                as String,
+                                            'keyword': arguments['keyword']
+                                                as List<String>,
+                                            'keywordId': arguments['keywordId']
+                                                as List<String>,
+                                            'tradeForListId': categoriesID,
+                                            'price':
+                                                int.parse(priceController.text),
+                                          },
+                                        ),
+                                        screen: const PostItemFour(),
+                                        withNavBar: true,
+                                        pageTransitionAnimation:
+                                            PageTransitionAnimation.cupertino,
+                                      );
+                                    }
+                                  });
+                                },
+                                child: const Text('Tiếp theo'),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  )),
+      ),
     );
   }
 
@@ -239,6 +251,6 @@ class _PostItemThreeState extends State<PostItemThree> {
     properties.add(DiagnosticsProperty<TextEditingController>(
         'priceController', priceController));
     properties.add(DiagnosticsProperty<FocusScopeNode>('node', node));
-    properties.add(IterableProperty<int>('categoriesID', categoriesID));
+    properties.add(IterableProperty<String>('categoriesID', categoriesID));
   }
 }
