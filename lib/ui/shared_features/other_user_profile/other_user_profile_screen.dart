@@ -5,7 +5,7 @@ import 'package:line_icons/line_icons.dart';
 import 'package:provider/provider.dart';
 
 import '../../../constants/app_dimens.dart';
-import '../../../models/cloud_firestore/user/user.dart';
+import '../../../models/cloud_firestore/user_model/user/user.dart';
 import '../../../models/ui/chat/temp_class.dart';
 import '../../../widgets/custom_material_button.dart';
 import '../../../widgets/custom_user_avatar.dart';

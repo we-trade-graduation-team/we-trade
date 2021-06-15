@@ -9,7 +9,7 @@ import 'package:multi_image_picker2/multi_image_picker2.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../constants/app_colors.dart';
-import '../../../../models/cloud_firestore/user/user.dart';
+import '../../../../models/cloud_firestore/user_model/user/user.dart';
 import '../../../../models/ui/shared_models/product_model.dart';
 import '../../../../services/message/firestore_message_service.dart';
 import '../../../../utils/helper/image_data_storage_helper/image_data_storage_helper.dart';
@@ -18,13 +18,6 @@ import '../../const_string/const_str.dart';
 import '../../helper/ulti.dart';
 import '../../shared_widgets/offer_card.dart';
 import '../widgets/message_tile.dart';
-
-//TODO : T đây nè Tín ớiiiiii
-// loadAsset() --> hàm chạy lấy ảnh các kiểu nè
-// chạy xong sẽ trả ra resultImages ---> setState images = resultImages để
-// show buildGridView() lên, tùy theo m custom cho thêm nút bấm ok load
-// ảnh lên firestore ở đâu nữa, f12 vào hàm addMessageImageToChatRoom --> f12 tiếp
-// để dô đc hàm static UsersCard.... dùng chung, m cú dùng hàm này đi hen
 
 class Body extends StatefulWidget {
   const Body({
@@ -142,7 +135,6 @@ class _BodyState extends State<Body> {
   }
 
   Widget buildGridViewSelectedImages() {
-    // hàm này show list ảnh images lên nè, m có thể chỉnh sửa tùy ý
     final height = MediaQuery.of(context).size.height;
     final width = MediaQuery.of(context).size.width;
     return images.isNotEmpty
@@ -229,8 +221,7 @@ class _BodyState extends State<Body> {
 
 // function Message send ============================
   Future<void> addMessageToChatRoom(String contentToSend, int type) async {
-    final name =
-        HelperClass.finalSenderName(thisUser.username, thisUser.email);
+    final name = HelperClass.finalSenderName(thisUser.name, thisUser.email);
 
     await messageServiceFireStore.addMessageToChatRoom(
         thisUser.uid!, type, contentToSend, widget.chatRoomId, name);

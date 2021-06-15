@@ -32,7 +32,7 @@
   "registerTxtEmail": "Email",
   "registerTxtPassword": "Password",
   "registerTxtConfirmPassword": "Nhập lại Password",
-  "registerTxtUsername": "Tên người dùng",
+  "registerTxtName": "Tên của bạn",
   "registerTxtErrorNotMatchPassword": "Passwords không trùng khớp",
   "registerAlertTxtErrorEmailAlreadyInUseTitle": "Email đã được sử dụng",
   "registerAlertTxtErrorEmailAlreadyInUseContent": "Đã tồn tại tài khoản cho email này.",
@@ -51,7 +51,7 @@
   "logoutAlertTxtContent": "Bạn có chắc chắn muốn đăng xuất?",
   "homeScreenTxtAppBar": "Tìm kiếm sản phẩm",
   "homeScreenTxtPopularPostCardsTitle": "Sản phẩm phổ biến",
-  "homeScreenTxtSpecialOfferCardsTitle": "Dành riêng cho bạn",
+  "homeScreenTxtSpecialCategoryCardsTitle": "Danh mục quan tâm",
   "homeScreenTxtRecommendedSectionTitle": "Được đề xuất",
   "homeScreenTxtSectionTitleRowSeeMore": "Xem thêm"
 }

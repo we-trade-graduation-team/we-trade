@@ -2,10 +2,10 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:material_floating_search_bar/material_floating_search_bar.dart';
 import 'package:provider/provider.dart';
+import '../../../../models/cloud_firestore/post_card_model/post_card/post_card.dart';
 
-import '../../../../models/cloud_firestore/post_card_models/post_card/post_card.dart';
 import '../../../../models/cloud_firestore/search_model/search_model.dart';
-// import '../../../../models/cloud_firestore/user/user.dart';
+// import '../../../../models/cloud_firestore/user_model/user/user.dart';
 
 class Item extends StatelessWidget {
   const Item({
@@ -18,7 +18,7 @@ class Item extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    
+
     final textTheme = theme.textTheme;
 
     final model = context.watch<SearchModel>();
@@ -68,7 +68,7 @@ class Item extends StatelessWidget {
                       ),
                       const SizedBox(height: 2),
                       Text(
-                        postCard.itemCondition,
+                        postCard.item.condition,
                         style: textTheme.bodyText2!.copyWith(
                           color: Colors.grey.shade600,
                         ),

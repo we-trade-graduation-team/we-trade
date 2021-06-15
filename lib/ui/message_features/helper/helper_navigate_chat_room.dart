@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
+import '../../../models/cloud_firestore/user_model/user/user.dart';
 
-import '../../../models/cloud_firestore/user/user.dart';
 import '../../../models/ui/chat/temp_class.dart';
 import '../../../services/message/algolia_user_service.dart';
 import '../../../services/message/firestore_message_service.dart';
@@ -26,8 +26,7 @@ class HelperNavigateChatRoom {
             mapData, chatRoomId);
         final usersId = mapData[usersIdStr] as List<String>;
         await messageServiceFireStore.createSeenHistory(chatRoomId, usersId);
-        final name =
-            HelperClass.finalSenderName(thisUser.username, thisUser.email);
+        final name = HelperClass.finalSenderName(thisUser.name, thisUser.email);
 
         await startNewChatRoom(
             chatRoomId: chatRoomId,
@@ -58,8 +57,7 @@ class HelperNavigateChatRoom {
             mapData, chatRoomId);
         final usersId = mapData[usersIdStr] as List<String>;
         await messageServiceFireStore.createSeenHistory(chatRoomId, usersId);
-        final name =
-            HelperClass.finalSenderName(thisUser.username, thisUser.email);
+        final name = HelperClass.finalSenderName(thisUser.name, thisUser.email);
 
         await startNewChatRoom(
             chatRoomId: chatRoomId,
@@ -81,8 +79,7 @@ class HelperNavigateChatRoom {
     messageServiceFireStore
         .createChatRoomGenerateIdFireStore(mapData)
         .then((chatRoomId) async {
-      final name =
-          HelperClass.finalSenderName(thisUser.username, thisUser.email);
+      final name = HelperClass.finalSenderName(thisUser.name, thisUser.email);
       final usersId = mapData[usersIdStr] as List<String>;
       await messageServiceFireStore.createSeenHistory(chatRoomId, usersId);
       await startNewChatRoom(
@@ -148,7 +145,7 @@ class HelperNavigateChatRoom {
     }
     usersId.add(thisUser.uid!);
 
-    usersName.add((thisUser.username ?? thisUser.email)!);
+    usersName.add((thisUser.name ?? thisUser.email)!);
     usersAva.add(thisUser.photoURL ?? '');
     usersEmail.add(thisUser.email ?? '');
 

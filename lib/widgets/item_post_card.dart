@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 
 import '../models/arguments/shared/post_details_arguments.dart';
-import '../models/cloud_firestore/post_card_models/my_post_card/my_post_card.dart';
+import '../models/cloud_firestore/post_card_model/post_card/post_card.dart';
 import '../models/ui/home_features/detail_screen/question_model.dart';
 import '../models/ui/shared_models/account_model.dart';
 import '../models/ui/shared_models/product_model.dart';
@@ -37,7 +37,7 @@ class ItemPostCard extends StatelessWidget {
     required this.postCard,
   }) : super(key: key);
 
-  final MyPostCard postCard;
+  final PostCard postCard;
 
   @override
   Widget build(BuildContext context) {
@@ -67,7 +67,7 @@ class ItemPostCard extends StatelessWidget {
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(8),
                 child: Image.network(
-                  postCard.image,
+                  postCard.item.image,
                   fit: BoxFit.cover,
                   height: double.infinity,
                   width: double.infinity,
@@ -96,7 +96,7 @@ class ItemPostCard extends StatelessWidget {
                     ),
                     Expanded(
                       child: Text(
-                        postCard.itemCondition,
+                        postCard.item.condition,
                         style: Theme.of(context).textTheme.bodyText2!.copyWith(
                               fontSize: 13,
                               fontWeight: FontWeight.w300,
@@ -114,7 +114,7 @@ class ItemPostCard extends StatelessWidget {
                           Expanded(
                             flex: 90,
                             child: Text(
-                              '\$${postCard.itemPrice}',
+                              '\$${postCard.item.price}',
                               overflow: TextOverflow.ellipsis,
                               style: Theme.of(context)
                                   .textTheme
@@ -144,7 +144,7 @@ class ItemPostCard extends StatelessWidget {
                               child: FittedBox(
                                 fit: BoxFit.fitHeight,
                                 child: Text(
-                                  'District ${postCard.district}',
+                                  'District ${postCard.item.district}',
                                   textAlign: TextAlign.center,
                                   maxLines: 1,
                                   style: Theme.of(context)
@@ -174,7 +174,7 @@ class ItemPostCard extends StatelessWidget {
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
-    properties.add(DiagnosticsProperty<MyPostCard>('postCard', postCard));
+    properties.add(DiagnosticsProperty<PostCard>('postCard', postCard));
   }
 
   // String getProductLocationShortcutText(String productLocation) {

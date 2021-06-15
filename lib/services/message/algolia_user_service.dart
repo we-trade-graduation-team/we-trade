@@ -1,7 +1,7 @@
 import 'package:algolia/algolia.dart';
 import 'package:intl/intl.dart';
+import '../../models/cloud_firestore/user_model/user/user.dart';
 
-import '../../models/cloud_firestore/user/user.dart';
 import '../../models/ui/chat/temp_class.dart';
 import '../../ui/message_features/const_string/const_str.dart';
 import '../algolia/algolia.dart';
@@ -12,7 +12,7 @@ class UserServiceAlgolia {
 
   Future<List<AlgoliaObjectSnapshot>> searchUserByAlgolia(String query) {
     return algolia.instance
-        .index(trangUsersAlgoliaIndex)
+        .index(usersAlgoliaIndex)
         .query(query)
         .getObjects()
         .then((result) => result.hits);
@@ -20,7 +20,7 @@ class UserServiceAlgolia {
 
   Future<UserAlgolia> getUserById(String id) async {
     return algolia.instance
-        .index(trangUsersAlgoliaIndex)
+        .index(usersAlgoliaIndex)
         .object(id)
         .getObject()
         .then((value) {
@@ -43,7 +43,7 @@ class UserServiceAlgolia {
       'objectID': user.uid,
       emailStr: user.email,
       phoneNumberStr: user.phoneNumber ?? '',
-      nameStr: user.username ?? '',
+      nameStr: user.name ?? '',
       presenceStr: user.presence ?? false,
       avatarURLStr: user.photoURL ?? '',
       lastActiveStr: user.lastSeen ?? 0
@@ -53,7 +53,7 @@ class UserServiceAlgolia {
   //lúc sign up chỉ có 2 trường {name, email}
   Future<void> addUser(User newUser) async {
     final newUserMap = createUserMapAlgolia(newUser);
-    await algolia.instance.index(trangUsersAlgoliaIndex).addObject(newUserMap);
+    await algolia.instance.index(usersAlgoliaIndex).addObject(newUserMap);
   }
 
   //update nè :v
@@ -61,7 +61,7 @@ class UserServiceAlgolia {
     final updateUserMap = createUserMapAlgolia(updateUser);
     final messageServiceFireStore = MessageServiceFireStore();
     await algolia.instance
-        .index(trangUsersAlgoliaIndex)
+        .index(usersAlgoliaIndex)
         .object(updateUserMap['objectID'].toString())
         .updateData(updateUserMap);
     // ignore: unawaited_futures

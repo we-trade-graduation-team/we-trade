@@ -2,7 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-import '../models/cloud_firestore/user/user.dart' as user_model;
+import '../models/cloud_firestore/user_model/user/user.dart' as user_model;
+import '../services/firestore/firestore_path.dart';
 
 enum Status {
   uninitialized,
@@ -38,12 +39,17 @@ class AuthProvider extends ChangeNotifier {
 
   Status get status => _status;
 
-  /// Changed to idTokenChanges as it updates depending on more cases.
-  Stream<user_model.User?> get authStateChanges =>
-      _auth.idTokenChanges().map(_userFromFirebase);
+  final _usersRef =
+      FirebaseFirestore.instance.collection(FirestorePath.users());
+
+  // /// Changed to idTokenChanges as it updates depending on more cases.
+  // Stream<user_model.User?> get authStateChanges =>
+  //     _auth.idTokenChanges().map(_userFromFirebase);
 
   Stream<user_model.User?> get user =>
       _auth.authStateChanges().map(_userFromFirebase);
+
+  // user_model.User? get _currentUser => _userFromFirebase(_auth.currentUser);
 
   //Create user object based on the given FirebaseUser
   user_model.User? _userFromFirebase(User? user) {
@@ -54,7 +60,7 @@ class AuthProvider extends ChangeNotifier {
     return user_model.User(
       uid: user.uid,
       email: user.email,
-      username: user.displayName,
+      name: user.displayName,
       isEmailVerified: user.emailVerified,
       photoURL: user.photoURL,
     );
@@ -98,7 +104,6 @@ class AuthProvider extends ChangeNotifier {
         };
 
         // Add new user to users Collection
-        final _usersRef = FirebaseFirestore.instance.collection('users');
         await _usersRef.doc(_newUser.uid).update(_presenceData);
       }
     } on FirebaseAuthException catch (e) {
@@ -115,7 +120,7 @@ class AuthProvider extends ChangeNotifier {
   Future<String?> registerWithEmailAndPassword({
     required String email,
     required String password,
-    required String username,
+    required String name,
   }) async {
     try {
       _status = Status.registering;
@@ -127,22 +132,22 @@ class AuthProvider extends ChangeNotifier {
         password: password,
       );
 
-      final _firebaseAuthUser = _result.user;
-
-      await _firebaseAuthUser?.updateProfile(
-        displayName: username,
-      );
+      final _firebaseAuthUser = _result.user!;
 
       final _newUser = _userFromFirebase(_firebaseAuthUser);
 
       if (_newUser != null) {
-        // Set username for new user
-        _newUser.username = username;
-        _newUser.presence = true;
+        _newUser
+          ..name = name
+          ..lastSeen = DateTime.now().millisecondsSinceEpoch
+          ..presence = true;
 
-        // Add new user to users Collection
-        final _usersRef = FirebaseFirestore.instance.collection('users');
-        await _usersRef.doc(_newUser.uid).set(_newUser.toJson());
+        await Future.wait([
+          // Set name in firestore database
+          _usersRef.doc(_newUser.uid).set(_newUser.toJson()),
+          // Set display name
+          _firebaseAuthUser.updateDisplayName(name),
+        ]);
       }
     } on FirebaseAuthException catch (e) {
       // print("Error on the new user registration = " + e.toString());
@@ -163,7 +168,19 @@ class AuthProvider extends ChangeNotifier {
 
   //Method to handle user signing out
   Future<void> signOut() async {
-    await _auth.signOut();
+    final _newData = {
+      'lastSeen': DateTime.now().millisecondsSinceEpoch,
+      'presence': false,
+    };
+
+    final _currentUser = _auth.currentUser;
+
+    await Future.wait([
+      // Update lastSeen and presence
+      _usersRef.doc(_currentUser!.uid).update(_newData),
+      // Sign out for current user
+      _auth.signOut(),
+    ]);
 
     _status = Status.unauthenticated;
 

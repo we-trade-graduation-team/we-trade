@@ -32,7 +32,7 @@
   "registerTxtEmail": "Email",
   "registerTxtPassword": "Password",
   "registerTxtConfirmPassword": "Confirm Password",
-  "registerTxtUsername": "Username",
+  "registerTxtName": "Your name",
   "registerTxtErrorNotMatchPassword": "Passwords do not match",
   "registerAlertTxtErrorEmailAlreadyInUseTitle": "Email already in-use",
   "registerAlertTxtErrorEmailAlreadyInUseContent": "The account already exists for that email.",
@@ -51,7 +51,7 @@
   "logoutAlertTxtContent": "Are you sure you want to log out?",
   "homeScreenTxtAppBar": "Search item",
   "homeScreenTxtPopularPostCardsTitle": "Popular items",
-  "homeScreenTxtSpecialOfferCardsTitle": "Special for you",
+  "homeScreenTxtSpecialCategoryCardsTitle": "Interest categories",
   "homeScreenTxtRecommendedSectionTitle": "Recommended",
   "homeScreenTxtSectionTitleRowSeeMore": "See More"
 }
