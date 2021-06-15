@@ -207,30 +207,32 @@ class _SignInScreenState extends State<SignInScreen> {
       _isLoading = false;
     });
 
-    if (result != null) {
-      final _appLocalizations = AppLocalizations.of(context);
-
-      final _contentHelper = DialogContentHelper(_appLocalizations);
-
-      final signInDialogContents = _contentHelper.signInDialogContents;
-
-      final myDialogContent = signInDialogContents[result];
-
-      final dialogTitleText = myDialogContent != null
-          ? myDialogContent.title
-          : _appLocalizations.translate('authenticationAlertTxtErrorTitle');
-
-      final dialogContentText = myDialogContent != null
-          ? myDialogContent.content
-          : _appLocalizations.translate('authenticationAlertTxtErrorContent');
-
-      await FlashHelper.showDialogFlash(
-        context,
-        title: Text(dialogTitleText),
-        content: Text(dialogContentText),
-        showBothAction: false,
-      );
+    if (result == null) {
+      return;
     }
+
+    final _appLocalizations = AppLocalizations.of(context);
+
+    final _contentHelper = DialogContentHelper(_appLocalizations);
+
+    final signInDialogContents = _contentHelper.signInDialogContents;
+
+    final myDialogContent = signInDialogContents[result];
+
+    final dialogTitleText = myDialogContent != null
+        ? myDialogContent.title
+        : _appLocalizations.translate('authenticationAlertTxtErrorTitle');
+
+    final dialogContentText = myDialogContent != null
+        ? myDialogContent.content
+        : _appLocalizations.translate('authenticationAlertTxtErrorContent');
+
+    await FlashHelper.showDialogFlash(
+      context,
+      title: Text(dialogTitleText),
+      content: Text(dialogContentText),
+      showBothAction: false,
+    );
   }
 
   FormFieldValidator<String> _validatePassword(BuildContext context) {

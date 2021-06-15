@@ -36,7 +36,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
-  final _usernameController = TextEditingController();
+  final _nameController = TextEditingController();
   final _scaffoldKey = GlobalKey<ScaffoldState>();
 
   // manage state of modal progress HUD widget
@@ -113,15 +113,15 @@ class _SignUpScreenState extends State<SignUpScreen> {
         textEditingController: _confirmPasswordController,
       ),
       CustomFormBuilderTextField(
-        name: 'username',
-        labelText: _appLocalizations.translate('registerTxtUsername'),
+        name: 'name',
+        labelText: _appLocalizations.translate('registerTxtName'),
         validator: FormBuilderValidators.compose([
           FormBuilderValidators.required(context),
           FormBuilderValidators.minLength(context, 4),
           FormBuilderValidators.maxLength(context, 20),
         ]),
         onEditingComplete: node.nextFocus,
-        textEditingController: _usernameController,
+        textEditingController: _nameController,
       ),
       // ! Have a issue, maybe use later
       // FormBuilderCheckbox(
@@ -204,7 +204,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
     final result = await _authProvider.registerWithEmailAndPassword(
       email: _emailController.text.trim(),
       password: _passwordController.text.trim(),
-      username: _usernameController.text.trim(),
+      name: _nameController.text.trim(),
     );
 
     if (!mounted) {
@@ -216,29 +216,31 @@ class _SignUpScreenState extends State<SignUpScreen> {
       _isLoading = false;
     });
 
-    if (result != null) {
-      final _appLocalizations = AppLocalizations.of(context);
-
-      final _contentHelper = DialogContentHelper(_appLocalizations);
-
-      final signUpDialogContents = _contentHelper.signUpDialogContents;
-
-      final myDialogContent = signUpDialogContents[result];
-
-      final dialogTitleText = myDialogContent != null
-          ? myDialogContent.title
-          : _appLocalizations.translate('authenticationAlertTxtErrorTitle');
-
-      final dialogContentText = myDialogContent != null
-          ? myDialogContent.content
-          : _appLocalizations.translate('authenticationAlertTxtErrorContent');
-
-      await FlashHelper.showDialogFlash(
-        context,
-        title: Text(dialogTitleText),
-        content: Text(dialogContentText),
-        showBothAction: false,
-      );
+    if (result == null) {
+      return;
     }
+
+    final _appLocalizations = AppLocalizations.of(context);
+
+    final _contentHelper = DialogContentHelper(_appLocalizations);
+
+    final signUpDialogContents = _contentHelper.signUpDialogContents;
+
+    final myDialogContent = signUpDialogContents[result];
+
+    final dialogTitleText = myDialogContent != null
+        ? myDialogContent.title
+        : _appLocalizations.translate('authenticationAlertTxtErrorTitle');
+
+    final dialogContentText = myDialogContent != null
+        ? myDialogContent.content
+        : _appLocalizations.translate('authenticationAlertTxtErrorContent');
+
+    await FlashHelper.showDialogFlash(
+      context,
+      title: Text(dialogTitleText),
+      content: Text(dialogContentText),
+      showBothAction: false,
+    );
   }
 }

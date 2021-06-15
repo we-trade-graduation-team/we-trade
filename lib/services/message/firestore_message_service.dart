@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
-import '../../models/cloud_firestore/user/user.dart';
+import '../../models/cloud_firestore/user_model/user/user.dart';
 
 import '../../models/ui/chat/temp_class.dart';
 import '../../ui/message_features/const_string/const_str.dart';
@@ -13,8 +13,6 @@ class MessageServiceFireStore {
   Future<DocumentSnapshot<Map<String, dynamic>>> getChatRoomByChatRoomId(
       String chatRoomId) {
     return FirebaseFirestore.instance
-        .collection('trang')
-        .doc('nzTptOzmSw1IbLfKHxOT')
         .collection(chatRoomCollection)
         .doc(chatRoomId)
         .get();
@@ -22,8 +20,6 @@ class MessageServiceFireStore {
 
   Future<List<String>> getAllUsersIdInChatRoom(String chatRoomId) {
     return FirebaseFirestore.instance
-        .collection('trang')
-        .doc('nzTptOzmSw1IbLfKHxOT')
         .collection(chatRoomCollection)
         .doc(chatRoomId)
         .get()
@@ -35,8 +31,6 @@ class MessageServiceFireStore {
   Future<void> createPeerToPeerChatRoomFireStore(
       Map<String, dynamic> chatData, String id) async {
     await FirebaseFirestore.instance
-        .collection('trang')
-        .doc('nzTptOzmSw1IbLfKHxOT')
         .collection(chatRoomCollection)
         .doc(id)
         .set(chatData)
@@ -46,8 +40,6 @@ class MessageServiceFireStore {
   Future<String> createChatRoomGenerateIdFireStore(
       Map<String, dynamic> chatData) {
     return FirebaseFirestore.instance
-        .collection('trang')
-        .doc('nzTptOzmSw1IbLfKHxOT')
         .collection(chatRoomCollection)
         .add(chatData)
         .then((returnData) {
@@ -62,8 +54,6 @@ class MessageServiceFireStore {
       mapData[element] = '';
     }
     await FirebaseFirestore.instance
-        .collection('trang')
-        .doc('nzTptOzmSw1IbLfKHxOT')
         .collection(chatRoomCollection)
         .doc(chatRoomId)
         .collection(seenHistoryCollection)
@@ -109,8 +99,6 @@ class MessageServiceFireStore {
     }
 
     FirebaseFirestore.instance
-        .collection('trang')
-        .doc('nzTptOzmSw1IbLfKHxOT')
         .collection(chatRoomCollection)
         .doc(chatRoomId)
         .update({
@@ -125,8 +113,6 @@ class MessageServiceFireStore {
   Future<String> addMessageToFireStore(
       String chatRoomId, Map<String, dynamic> mapData) async {
     return FirebaseFirestore.instance
-        .collection('trang')
-        .doc('nzTptOzmSw1IbLfKHxOT')
         .collection(chatRoomCollection)
         .doc(chatRoomId)
         .collection(chatCollection)
@@ -137,8 +123,6 @@ class MessageServiceFireStore {
   Future<Stream<QuerySnapshot<Map<String, dynamic>>>> getChats(
       String chatRoomId) async {
     return FirebaseFirestore.instance
-        .collection('trang')
-        .doc('nzTptOzmSw1IbLfKHxOT')
         .collection(chatRoomCollection)
         .doc(chatRoomId)
         .collection(chatCollection)
@@ -149,8 +133,6 @@ class MessageServiceFireStore {
   Future<Stream<DocumentSnapshot<Map<String, dynamic>>>> getSeenHistory(
       String chatRoomId) async {
     return FirebaseFirestore.instance
-        .collection('trang')
-        .doc('nzTptOzmSw1IbLfKHxOT')
         .collection(chatRoomCollection)
         .doc(chatRoomId)
         .collection(seenHistoryCollection)
@@ -161,8 +143,6 @@ class MessageServiceFireStore {
   Future<void> updateMySeenHistory(
       String chatRoomId, String userId, String lastMessageId) async {
     await FirebaseFirestore.instance
-        .collection('trang')
-        .doc('nzTptOzmSw1IbLfKHxOT')
         .collection(chatRoomCollection)
         .doc(chatRoomId)
         .collection(seenHistoryCollection)
@@ -183,8 +163,6 @@ class MessageServiceFireStore {
 
   Future<Chat> getChatRoom(String chatRoomId) {
     return FirebaseFirestore.instance
-        .collection('trang')
-        .doc('nzTptOzmSw1IbLfKHxOT')
         .collection(chatRoomCollection)
         .doc(chatRoomId)
         .get()
@@ -196,8 +174,6 @@ class MessageServiceFireStore {
   Future<void> updateSeenHistoryOfChatRoom(
       String chatRoomId, String thisUserId, String lastMessageId) {
     return FirebaseFirestore.instance
-        .collection('trang')
-        .doc('nzTptOzmSw1IbLfKHxOT')
         .collection(chatRoomCollection)
         .doc(chatRoomId)
         .collection(seenHistoryCollection)
@@ -236,8 +212,6 @@ class MessageServiceFireStore {
 
   Future<void> outOfChatRoom(String chatRoomId, String userId) async {
     await FirebaseFirestore.instance
-        .collection('trang')
-        .doc('nzTptOzmSw1IbLfKHxOT')
         .collection(chatRoomCollection)
         .doc(chatRoomId)
         .get()
@@ -277,8 +251,6 @@ class MessageServiceFireStore {
   Future<void> changeGroupChatName(
       String chatRoomId, String newGroupName) async {
     await FirebaseFirestore.instance
-        .collection('trang')
-        .doc('nzTptOzmSw1IbLfKHxOT')
         .collection(chatRoomCollection)
         .doc(chatRoomId)
         .update({chatRoomNameStr: newGroupName});
@@ -329,8 +301,6 @@ class MessageServiceFireStore {
   Future<Stream<QuerySnapshot<Map<String, dynamic>>>> getAllChatRooms(
       String userId) async {
     return FirebaseFirestore.instance
-        .collection('trang')
-        .doc('nzTptOzmSw1IbLfKHxOT')
         .collection(chatRoomCollection)
         .where(usersIdStr, arrayContains: userId)
         .orderBy(timeStr, descending: true)
@@ -339,8 +309,6 @@ class MessageServiceFireStore {
 
   Future<void> updateChatRoomsWhenUpdateUser(User user) async {
     await FirebaseFirestore.instance
-        .collection('trang')
-        .doc('nzTptOzmSw1IbLfKHxOT')
         .collection(chatRoomCollection)
         .where(usersIdStr, arrayContains: user.uid)
         .get()
@@ -350,7 +318,7 @@ class MessageServiceFireStore {
         for (var i = 0; i < chat.usersId.length; i++) {
           if (chat.usersId[i] == user.uid) {
             chat.images[i] = user.photoURL!;
-            chat.names[i] = user.displayName!;
+            chat.names[i] = user.name!;
             chat.emails[i] = user.email!;
             break;
           }

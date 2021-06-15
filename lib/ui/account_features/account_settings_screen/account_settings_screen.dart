@@ -4,9 +4,7 @@ import 'package:loading_overlay/loading_overlay.dart';
 import 'package:provider/provider.dart';
 
 import '../../../app_localizations.dart';
-import '../../../models/cloud_firestore/user/user.dart';
 import '../../../providers/auth_provider.dart';
-import '../../../services/firestore/firestore_database.dart';
 import '../../../utils/helper/flash/flash_helper.dart';
 
 class AccountSettingsScreen extends StatefulWidget {
@@ -106,10 +104,6 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
   Future<void> signOut() async {
     final _authProvider = context.read<AuthProvider>();
 
-    final _firestoreDatabase = context.read<FirestoreDatabase>();
-
-    final _currentUser = context.read<User>();
-
     final _appLocalizations = AppLocalizations.of(context);
 
     // start the modal progress HUD
@@ -119,23 +113,16 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
 
     const secondsDelay = 1;
 
-    await Future<void>.delayed(const Duration(seconds: secondsDelay));
-
-    await FlashHelper.showBasicsFlash(
-      context,
-      message: _appLocalizations.translate('logoutAlertTxtLoggedOut'),
-      duration: const Duration(seconds: secondsDelay * 2),
-    );
-
-    final newData = {
-      'presence': false,
-    };
-
-    // Update User Presence
-    await _firestoreDatabase.updateUser(
-      uid: _currentUser.uid!,
-      newData: newData,
-    );
+    await Future.wait([
+      // Delay to show flash
+      Future<void>.delayed(const Duration(seconds: secondsDelay)),
+      // Show flash
+      FlashHelper.showBasicsFlash(
+        context,
+        message: _appLocalizations.translate('logoutAlertTxtLoggedOut'),
+        duration: const Duration(seconds: secondsDelay * 2),
+      ),
+    ]);
 
     await _authProvider.signOut();
 

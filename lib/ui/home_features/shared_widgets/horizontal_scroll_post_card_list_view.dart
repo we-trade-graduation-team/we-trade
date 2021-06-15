@@ -2,7 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import '../../../constants/app_dimens.dart';
-import '../../../models/cloud_firestore/post_card_models/post_card/post_card.dart';
+import '../../../models/cloud_firestore/post_card_model/post_card/post_card.dart';
 import '../../../widgets/custom_animation_limiter_for_list_view.dart';
 import '../../../widgets/item_post_card.dart';
 
