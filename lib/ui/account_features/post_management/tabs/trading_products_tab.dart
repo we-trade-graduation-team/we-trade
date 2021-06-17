@@ -3,7 +3,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import '../../account_screen/account_screen.dart';
 
-import '../../shared_widgets/trading_prod_card.dart';
 import '../../utils.dart';
 
 class TradingProductsTab extends StatefulWidget {
@@ -84,8 +83,8 @@ class _TradingProductsTabState extends State<TradingProductsTab> {
                           final post =
                               snapshot.data!.data() as Map<String, dynamic>;
                           post['id'] = snapshot.data!.id;
-                          final temp = post['createAt'] as Timestamp;
-                          final dateTime = temp.toDate();
+                          //final temp = post['createAt'] as Timestamp;
+                          //final dateTime = temp.toDate();
 
                           // return TradingProductCard(
                           //   key: ValueKey(post['id'].toString()),

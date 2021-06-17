@@ -26,13 +26,7 @@ class WishListScreen extends StatelessWidget {
           // alignment: WrapAlignment.spaceAround,
           spacing: 20,
           runSpacing: 15,
-          children: [
-            // ...products
-            //     .map(
-            //       (product) => ProductCard(product: product),
-            //     )
-            //     .toList(),
-          ],
+          
         ),
       ),
       const SizedBox(height: 20),
