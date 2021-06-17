@@ -8,7 +8,7 @@ part 'user_category_history.g.dart';
 class UserCategoryHistory {
   UserCategoryHistory({
     required this.categoryId,
-    required this.times,
+    this.times = 1,
   });
 
   factory UserCategoryHistory.fromJson(Map<String, dynamic> json) =>
@@ -17,8 +17,8 @@ class UserCategoryHistory {
   @JsonKey(required: true)
   final String categoryId;
 
-  @JsonKey(required: true)
-  final int times;
+  @JsonKey(required: true, defaultValue: 1)
+  int times;
 
   Map<String, dynamic> toJson() => _$UserCategoryHistoryToJson(this);
 }

@@ -1,14 +1,18 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
+// import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
+import 'package:provider/provider.dart';
 
-import '../models/arguments/shared/post_details_arguments.dart';
+// import '../app_localizations.dart';
+import '../app_localizations.dart';
+// import '../models/arguments/shared/post_details_arguments.dart';
 import '../models/cloud_firestore/post_card_model/post_card/post_card.dart';
 import '../models/ui/home_features/detail_screen/question_model.dart';
 import '../models/ui/shared_models/account_model.dart';
 import '../models/ui/shared_models/product_model.dart';
-import '../ui/home_features/post_details_screen/post_details_screen.dart';
-import '../utils/routes/routes.dart';
+import '../services/firestore/firestore_database.dart';
+// import '../ui/home_features/post_details_screen/post_details_screen.dart';
+// import '../utils/routes/routes.dart';
 
 final tempProduct = Product(
   id: 1,
@@ -31,7 +35,14 @@ final tempProduct = Product(
   questions: demoQuestions,
 );
 
-class ItemPostCard extends StatelessWidget {
+bool _isNumeric(String? s) {
+  if (s == null) {
+    return false;
+  }
+  return double.tryParse(s) != null;
+}
+
+class ItemPostCard extends StatefulWidget {
   const ItemPostCard({
     Key? key,
     required this.postCard,
@@ -40,21 +51,31 @@ class ItemPostCard extends StatelessWidget {
   final PostCard postCard;
 
   @override
+  _ItemPostCardState createState() => _ItemPostCardState();
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(DiagnosticsProperty<PostCard>('postCard', postCard));
+  }
+}
+
+class _ItemPostCardState extends State<ItemPostCard> {
+  @override
   Widget build(BuildContext context) {
-    // final size = MediaQuery.of(context).size;
+    final _appLocalization = AppLocalizations.of(context);
+
+    final _districtText = _appLocalization.translate('itemPostCardTxtDistrict');
+
+    var _districtTextToShow =
+        widget.postCard.item.district.replaceAll('Thành phố', '');
+
+    if (_isNumeric(_districtTextToShow)) {
+      _districtTextToShow = '$_districtText $_districtTextToShow';
+    }
+
     return GestureDetector(
-      onTap: () => pushNewScreenWithRouteSettings<void>(
-        context,
-        screen: const PostDetailsScreen(),
-        settings: RouteSettings(
-          name: Routes.postDetailScreenRouteName,
-          arguments: PostDetailsArguments(
-            postCard: tempProduct,
-          ),
-        ),
-        withNavBar: false,
-        pageTransitionAnimation: PageTransitionAnimation.cupertino,
-      ),
+      onTap: _onTap,
       child: Container(
         // color: Colors.blue,
         width: 160,
@@ -67,7 +88,7 @@ class ItemPostCard extends StatelessWidget {
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(8),
                 child: Image.network(
-                  postCard.item.image,
+                  widget.postCard.item.image,
                   fit: BoxFit.cover,
                   height: double.infinity,
                   width: double.infinity,
@@ -85,7 +106,7 @@ class ItemPostCard extends StatelessWidget {
                     Expanded(
                       flex: 2,
                       child: Text(
-                        postCard.title,
+                        widget.postCard.title,
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
                         style: Theme.of(context)
@@ -96,7 +117,7 @@ class ItemPostCard extends StatelessWidget {
                     ),
                     Expanded(
                       child: Text(
-                        postCard.item.condition,
+                        widget.postCard.item.condition,
                         style: Theme.of(context).textTheme.bodyText2!.copyWith(
                               fontSize: 13,
                               fontWeight: FontWeight.w300,
@@ -110,53 +131,44 @@ class ItemPostCard extends StatelessWidget {
                     ),
                     Expanded(
                       child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Expanded(
-                            flex: 90,
-                            child: Text(
-                              '\$${postCard.item.price}',
-                              overflow: TextOverflow.ellipsis,
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .bodyText2!
-                                  .copyWith(
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                            ),
+                          Text(
+                            '\$${widget.postCard.item.price}',
+                            overflow: TextOverflow.ellipsis,
+                            style:
+                                Theme.of(context).textTheme.bodyText2!.copyWith(
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.bold,
+                                    ),
                           ),
-                          const Expanded(
-                            flex: 8,
-                            child: SizedBox(),
-                          ),
-                          Expanded(
-                            flex: 42,
-                            child: Container(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 4,
-                                vertical: 4,
-                              ),
-                              decoration: BoxDecoration(
-                                color: Theme.of(context)
-                                    .primaryColorLight
-                                    .withOpacity(0.5),
-                              ),
-                              child: FittedBox(
-                                fit: BoxFit.fitHeight,
+                          Flex(
+                            direction: Axis.horizontal,
+                            children: [
+                              Container(
+                                padding: const EdgeInsets.all(4),
+                                constraints: BoxConstraints(
+                                  maxWidth:
+                                      MediaQuery.of(context).size.width * 0.190,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: Theme.of(context)
+                                      .primaryColorLight
+                                      .withOpacity(0.5),
+                                ),
                                 child: Text(
-                                  'District ${postCard.item.district}',
-                                  textAlign: TextAlign.center,
-                                  maxLines: 1,
+                                  _districtTextToShow,
                                   style: Theme.of(context)
                                       .textTheme
                                       .bodyText2!
                                       .copyWith(
                                         color: Theme.of(context).primaryColor,
                                         fontWeight: FontWeight.bold,
+                                        fontSize: 10,
                                       ),
                                 ),
-                              ),
-                            ),
+                              )
+                            ],
                           ),
                         ],
                       ),
@@ -171,17 +183,47 @@ class ItemPostCard extends StatelessWidget {
     );
   }
 
-  @override
-  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
-    super.debugFillProperties(properties);
-    properties.add(DiagnosticsProperty<PostCard>('postCard', postCard));
+  Future<void> _onTap() async {
+    await Future.wait([
+      // Increase view by 1
+      _viewIncrement(),
+      // Update current user's keyword history
+      _updateCurrentUserKeywordHistory(),
+      // // Navigate to post details screen
+      // _navigateToDetailsScreen(),
+    ]);
   }
 
-  // String getProductLocationShortcutText(String productLocation) {
-  //   final split = productLocation.split(',');
-  //   final values = <int, String>{
-  //     for (int i = 0; i < split.length; i++) i: split[i]
-  //   };
-  //   return values[0] != null ? values[0]! : 'Undefined';
+  Future<void> _viewIncrement() async {
+    final _firestoreDatabase = context.read<FirestoreDatabase>();
+
+    final _postId = widget.postCard.postId!;
+
+    await _firestoreDatabase.increasePostCardView(postId: _postId);
+  }
+
+  Future<void> _updateCurrentUserKeywordHistory() async {
+    final _firestoreDatabase = context.read<FirestoreDatabase>();
+
+    final _postId = widget.postCard.postId!;
+
+    await _firestoreDatabase.updateUserKeywordHistory(
+      postId: _postId,
+    );
+  }
+
+  // Future<void> _navigateToDetailsScreen() async {
+  //   await pushNewScreenWithRouteSettings<void>(
+  //     context,
+  //     screen: const PostDetailsScreen(),
+  //     settings: RouteSettings(
+  //       name: Routes.postDetailScreenRouteName,
+  //       arguments: PostDetailsArguments(
+  //         postCard: tempProduct,
+  //       ),
+  //     ),
+  //     withNavBar: false,
+  //     pageTransitionAnimation: PageTransitionAnimation.cupertino,
+  //   );
   // }
 }
