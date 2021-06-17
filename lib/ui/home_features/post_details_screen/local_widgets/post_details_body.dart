@@ -2,8 +2,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import '../../../../models/ui/shared_models/product_model.dart';
 
-import 'detail_app_bar.dart';
-import 'detail_sections_box.dart';
+import 'post_details_app_bar.dart';
+import 'post_details_sections_box.dart';
 
 class Body extends StatelessWidget {
   const Body({
