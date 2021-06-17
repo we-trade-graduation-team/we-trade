@@ -59,7 +59,12 @@ class _MyAppState extends State<MyApp> {
       builder: (_, snapshot) {
         // Check for errors
         if (snapshot.hasError) {
-          return Text('${snapshot.error}');
+          return Text(
+            '${snapshot.error}',
+            style: const TextStyle(
+              color: Colors.white,
+            ),
+          );
         }
 
         // Once complete, show your application
@@ -69,20 +74,20 @@ class _MyAppState extends State<MyApp> {
 
         // Otherwise, show something whilst waiting for initialization to complete
         return const Center(
-          child: CircularProgressIndicator(),
+          child: CircularProgressIndicator(
+            color: Colors.white,
+          ),
         );
       },
     );
   }
 
   Widget _myAwesomeApp() {
-    final botToastBuilder = BotToastInit(); //1. call BotToastInit
+    final _botToastBuilder = BotToastInit(); //1. call BotToastInit
 
     final _themeProvider = Provider.of<ThemeProvider>(context);
 
     final _languageProvider = Provider.of<LanguageProvider>(context);
-
-    // final _authProvider = Provider.of<AuthProvider>(context);
 
     return AuthWidgetBuilder(
       databaseBuilder: widget.databaseBuilder,
@@ -108,7 +113,7 @@ class _MyAppState extends State<MyApp> {
               child: child,
             );
 
-            child = botToastBuilder(context, child);
+            child = _botToastBuilder(context, child);
 
             return child;
           },
