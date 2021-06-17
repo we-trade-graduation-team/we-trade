@@ -100,7 +100,7 @@ class AuthProvider extends ChangeNotifier {
       final _newUser = _userFromFirebase(_firebaseAuthUser);
 
       if (_newUser != null) {
-        final _presenceField = ModelProperties.userPresenceProperty;
+        const _presenceField = ModelProperties.userPresenceProperty;
 
         final _presenceData = {
           _presenceField: true,
@@ -171,9 +171,9 @@ class AuthProvider extends ChangeNotifier {
 
   //Method to handle user signing out
   Future<void> signOut() async {
-    final _lastSeenField = ModelProperties.userLastSeenProperty;
+    const _lastSeenField = ModelProperties.userLastSeenProperty;
 
-    final _presenceField = ModelProperties.userPresenceProperty;
+    const _presenceField = ModelProperties.userPresenceProperty;
 
     final _newData = {
       _lastSeenField: DateTime.now().millisecondsSinceEpoch,
@@ -192,7 +192,5 @@ class AuthProvider extends ChangeNotifier {
     _status = Status.unauthenticated;
 
     notifyListeners();
-
-    // return Future<void>.delayed(Duration.zero);
   }
 }

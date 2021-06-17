@@ -91,7 +91,7 @@ class FirestoreDatabase {
     // Default, amount is one
     int amount = 1,
   }) async {
-    final _viewField = ModelProperties.postCardViewProperty;
+    const _viewField = ModelProperties.postCardViewProperty;
 
     final _newData = {
       _viewField: FieldValue.increment(amount),
@@ -153,7 +153,7 @@ class FirestoreDatabase {
               .limit(limit);
         }
 
-        final _defaultOrderField =
+        const _defaultOrderField =
             ModelProperties.specialCategoryCardViewProperty;
 
         final _orderField = fieldToOrder ?? _defaultOrderField;
@@ -203,7 +203,7 @@ class FirestoreDatabase {
               .limit(limit);
         }
 
-        final _defaultOrderField = ModelProperties.postCardViewProperty;
+        const _defaultOrderField = ModelProperties.postCardViewProperty;
 
         final _orderField = fieldToOrder ?? _defaultOrderField;
 
@@ -290,7 +290,7 @@ class FirestoreDatabase {
   Future<List<JunctionKeywordPost>> _getJunctionKeywordPostByKeywordId({
     required String keywordId,
   }) async {
-    final _filterField = ModelProperties.keywordKeywordIdProperty;
+    const _filterField = ModelProperties.keywordKeywordIdProperty;
 
     final _result = await _fireStoreService.collectionFuture(
       path: FirestorePath.junctionKeywordPost(),
@@ -310,7 +310,7 @@ class FirestoreDatabase {
   Future<List<JunctionKeywordPost>> _getJunctionKeywordPostByPostId({
     required String postId,
   }) async {
-    final _filterField = ModelProperties.keywordPostIdProperty;
+    const _filterField = ModelProperties.keywordPostIdProperty;
 
     final _result = await _fireStoreService.collectionFuture(
       path: FirestorePath.junctionKeywordPost(),
@@ -552,7 +552,7 @@ class FirestoreDatabase {
     // Get current user's category history
     final _currentUserCategoryHistory = _currentUser.categoryHistory;
 
-    final _categoryHistoryField = ModelProperties.userCategoryHistoryProperty;
+    const _categoryHistoryField = ModelProperties.userCategoryHistoryProperty;
 
     // Check if null or empty
     if (_currentUserCategoryHistory != null &&
@@ -606,7 +606,7 @@ class FirestoreDatabase {
     // Get user's keyword history
     final _currentUserKeywordHistory = _currentUser.keywordHistory;
 
-    final _keywordHistoryField = ModelProperties.userKeywordHistoryProperty;
+    const _keywordHistoryField = ModelProperties.userKeywordHistoryProperty;
 
     // Get junction list
     final _junctionList = await _getJunctionKeywordPostByPostId(postId: postId);
@@ -710,11 +710,11 @@ class FirestoreDatabase {
 
   // Method to retrieve all Popular Post Cards
   Stream<List<PostCard>> popularPostCardsStream() {
-    final _viewField = ModelProperties.postCardViewProperty;
+    const _viewField = ModelProperties.postCardViewProperty;
 
-    final _defaultFilerField = _viewField;
+    const _defaultFilerField = _viewField;
 
-    final _defaultOrderField = _viewField;
+    const _defaultOrderField = _viewField;
 
     const _numberOfDocumentToTake =
         AppFirestoreConstant.kHomeScreenPopularPostCardAmount;
