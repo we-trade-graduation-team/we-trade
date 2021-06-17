@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 
 import '../models/cloud_firestore/user_model/user/user.dart' as user_model;
 import '../services/firestore/firestore_path.dart';
+import '../utils/model_properties/model_properties.dart';
 
 enum Status {
   uninitialized,
@@ -99,8 +100,10 @@ class AuthProvider extends ChangeNotifier {
       final _newUser = _userFromFirebase(_firebaseAuthUser);
 
       if (_newUser != null) {
+        final _presenceField = ModelProperties.userPresenceProperty;
+
         final _presenceData = {
-          'presence': true,
+          _presenceField: true,
         };
 
         // Add new user to users Collection
@@ -168,9 +171,13 @@ class AuthProvider extends ChangeNotifier {
 
   //Method to handle user signing out
   Future<void> signOut() async {
+    final _lastSeenField = ModelProperties.userLastSeenProperty;
+
+    final _presenceField = ModelProperties.userPresenceProperty;
+
     final _newData = {
-      'lastSeen': DateTime.now().millisecondsSinceEpoch,
-      'presence': false,
+      _lastSeenField: DateTime.now().millisecondsSinceEpoch,
+      _presenceField: false,
     };
 
     final _currentUser = _auth.currentUser;
@@ -186,6 +193,6 @@ class AuthProvider extends ChangeNotifier {
 
     notifyListeners();
 
-    return Future<void>.delayed(Duration.zero);
+    // return Future<void>.delayed(Duration.zero);
   }
 }
