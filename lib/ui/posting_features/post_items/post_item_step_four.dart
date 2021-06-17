@@ -3,15 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:multi_image_picker2/multi_image_picker2.dart';
 import 'package:provider/provider.dart';
-import 'package:we_trade/models/post/post.dart';
 
-import './component/class.dart';
-// ignore: directives_ordering
 import '../../../../constants/app_colors.dart';
 import '../../../models/cloud_firestore/user_model/user/user.dart';
 import '../../../services/post_feature/post_service_algolia.dart';
 import '../../../services/post_feature/post_service_firestore.dart';
 import '../../../utils/helper/image_data_storage_helper/image_data_storage_helper.dart';
+import './component/class.dart';
 import 'post_item_step_one.dart';
 
 class PostItemFour extends StatefulWidget {
@@ -184,15 +182,14 @@ class _PostItemFourState extends State<PostItemFour> {
               }).toList()
             : [],
       );
+
   void _showMessgage() {
     showDialog<dynamic>(
       context: context,
       builder: (arlertContext) {
         return AlertDialog(
-          //title: const Text(''),
           content: const Text('Đăng sản phẩm thành công'),
           actions: <Widget>[
-            // usually buttons at the bottom of the dialog
             TextButton(
               onPressed: () {
                 Navigator.of(arlertContext).pop();
