@@ -66,7 +66,10 @@ class PostServiceFireStore {
 
   Future<QuerySnapshot<Map<String, dynamic>>> getKeyword() {
     try {
-      return FirebaseFirestore.instance.collection('keywords').get();
+      return FirebaseFirestore.instance
+          .collection('keywords')
+          .orderBy('keyword')
+          .get();
     } catch (e) {
       rethrow;
     }
