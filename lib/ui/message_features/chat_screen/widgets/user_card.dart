@@ -1,16 +1,19 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import '../../../../constants/app_colors.dart';
 import '../../../../models/ui/chat/temp_class.dart';
 
-class UserCard extends StatelessWidget {
-  const UserCard({
-    Key? key,
-    required this.user,
-    required this.press,
-    this.showActiveAt = false,
-  }) : super(key: key);
+import '../../../../widgets/custom_user_avatar.dart';
 
-  final User user;
+class UserCard extends StatelessWidget {
+  const UserCard(
+      {Key? key,
+      required this.user,
+      required this.press,
+      this.showActiveAt = false})
+      : super(key: key);
+
+  final UserAlgolia user;
   final VoidCallback press;
   final bool showActiveAt;
 
@@ -19,15 +22,12 @@ class UserCard extends StatelessWidget {
     return InkWell(
       onTap: press,
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+        padding: const EdgeInsets.symmetric(vertical: 15),
         child: Row(
           children: [
             Stack(
               children: [
-                CircleAvatar(
-                  radius: 24,
-                  backgroundImage: AssetImage(user.image),
-                ),
+                CustomUserAvatar(image: user.image, radius: 24),
                 if (user.isActive)
                   Positioned(
                     right: 0,
@@ -44,31 +44,30 @@ class UserCard extends StatelessWidget {
                   )
               ],
             ),
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    Text(
-                      user.name,
-                      style: const TextStyle(
-                          fontSize: 16, fontWeight: FontWeight.w500),
-                    ),
-                    if (user.isActive == false)
-                      Container(
-                        margin: const EdgeInsets.fromLTRB(0, 3, 0, 3),
-                        child: Text(
-                          user.activeAt,
-                          style: const TextStyle(
-                            fontSize: 12,
-                            fontWeight: FontWeight.w200,
-                          ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Text(
+                    user.name.isNotEmpty ? user.name : user.email,
+                    style: const TextStyle(
+                        fontSize: 16, fontWeight: FontWeight.w500),
+                  ),
+                  if (user.isActive == false)
+                    Container(
+                      margin: const EdgeInsets.fromLTRB(0, 3, 0, 3),
+                      child: Text(
+                        user.activeAt,
+                        style: const TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.w200,
+                          color: AppColors.kTextColor,
                         ),
                       ),
-                  ],
-                ),
+                    ),
+                ],
               ),
             ),
           ],
@@ -80,7 +79,7 @@ class UserCard extends StatelessWidget {
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
-    properties.add(DiagnosticsProperty<User>('user', user));
+    properties.add(DiagnosticsProperty<UserAlgolia>('user', user));
     properties.add(ObjectFlagProperty<VoidCallback>.has('press', press));
     properties.add(DiagnosticsProperty<bool>('showActiveAt', showActiveAt));
   }

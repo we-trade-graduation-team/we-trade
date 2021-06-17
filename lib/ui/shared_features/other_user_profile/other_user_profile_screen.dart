@@ -2,13 +2,14 @@ import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:line_icons/line_icons.dart';
-import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
+import 'package:provider/provider.dart';
 
 import '../../../constants/app_dimens.dart';
+import '../../../models/cloud_firestore/user_model/user/user.dart';
 import '../../../models/ui/chat/temp_class.dart';
-import '../../../utils/routes/routes.dart';
 import '../../../widgets/custom_material_button.dart';
-import '../../message_features/chat_screen/personal_chat/personal_chat_screen.dart';
+import '../../../widgets/custom_user_avatar.dart';
+import '../../message_features/helper/helper_navigate_chat_room.dart';
 import 'dialogs/other_user_profile_dialog.dart';
 import 'tabs/about_tab.dart';
 import 'tabs/posts_tab.dart';
@@ -17,22 +18,33 @@ import 'tabs/review_tab.dart';
 class OtherUserProfileScreen extends StatefulWidget {
   const OtherUserProfileScreen({
     Key? key,
+    required this.userId,
   }) : super(key: key);
-
+  final String userId;
   @override
   _OtherUserProfileScreenState createState() => _OtherUserProfileScreenState();
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(StringProperty('userId', userId));
+  }
 }
 
 class _OtherUserProfileScreenState extends State<OtherUserProfileScreen> {
-  final _tabData = ['ABOUT', 'POSTS', 'REVIEW'];
-  final _mainInfoKey = GlobalKey();
-  late Size _flexibleSpaceBarSize;
-  bool _visible = true;
+  final tabData = ['ABOUT', 'POSTS', 'REVIEW'];
+  final mainInfoKey = GlobalKey();
+  Size flexibleSpaceBarSize = const Size(0, 0);
+  bool visible = true;
+
+  void navigateToChatRoom(String userid) {
+    final thisUser = Provider.of<User?>(context, listen: false)!;
+    HelperNavigateChatRoom.checkAndSendChatRoomOneUserByIds(
+        userId: userid, thisUser: thisUser, context: context);
+  }
 
   Future<void> getSizeAndPosition() async {
-    final _cardBox =
-        _mainInfoKey.currentContext!.findRenderObject() as RenderBox;
-    _flexibleSpaceBarSize = _cardBox.size;
+    final cardBox = mainInfoKey.currentContext!.findRenderObject() as RenderBox;
+    flexibleSpaceBarSize = cardBox.size;
   }
 
   @override
@@ -44,7 +56,7 @@ class _OtherUserProfileScreenState extends State<OtherUserProfileScreen> {
           Future<void>.delayed(const Duration(microseconds: 1)).then(
             (value) {
               setState(() {
-                _visible = false;
+                visible = false;
               });
             },
           ),
@@ -55,10 +67,10 @@ class _OtherUserProfileScreenState extends State<OtherUserProfileScreen> {
 
   Widget getHeight(double width) {
     return Visibility(
-      visible: _visible,
+      visible: visible,
       child: Padding(
         padding: const EdgeInsets.fromLTRB(10, 15, 10, 10),
-        key: _mainInfoKey,
+        key: mainInfoKey,
         child: Column(
           children: [
             Row(
@@ -134,8 +146,9 @@ class _OtherUserProfileScreenState extends State<OtherUserProfileScreen> {
   @override
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
-    final agrs =
-        ModalRoute.of(context)!.settings.arguments as OtherUserProfileArguments;
+    //TODO, get userDetail by agrs.id
+    final userDetail = userDetailTemp;
+
     return Scaffold(
       appBar: AppBar(
         actions: [
@@ -153,10 +166,10 @@ class _OtherUserProfileScreenState extends State<OtherUserProfileScreen> {
       body: Column(
         children: [
           getHeight(width),
-          if (!_visible)
+          if (!visible)
             Expanded(
               child: DefaultTabController(
-                length: _tabData.length,
+                length: tabData.length,
                 child: NestedScrollView(
                   physics: const NeverScrollableScrollPhysics(),
                   headerSliverBuilder: (context, isScrolled) {
@@ -164,15 +177,14 @@ class _OtherUserProfileScreenState extends State<OtherUserProfileScreen> {
                       SliverAppBar(
                         automaticallyImplyLeading: false,
                         backgroundColor: Colors.white,
-                        collapsedHeight: _flexibleSpaceBarSize.height,
-                        expandedHeight: _flexibleSpaceBarSize.height,
-                        flexibleSpace:
-                            buildMainInfoWidget(agrs.userDetail, width),
+                        collapsedHeight: flexibleSpaceBarSize.height,
+                        expandedHeight: flexibleSpaceBarSize.height,
+                        flexibleSpace: buildMainInfoWidget(userDetail, width),
                       ),
                       SliverPersistentHeader(
                         delegate: MyDelegate(
                           TabBar(
-                            tabs: _tabData
+                            tabs: tabData
                                 .map(
                                   (item) => Tab(
                                     child: Text(item),
@@ -189,9 +201,9 @@ class _OtherUserProfileScreenState extends State<OtherUserProfileScreen> {
                   body: TabBarView(
                     //children: getTabContent(),
                     children: [
-                      AboutTab(userDetail: agrs.userDetail),
-                      PostsTab(userDetail: agrs.userDetail),
-                      ReviewTab(userDetail: agrs.userDetail),
+                      AboutTab(userDetail: userDetail),
+                      PostsTab(userDetail: userDetail),
+                      ReviewTab(userDetail: userDetail),
                     ],
                   ),
                 ),
@@ -221,10 +233,8 @@ class _OtherUserProfileScreenState extends State<OtherUserProfileScreen> {
                   child: CircleAvatar(
                     radius: width / 7 - 2.5,
                     backgroundColor: Colors.white,
-                    child: CircleAvatar(
-                      backgroundImage: AssetImage(userDetail.user.image),
-                      radius: width / 7 - 5,
-                    ),
+                    child: CustomUserAvatar(
+                        image: userDetail.user.image, radius: width / 7 - 5),
                   ),
                 ),
               ),
@@ -272,33 +282,10 @@ class _OtherUserProfileScreenState extends State<OtherUserProfileScreen> {
                                 // color: Theme.of(context).primaryColor,
                                 size: 20,
                               ),
-                              press: () => pushNewScreenWithRouteSettings<void>(
-                                    context,
-                                    settings: RouteSettings(
-                                      name: Routes.personChatScreenRouteName,
-                                      arguments: PersonalChatArguments(
-                                        chat: Chat(
-                                          id: 0,
-                                          lastMessage: '',
-                                          time: '',
-                                          users: [userDetail.user],
-                                        ),
-                                      ),
-                                    ),
-                                    screen: const PersonalChatScreen(),
-                                    withNavBar: false,
-                                    pageTransitionAnimation:
-                                        PageTransitionAnimation.cupertino,
-                                  ),
-                              // press: () => Navigator.pushNamed(
-                              //     context, PersonalChatScreen.routeName,
-                              //     arguments: PersonalChatArguments(
-                              //         chat: Chat(
-                              //       id: 0,
-                              //       lastMessage: '',
-                              //       time: '',
-                              //       users: [userDetail.user],
-                              //     ))),
+                              press: () {
+                                //TODO trang navigate to chat_room_screen (id)
+                                navigateToChatRoom(widget.userId);
+                              },
                               text: 'Nhắn tin',
                               width: MediaQuery.of(context).size.width / 3.8,
                               isFilled: false,
@@ -372,6 +359,17 @@ class _OtherUserProfileScreenState extends State<OtherUserProfileScreen> {
       attachedBuilder: (_) => OtherUserProfileDialog(parentContext: context),
       targetContext: context,
     );
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(IterableProperty<String>('tabData', tabData));
+    properties.add(DiagnosticsProperty<GlobalKey<State<StatefulWidget>>>(
+        'mainInfoKey', mainInfoKey));
+    properties.add(DiagnosticsProperty<Size>(
+        'flexibleSpaceBarSize', flexibleSpaceBarSize));
+    properties.add(DiagnosticsProperty<bool>('visible', visible));
   }
 }
 
@@ -455,9 +453,7 @@ class ReviewProperty extends StatelessWidget {
   }
 }
 
-class OtherUserProfileArguments {
-  OtherUserProfileArguments({
-    required this.userDetail,
-  });
-  UserDetail userDetail;
-}
+// class OtherUserProfileArguments {
+//   OtherUserProfileArguments({required this.userId});
+//   final String userId;
+// }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../models/ui/chat/temp_class.dart';
 import '../../ui/account_features/follow_screen/follow_screen.dart';
 import '../../ui/account_features/my_rate_screen/my_rate_screen.dart';
 import '../../ui/account_features/post_management/hide_post_screen.dart';
@@ -17,16 +18,13 @@ import '../../ui/home_features/notification_screen/detailed_notification_screen.
 import '../../ui/home_features/notification_screen/notification_screen.dart';
 import '../../ui/home_features/post_details_screen/post_details_screen.dart';
 import '../../ui/home_features/searching_screen/search_screen.dart';
-import '../../ui/message_features/chat_screen/add_chat/add_chat_screen.dart';
-import '../../ui/message_features/chat_screen/group_chat/chat_screen/group_chat_screen.dart';
-import '../../ui/message_features/chat_screen/group_chat/members/all_members_screen.dart';
-import '../../ui/message_features/chat_screen/personal_chat/personal_chat_screen.dart';
+import '../../ui/message_features/chat_screen/chat_room/chat_room.dart';
 import '../../ui/message_features/match_post/match_post_screen.dart';
 import '../../ui/message_features/offer_screens/make_offer_screen.dart';
 import '../../ui/message_features/offer_screens/offer_detail_screen.dart';
-import '../../ui/posting_features/post_items/post_item_step_four.dart';
-import '../../ui/posting_features/post_items/post_item_step_three.dart';
-import '../../ui/posting_features/post_items/post_item_step_two.dart';
+import '../../ui/posting_features/post_items/component/post_item_step_four.dart';
+import '../../ui/posting_features/post_items/component/post_item_step_three.dart';
+import '../../ui/posting_features/post_items/component/post_item_step_two.dart';
 import '../../ui/shared_features/other_user_profile/other_user_profile_screen.dart';
 import '../../ui/shared_features/report/report_screen.dart';
 import '../../ui/wish_list_features/wish_list/wish_list_screen.dart';
@@ -70,6 +68,7 @@ class Routes {
   static const matchPostsScreenRouteName = '/match-posts';
   static const makeOfferScreenRouteName = '/make-offer';
   static const offerDetailScreenRouteName = '/offer-detail';
+  static const chatRoomScreenRouteName = '/chat-room';
 
   // Posting features
   static const postItemStepTwoScreenRouteName = '/post-item-step-two';
@@ -106,15 +105,14 @@ class Routes {
   };
 
   static final Map<String, WidgetBuilder> sharedFeaturesRoutes = {
-    otherProfileScreenRouteName: (_) => const OtherUserProfileScreen(),
+    otherProfileScreenRouteName: (_) => const OtherUserProfileScreen(
+          userId: '',
+        ),
     reportScreenRouteName: (_) => const ReportScreen(),
   };
 
   static final Map<String, WidgetBuilder> messageFeaturesRoutes = {
-    addChatScreenRouteName: (_) => const AddChatScreen(),
-    groupChatScreenRouteName: (_) => const GroupChatScreen(),
-    allMemberScreenRouteName: (_) => const AllMembersScreen(),
-    personChatScreenRouteName: (_) => const PersonalChatScreen(),
+    chatRoomScreenRouteName: (_) => ChatRoomScreen(chat: Chat.nullChat()),
     matchPostsScreenRouteName: (_) => const MatchPostsScreen(),
     makeOfferScreenRouteName: (_) => const MakeOfferScreen(),
     offerDetailScreenRouteName: (_) => const OfferDetailScreen(),
@@ -122,8 +120,8 @@ class Routes {
   };
 
   static final Map<String, WidgetBuilder> postingFeaturesRoutes = {
-    postItemStepTwoScreenRouteName: (_) => const PostItemStepTwo(),
-    postItemStepThreeScreenRouteName: (_) => const PostItemStepThree(),
-    postItemStepFourScreenRouteName: (_) => const PostItemStepFour(),
+    postItemStepTwoScreenRouteName: (_) => const PostItemTwo(),
+    postItemStepThreeScreenRouteName: (_) => const PostItemThree(),
+    postItemStepFourScreenRouteName: (_) => PostItemFour(),
   };
 }

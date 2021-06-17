@@ -3,12 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 
-import '../constants/app_dimens.dart';
 import '../models/ui/main_menu/bottom_navigation_bar_item_model.dart';
 import 'account_features/account_screen/account_screen.dart';
 import 'home_features/home_screen/home_screen.dart';
 import 'message_features/chat_screen/all_chat/chat_screen.dart';
-import 'posting_features/post_items/post_item_step_one.dart';
+import 'posting_features/post_items/component/post_item_step_one.dart';
 import 'wish_list_features/wish_list/wish_list_screen.dart';
 
 class MainMenu extends StatefulWidget {
@@ -42,7 +41,7 @@ class _MainMenuState extends State<MainMenu> {
       navBarHeight: MediaQuery.of(context).viewInsets.bottom > 0
           ? 0.0
           : kBottomNavigationBarHeight,
-      bottomScreenMargin: AppDimens.kDefaultBottomNavigationBarHeight,
+      //bottomScreenMargin: AppDimens.kDefaultBottomNavigationBarHeight,
       hideNavigationBar: _hideNavBar,
       itemAnimationProperties: const ItemAnimationProperties(
         duration: Duration(milliseconds: 400),
@@ -59,7 +58,7 @@ class _MainMenuState extends State<MainMenu> {
     return [
       const HomeScreen(),
       const ChatScreen(),
-      const PostItemStepOne(),
+      const PostItemOne(),
       const WishListScreen(),
       const AccountScreen(),
     ];

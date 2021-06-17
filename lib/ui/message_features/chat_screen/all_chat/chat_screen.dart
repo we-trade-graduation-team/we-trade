@@ -1,8 +1,10 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
+import 'package:provider/provider.dart';
+import '../../../../models/cloud_firestore/user_model/user/user.dart';
 
-import '../add_chat/add_chat_screen.dart';
+import '../search_user/search_user_screen.dart';
 import 'body.dart';
 
 class ChatScreen extends StatelessWidget {
@@ -12,48 +14,41 @@ class ChatScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('CHAT'),
-      ),
-      body: const Body(),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () => pushNewScreen<void>(
-          context,
-          screen: const AddChatScreen(),
-          withNavBar: false, // OPTIONAL VALUE. True by default.
-          pageTransitionAnimation: PageTransitionAnimation.cupertino,
+    return GestureDetector(
+      onTap: () {
+        FocusScope.of(context).requestFocus(FocusNode());
+      },
+      child: Scaffold(
+        resizeToAvoidBottomInset: false,
+        appBar: AppBar(
+          title: const Text(
+            'CHAT',
+          ),
         ),
-        // ? Should be delete
-        // backgroundColor: Theme.of(context).primaryColor,
-        child: const Icon(
-          Icons.group_add,
-          color: Colors.white,
+        body: const Body(),
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {
+            final thisUser = Provider.of<User?>(context, listen: false)!;
+            pushNewScreenWithRouteSettings<void>(
+              context,
+              screen: const SearchUserScreen(),
+              settings: RouteSettings(
+                name: SearchUserScreen.routeName,
+                arguments: SearchUserScreenArgument(
+                    tittle: 'ADD CHAT',
+                    addChat: true,
+                    usersId: [thisUser.uid!]),
+              ),
+              withNavBar: false, // OPTIONAL VALUE. True by default.
+              pageTransitionAnimation: PageTransitionAnimation.cupertino,
+            );
+          },
+          backgroundColor: Theme.of(context).primaryColor,
+          child: const Icon(
+            Icons.group_add,
+            color: Colors.white,
+          ),
         ),
-      ),
-    );
-  }
-}
-
-class BuildFloatingActionButton extends StatelessWidget {
-  const BuildFloatingActionButton({
-    Key? key,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return FloatingActionButton(
-      onPressed: () => pushNewScreen<void>(
-        context,
-        screen: const AddChatScreen(),
-        withNavBar: false,
-        pageTransitionAnimation: PageTransitionAnimation.cupertino,
-      ),
-        // ? Should be delete
-      // backgroundColor: Theme.of(context).primaryColor,
-      child: const Icon(
-        Icons.group_add,
-        color: Colors.white,
       ),
     );
   }

@@ -1,10 +1,11 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
-
 import '../constants/app_colors.dart';
 import '../constants/app_dimens.dart';
 import '../models/ui/review/temp_class.dart';
+
+import 'custom_user_avatar.dart';
 
 class ReviewCard extends StatelessWidget {
   const ReviewCard({
@@ -30,14 +31,9 @@ class ReviewCard extends StatelessWidget {
           Row(
             children: [
               Container(
-                margin: const EdgeInsets.fromLTRB(0, 0, 20, 0),
-                child: CircleAvatar(
-                  child: CircleAvatar(
-                    radius: 100,
-                    backgroundImage: AssetImage(review.user.image),
-                  ),
-                ),
-              ),
+                  margin: const EdgeInsets.fromLTRB(0, 0, 20, 0),
+                  child:
+                      CustomUserAvatar(image: review.user.image, radius: 20)),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -69,11 +65,12 @@ class ReviewCard extends StatelessWidget {
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              //if (review.posts.isNotEmpty)
               Expanded(
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(10),
-                  child: Image.asset(
-                    review.product.images[0],
+                  child: Image.network(
+                    review.posts![0].images[0],
                     fit: BoxFit.cover,
                   ),
                 ),

@@ -1,7 +1,7 @@
 import 'package:bot_toast/bot_toast.dart';
-import 'package:device_preview/device_preview.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flash/flash.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
@@ -99,7 +99,7 @@ class _MyAppState extends State<MyApp> {
           builder: (context, _) {
             var child = _!;
             final navigatorKey = child.key as GlobalKey<NavigatorState>;
-            child = DevicePreview.appBuilder(context, _);
+            //child = DevicePreview.appBuilder(context, _);
             final theme = Theme.of(context);
             final isThemeDark = theme.brightness == Brightness.dark;
             // Wrap with toast.

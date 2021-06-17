@@ -2,20 +2,26 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:line_icons/line_icons.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
+import 'package:provider/provider.dart';
 
 import '../../../../constants/app_colors.dart';
 import '../../../../constants/app_dimens.dart';
-import '../../../../models/ui/chat/temp_class.dart';
+import '../../../../models/cloud_firestore/user_model/user/user.dart';
+import '../../../../services/message/firestore_message_service.dart';
 import '../../../../utils/routes/routes.dart';
 import '../../../shared_features/report/report_screen.dart';
+import '../../helper/ulti.dart';
 import '../group_chat/members/all_members_screen.dart';
 
 class GroupChatDialog extends StatelessWidget {
-  const GroupChatDialog(
-      {Key? key, required this.parentContext, required this.chat})
-      : super(key: key);
+  const GroupChatDialog({
+    Key? key,
+    required this.parentContext,
+    required this.chatRoomId,
+  }) : super(key: key);
   final BuildContext parentContext;
-  final Chat chat;
+  final String chatRoomId;
+
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -47,11 +53,10 @@ class GroupChatDialog extends StatelessWidget {
                       onTap: () {
                         pushNewScreenWithRouteSettings<void>(
                           parentContext,
-                          settings: RouteSettings(
+                          settings: const RouteSettings(
                             name: Routes.allMemberScreenRouteName,
-                            arguments: AllMemberArguments(chat: chat),
                           ),
-                          screen: const AllMembersScreen(),
+                          screen: AllMemberScreen(chatRoomId: chatRoomId),
                           withNavBar: false,
                           pageTransitionAnimation:
                               PageTransitionAnimation.cupertino,
@@ -79,7 +84,10 @@ class GroupChatDialog extends StatelessWidget {
                       ),
                     ),
                     InkWell(
-                      onTap: () {},
+                      onTap: () {
+                        showAlertDialogOutGroup(
+                            parentContext, chatRoomId, parentContext);
+                      },
                       child: Container(
                         margin: const EdgeInsets.fromLTRB(0, 0, 0, 10),
                         padding: const EdgeInsets.fromLTRB(0, 0, 20, 10),
@@ -188,6 +196,46 @@ class GroupChatDialog extends StatelessWidget {
     super.debugFillProperties(properties);
     properties
         .add(DiagnosticsProperty<BuildContext>('parentContext', parentContext));
-    properties.add(DiagnosticsProperty<Chat>('chat', chat));
+    properties.add(StringProperty('ChatRoomId', chatRoomId));
   }
+}
+
+Future<Widget?> showAlertDialogOutGroup(
+    BuildContext context, String chatRoomId, BuildContext parentContext) {
+  final Widget cancelButton = TextButton(
+    onPressed: () {
+      Navigator.of(context).pop();
+    },
+    child: const Text('Hủy'),
+  );
+  final Widget continueButton = TextButton(
+    onPressed: () async {
+      Navigator.of(context).pop();
+      HelperClass.showBottomSheet(context);
+      await Future.delayed(const Duration(milliseconds: 1000), () async {});
+      final thisUser = Provider.of<User?>(context, listen: false)!;
+      final messageServiceFireStore = MessageServiceFireStore();
+      await messageServiceFireStore.outOfChatRoom(chatRoomId, thisUser.uid!);
+      Navigator.of(parentContext).popUntil(ModalRoute.withName('/'));
+    },
+    child: const Text('Rời khỏi'),
+  );
+
+  final alert = AlertDialog(
+    title: const Text('Rời khỏi nhóm ?'),
+    content: const Text(
+        'Bạn có chắc chắn muốn rời khỏi cuộc trò chuyện? \n bạn sẽ không nhận được tin nhắn mới nữa'),
+    actions: [
+      cancelButton,
+      continueButton,
+    ],
+  );
+
+  // show the dialog
+  return showDialog<Widget>(
+    context: context,
+    builder: (context) {
+      return alert;
+    },
+  );
 }
