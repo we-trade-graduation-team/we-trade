@@ -23,12 +23,24 @@ class FirestorePath {
 
   static String categoryCards() => 'categoryCards';
 
+  static String categoryCard({
+    required String categoryId,
+  }) =>
+      '${categoryCards()}/$categoryId';
+
   static String specialCategoryCards() => 'specialCategoryCards';
 
   static String specialCategoryCard({
     required String categoryId,
   }) =>
       '${specialCategoryCards()}/$categoryId';
+
+  static String allCategoryEvents() => 'categoryEvents';
+
+  static String categoryEvents({
+    required String categoryId,
+  }) =>
+      '${allCategoryEvents()}/$categoryId';
 
   static String postCards() => 'postCards';
 

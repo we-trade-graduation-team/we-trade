@@ -8,7 +8,9 @@ import '../home_screen/local_widgets/home_screen_search_bar.dart';
 import '../notification_screen/notification_screen.dart';
 import '../searching_screen/local_widgets/filter_overlay.dart';
 
-const productKind = ProductKind(name: 'Flash Deal');
+
+// Flash Deal is deleted
+const productKind = ProductKind(name: 'Laptop');
 
 class CategoryKindScreen extends StatelessWidget {
   const CategoryKindScreen({
