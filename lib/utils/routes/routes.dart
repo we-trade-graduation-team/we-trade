@@ -114,7 +114,7 @@ class Routes {
   static final Map<String, WidgetBuilder> messageFeaturesRoutes = {
     chatRoomScreenRouteName: (_) => ChatRoomScreen(chat: Chat.nullChat()),
     matchPostsScreenRouteName: (_) => const MatchPostsScreen(),
-    makeOfferScreenRouteName: (_) => const MakeOfferScreen(),
+    makeOfferScreenRouteName: (_) => const MakeOfferScreen(otherUserPostId: '', ),
     offerDetailScreenRouteName: (_) => const OfferDetailScreen(),
     ...sharedFeaturesRoutes,
   };

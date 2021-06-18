@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:collection/collection.dart';
+import 'package:we_trade/models/cloud_firestore/post_model/post/post.dart';
 
 import '../../constants/app_firestore_constant.dart';
 import '../../models/cloud_firestore/category_card/category_card.dart';
@@ -494,6 +495,29 @@ class FirestoreDatabase {
     ];
 
     return _fullList;
+  }
+
+  Future<List<PostCard>> getPostCardsByUserId({
+    String? userId,
+  }) async {
+    final _postsFromUser = await _fireStoreService.collectionFuture(
+      path: FirestorePath.posts(),
+      queryBuilder: (query) {
+        final _ownerId = ModelProperties.postOwnerIdProperty;
+
+        return query.where(
+          _ownerId,
+          isEqualTo: userId ?? uid,
+        );
+      },
+      builder: (data) => Post.fromDocumentSnapshot(data),
+    );
+
+    final _postIdList = _postsFromUser.map((post) => post.postId!).toList();
+
+    final _result = await getPostCardsByPostIdList(postIdList: _postIdList);
+
+    return _result;
   }
 
   // Increase view of category in all path by one (default)
