@@ -70,9 +70,10 @@ class _SearchResultsListViewState extends State<SearchResultsListView> {
             child: ToggleSwitch(
               minWidth: size.width * (1 - 0.05),
               initialLabelIndex: _initialIndex,
-              activeBgColor: Theme.of(context).primaryColor,
+              activeBgColor: [Theme.of(context).primaryColor],
               inactiveBgColor: AppColors.kTextLightColor.withOpacity(0.9),
               inactiveFgColor: Colors.white,
+              totalSwitches: sortList.length,
               labels: sortList,
               onToggle: (index) {
                 setState(() {
@@ -87,21 +88,21 @@ class _SearchResultsListViewState extends State<SearchResultsListView> {
               child: Padding(
                 padding: const EdgeInsets.symmetric(vertical: 25),
                 child: Column(
-                  // TODO: <Phuc> Replace List<Product> with List<PostCard>
-                  // children: [
-                  //   Center(
-                  //     child: Wrap(
-                  //       spacing: 20,
-                  //       runSpacing: 15,
-                  //       children: _toShowProducts
-                  //           .map(
-                  //             (product) => ItemPostCard(postCard: product),
-                  //           )
-                  //           .toList(),
-                  //     ),
-                  //   ),
-                  // ],
-                ),
+                    // TODO: <Phuc> Replace List<Product> with List<PostCard>
+                    // children: [
+                    //   Center(
+                    //     child: Wrap(
+                    //       spacing: 20,
+                    //       runSpacing: 15,
+                    //       children: _toShowProducts
+                    //           .map(
+                    //             (product) => ItemPostCard(postCard: product),
+                    //           )
+                    //           .toList(),
+                    //     ),
+                    //   ),
+                    // ],
+                    ),
               ),
             ),
           ),

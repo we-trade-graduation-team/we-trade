@@ -1,8 +1,13 @@
+import 'dart:developer';
+
 import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:line_icons/line_icons.dart';
+import 'package:lottie/lottie.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
+import 'package:we_trade/ui/message_features/const_string/const_str.dart';
 
 import '../../../constants/app_dimens.dart';
 import '../../../models/cloud_firestore/user_model/user/user.dart';
@@ -34,35 +39,31 @@ class _OtherUserProfileScreenState extends State<OtherUserProfileScreen> {
   final tabData = ['ABOUT', 'POSTS', 'REVIEW'];
   final mainInfoKey = GlobalKey();
   Size flexibleSpaceBarSize = const Size(0, 0);
+  // ignore: diagnostic_describe_all_properties
+  late UserDetail userDetail;
+  bool isFollow = false;
   bool visible = true;
+  bool loading = true;
 
+// function handle ==================================
   void navigateToChatRoom(String userid) {
     final thisUser = Provider.of<User?>(context, listen: false)!;
     HelperNavigateChatRoom.checkAndSendChatRoomOneUserByIds(
         userId: userid, thisUser: thisUser, context: context);
   }
 
+  void handleFollowButtonClick(String userId) {
+    // TODO xử lý nut bấm theo dõi/ đang theo dõi
+    setState(() {
+      isFollow = !isFollow;
+    });
+  }
+
+// Widget UI ==========================================
+
   Future<void> getSizeAndPosition() async {
     final cardBox = mainInfoKey.currentContext!.findRenderObject() as RenderBox;
     flexibleSpaceBarSize = cardBox.size;
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance!.addPostFrameCallback(
-      (_) => getSizeAndPosition().whenComplete(
-        () => {
-          Future<void>.delayed(const Duration(microseconds: 1)).then(
-            (value) {
-              setState(() {
-                visible = false;
-              });
-            },
-          ),
-        },
-      ),
-    );
   }
 
   Widget getHeight(double width) {
@@ -144,10 +145,36 @@ class _OtherUserProfileScreenState extends State<OtherUserProfileScreen> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance!.addPostFrameCallback(
+      (_) => getSizeAndPosition().whenComplete(
+        () => {
+          Future<void>.delayed(const Duration(microseconds: 1)).then(
+            (value) {
+              setState(() {
+                visible = false;
+              });
+            },
+          ),
+        },
+      ),
+    );
+  }
+
+  @override
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
+
     //TODO, get userDetail by agrs.id
-    final userDetail = userDetailTemp;
+    Future<void>.delayed(const Duration(seconds: 3)).then((value) {
+      setState(() {
+        userDetail = userDetailTemp;
+        // TODO get isFollow ?
+        //isFollow = true;
+        loading = false;
+      });
+    });
 
     return Scaffold(
       appBar: AppBar(
@@ -166,7 +193,7 @@ class _OtherUserProfileScreenState extends State<OtherUserProfileScreen> {
       body: Column(
         children: [
           getHeight(width),
-          if (!visible)
+          if (!visible && !loading)
             Expanded(
               child: DefaultTabController(
                 length: tabData.length,
@@ -179,7 +206,8 @@ class _OtherUserProfileScreenState extends State<OtherUserProfileScreen> {
                         backgroundColor: Colors.white,
                         collapsedHeight: flexibleSpaceBarSize.height,
                         expandedHeight: flexibleSpaceBarSize.height,
-                        flexibleSpace: buildMainInfoWidget(userDetail, width),
+                        flexibleSpace:
+                            buildMainInfoWidget(userDetail, isFollow, width),
                       ),
                       SliverPersistentHeader(
                         delegate: MyDelegate(
@@ -199,7 +227,6 @@ class _OtherUserProfileScreenState extends State<OtherUserProfileScreen> {
                     ];
                   },
                   body: TabBarView(
-                    //children: getTabContent(),
                     children: [
                       AboutTab(userDetail: userDetail),
                       PostsTab(userDetail: userDetail),
@@ -208,14 +235,31 @@ class _OtherUserProfileScreenState extends State<OtherUserProfileScreen> {
                   ),
                 ),
               ),
-            ),
+            )
+          else
+            Center(
+              child: Column(children: [
+                Lottie.network(messageLoadingStr2, width: 100, height: 100),
+                const Text('loading ...'),
+              ]),
+            )
         ],
       ),
+
+      // loading
+      //     ? Center(
+      //         child: Column(children: [
+      //           Lottie.network(messageLoadingStr2, width: 100, height: 100),
+      //           const Text('loading ...'),
+      //         ]),
+      //       )
+      //     : bodyOtherUserProfile(),
     );
   }
 
   Widget buildMainInfoWidget(
     UserDetail userDetail,
+    bool isFollow,
     double width,
   ) {
     return Padding(
@@ -269,8 +313,10 @@ class _OtherUserProfileScreenState extends State<OtherUserProfileScreen> {
                                   color: Colors.white,
                                   size: 20,
                                 ),
-                                press: () {},
-                                text: 'Theo dõi',
+                                press: () {
+                                  handleFollowButtonClick(widget.userId);
+                                },
+                                text: isFollow ? 'Đã theo dõi' : 'Theo dõi',
                                 width: MediaQuery.of(context).size.width / 3.8,
                                 fontSize: 10,
                                 height: 25)),
@@ -283,7 +329,6 @@ class _OtherUserProfileScreenState extends State<OtherUserProfileScreen> {
                                 size: 20,
                               ),
                               press: () {
-                                //TODO trang navigate to chat_room_screen (id)
                                 navigateToChatRoom(widget.userId);
                               },
                               text: 'Nhắn tin',
@@ -370,6 +415,8 @@ class _OtherUserProfileScreenState extends State<OtherUserProfileScreen> {
     properties.add(DiagnosticsProperty<Size>(
         'flexibleSpaceBarSize', flexibleSpaceBarSize));
     properties.add(DiagnosticsProperty<bool>('visible', visible));
+    properties.add(DiagnosticsProperty<bool>('loading', loading));
+    properties.add(DiagnosticsProperty<bool>('isFollow', isFollow));
   }
 }
 
