@@ -2,16 +2,17 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
+import '../../../constants/app_dimens.dart';
 
 import '../../../utils/routes/routes.dart';
 import '../post_management/hide_post_screen.dart';
-import '../utils.dart';
 import 'custom_overlay_icon_button.dart';
 import 'trading_prod_overlay.dart';
 
 class TradingProductCard extends StatelessWidget {
-  const TradingProductCard({
+  TradingProductCard({
     Key? key,
     required this.id,
     required this.name,
@@ -174,7 +175,10 @@ class TradingProductCard extends StatelessWidget {
               child: Container(
                 margin: const EdgeInsets.fromLTRB(0, 10, 0, 0),
                 child: Text(
-                  review.dateTime.toString(),
+                  DateFormat.yMMMMd('en_US')
+                      .add_jm()
+                      .format(dateTime)
+                      .toString(),
                   style: const TextStyle(
                     fontSize: 10,
                     fontWeight: FontWeight.w300,
