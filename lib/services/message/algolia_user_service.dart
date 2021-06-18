@@ -59,14 +59,27 @@ class UserServiceAlgolia {
   }
 
   //update nè :v
-  Future<void> updateUser(User updateUser) async {
-    final updateUserMap = createUserMapAlgolia(updateUser);
+  Future<void> updateUser(Map<String, dynamic> user) async {
     final messageServiceFireStore = MessageServiceFireStore();
+    final userFromAlgolia = await algolia.instance
+        .index(usersAlgoliaIndex)
+        .object(user['objectID'].toString())
+        .getObject();
+    final userUpdate = userFromAlgolia.data;
+    if (user['avatarUrl'] == null) {
+      userUpdate['objectID'] = user['objectID'].toString();
+      userUpdate['name'] = user['name'].toString();
+      userUpdate['email'] = user['email'].toString();
+      userUpdate['phoneNumber'] = user['phoneNumber'].toString();
+    } else {
+      userUpdate['avatarUrl'] = user['avatarUrl'].toString();
+    }
+
     await algolia.instance
         .index(usersAlgoliaIndex)
-        .object(updateUserMap['objectID'].toString())
-        .updateData(updateUserMap);
+        .object(user['objectID'].toString())
+        .updateData(userUpdate);
     // ignore: unawaited_futures
-    messageServiceFireStore.updateChatRoomsWhenUpdateUser(updateUser);
+    messageServiceFireStore.updateChatRoomsWhenUpdateUser(userUpdate);
   }
 }

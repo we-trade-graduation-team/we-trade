@@ -10,7 +10,7 @@ UserCategoryHistory _$UserCategoryHistoryFromJson(Map<String, dynamic> json) {
   $checkKeys(json, requiredKeys: const ['categoryId', 'times']);
   return UserCategoryHistory(
     categoryId: json['categoryId'] as String,
-    times: json['times'] as int,
+    times: json['times'] as int? ?? 1,
   );
 }
 

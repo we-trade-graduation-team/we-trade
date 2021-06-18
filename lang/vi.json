@@ -51,7 +51,8 @@
   "logoutAlertTxtContent": "Bạn có chắc chắn muốn đăng xuất?",
   "homeScreenTxtAppBar": "Tìm kiếm sản phẩm",
   "homeScreenTxtPopularPostCardsTitle": "Sản phẩm phổ biến",
-  "homeScreenTxtSpecialCategoryCardsTitle": "Danh mục quan tâm",
+  "homeScreenTxtSpecialCategoryCardsTitle": "Bạn có thể quan tâm",
   "homeScreenTxtRecommendedSectionTitle": "Được đề xuất",
-  "homeScreenTxtSectionTitleRowSeeMore": "Xem thêm"
+  "homeScreenTxtSectionTitleRowSeeMore": "Xem thêm",
+  "itemPostCardTxtDistrict": "Quận"
 }

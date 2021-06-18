@@ -1,22 +1,35 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-
-import '../../../constants/app_dimens.dart';
 import '../../../models/ui/chat/temp_class.dart';
+
 import 'tabs/trading_products_tab.dart';
 
-class PostManagementScreen extends StatelessWidget {
-  const PostManagementScreen({
+class PostManagementScreen extends StatefulWidget {
+  PostManagementScreen({
     Key? key,
   }) : super(key: key);
 
+  static const routeName = '/postmanagement';
+  final UserDetail userDetail = userDetailTemp;
+
+  @override
+  _PostManagementScreenState createState() => _PostManagementScreenState();
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(DiagnosticsProperty<UserDetail>('userDetail', userDetail));
+  }
+}
+
+class _PostManagementScreenState extends State<PostManagementScreen> {
+  final tabData = [
+    'ĐANG TRAO ĐỔI',
+    'HẾT HẠN/ẨN',
+  ];
+
   @override
   Widget build(BuildContext context) {
-    final tabData = [
-      'ĐANG TRAO ĐỔI',
-      'HẾT HẠN/ẨN',
-    ];
-
     return Scaffold(
       appBar: AppBar(
         title: const Text('Quản lí bài đăng'),
@@ -54,9 +67,15 @@ class PostManagementScreen extends StatelessWidget {
 
   List<Widget> getTabContent() {
     return [
-      TradingProductsTab(userDetail: userDetailTemp),
-      TradingProductsTab(userDetail: userDetailTemp),
+      const TradingProductsTab(isHiddenPosts: false),
+      const TradingProductsTab(isHiddenPosts: true),
     ];
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(IterableProperty<String>('tabData', tabData));
   }
 }
 
@@ -68,11 +87,17 @@ class MyDelegate extends SliverPersistentHeaderDelegate {
   Widget build(
       BuildContext context, double shrinkOffset, bool overlapsContent) {
     return Container(
-      decoration: BoxDecoration(
+      decoration:  BoxDecoration(
         color: Colors.white,
         border: Border(
-          top: AppDimens.kBorderSide(),
-          bottom: AppDimens.kBorderSide(),
+          top: BorderSide(
+            color: Theme.of(context).primaryColor,
+            width: 0.2,
+          ),
+          bottom: BorderSide(
+            color: Theme.of(context).primaryColor,
+            width: 0.2,
+          ),
         ),
       ),
       child: tabBar,

@@ -8,7 +8,7 @@ part 'user_search_history.g.dart';
 class UserSearchHistory {
   UserSearchHistory({
     required this.searchTerm,
-    required this.times,
+    this.times = 1,
   });
 
   factory UserSearchHistory.fromJson(Map<String, dynamic> json) =>
@@ -17,8 +17,8 @@ class UserSearchHistory {
   @JsonKey(required: true)
   final String searchTerm;
 
-  @JsonKey(required: true)
-  final int times;
+  @JsonKey(required: true, defaultValue: 1)
+  int times;
 
   Map<String, dynamic> toJson() => _$UserSearchHistoryToJson(this);
 }

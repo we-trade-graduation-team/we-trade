@@ -2,12 +2,12 @@ name: we_trade
 
 description: A new Flutter project.
 
-publish_to: "none"
+publish_to: 'none'
 
 version: 1.0.0+1
 
 environment:
-  sdk: ">=2.12.0-259.16.beta <3.0.0"
+  sdk: '>=2.12.0-259.16.beta <3.0.0'
 
 dependencies:
   flutter:
@@ -20,6 +20,7 @@ dependencies:
   bot_toast: ^4.0.1
   carousel_slider: ^4.0.0-nullsafety.0
   cloud_firestore: ^2.1.0
+  collection: ^1.15.0
   connectivity: ^3.0.3
   cupertino_icons: ^1.0.2
   date_format: ^2.0.2
@@ -73,9 +74,9 @@ dev_dependencies:
   flutter_native_splash: ^1.1.8+4
 
 flutter_icons:
-  android: "launcher_icon"
+  android: 'launcher_icon'
   ios: true
-  image_path: "assets/images/logos/logo.png"
+  image_path: 'assets/images/logos/logo.png'
 
 flutter:
   uses-material-design: true

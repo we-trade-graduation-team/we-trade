@@ -1,8 +1,10 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:flutter/services.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 
+import '../../../constants/app_colors.dart';
 import '../../../utils/routes/routes.dart';
 import '../../wish_list_features/wish_list/wish_list_screen.dart';
 import '../account_settings_screen/account_settings_screen.dart';
@@ -11,6 +13,8 @@ import '../my_rate_screen/my_rate_screen.dart';
 import '../post_management/post_management_screen.dart';
 import '../trading_history/trading_history_screen.dart';
 import '../user_info/user_info_screen.dart';
+import 'local_widgets/getter.dart';
+import 'local_widgets/pickers/user_image_picker.dart';
 
 class AccountListTileModel {
   AccountListTileModel({
@@ -24,16 +28,20 @@ class AccountListTileModel {
   final VoidCallback onTapFunc;
 }
 
-class AccountScreen extends StatelessWidget {
+class AccountScreen extends StatefulWidget {
   const AccountScreen({
     Key? key,
   }) : super(key: key);
+  @override
+  _AccountScreenState createState() => _AccountScreenState();
+}
+
+class _AccountScreenState extends State<AccountScreen> {
+  final _userID = FirebaseAuth.instance.currentUser!.uid;
+  final referenceDatabase = FirebaseFirestore.instance;
 
   Widget profileNavigationLabel(
-    Widget topWid,
-    Widget botWid,
-    Function navigateToScreen,
-  ) {
+      Widget topWid, Widget botWid, Function navigateToScreen) {
     return GestureDetector(
       onTap: () => navigateToScreen(),
       child: Column(
@@ -55,14 +63,20 @@ class AccountScreen extends StatelessWidget {
     );
   }
 
+  final user = {
+    'name': 'Tranf Duy qunag',
+    'email': 'asdas@hail.com',
+    'phoneNumber': '0202424024',
+    'location': 'asdasaf',
+    'bio': 'I like trading',
+    'following': <dynamic>[],
+    'followers': <dynamic>[],
+    'legit': 0,
+    'tradingHistory': <dynamic>[],
+  };
+
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setSystemUIOverlayStyle(
-      const SystemUiOverlayStyle(
-        statusBarIconBrightness: Brightness.light,
-      ),
-    );
-
     final height = MediaQuery.of(context).size.height;
     final bannerHeight = height * 0.28;
 
@@ -79,7 +93,7 @@ class AccountScreen extends StatelessWidget {
             settings: const RouteSettings(
               name: Routes.postManagementScreenRouteName,
             ),
-            screen: const PostManagementScreen(),
+            screen: PostManagementScreen(),
             withNavBar: false,
             pageTransitionAnimation: PageTransitionAnimation.cupertino,
           );
@@ -94,7 +108,9 @@ class AccountScreen extends StatelessWidget {
         onTapFunc: () {
           pushNewScreenWithRouteSettings<void>(
             context,
-            settings: const RouteSettings(name: Routes.wishListScreenRouteName),
+            settings: const RouteSettings(
+              name: Routes.wishListScreenRouteName,
+            ),
             screen: const WishListScreen(),
             withNavBar: false,
             pageTransitionAnimation: PageTransitionAnimation.cupertino,
@@ -110,8 +126,9 @@ class AccountScreen extends StatelessWidget {
         onTapFunc: () {
           pushNewScreenWithRouteSettings<void>(
             context,
-            settings:
-                const RouteSettings(name: Routes.tradingHistoryScreenRouteName),
+            settings: const RouteSettings(
+              name: Routes.tradingHistoryScreenRouteName,
+            ),
             screen: const TradingHistoryScreen(),
             withNavBar: false,
             pageTransitionAnimation: PageTransitionAnimation.cupertino,
@@ -130,7 +147,7 @@ class AccountScreen extends StatelessWidget {
             settings: const RouteSettings(
               name: Routes.myRateScreenRouteName,
             ),
-            screen: const MyRateScreen(),
+            screen: MyRateScreen(),
             withNavBar: false,
             pageTransitionAnimation: PageTransitionAnimation.cupertino,
           );
@@ -145,16 +162,7 @@ class AccountScreen extends StatelessWidget {
         onTapFunc: () {
           pushNewScreen<void>(
             context,
-            // screen: const AccountSettingsScreen(),
-            screen: Overlay(
-              initialEntries: [
-                OverlayEntry(
-                  builder: (_) {
-                    return const AccountSettingsScreen();
-                  },
-                ),
-              ],
-            ),
+            screen: const AccountSettingsScreen(),
             withNavBar: false,
           );
         },
@@ -170,192 +178,210 @@ class AccountScreen extends StatelessWidget {
     ];
 
     return Scaffold(
-      backgroundColor: Colors.black,
-      // appBar: AppBar(
-      //   title: Text('Account'),
-      // ),
       body: SafeArea(
-        child: ColoredBox(
-          color: Colors.white,
-          child: Column(
-            children: [
-              Container(
-                color: Theme.of(context).primaryColor,
-                height: bannerHeight,
-                child: Column(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20),
-                      child: Column(
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              IconButton(
-                                  color: Theme.of(context).primaryColorLight,
-                                  icon: const Icon(Icons.settings),
-                                  onPressed: () {}),
-                            ],
-                          ),
-                          Row(
-                            children: [
-                              Container(
-                                margin: const EdgeInsets.only(right: 10),
-                                height: 55,
-                                width: 55,
-                                child: CircleAvatar(
-                                  child: Image.asset(
-                                    'assets/images/chat_screen_ava/user.png',
-                                    fit: BoxFit.cover,
-                                  ),
-                                ),
-                              ),
-                              Column(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    'Duy quang',
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 20,
-                                      color:
-                                          Theme.of(context).primaryColorLight,
-                                    ),
-                                  ),
-                                  const SizedBox(height: 5),
-                                  Container(
-                                    padding: const EdgeInsets.all(5),
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(10),
-                                      color: Colors.black87,
-                                    ),
-                                    child: GestureDetector(
-                                      onTap: () {
-                                        pushNewScreenWithRouteSettings<void>(
-                                          context,
-                                          settings: const RouteSettings(
-                                            name:
-                                                Routes.userInfoScreenRouteName,
-                                          ),
-                                          screen: const UserInfoScreen(),
-                                          withNavBar: false,
-                                          pageTransitionAnimation:
-                                              PageTransitionAnimation.cupertino,
-                                        );
-                                      },
-                                      child: Text(
-                                        'Thông tin tài khoản',
-                                        style: TextStyle(
-                                          decoration: TextDecoration.underline,
-                                          color: Theme.of(context)
-                                              .primaryColorLight,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              )
-                            ],
-                          ),
-                          const SizedBox(height: 10),
-                          DefaultTextStyle(
-                            style: TextStyle(
-                              fontSize: 16,
-                              color: Theme.of(context).primaryColorLight,
+        child: Column(
+          children: [
+            Container(
+              color: Theme.of(context).primaryColor,
+              height: bannerHeight,
+              child: Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    child: Column(
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            IconButton(
+                              color: AppColors.kPrimaryLightColor,
+                              icon: const Icon(Icons.settings),
+                              onPressed: () {
+                                // ignore: avoid_print
+                                print('setting pressed');
+                              },
                             ),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          ],
+                        ),
+                        Row(
+                          children: [
+                            Container(
+                              margin: const EdgeInsets.only(right: 10),
+                              height: 55,
+                              width: 55,
+                              child: UserImagePicker(
+                                userID: _userID,
+                              ),
+                            ),
+                            Column(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                profileNavigationLabel(
-                                  Row(
-                                    children: const [
-                                      Icon(
-                                        Icons.star_rate_rounded,
-                                        color: Colors.yellow,
-                                      ),
-                                      Text(
-                                        '3',
-                                      )
-                                    ],
+                                DefaultTextStyle(
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 20,
+                                    color: AppColors.kPrimaryLightColor,
                                   ),
-                                  const Text('Legit'),
-                                  () {
-                                    pushNewScreenWithRouteSettings<void>(
-                                      context,
-                                      settings: const RouteSettings(
-                                        name: Routes.myRateScreenRouteName,
-                                      ),
-                                      screen: const MyRateScreen(),
-                                      withNavBar: false,
-                                      pageTransitionAnimation:
-                                          PageTransitionAnimation.cupertino,
-                                    );
-                                  },
-                                ),
-                                profileNavigationLabel(
-                                  const Text('0'),
-                                  const Text('Theo dõi'),
-                                  () {
-                                    pushNewScreenWithRouteSettings<void>(
-                                      context,
-                                      settings: RouteSettings(
-                                        name: Routes.followScreenRouteName,
-                                        arguments: FollowScreenArguments(
-                                            screenName:
-                                                Follow_Screen_Name.following),
-                                      ),
-                                      screen: const FollowScreen(),
-                                      withNavBar: false,
-                                      pageTransitionAnimation:
-                                          PageTransitionAnimation.cupertino,
-                                    );
-                                  },
-                                ),
-                                profileNavigationLabel(
-                                  const Text('1'),
-                                  const Text(
-                                    'Người theo \n dõi',
-                                    textAlign: TextAlign.center,
+                                  child: GetUserName(
+                                    documentId: _userID,
+                                    isStream: true,
                                   ),
-                                  () {
-                                    pushNewScreenWithRouteSettings<void>(
-                                      context,
-                                      settings: RouteSettings(
-                                        name: Routes.followScreenRouteName,
-                                        arguments: FollowScreenArguments(
-                                            screenName:
-                                                Follow_Screen_Name.follower),
+                                ),
+                                const SizedBox(height: 5),
+                                Container(
+                                  padding: const EdgeInsets.all(5),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(10),
+                                    color: Colors.black87,
+                                  ),
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      pushNewScreenWithRouteSettings<void>(
+                                        context,
+                                        settings: const RouteSettings(
+                                          name: Routes.userInfoScreenRouteName,
+                                        ),
+                                        screen: const UserInfoScreen(),
+                                        withNavBar: false,
+                                        pageTransitionAnimation:
+                                            PageTransitionAnimation.cupertino,
+                                      );
+                                    },
+                                    child: const Text(
+                                      'Thông tin tài khoản',
+                                      style: TextStyle(
+                                        decoration: TextDecoration.underline,
+                                        color: AppColors.kPrimaryLightColor,
                                       ),
-                                      screen: const FollowScreen(),
-                                      withNavBar: false,
-                                      pageTransitionAnimation:
-                                          PageTransitionAnimation.cupertino,
-                                    );
-                                  },
+                                    ),
+                                  ),
                                 ),
                               ],
-                            ),
-                          )
-                        ],
-                      ),
+                            )
+                          ],
+                        ),
+                        const SizedBox(height: 10),
+                        DefaultTextStyle(
+                          style: const TextStyle(
+                            fontSize: 16,
+                            color: AppColors.kPrimaryLightColor,
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              profileNavigationLabel(
+                                Row(
+                                  children: [
+                                    const Icon(
+                                      Icons.star_rate_rounded,
+                                      color: Colors.yellow,
+                                    ),
+                                    GetLegit(documentId: _userID),
+                                  ],
+                                ),
+                                const Text('Legit\n'),
+                                () {
+                                  pushNewScreenWithRouteSettings<void>(
+                                    context,
+                                    settings: const RouteSettings(
+                                      name: Routes.myRateScreenRouteName,
+                                    ),
+                                    screen: MyRateScreen(),
+                                    withNavBar: false,
+                                    pageTransitionAnimation:
+                                        PageTransitionAnimation.cupertino,
+                                  );
+                                },
+                              ),
+                              profileNavigationLabel(
+                                GetNumberOfFollow(
+                                  documentId: _userID,
+                                  typeOfReturnNumber:
+                                      Follow_Screen_Name.following,
+                                ),
+                                const Text(
+                                  'Đang theo \n  dõi',
+                                  textAlign: TextAlign.center,
+                                ),
+                                () {
+                                  pushNewScreenWithRouteSettings<void>(
+                                    context,
+                                    settings: RouteSettings(
+                                      name: Routes.followScreenRouteName,
+                                      arguments: {
+                                        'screenArgument': FollowScreenArguments(
+                                          screenName:
+                                              Follow_Screen_Name.following,
+                                        ),
+                                        'userID': _userID
+                                      },
+                                    ),
+                                    screen: const FollowScreen(),
+                                    withNavBar: false,
+                                    pageTransitionAnimation:
+                                        PageTransitionAnimation.cupertino,
+                                  );
+                                },
+                              ),
+                              profileNavigationLabel(
+                                GetNumberOfFollow(
+                                  documentId: _userID,
+                                  typeOfReturnNumber:
+                                      Follow_Screen_Name.follower,
+                                ),
+                                const Text(
+                                  'Người theo \n dõi',
+                                  textAlign: TextAlign.center,
+                                ),
+                                () {
+                                  pushNewScreenWithRouteSettings<void>(
+                                    context,
+                                    settings: RouteSettings(
+                                      name: Routes.followScreenRouteName,
+                                      arguments: {
+                                        'screenArgument': FollowScreenArguments(
+                                          screenName:
+                                              Follow_Screen_Name.follower,
+                                        ),
+                                        'userID': _userID
+                                      },
+                                    ),
+                                    screen: const FollowScreen(),
+                                    withNavBar: false,
+                                    pageTransitionAnimation:
+                                        PageTransitionAnimation.cupertino,
+                                  );
+                                },
+                              ),
+                            ],
+                          ),
+                        )
+                      ],
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
-              ListView.builder(
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                itemCount: accountListTileItemModel.length,
-                itemBuilder: (_, index) => buildListTile(
-                  accountListTileItemModel[index],
-                ),
+            ),
+            ListView.builder(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              itemCount: accountListTileItemModel.length,
+              itemBuilder: (_, index) => buildListTile(
+                accountListTileItemModel[index],
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(DiagnosticsProperty<Map<String, Object>>('user', user));
+    properties.add(DiagnosticsProperty<FirebaseFirestore>(
+        'referenceDatabase', referenceDatabase));
   }
 }

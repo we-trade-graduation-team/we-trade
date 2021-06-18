@@ -10,7 +10,7 @@ UserSearchHistory _$UserSearchHistoryFromJson(Map<String, dynamic> json) {
   $checkKeys(json, requiredKeys: const ['searchTerm', 'times']);
   return UserSearchHistory(
     searchTerm: json['searchTerm'] as String,
-    times: json['times'] as int,
+    times: json['times'] as int? ?? 1,
   );
 }
 

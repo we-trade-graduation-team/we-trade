@@ -51,7 +51,8 @@
   "logoutAlertTxtContent": "Are you sure you want to log out?",
   "homeScreenTxtAppBar": "Search item",
   "homeScreenTxtPopularPostCardsTitle": "Popular items",
-  "homeScreenTxtSpecialCategoryCardsTitle": "Interest categories",
+  "homeScreenTxtSpecialCategoryCardsTitle": "You may interested in",
   "homeScreenTxtRecommendedSectionTitle": "Recommended",
-  "homeScreenTxtSectionTitleRowSeeMore": "See More"
+  "homeScreenTxtSectionTitleRowSeeMore": "See More",
+  "itemPostCardTxtDistrict": "District"
 }
