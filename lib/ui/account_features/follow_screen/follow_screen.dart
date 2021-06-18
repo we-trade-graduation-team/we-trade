@@ -2,8 +2,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 
 import '../../../constants/app_colors.dart';
+import '../../../utils/routes/routes.dart';
+import '../../shared_features/other_user_profile/other_user_profile_screen.dart';
 import '../account_screen/local_widgets/getter.dart';
 import '../utils.dart';
 
@@ -172,56 +175,73 @@ class _FollowScreenState extends State<FollowScreen> {
                   itemBuilder: (ctx, index) => Padding(
                     padding: const EdgeInsets.symmetric(
                         vertical: 10, horizontal: 15),
-                    child: Row(
-                      children: [
-                        FutureBuilder<DocumentSnapshot>(
-                            future: referenceDatabase
-                                .collection('users')
-                                .doc(usersRender[index].toString())
-                                .get(),
-                            builder: (context, snapshot) {
-                              if (snapshot.connectionState ==
-                                  ConnectionState.done) {
-                                final user = snapshot.data!;
-                                return CircleAvatar(
-                                  backgroundColor: Colors.black26,
-                                  backgroundImage: NetworkImage(
-                                    user['avatarUrl'].toString(),
-                                  ),
-                                  radius: width * 0.085,
-                                );
-                              }
+                    child: GestureDetector(
+                      onTap: () {
+                        pushNewScreenWithRouteSettings<void>(
+                          context,
+                          settings: const RouteSettings(
+                            name: Routes.otherProfileScreenRouteName,
+                          ),
+                          screen: OtherUserProfileScreen(
+                            userId: usersRender[index].toString(),
+                          ),
+                          withNavBar: false,
+                          pageTransitionAnimation:
+                              PageTransitionAnimation.cupertino,
+                        );
+                      },
+                      child: Row(
+                        children: [
+                          FutureBuilder<DocumentSnapshot>(
+                              future: referenceDatabase
+                                  .collection('users')
+                                  .doc(usersRender[index].toString())
+                                  .get(),
+                              builder: (context, snapshot) {
+                                if (snapshot.connectionState ==
+                                    ConnectionState.done) {
+                                  final user = snapshot.data!;
+                                  return CircleAvatar(
+                                    backgroundColor: Colors.black26,
+                                    backgroundImage: NetworkImage(
+                                      user['avatarUrl'].toString(),
+                                    ),
+                                    radius: width * 0.085,
+                                  );
+                                }
 
-                              return const Center(
-                                  child: CircularProgressIndicator(
-                                color: Colors.black45,
-                              ));
-                            }),
-                        const SizedBox(width: 15),
-                        Expanded(
-                          child: DefaultTextStyle(
-                            style: const TextStyle(
-                                fontSize: 18,
-                                color: AppColors.kTextColor,
-                                fontWeight: FontWeight.w500),
-                            child: GetUserName(
-                              key: ValueKey(usersRender[index].toString()),
-                              documentId: usersRender[index].toString(),
-                              isStream: false,
+                                return const Center(
+                                    child: CircularProgressIndicator(
+                                  color: Colors.black45,
+                                ));
+                              }),
+                          const SizedBox(width: 15),
+                          Expanded(
+                            child: DefaultTextStyle(
+                              style: const TextStyle(
+                                  fontSize: 18,
+                                  color: AppColors.kTextColor,
+                                  fontWeight: FontWeight.w500),
+                              child: GetUserName(
+                                key: ValueKey(usersRender[index].toString()),
+                                documentId: usersRender[index].toString(),
+                                isStream: false,
+                              ),
                             ),
                           ),
-                        ),
-                        const SizedBox(width: 15),
-                        if (screen.screenName == Follow_Screen_Name.following)
-                          buildUnfollowButton(usersRender[index] as String)
-                        else
-                        //chang: logic đoạn này, nếu trong user['following'] có id user kia rồi
-                        //thì hiện nút unfollow, ngược lại hiện hiện follow
-                          followingUsers.contains(usersRender[index])
-                              ? buildUnfollowButton(
-                                  usersRender[index] as String)
-                              : buildFollowButton(usersRender[index] as String),
-                      ],
+                          const SizedBox(width: 15),
+                          if (screen.screenName == Follow_Screen_Name.following)
+                            buildUnfollowButton(usersRender[index] as String)
+                          else
+                            //chang: logic đoạn này, nếu trong user['following'] có id user kia rồi
+                            //thì hiện nút unfollow, ngược lại hiện hiện follow
+                            followingUsers.contains(usersRender[index])
+                                ? buildUnfollowButton(
+                                    usersRender[index] as String)
+                                : buildFollowButton(
+                                    usersRender[index] as String),
+                        ],
+                      ),
                     ),
                   ),
                   itemCount: usersRender.length,

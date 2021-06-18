@@ -4,6 +4,7 @@ import 'package:intl/intl.dart';
 import '../../models/ui/chat/temp_class.dart';
 import '../../ui/message_features/const_string/const_str.dart';
 import '../../ui/message_features/helper/ulti.dart';
+import '../post_feature/post_service_firestore.dart';
 import 'algolia_user_service.dart';
 
 class MessageServiceFireStore {
@@ -278,8 +279,6 @@ class MessageServiceFireStore {
       if (message != '$myName  đã thêm ') {
         //update data chatroom
         await FirebaseFirestore.instance
-            .collection('trang')
-            .doc('nzTptOzmSw1IbLfKHxOT')
             .collection(chatRoomCollection)
             .doc(chatRoomId)
             .update({
@@ -330,5 +329,136 @@ class MessageServiceFireStore {
         });
       }
     });
+  }
+
+  Future<bool> isFollowUser(
+      {required String thisUserId, required String userId}) {
+    return FirebaseFirestore.instance
+        .collection('users')
+        .doc(thisUserId)
+        .get()
+        .then((user) {
+      final allUsersId =
+          (user.data()!['following'] as List<dynamic>).cast<String>().toList();
+      return allUsersId.contains(userId);
+    });
+  }
+
+  Future<UserDetail> getUserById({required String userId}) async {
+    return FirebaseFirestore.instance
+        .collection('users')
+        .doc(userId)
+        .get()
+        .then((user) async {
+      final data = user.data()!;
+      final id = user.id;
+      final name = getValueByKey(data, 'name') == null
+          ? ''
+          : getValueByKey(data, 'name').toString();
+      final avatarUrl = getValueByKey(data, 'avatarUrl') == null
+          ? userImageStr
+          : getValueByKey(data, 'avatarUrl').toString();
+      final phoneNumber = getValueByKey(data, 'phoneNumber') == null
+          ? '0xx xxx xxx'
+          : getValueByKey(data, 'phoneNumber').toString();
+      final email = getValueByKey(data, 'email') == null
+          ? 'no data'
+          : getValueByKey(data, 'email').toString();
+      final location = getValueByKey(data, 'location') == null
+          ? 'no data'
+          : getValueByKey(data, 'location').toString();
+      final bio = getValueByKey(data, 'bio') == null
+          ? '...'
+          : getValueByKey(data, 'bio').toString();
+      final legit = getValueByKey(data, 'legit') == null
+          ? 0.0
+          : double.parse(getValueByKey(data, 'legit').toString());
+      final postsId = getValueByKey(data, 'posts') == null
+          ? <String>[]
+          : (getValueByKey(data, 'posts') as List<dynamic>)
+              .cast<String>()
+              .toList();
+      final following = getValueByKey(data, 'following') == null
+          ? 0
+          : (getValueByKey(data, 'following') as List<dynamic>).length;
+      final reviews = await getAllUserReviews(userId: userId);
+      return UserDetail(
+          id: id,
+          name: name,
+          email: email,
+          avatarUrl: avatarUrl,
+          bio: bio,
+          legit: legit,
+          location: location,
+          following: following,
+          phoneNumber: phoneNumber,
+          reviews: reviews,
+          postsId: postsId);
+      // final reviewsId
+    });
+  }
+
+  Future<List<Review>> getAllUserReviews({required String userId}) {
+    return FirebaseFirestore.instance
+        .collection('ratings')
+        .where('userBeRated', isEqualTo: userId)
+        .get()
+        .then((result) async {
+      final reviews = <Review>[];
+      final userService = UserServiceAlgolia();
+      final postService = PostServiceFireStore();
+      for (final doc in result.docs) {
+        final data = doc.data();
+        final star = double.parse(data['star'].toString());
+        final dateTime = (data['createAt'] as Timestamp).toDate();
+        final user =
+            await userService.getUserById(data['userMakeRating'].toString());
+        final reply = data['reply'].toString();
+        final comment = data['comment'].toString();
+        var image = '';
+        if (data['post'].toString().isNotEmpty) {
+          image = await postService.getFirstPostImage(data['post'].toString());
+        }
+        reviews.add(Review(
+          comment: comment,
+          dateTime: dateTime,
+          image: image,
+          star: star,
+          user: user,
+          reply: reply,
+        ));
+      }
+      return reviews;
+    });
+  }
+
+  Future<void> handleFollowButton(
+      {required String userId,
+      required String thisUserId,
+      required bool isAddFollowing}) async {
+    return FirebaseFirestore.instance
+        .collection('users')
+        .doc(thisUserId)
+        .get()
+        .then((user) {
+      final allUsersId =
+          (user.data()!['following'] as List<dynamic>).cast<String>().toList();
+      if (isAddFollowing) {
+        if (!allUsersId.contains(userId)) {
+          allUsersId.add(userId);
+        }
+      } else {
+        allUsersId.removeWhere((element) => element == userId);
+      }
+      user.reference.update({'following': allUsersId});
+    });
+  }
+
+  dynamic getValueByKey(Map<String, dynamic> map, String key) {
+    if (map.containsKey(key)) {
+      return map[key];
+    } else {
+      return null;
+    }
   }
 }

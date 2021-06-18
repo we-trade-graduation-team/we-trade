@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
@@ -92,7 +90,7 @@ class _AllMemberScreenState extends State<AllMemberScreen> {
                 itemBuilder: (context, index) => UserCard(
                     user: users[index],
                     press: () {
-                     // log(users[index].image);
+                      // log(users[index].image);
                       if (users[index].id != thisUser.uid) {
                         pushNewScreenWithRouteSettings<void>(
                           context,

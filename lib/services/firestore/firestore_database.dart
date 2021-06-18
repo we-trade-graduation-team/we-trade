@@ -214,6 +214,16 @@ class FirestoreDatabase {
     return _result;
   }
 
+  Future<List<PostCard>> getPostCardsByPostIdList({
+    required List<String> postIdList,
+  }) async {
+    final _result = await Stream.fromIterable(postIdList)
+        .asyncMap((postId) => _getPostCard(postId: postId))
+        .toList();
+
+    return _result;
+  }
+
   // Method to retrieve top 10 Special Category Cards
   Future<List<SpecialCategoryCard>> specialCategoryCardsFuture() async {
     final _currentUser = await _getCurrentUser();

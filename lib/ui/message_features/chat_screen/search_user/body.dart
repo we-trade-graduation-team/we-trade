@@ -196,12 +196,13 @@ class _BodyState extends State<Body> {
   @override
   void initState() {
     super.initState();
-    thisUser = Provider.of<User?>(context, listen: false)!;
   }
 
   @override
   Widget build(BuildContext context) {
     final height = MediaQuery.of(context).size.height;
+    thisUser = Provider.of<User?>(context, listen: false)!;
+
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 10),
       child: Column(

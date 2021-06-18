@@ -24,4 +24,12 @@ class PostServiceFireStore {
       return value;
     });
   }
+
+  Future<String> getFirstPostImage(String postId) {
+    return FirebaseFirestore.instance
+        .collection('postCards')
+        .doc(postId)
+        .get()
+        .then((value) => value.data()!['item']['image'].toString());
+  }
 }

@@ -79,7 +79,7 @@ class Routes {
     followScreenRouteName: (_) => const FollowScreen(),
     myRateScreenRouteName: (_) => MyRateScreen(),
     hidePostScreenRouteName: (_) => const HidePostScreen(),
-    postManagementScreenRouteName: (_) => PostManagementScreen(),
+    postManagementScreenRouteName: (_) => const PostManagementScreen(),
     // rateForTradingScreenRouteName: (_) => const RateForTrading(),
     tradingHistoryScreenRouteName: (_) => const TradingHistoryScreen(),
     changePasswordScreenRouteName: (_) => const ChangePasswordScreen(),
