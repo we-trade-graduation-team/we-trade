@@ -26,7 +26,7 @@ class HistoryProductCard extends StatefulWidget {
 
   final statusValue = <String, int>{
     'success': 1,
-    'onProgress': 2,
+    'inProgress': 2,
     'failure': 3
   };
 
