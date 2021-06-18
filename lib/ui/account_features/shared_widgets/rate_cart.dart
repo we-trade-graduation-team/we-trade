@@ -112,7 +112,6 @@ class RateCard extends StatelessWidget {
                       Icons.star,
                       color: Colors.amber,
                     ),
-                    //onRatingUpdate: print,
                     ignoreGestures: true,
                     onRatingUpdate: (value) {},
                   ),
