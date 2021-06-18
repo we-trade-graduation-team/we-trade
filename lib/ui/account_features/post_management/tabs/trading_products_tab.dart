@@ -1,8 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import '../../account_screen/account_screen.dart';
 
+import '../../shared_widgets/geting_data_status.dart';
+import '../../shared_widgets/trading_prod_card.dart';
 import '../../utils.dart';
 
 class TradingProductsTab extends StatefulWidget {
@@ -22,11 +24,11 @@ class TradingProductsTab extends StatefulWidget {
 }
 
 class _TradingProductsTabState extends State<TradingProductsTab> {
-  final userID = AccountScreen.localUserID;
+  final userID = FirebaseAuth.instance.currentUser!.uid;
 
   @override
   Widget build(BuildContext context) {
-    final referenceDatabase = AccountScreen.localRefDatabase;
+    final referenceDatabase = FirebaseFirestore.instance;
 
     return StreamBuilder<DocumentSnapshot>(
         stream: referenceDatabase.collection('users').doc(userID).snapshots(),
@@ -65,41 +67,31 @@ class _TradingProductsTabState extends State<TradingProductsTab> {
                           .get(),
                       builder: (context, snapshot) {
                         if (snapshot.hasError) {
-                          return Text('Something went wrong',
-                              style: TextStyle(
-                                fontWeight: FontWeight.normal,
-                                color: Colors.red.withOpacity(0.6),
-                              ));
+                          return const WentWrong();
                         }
 
                         if (snapshot.hasData && !snapshot.data!.exists) {
-                          return Text('Document does not exist',
-                              style: TextStyle(
-                                fontWeight: FontWeight.normal,
-                                color: Colors.red.withOpacity(0.6),
-                              ));
+                          return const DataDoesNotExist();
                         }
                         if (snapshot.connectionState == ConnectionState.done) {
                           final post =
                               snapshot.data!.data() as Map<String, dynamic>;
                           post['id'] = snapshot.data!.id;
-                          //final temp = post['createAt'] as Timestamp;
-                          //final dateTime = temp.toDate();
-
-                          // return TradingProductCard(
-                          //   key: ValueKey(post['id'].toString()),
-                          //   id: post['id'].toString(),
-                          //   name: post['name'].toString(),
-                          //   price: post['price'].toString(),
-                          //   dateTime: dateTime,
-                          //   isHiddenPost: widget.isHiddenPosts,
-                          // );
+                          final temp = post['createAt'] as Timestamp;
+                          final dateTime = temp.toDate();
+                          return TradingProductCard(
+                            key: ValueKey(post['id'].toString()),
+                            id: post['id'].toString(),
+                            name: post['name'].toString(),
+                            price: post['price'].toString(),
+                            imageUrl: post['imagesUrl'][0].toString(),
+                            dateTime: dateTime,
+                            isHiddenPost: widget.isHiddenPosts,
+                          );
                         }
                         return const Center(
-                          child: CircularProgressIndicator(
-                            valueColor:
-                                AlwaysStoppedAnimation<Color>(Colors.blue),
-                          ),
+                          child: CustomLinearProgressIndicator(
+                              verticalPadding: 80, horizontalPadding: 30),
                         );
                       },
                     );

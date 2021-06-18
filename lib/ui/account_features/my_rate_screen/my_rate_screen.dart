@@ -1,10 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
-import '../../../constants/app_assets.dart';
 import '../../../models/ui/chat/temp_class.dart';
-import '../account_screen/account_screen.dart';
 
 import 'tabs/rate_tab.dart';
 
@@ -15,8 +14,8 @@ class MyRateScreen extends StatefulWidget {
 
   static const routeName = '/myrate';
   final UserDetail userDetail = userDetailTemp;
-  final referenceDatabase = AccountScreen.localRefDatabase;
-  final userID = AccountScreen.localUserID;
+  final referenceDatabase = FirebaseFirestore.instance;
+  final userID = FirebaseAuth.instance.currentUser!.uid;
 
   @override
   _MyRateScreenState createState() => _MyRateScreenState();
@@ -24,9 +23,9 @@ class MyRateScreen extends StatefulWidget {
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
     properties.add(DiagnosticsProperty<UserDetail>('userDetail', userDetail));
-    properties.add(DiagnosticsProperty<DocumentReference<Map<String, dynamic>>>(
-        'referenceDatabase', referenceDatabase));
     properties.add(StringProperty('userID', userID));
+    properties.add(DiagnosticsProperty<FirebaseFirestore>(
+        'referenceDatabase', referenceDatabase));
   }
 }
 
@@ -35,49 +34,60 @@ class _MyRateScreenState extends State<MyRateScreen> {
     'TÔI ĐÁNH GIÁ',
     'ĐƯỢC ĐÁNH GIÁ',
   ];
+  late FocusScopeNode node;
+
+  @override
+  void dispose() {
+    node.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
+    node = FocusScope.of(context);
     final width = MediaQuery.of(context).size.width;
     final height = MediaQuery.of(context).size.height;
 
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Đánh giá của tôi'),
-      ),
-      body: DefaultTabController(
-        length: tabData.length,
-        child: NestedScrollView(
-            physics: const NeverScrollableScrollPhysics(),
-            headerSliverBuilder: (context, isScolled) {
-              return [
-                SliverAppBar(
-                  backgroundColor: Colors.white,
-                  collapsedHeight: height * 0.25,
-                  expandedHeight: height * 0.25,
-                  flexibleSpace: MainInfo(width: width, widget: widget),
-                  automaticallyImplyLeading: false,
-                ),
-                SliverPersistentHeader(
-                  delegate: MyDelegate(
-                    TabBar(
-                      tabs: tabData
-                          .map(
-                            (item) => Tab(
-                              child: Text(item),
-                            ),
-                          )
-                          .toList(),
-                    ),
+    return GestureDetector(
+      onTap: () => node.unfocus(),
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text('Đánh giá của tôi'),
+        ),
+        body: DefaultTabController(
+          length: tabData.length,
+          child: NestedScrollView(
+              physics: const NeverScrollableScrollPhysics(),
+              headerSliverBuilder: (context, isScolled) {
+                return [
+                  SliverAppBar(
+                    backgroundColor: Colors.white,
+                    collapsedHeight: height * 0.25,
+                    expandedHeight: height * 0.25,
+                    flexibleSpace: MainInfo(width: width, widget: widget),
+                    automaticallyImplyLeading: false,
                   ),
-                  floating: true,
-                  pinned: true,
-                )
-              ];
-            },
-            body: TabBarView(
-              children: getTabContent(),
-            )),
+                  SliverPersistentHeader(
+                    delegate: MyDelegate(
+                      TabBar(
+                        tabs: tabData
+                            .map(
+                              (item) => Tab(
+                                child: Text(item),
+                              ),
+                            )
+                            .toList(),
+                      ),
+                    ),
+                    floating: true,
+                    pinned: true,
+                  )
+                ];
+              },
+              body: TabBarView(
+                children: getTabContent(),
+              )),
+        ),
       ),
     );
   }
@@ -95,6 +105,7 @@ class _MyRateScreenState extends State<MyRateScreen> {
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
     properties.add(IterableProperty<String>('tabData', tabData));
+    properties.add(DiagnosticsProperty<FocusScopeNode>('node', node));
   }
 }
 
@@ -152,10 +163,11 @@ class MainInfo extends StatefulWidget {
 }
 
 class _MainInfoState extends State<MainInfo> {
-  final referenceDatabase = AccountScreen.localRefDatabase;
-  final userID = AccountScreen.localUserID;
+  final referenceDatabase = FirebaseFirestore.instance;
+  final userID = FirebaseAuth.instance.currentUser!.uid;
 
   double legit = 0;
+  String avatarUrl = '';
 
   @override
   void initState() {
@@ -174,17 +186,16 @@ class _MainInfoState extends State<MainInfo> {
             legit = double.parse(_user['legit'].toString());
             legit = legit > 5 ? 5 : legit;
             legit = legit < 0 ? 0 : legit;
+            avatarUrl = _user['avatarUrl'].toString();
           });
         }
       });
-    } on FirebaseException catch (e) {
-      // ignore: avoid_print
-      print('Lỗi: $e');
-    }
+    } on FirebaseException catch (_) {}
   }
 
   @override
   Widget build(BuildContext context) {
+    const avatarSize = 110.0;
     return Container(
       color: Theme.of(context).primaryColor,
       child: Column(
@@ -198,18 +209,20 @@ class _MainInfoState extends State<MainInfo> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Container(
-                      margin: const EdgeInsets.only(right: 10),
-                      height: 100,
-                      width: 100,
-                      child: CircleAvatar(
-                        //TODO: change image source
-                        child: ClipOval(
-                          child: Image.asset(
-                            AppAssets.firstWalkThroughImage,
-                            fit: BoxFit.cover,
-                            height: 100,
-                          ),
-                        ),
+                      decoration: BoxDecoration(
+                        color: Colors.black26,
+                        borderRadius: BorderRadius.circular(avatarSize / 2),
+                      ),
+                      height: avatarSize,
+                      width: avatarSize,
+                      child: ClipOval(
+                        child: avatarUrl.isNotEmpty
+                            ? Image.network(
+                                avatarUrl,
+                                fit: BoxFit.cover,
+                                height: 110,
+                              )
+                            : Container(),
                       ),
                     ),
                   ],
@@ -244,8 +257,9 @@ class _MainInfoState extends State<MainInfo> {
     super.debugFillProperties(properties);
     properties.add(DoubleProperty('width', widget.width));
     properties.add(DoubleProperty('legit', legit));
-    properties.add(DiagnosticsProperty<DocumentReference<Map<String, dynamic>>>(
-        'referenceDatabase', referenceDatabase));
     properties.add(StringProperty('userID', userID));
+    properties.add(StringProperty('avatarUrl', avatarUrl));
+    properties.add(DiagnosticsProperty<FirebaseFirestore>(
+        'referenceDatabase', referenceDatabase));
   }
 }

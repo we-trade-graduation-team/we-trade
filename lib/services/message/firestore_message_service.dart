@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
-import '../../models/cloud_firestore/user_model/user/user.dart';
 
 import '../../models/ui/chat/temp_class.dart';
 import '../../ui/message_features/const_string/const_str.dart';
@@ -307,19 +306,19 @@ class MessageServiceFireStore {
         .snapshots();
   }
 
-  Future<void> updateChatRoomsWhenUpdateUser(User user) async {
+  Future<void> updateChatRoomsWhenUpdateUser(Map<String, dynamic> user) async {
     await FirebaseFirestore.instance
         .collection(chatRoomCollection)
-        .where(usersIdStr, arrayContains: user.uid)
+        .where(usersIdStr, arrayContains: user['objectID'].toString())
         .get()
         .then((value) {
       for (final snapShot in value.docs) {
         final chat = createChatFromData(snapShot.data(), snapShot.id);
         for (var i = 0; i < chat.usersId.length; i++) {
-          if (chat.usersId[i] == user.uid) {
-            chat.images[i] = user.avatarUrl!;
-            chat.names[i] = user.name!;
-            chat.emails[i] = user.email!;
+          if (chat.usersId[i] == user['objectID'].toString()) {
+            chat.images[i] = user['avatarUrl']!.toString();
+            chat.names[i] = user['name']!.toString();
+            chat.emails[i] = user['email']!.toString();
             break;
           }
         }

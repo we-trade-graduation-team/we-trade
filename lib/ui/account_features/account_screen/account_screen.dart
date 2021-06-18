@@ -1,5 +1,5 @@
-
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
@@ -32,19 +32,13 @@ class AccountScreen extends StatefulWidget {
   const AccountScreen({
     Key? key,
   }) : super(key: key);
-
-  static const routeName = '/account';
-  // final quangDocID = 'h0Z8Hn6XvbtMsP4bwa4P';
-  static final localRefDatabase = FirebaseFirestore.instance
-      .collection('quang')
-      .doc('h0Z8Hn6XvbtMsP4bwa4P');
-  static const localUserID = 'HClKVm4TTdlx28xCKTxF';
-
   @override
   _AccountScreenState createState() => _AccountScreenState();
 }
 
 class _AccountScreenState extends State<AccountScreen> {
+  final _userID = FirebaseAuth.instance.currentUser!.uid;
+  final referenceDatabase = FirebaseFirestore.instance;
 
   Widget profileNavigationLabel(
       Widget topWid, Widget botWid, Function navigateToScreen) {
@@ -80,16 +74,6 @@ class _AccountScreenState extends State<AccountScreen> {
     'legit': 0,
     'tradingHistory': <dynamic>[],
   };
-
-  Future<void> addUser() {
-    // Call the user's CollectionReference to add a new user
-    return AccountScreen.localRefDatabase
-        .collection('users')
-        .add(user)
-        // ignore: avoid_print
-        .then((value) => print('User Added: $user'));
-    // .catchError((error) => print('Failed to add user: $error'));
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -217,11 +201,6 @@ class _AccountScreenState extends State<AccountScreen> {
                                 print('setting pressed');
                               },
                             ),
-                            IconButton(
-                              color: AppColors.kPrimaryLightColor,
-                              icon: const Icon(Icons.add),
-                              onPressed: addUser,
-                            ),
                           ],
                         ),
                         Row(
@@ -230,20 +209,22 @@ class _AccountScreenState extends State<AccountScreen> {
                               margin: const EdgeInsets.only(right: 10),
                               height: 55,
                               width: 55,
-                              child: const UserImagePicker(userID: AccountScreen.localUserID,),
+                              child: UserImagePicker(
+                                userID: _userID,
+                              ),
                             ),
                             Column(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                const DefaultTextStyle(
-                                  style: TextStyle(
+                                DefaultTextStyle(
+                                  style: const TextStyle(
                                     fontWeight: FontWeight.bold,
                                     fontSize: 20,
                                     color: AppColors.kPrimaryLightColor,
                                   ),
                                   child: GetUserName(
-                                    documentId: AccountScreen.localUserID,
+                                    documentId: _userID,
                                     isStream: true,
                                   ),
                                 ),
@@ -291,13 +272,12 @@ class _AccountScreenState extends State<AccountScreen> {
                             children: [
                               profileNavigationLabel(
                                 Row(
-                                  children: const [
-                                    Icon(
+                                  children: [
+                                    const Icon(
                                       Icons.star_rate_rounded,
                                       color: Colors.yellow,
                                     ),
-                                    GetLegit(
-                                        documentId: AccountScreen.localUserID),
+                                    GetLegit(documentId: _userID),
                                   ],
                                 ),
                                 const Text('Legit\n'),
@@ -315,8 +295,8 @@ class _AccountScreenState extends State<AccountScreen> {
                                 },
                               ),
                               profileNavigationLabel(
-                                const GetNumberOfFollow(
-                                  documentId: AccountScreen.localUserID,
+                                GetNumberOfFollow(
+                                  documentId: _userID,
                                   typeOfReturnNumber:
                                       Follow_Screen_Name.following,
                                 ),
@@ -334,7 +314,7 @@ class _AccountScreenState extends State<AccountScreen> {
                                           screenName:
                                               Follow_Screen_Name.following,
                                         ),
-                                        'userID': AccountScreen.localUserID
+                                        'userID': _userID
                                       },
                                     ),
                                     screen: const FollowScreen(),
@@ -345,8 +325,8 @@ class _AccountScreenState extends State<AccountScreen> {
                                 },
                               ),
                               profileNavigationLabel(
-                                const GetNumberOfFollow(
-                                  documentId: AccountScreen.localUserID,
+                                GetNumberOfFollow(
+                                  documentId: _userID,
                                   typeOfReturnNumber:
                                       Follow_Screen_Name.follower,
                                 ),
@@ -364,7 +344,7 @@ class _AccountScreenState extends State<AccountScreen> {
                                           screenName:
                                               Follow_Screen_Name.follower,
                                         ),
-                                        'userID': AccountScreen.localUserID
+                                        'userID': _userID
                                       },
                                     ),
                                     screen: const FollowScreen(),
@@ -400,8 +380,8 @@ class _AccountScreenState extends State<AccountScreen> {
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
-    properties.add(DiagnosticsProperty<DocumentReference<Map<String, dynamic>>>(
-        'localRefDatabase', AccountScreen.localRefDatabase));
     properties.add(DiagnosticsProperty<Map<String, Object>>('user', user));
+    properties.add(DiagnosticsProperty<FirebaseFirestore>(
+        'referenceDatabase', referenceDatabase));
   }
 }

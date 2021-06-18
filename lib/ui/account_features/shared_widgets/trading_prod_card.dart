@@ -1,21 +1,88 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 
-import '../../../constants/app_dimens.dart';
-import '../../../models/ui/review/temp_class.dart';
-import '../../../ui/account_features/post_management/hide_post_screen.dart';
 import '../../../utils/routes/routes.dart';
+import '../post_management/hide_post_screen.dart';
+import '../utils.dart';
 import 'custom_overlay_icon_button.dart';
 import 'trading_prod_overlay.dart';
 
 class TradingProductCard extends StatelessWidget {
   const TradingProductCard({
     Key? key,
-    required this.review,
+    required this.id,
+    required this.name,
+    required this.price,
+    required this.imageUrl,
+    required this.dateTime,
+    required this.isHiddenPost,
   }) : super(key: key);
 
-  final Review review;
+  final String id;
+  final String name;
+  final String price;
+  final String imageUrl;
+  final DateTime dateTime;
+  final bool isHiddenPost;
+
+  final referenceDatabase = FirebaseFirestore.instance;
+  final userID = FirebaseAuth.instance.currentUser!.uid;
+
+  Future<void> _removePost(String postID) async {
+    try {
+      await referenceDatabase
+          .collection('users')
+          .doc(userID)
+          .get()
+          .then((documentSnapshot) async {
+        final _user = documentSnapshot.data();
+        final hiddenPosts = _user!['hiddenPosts'] as List;
+        final posts = _user['posts'] as List;
+
+        hiddenPosts.remove(postID);
+        posts.remove(postID);
+        await referenceDatabase.collection('users').doc(userID).update({
+          'hiddenPosts': hiddenPosts,
+          'posts': posts,
+        });
+      });
+    } catch (error) {
+      rethrow;
+    }
+  }
+
+  Future<void> _reShowPost(String postID) async {
+    try {
+      await referenceDatabase
+          .collection('users')
+          .doc(userID)
+          .get()
+          .then((documentSnapshot) async {
+        final _user = documentSnapshot.data();
+        final hiddenPosts = _user!['hiddenPosts'] as List;
+        final posts = _user['posts'] as List;
+        final res = hiddenPosts.remove(postID);
+
+        if (res) {
+          posts.add(postID);
+          await referenceDatabase
+              .collection('posts')
+              .doc(postID)
+              .update({'isHidden': false});
+
+          await referenceDatabase.collection('users').doc(userID).update({
+            'hiddenPosts': hiddenPosts,
+            'posts': posts,
+          });
+        }
+      });
+    } catch (error) {
+      rethrow;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -63,8 +130,8 @@ class TradingProductCard extends StatelessWidget {
                   height: height * 0.15,
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(10),
-                    child: Image.asset(
-                      review.posts![0].images[0],
+                    child: Image.network(
+                      imageUrl,
                       fit: BoxFit.cover,
                     ),
                   ),
@@ -124,6 +191,14 @@ class TradingProductCard extends StatelessWidget {
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
-    properties.add(DiagnosticsProperty<Review>('review', review));
+    properties.add(DiagnosticsProperty<bool>('isHiddenPost', isHiddenPost));
+    properties.add(StringProperty('name', name));
+    properties.add(StringProperty('price', price));
+    properties.add(DiagnosticsProperty<DateTime>('dateTime', dateTime));
+    properties.add(StringProperty('userID', userID));
+    properties.add(StringProperty('postID', id));
+    properties.add(StringProperty('imageUrl', imageUrl));
+    properties.add(DiagnosticsProperty<FirebaseFirestore>(
+        'referenceDatabase', referenceDatabase));
   }
 }

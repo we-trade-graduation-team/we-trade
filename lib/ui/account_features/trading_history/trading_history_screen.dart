@@ -1,9 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import '../../../models/ui/shared_models/product_model.dart';
-import '../account_screen/account_screen.dart';
 import '../shared_widgets/geting_data_status.dart';
 import '../shared_widgets/history_prod_card.dart';
 import '../utils.dart';
@@ -20,11 +20,11 @@ class TradingHistoryScreen extends StatefulWidget {
 }
 
 class _TradingHistoryScreenState extends State<TradingHistoryScreen> {
-  final userID = AccountScreen.localUserID;
+  final userID = FirebaseAuth.instance.currentUser!.uid;
 
   @override
   Widget build(BuildContext context) {
-    final referenceDatabase = AccountScreen.localRefDatabase;
+    final referenceDatabase = FirebaseFirestore.instance;
     final offerSideProducts = [allProduct[0], allProduct[1]];
     const money = 100000;
     final forProduct = allProduct[3];
@@ -86,7 +86,7 @@ class _TradingHistoryScreenState extends State<TradingHistoryScreen> {
                       );
                     }
                     return const CustomLinearProgressIndicator(
-                        verticalPadding: 30, horizontalPadding: 30);
+                        verticalPadding: 65, horizontalPadding: 30);
                   },
                 );
               },

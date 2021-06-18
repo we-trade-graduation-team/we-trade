@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import '../account_screen/account_screen.dart';
 
 import '../utils.dart';
 
@@ -45,8 +45,8 @@ class HidePostScreen extends StatefulWidget {
 }
 
 class _HidePostScreenState extends State<HidePostScreen> {
-  final referenceDatabase = AccountScreen.localRefDatabase;
-  final userID = AccountScreen.localUserID;
+  final referenceDatabase = FirebaseFirestore.instance;
+  final userID = FirebaseAuth.instance.currentUser!.uid;
 
   List<Reason> reasons = [];
   Reason selectedReason = Reason(
@@ -101,13 +101,18 @@ class _HidePostScreenState extends State<HidePostScreen> {
 
         if (res) {
           hiddenPosts.add(postID);
+          await referenceDatabase
+              .collection('posts')
+              .doc(postID)
+              .update({'isHidden': true});
+
+          await referenceDatabase.collection('users').doc(userID).update({
+            'hiddenPosts': hiddenPosts,
+            'posts': posts,
+          }).then((value) {
+            return true;
+          });
         }
-        await referenceDatabase.collection('users').doc(userID).update({
-          'hiddenPosts': hiddenPosts,
-          'posts': posts,
-        }).then((value) {
-          return true;
-        });
       });
     } catch (error) {
       rethrow;
@@ -180,9 +185,9 @@ class _HidePostScreenState extends State<HidePostScreen> {
     properties.add(IterableProperty<Reason>('reasons', reasons));
     properties
         .add(DiagnosticsProperty<Reason>('selectedReason', selectedReason));
-    properties.add(DiagnosticsProperty<DocumentReference<Map<String, dynamic>>>(
-        'referenceDatabase', referenceDatabase));
     properties.add(StringProperty('userID', userID));
     properties.add(DiagnosticsProperty<bool>('isSelected', isSelected));
+    properties.add(DiagnosticsProperty<FirebaseFirestore>(
+        'referenceDatabase', referenceDatabase));
   }
 }

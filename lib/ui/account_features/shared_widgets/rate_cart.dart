@@ -1,40 +1,46 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:intl/intl.dart';
+
 import '../../../constants/app_colors.dart';
 import '../account_screen/local_widgets/getter.dart';
-
+import 'reply_button.dart';
 
 class RateCard extends StatelessWidget {
   const RateCard({
     Key? key,
     required this.otherSideUserID,
+    required this.ratingID,
     required this.tradingID,
     required this.star,
     required this.comment,
     required this.reply,
     required this.dateTime,
     required this.isMyRateFromOther,
+    required this.showingPost,
   }) : super(key: key);
   final String otherSideUserID;
+  final String ratingID;
   final String tradingID;
   final int star;
   final String comment;
   final String reply;
   final DateTime dateTime;
   final bool isMyRateFromOther;
+  final String showingPost;
 
   @override
   Widget build(BuildContext context) {
+    final referenceDatabase = FirebaseFirestore.instance;
     final width = MediaQuery.of(context).size.width;
     final dateFormat = DateFormat.yMMMMd('en_US').add_jm().format(dateTime);
 
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 10),
       padding: const EdgeInsets.all(20),
-      decoration:  BoxDecoration(
-        //color: Colors.white,
+      decoration: BoxDecoration(
         border: Border(
           bottom: BorderSide(
             color: Theme.of(context).primaryColor,
@@ -48,18 +54,35 @@ class RateCard extends StatelessWidget {
             children: [
               Container(
                 margin: const EdgeInsets.fromLTRB(0, 0, 20, 0),
-                // child: CircleAvatar(
-                //   child: CircleAvatar(
-                //     radius: 100,
-                //     backgroundImage: AssetImage(review.user.image),
-                //   ),
-                // ),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(100),
-                  color: Colors.amber,
+                  color: Colors.black26,
                 ),
                 width: 40,
                 height: 40,
+                child: FutureBuilder<DocumentSnapshot>(
+                    future: referenceDatabase
+                        .collection('users')
+                        .doc(otherSideUserID)
+                        .get(),
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.done) {
+                        final user = snapshot.data!;
+                        final avatarUrl = user['avatarUrl'].toString();
+                        return CircleAvatar(
+                          backgroundColor: Colors.black26,
+                          backgroundImage: NetworkImage(
+                            avatarUrl,
+                            scale: 1,
+                          ),
+                        );
+                      }
+
+                      return const Center(
+                          child: CircularProgressIndicator(
+                        color: Colors.black45,
+                      ));
+                    }),
               ),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -68,9 +91,9 @@ class RateCard extends StatelessWidget {
                     margin: const EdgeInsets.symmetric(vertical: 5),
                     width: width * 0.7,
                     child: DefaultTextStyle(
-                      style:  TextStyle(
+                      style: TextStyle(
                         color: Theme.of(context).primaryColor,
-                        fontSize: 15,
+                        fontSize: 16,
                         fontWeight: FontWeight.w600,
                       ),
                       child: GetUserName(
@@ -101,26 +124,45 @@ class RateCard extends StatelessWidget {
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Expanded(
-                // child: ClipRRect(
-                //   borderRadius: BorderRadius.circular(10),
-                //   child: Image.asset(
-                //     review.product.images[0],
-                //     fit: BoxFit.cover,
-                //   ),
-                // ),
-                child: Container(
+              Container(
                   decoration: BoxDecoration(
-                    color: Colors.red,
+                    color: Colors.black26,
                     borderRadius: BorderRadius.circular(10),
                   ),
-                  height: 70,
-                ),
-              ),
+                  width: 110,
+                  height: 90,
+                  child: FutureBuilder<DocumentSnapshot>(
+                      future: referenceDatabase
+                          .collection('posts')
+                          .doc(showingPost)
+                          .get(),
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState == ConnectionState.done) {
+                          final post = snapshot.data!;
+                          return ClipRRect(
+                            borderRadius: BorderRadius.circular(10),
+                            child: Image.network(
+                              post['imagesUrl'][0].toString(),
+                              fit: BoxFit.cover,
+                            ),
+                          );
+                        }
+                        return const Center(
+                            child: CircularProgressIndicator(
+                          color: Colors.black45,
+                        ));
+                      })),
               const SizedBox(width: 15),
               Expanded(
                 flex: 3,
-                child: Text(comment),
+                child: Container(
+                    padding:
+                        const EdgeInsets.symmetric(vertical: 5, horizontal: 8),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(5),
+                      color: Colors.black12,
+                    ),
+                    child: Text(comment)),
               ),
             ],
           ),
@@ -137,7 +179,10 @@ class RateCard extends StatelessWidget {
               ),
             ),
           ),
-          if (reply != '') getWidgetReplie(reply),
+          if (reply.isNotEmpty)
+            getWidgetReplie(reply)
+          else if (isMyRateFromOther)
+            ReplyButton(ratingID: ratingID),
         ],
       ),
     );
@@ -147,6 +192,7 @@ class RateCard extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(5),
+        color: Colors.black12,
       ),
       margin: const EdgeInsets.symmetric(vertical: 10),
       alignment: Alignment.topLeft,
@@ -160,7 +206,7 @@ class RateCard extends StatelessWidget {
           hintText: '\n',
           hintStyle: const TextStyle(height: 2),
           labelStyle: const TextStyle(
-            color:AppColors.kReviewTextLabel ,
+            color: AppColors.kReviewTextLabel,
             fontSize: 17,
             fontWeight: FontWeight.normal,
           ),
@@ -184,5 +230,7 @@ class RateCard extends StatelessWidget {
     properties.add(DiagnosticsProperty<DateTime>('dateTime', dateTime));
     properties
         .add(DiagnosticsProperty<bool>('isMyRateFromOther', isMyRateFromOther));
+    properties.add(StringProperty('showingPost', showingPost));
+    properties.add(StringProperty('ratingID', ratingID));
   }
 }
