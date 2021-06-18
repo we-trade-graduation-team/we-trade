@@ -23,15 +23,11 @@ class WishListScreen extends StatelessWidget {
       ),
       Center(
         child: Wrap(
-          // alignment: WrapAlignment.spaceAround,
           spacing: 20,
           runSpacing: 15,
+          // ignore: prefer_const_literals_to_create_immutables
           children: [
-            // ...products
-            //     .map(
-            //       (product) => ProductCard(product: product),
-            //     )
-            //     .toList(),
+          //TODO: render postsList
           ],
         ),
       ),

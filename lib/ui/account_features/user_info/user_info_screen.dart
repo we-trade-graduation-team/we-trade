@@ -1,11 +1,14 @@
+import 'package:algolia/algolia.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
-import '../../../constants/app_colors.dart';
 
+import '../../../constants/app_colors.dart';
+import '../../../services/algolia/algolia.dart';
+import '../../../services/message/algolia_user_service.dart';
 import '../utils.dart';
 import './change_password_screen.dart';
 
@@ -23,6 +26,7 @@ class UserInfoScreen extends StatefulWidget {
 class _UserInfoScreenState extends State<UserInfoScreen> {
   final referenceDatabase = FirebaseFirestore.instance;
   final userID = FirebaseAuth.instance.currentUser!.uid;
+  final Algolia algolia = Application.algolia;
 
   final _nameController = TextEditingController();
   final _phoneNumController = TextEditingController();
@@ -89,31 +93,34 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
     });
 
     final data = <String, dynamic>{
+      'objectID': userID,
       'name': _nameController.text,
       'email': _emailController.text,
       'phoneNumber': _phoneNumController.text,
       'location': _locationController.text,
       'bio': _bioController.text,
     };
-
     try {
       await referenceDatabase
           .collection('users')
           .doc(userID)
           .update(data)
-          .then((value) {
+          .then((_) async {
         setState(() {
           _isChanged = false;
           _isLoaded = true;
         });
-
-        showMyNotificationDialog(
+        await showMyNotificationDialog(
             context: context,
             title: 'Thông báo',
             content: 'Thông tin thay đổi thành công!',
             handleFunction: () {
               Navigator.of(context).pop();
             });
+
+        await UserServiceAlgolia().updateUser(data);
+        //TODO: Nếu ai cần cập nhật  User(name, email, ...) của provider thì cập nhật ở đây
+        //
       }).timeout(Duration(seconds: timeOut));
     } on FirebaseException catch (error) {
       // ignore: avoid_print
@@ -164,24 +171,6 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                     child: Column(
                       children: <Widget>[
                         FormBuilderTextField(
-                          name: 'name',
-                          decoration: const InputDecoration(
-                            icon: Icon(Icons.person),
-                            labelText: 'Họ và tên',
-                            hintText: 'Nhập họ tên',
-                            floatingLabelBehavior: FloatingLabelBehavior.auto,
-                          ),
-                          validator: FormBuilderValidators.compose([
-                            FormBuilderValidators.required(context),
-                          ]),
-                          onEditingComplete: _onEdittingCompleteHandleFunction,
-                          textInputAction: TextInputAction.done,
-                          keyboardType: TextInputType.text,
-                          controller: _nameController,
-                          onChanged: _onChangedHandleFunction,
-                        ),
-                        const SizedBox(height: 15),
-                        FormBuilderTextField(
                           name: 'email',
                           decoration: const InputDecoration(
                             icon: Icon(Icons.email),
@@ -197,6 +186,25 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                           textInputAction: TextInputAction.done,
                           keyboardType: TextInputType.emailAddress,
                           controller: _emailController,
+                          onChanged: _onChangedHandleFunction,
+                          enabled: false,
+                        ),
+                        const SizedBox(height: 15),
+                        FormBuilderTextField(
+                          name: 'name',
+                          decoration: const InputDecoration(
+                            icon: Icon(Icons.person),
+                            labelText: 'Họ và tên',
+                            hintText: 'Nhập họ tên',
+                            floatingLabelBehavior: FloatingLabelBehavior.auto,
+                          ),
+                          validator: FormBuilderValidators.compose([
+                            FormBuilderValidators.required(context),
+                          ]),
+                          onEditingComplete: _onEdittingCompleteHandleFunction,
+                          textInputAction: TextInputAction.done,
+                          keyboardType: TextInputType.text,
+                          controller: _nameController,
                           onChanged: _onChangedHandleFunction,
                         ),
                         const SizedBox(height: 15),
@@ -237,7 +245,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                             hintText: 'Nhập lời giới thiệu...',
                             floatingLabelBehavior: FloatingLabelBehavior.auto,
                           ),
-                          textInputAction: TextInputAction.newline,
+                          textInputAction: TextInputAction.done,
                           controller: _bioController,
                           onChanged: _onChangedHandleFunction,
                           maxLength: 300,
@@ -313,5 +321,6 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
     properties.add(StringProperty('userID', userID));
     properties.add(DiagnosticsProperty<FirebaseFirestore>(
         'referenceDatabase', referenceDatabase));
+    properties.add(DiagnosticsProperty<Algolia>('algolia', algolia));
   }
 }

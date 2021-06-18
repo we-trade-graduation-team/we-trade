@@ -82,7 +82,7 @@ class _FollowScreenState extends State<FollowScreen> {
           : _user!['following'] as List;
       followingUsers = _user!['following'] as List;
     }
-
+    // chang: nút follow, truyền vào id người muốn theo dõi
     Widget buildFollowButton(String idValue) {
       return ElevatedButton(
         onPressed: () {
@@ -111,6 +111,7 @@ class _FollowScreenState extends State<FollowScreen> {
       );
     }
 
+    // chang: nút unfollow, truyền vào id người bỏ theo dõi
     Widget buildUnfollowButton(String idValue) {
       return OutlinedButton(
         onPressed: () async {
@@ -214,6 +215,8 @@ class _FollowScreenState extends State<FollowScreen> {
                         if (screen.screenName == Follow_Screen_Name.following)
                           buildUnfollowButton(usersRender[index] as String)
                         else
+                        //chang: logic đoạn này, nếu trong user['following'] có id user kia rồi
+                        //thì hiện nút unfollow, ngược lại hiện hiện follow
                           followingUsers.contains(usersRender[index])
                               ? buildUnfollowButton(
                                   usersRender[index] as String)

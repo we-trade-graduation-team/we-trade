@@ -32,14 +32,6 @@ class AccountScreen extends StatefulWidget {
   const AccountScreen({
     Key? key,
   }) : super(key: key);
-
-  static const routeName = '/account';
-  // final quangDocID = 'h0Z8Hn6XvbtMsP4bwa4P';
-  // static final localRefDatabase = FirebaseFirestore.instance
-  // .collection('quang')
-  // .doc('h0Z8Hn6XvbtMsP4bwa4P');
-  // static const localUserID = 'HClKVm4TTdlx28xCKTxF';
-
   @override
   _AccountScreenState createState() => _AccountScreenState();
 }

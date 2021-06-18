@@ -3,7 +3,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import '../../../constants/app_colors.dart';
-import '../account_screen/account_screen.dart';
 
 import '../utils.dart';
 

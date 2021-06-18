@@ -6,6 +6,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
+
+import '../../../../../services/message/algolia_user_service.dart';
 import '../../../utils.dart';
 
 class UserImagePicker extends StatefulWidget {
@@ -69,10 +71,14 @@ class _UserImagePickerState extends State<UserImagePicker> {
             pickedUploadImage = pickedImageFile;
           });
           final downloadUrl = await snapshot.ref.getDownloadURL();
+          final updateData = {'objectID': userID, 'avatarUrl': downloadUrl};
           await referenceDatabase
               .collection('users')
               .doc(widget.userID)
-              .update({'avatarUrl': downloadUrl});
+              .update(updateData);
+          await UserServiceAlgolia().updateUser(updateData);
+          //TODO: Nếu ai cần cập nhật  User(avatarUrl) của provider thì cập nhật ở đây
+          //
         } on FirebaseException catch (_) {
           await showMyNotificationDialog(
               context: context,
@@ -104,10 +110,14 @@ class _UserImagePickerState extends State<UserImagePicker> {
           pickedUploadImage = pickedImageFile;
         });
         final downloadUrl = await snapshot.ref.getDownloadURL();
+        final updateData = {'objectID': userID, 'avatarUrl': downloadUrl};
         await referenceDatabase
             .collection('users')
             .doc(widget.userID)
-            .update({'avatarUrl': downloadUrl});
+            .update(updateData);
+        await UserServiceAlgolia().updateUser(updateData);
+        //TODO: Nếu ai cần cập nhật  User(avatarUrl) của provider thì cập nhật ở đây
+        //
       }
     }
   }
