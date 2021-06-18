@@ -32,7 +32,7 @@ class PostCard {
   final PostCardItem item;
 
   @JsonKey(required: true, defaultValue: 0)
-  final int view;
+  int view;
 
   Map<String, dynamic> toJson() {
     final json = _$PostCardToJson(this);

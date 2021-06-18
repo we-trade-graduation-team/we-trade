@@ -21,6 +21,7 @@ class MainMenu extends StatefulWidget {
 
 class _MainMenuState extends State<MainMenu> {
   final _controller = PersistentTabController();
+
   final _hideNavBar = false;
 
   @override

@@ -10,7 +10,7 @@ UserKeywordHistory _$UserKeywordHistoryFromJson(Map<String, dynamic> json) {
   $checkKeys(json, requiredKeys: const ['keywordId', 'times']);
   return UserKeywordHistory(
     keywordId: json['keywordId'] as String,
-    times: json['times'] as int,
+    times: json['times'] as int? ?? 1,
   );
 }
 
