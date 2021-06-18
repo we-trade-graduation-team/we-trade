@@ -51,8 +51,8 @@ class _PostItemTwoState extends State<PostItemTwo> {
     final _tempCategory = <TypeofGoods>[];
     return dataServiceFireStore.getMainCategory().then((value) {
       for (final item in value.docs) {
-        final itemCate = TypeofGoods(
-            id: item.id, name: item.data()['category_name'].toString());
+        final itemCate =
+            TypeofGoods(id: item.id, name: item.data()['category'].toString());
         _tempCategory.add(itemCate);
       }
       return _tempCategory;
@@ -64,7 +64,7 @@ class _PostItemTwoState extends State<PostItemTwo> {
     return dataServiceFireStore.getSubCategory(main).then((value) {
       for (final item in value.docs) {
         final subCate = TypeofGoods(
-            id: item.id, name: item.data()['subCategory_name'].toString());
+            id: item.id, name: item.data()['subCategory'].toString());
         _typeSubTemp.add(subCate);
       }
       return _typeSubTemp;
@@ -94,67 +94,6 @@ class _PostItemTwoState extends State<PostItemTwo> {
       }
       return _typeSubTemp;
     });
-  }
-
-  Future<dynamic> addItemDialog() {
-    return showDialog<dynamic>(
-      context: PostItemTwo.navKey.currentState?.overlay?.context ?? context,
-      builder: (alertContext) {
-        return AlertDialog(
-          title: const Text('Nhập keyword'),
-          content: Form(
-            key: _formKey,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                input ?? const SizedBox.shrink(),
-                TextButton(
-                  onPressed: () {
-                    if (_formKey.currentState?.validate() ?? false) {
-                      editableItems.add(DropdownMenuItem<dynamic>(
-                        value: inputString,
-                        child: Text(inputString),
-                      ));
-                      dataServiceFireStore
-                          .addKeyword(inputString)
-                          .then((newkeywordId) {
-                        final keyword =
-                            KeyWord(id: newkeywordId, value: inputString);
-                        listKeyWord.add(keyword);
-                      });
-                      Navigator.pop(alertContext, inputString);
-                    }
-                  },
-                  child: const Text('Xác nhận'),
-                ),
-                TextButton(
-                  onPressed: () {
-                    Navigator.pop(alertContext, 'null');
-                  },
-                  child: const Text('Hủy'),
-                ),
-              ],
-            ),
-          ),
-        );
-      },
-    );
-  }
-
-  Future<List<String>> getKeywordToSave() async {
-    try {
-      final tempKeyword = <String>[];
-      for (var i = 0; i < editableSelectedItems.length; i++) {
-        tempKeyword
-            .add(editableItems[editableSelectedItems[i]].value.toString());
-        idKeywordToSave.add(listKeyWord
-            .firstWhere((element) => tempKeyword[i] == element.value.toString())
-            .id);
-      }
-      return tempKeyword;
-    } catch (e) {
-      rethrow;
-    }
   }
 
   Widget categoryDropDown() => DropdownButton<TypeofGoods>(
@@ -230,6 +169,68 @@ class _PostItemTwoState extends State<PostItemTwo> {
               }).toList()
             : [],
       );
+
+  Future<dynamic> addItemDialog() {
+    return showDialog<dynamic>(
+      context: PostItemTwo.navKey.currentState?.overlay?.context ?? context,
+      builder: (alertContext) {
+        return AlertDialog(
+          title: const Text('Nhập keyword'),
+          content: Form(
+            key: _formKey,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                input ?? const SizedBox.shrink(),
+                TextButton(
+                  onPressed: () {
+                    if (_formKey.currentState?.validate() ?? false) {
+                      editableItems.add(DropdownMenuItem<dynamic>(
+                        value: inputString,
+                        child: Text(inputString),
+                      ));
+                      // dataServiceFireStore
+                      //     .addKeyword(inputString)
+                      //     .then((newkeywordId) {
+                      final keyword = KeyWord(id: 'new', value: inputString);
+                      listKeyWord.add(keyword);
+                      //});
+                      Navigator.pop(alertContext, inputString);
+                    }
+                  },
+                  child: const Text('Xác nhận'),
+                ),
+                TextButton(
+                  onPressed: () {
+                    Navigator.pop(alertContext, 'null');
+                  },
+                  child: const Text('Hủy'),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  Future<List<String>> getKeywordToSave() async {
+    try {
+      final tempKeyword = <String>[];
+      for (var i = 0; i < editableSelectedItems.length; i++) {
+        tempKeyword
+            .add(editableItems[editableSelectedItems[i]].value.toString());
+        idKeywordToSave.add(listKeyWord
+            .firstWhere((element) =>
+                tempKeyword[i] == element.value.toString() &&
+                element.id != 'new')
+            .id);
+      }
+      return tempKeyword;
+    } catch (e) {
+      rethrow;
+    }
+  }
 
   Widget keyWordChoice() {
     return SearchChoices<dynamic>.multiple(
@@ -321,7 +322,7 @@ class _PostItemTwoState extends State<PostItemTwo> {
         // return object of type Dialog
         return AlertDialog(
           //title: const Text(''),
-          content: const Text('Bạn chọn keyword'),
+          content: const Text('Bạn chưa chọn keyword'),
           actions: <Widget>[
             // usually buttons at the bottom of the dialog
             TextButton(

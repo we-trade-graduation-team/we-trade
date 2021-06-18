@@ -11,7 +11,7 @@ class PostDetailsItem {
     required this.images,
     required this.description,
     required this.condition,
-    required this.address,
+    required this.addressInfo,
     required this.price,
     required this.tradeForList,
   });
@@ -29,7 +29,7 @@ class PostDetailsItem {
   final String condition;
 
   @JsonKey(required: true)
-  final PostDetailsItemAddress address;
+  final PostDetailsItemAddress addressInfo;
 
   @JsonKey(required: true)
   final double price;

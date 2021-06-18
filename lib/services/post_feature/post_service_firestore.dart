@@ -4,9 +4,8 @@ class PostServiceFireStore {
   Future<QuerySnapshot<Map<String, dynamic>>> getMainCategory() {
     try {
       return FirebaseFirestore.instance
-          .collection('thientin')
-          .doc('category')
-          .collection('categoryList')
+          .collection('categories')
+          .orderBy('category')
           .get();
     } catch (e) {
       rethrow;
@@ -17,10 +16,8 @@ class PostServiceFireStore {
       String mainCategory) {
     try {
       return FirebaseFirestore.instance
-          .collection('thientin')
-          .doc('category')
-          .collection('categoryList')
-          .where('category_name', isEqualTo: mainCategory)
+          .collection('categories')
+          .where('category', isEqualTo: mainCategory)
           .get()
           .then((value) async {
         if (value.docs.isNotEmpty) {
@@ -36,7 +33,7 @@ class PostServiceFireStore {
   Future<QuerySnapshot<Map<String, dynamic>>> getCities() {
     try {
       return FirebaseFirestore.instance
-          .collection('vietNamCities')
+          .collection('locations')
           .orderBy('city')
           .get();
     } catch (e) {
@@ -47,13 +44,13 @@ class PostServiceFireStore {
   Future<QuerySnapshot<Map<String, dynamic>>> getDistrict(String city) {
     try {
       return FirebaseFirestore.instance
-          .collection('vietNamCities')
+          .collection('locations')
           .where('city', isEqualTo: city)
           .get()
           .then((value) async {
         if (value.docs.isNotEmpty) {
           return value.docs[0].reference
-              .collection('district')
+              .collection('districts')
               .orderBy('district')
               .get();
         }
@@ -100,7 +97,7 @@ class PostServiceFireStore {
   Future<String> addPost(Map arguments) async {
     try {
       final CollectionReference postDB =
-          FirebaseFirestore.instance.collection('post');
+          FirebaseFirestore.instance.collection('posts');
       final doc = await postDB.add(arguments);
       return doc.id;
     } catch (e) {

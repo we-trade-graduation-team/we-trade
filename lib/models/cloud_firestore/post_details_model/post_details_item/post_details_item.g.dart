@@ -11,7 +11,7 @@ PostDetailsItem _$PostDetailsItemFromJson(Map<String, dynamic> json) {
     'images',
     'description',
     'condition',
-    'address',
+    'addressInfo',
     'price',
     'tradeForList'
   ]);
@@ -19,8 +19,8 @@ PostDetailsItem _$PostDetailsItemFromJson(Map<String, dynamic> json) {
     images: (json['images'] as List<dynamic>).map((e) => e as String).toList(),
     description: json['description'] as String,
     condition: json['condition'] as String,
-    address: PostDetailsItemAddress.fromJson(
-        json['address'] as Map<String, dynamic>),
+    addressInfo: PostDetailsItemAddress.fromJson(
+        json['addressInfo'] as Map<String, dynamic>),
     price: (json['price'] as num).toDouble(),
     tradeForList: (json['tradeForList'] as List<dynamic>)
         .map((e) => e as String)
@@ -33,7 +33,7 @@ Map<String, dynamic> _$PostDetailsItemToJson(PostDetailsItem instance) =>
       'images': instance.images,
       'description': instance.description,
       'condition': instance.condition,
-      'address': instance.address.toJson(),
+      'addressInfo': instance.addressInfo.toJson(),
       'price': instance.price,
       'tradeForList': instance.tradeForList,
     };

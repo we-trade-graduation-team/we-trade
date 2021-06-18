@@ -9,8 +9,6 @@ class FirestorePath {
 
   static String users() => 'users';
 
-  static String post() => 'post';
-
   static String user({
     required String uid,
   }) =>
@@ -42,12 +40,26 @@ class FirestorePath {
   }) =>
       '${allCategoryEvents()}/$categoryId';
 
+  static String posts() => 'posts';
+
+  static String post({
+    required String postId,
+  }) =>
+      '${posts()}/$postId';
+
   static String postCards() => 'postCards';
 
   static String postCard({
     required String postId,
   }) =>
       '${postCards()}/$postId';
+
+  static String allPostDetails() => 'postDetails';
+
+  static String postDetails({
+    required String postId,
+  }) =>
+      '${allPostDetails()}/$postId';
 
   static String keywords() => 'keywords';
 

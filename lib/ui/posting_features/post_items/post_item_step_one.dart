@@ -3,6 +3,7 @@ import 'dart:developer';
 // import cho upload image
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 // import cho upload image
 import 'package:multi_image_picker2/multi_image_picker2.dart';
@@ -34,7 +35,6 @@ class _PostItemOneState extends State<PostItemOne> {
   Future<void> loadAssets() async {
     var resultList = <Asset>[]; //start here list ảnh trả ra tạm thời
     var error = 'No Error Detected';
-
     try {
       resultList = await MultiImagePicker.pickImages(
         maxImages: 6,

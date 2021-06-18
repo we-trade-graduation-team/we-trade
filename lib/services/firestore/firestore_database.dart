@@ -1,13 +1,20 @@
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:collection/collection.dart';
+import '../../constants/app_assets.dart';
 
 import '../../constants/app_firestore_constant.dart';
 import '../../models/cloud_firestore/category_card/category_card.dart';
 import '../../models/cloud_firestore/category_events/category_events.dart';
 import '../../models/cloud_firestore/junction_keyword_post/junction_keyword_post.dart';
 import '../../models/cloud_firestore/post_card_model/post_card/post_card.dart';
+import '../../models/cloud_firestore/post_details_model/post_details/post_details.dart';
+import '../../models/cloud_firestore/post_details_model/post_details_item/post_details_item.dart';
+import '../../models/cloud_firestore/post_details_model/post_details_item_address/post_details_item_address.dart';
+import '../../models/cloud_firestore/post_details_model/post_details_owner/post_details_owner.dart';
+import '../../models/cloud_firestore/post_model/post/post.dart';
 import '../../models/cloud_firestore/special_category_card/special_category_card.dart';
 import '../../models/cloud_firestore/user_model/user/user.dart' as user_model;
 import '../../models/cloud_firestore/user_model/user_category_history/user_category_history.dart';
@@ -50,8 +57,18 @@ class FirestoreDatabase {
     return _result;
   }
 
+  // Future<user_model.User> _getUser({
+  //   required String userId,
+  // }) async {
+  //   final _result = await _fireStoreService.documentFuture(
+  //     path: FirestorePath.user(uid: userId),
+  //     builder: (data) => user_model.User.fromDocumentSnapshot(data),
+  //   );
+  //   return _result;
+  // }
+
   // Method to update user info
-  Future<void> updateCurrentUser({
+  Future<void> _updateCurrentUser({
     // required String uid,
     required Map<String, dynamic> newData,
   }) async {
@@ -61,21 +78,8 @@ class FirestoreDatabase {
     );
   }
 
-  // Method to update user info
-  Future<void> setCurrentUserData({
-    // required String uid,
-    required Map<String, dynamic> newData,
-    bool merge = false,
-  }) async {
-    await _fireStoreService.setData(
-      path: FirestorePath.user(uid: uid),
-      data: newData,
-      merge: merge,
-    );
-  }
-
   // Method to update postCard info
-  Future<void> updatePostCard({
+  Future<void> _updatePostCard({
     required String postId,
     required Map<String, dynamic> newData,
   }) async {
@@ -97,7 +101,7 @@ class FirestoreDatabase {
       _viewField: FieldValue.increment(amount),
     };
 
-    await updatePostCard(
+    await _updatePostCard(
       postId: postId,
       newData: _newData,
     );
@@ -572,7 +576,7 @@ class FirestoreDatabase {
             _categoryHistoryField: _dataList,
           };
 
-          return updateCurrentUser(
+          return _updateCurrentUser(
             newData: _newData,
           );
         }
@@ -592,7 +596,7 @@ class FirestoreDatabase {
       _categoryHistoryField: FieldValue.arrayUnion(_dataList),
     };
 
-    return updateCurrentUser(
+    return _updateCurrentUser(
       newData: _newData,
     );
   }
@@ -655,7 +659,7 @@ class FirestoreDatabase {
           _keywordHistoryField: _dataList,
         };
 
-        return updateCurrentUser(
+        return _updateCurrentUser(
           newData: _newData,
         );
       }
@@ -671,33 +675,78 @@ class FirestoreDatabase {
       _keywordHistoryField: FieldValue.arrayUnion(_dataList),
     };
 
-    return updateCurrentUser(
+    return _updateCurrentUser(
       newData: _newData,
     );
   }
 
-  // Method to retrieve all user details from Firestore
-  Stream<List<user_model.User>> usersStream() {
-    return _fireStoreService.collectionStream(
-      path: FirestorePath.users(),
-      builder: (data) => user_model.User.fromDocumentSnapshot(data),
+  // Method to set post details by postId
+  Future<Post> getPost({
+    required String postId,
+  }) async {
+    final _result = await _fireStoreService.documentFuture(
+      path: FirestorePath.post(postId: postId),
+      builder: (data) => Post.fromDocumentSnapshot(data),
     );
+
+    return _result;
   }
 
-  // Method to retrieve a User
-  Stream<user_model.User> userStream() {
-    return _fireStoreService.documentStream(
-      path: FirestorePath.user(uid: uid),
-      builder: (data) => user_model.User.fromDocumentSnapshot(data),
-    );
+  // Method to set post details by postId
+  Future<void> setPostDetails({
+    required String postId,
+  }) async {
+    try {
+      // Get post info
+      final _postInfo = await getPost(postId: postId);
+      log('postInfo ne ${_postInfo.name} ');
+
+      // Get owner info
+      final _ownerInfo = await _getCurrentUser();
+
+      log('ownerInfo ne $_ownerInfo');
+       final _postDetailsToSet = PostDetails(
+        // postId: postId,
+        title: _postInfo.name,
+        itemInfo: PostDetailsItem(
+          images: _postInfo.imagesUrl,
+          description: _postInfo.itemInfo.description,
+          price: _postInfo.price.toDouble(),
+          tradeForList: _postInfo.tradeForList,
+          condition: _postInfo.itemInfo.condition,
+          addressInfo: PostDetailsItemAddress(
+            address: _postInfo.itemInfo.addressInfo.address,
+            district: _postInfo.itemInfo.addressInfo.district,
+            city: _postInfo.itemInfo.addressInfo.city,
+          ),
+        ),
+        ownerInfo: PostDetailsOwner(
+        uid: _ownerInfo.uid!,
+        name: _ownerInfo.name ?? 'Unknown',
+        lastSeen: _ownerInfo.lastSeen ?? DateTime.now().millisecondsSinceEpoch,
+        avatarURL: _ownerInfo.avatarUrl ?? AppAssets.userImageStr,
+        legitimacy: _ownerInfo.legit,
+      ),
+      );
+      return _fireStoreService.setData(
+        path: FirestorePath.postDetails(postId: postId),
+        data: _postDetailsToSet.toJson(),
+      );
+    } catch (err) {
+      log('loi nua ne: $err');
+    }
   }
 
-  // Method to retrieve all Post Cards from the same user based on uid
-  Stream<List<PostCard>> userPostCardsStream() {
-    return _fireStoreService.collectionStream(
-      path: FirestorePath.userPostCards(uid: uid),
-      builder: (data) => PostCard.fromDocumentSnapshot(data),
+  // Method to retrieve post details by postId
+  Future<PostDetails> getPostDetails({
+    required String postId,
+  }) async {
+    final _result = await _fireStoreService.documentFuture(
+      path: FirestorePath.postDetails(postId: postId),
+      builder: (data) => PostDetails.fromDocumentSnapshot(data),
     );
+
+    return _result;
   }
 
   // Method to retrieve all Category Cards
@@ -739,21 +788,45 @@ class FirestoreDatabase {
     );
   }
 
-  // Method to retrieve all Post Cards
-  Stream<List<PostCard>> postCardsStream() {
-    return _fireStoreService.collectionStream(
-      path: FirestorePath.postCards(),
-      builder: (data) => PostCard.fromDocumentSnapshot(data),
-    );
-  }
+  // // Method to retrieve all user details from Firestore
+  // Stream<List<user_model.User>> usersStream() {
+  //   return _fireStoreService.collectionStream(
+  //     path: FirestorePath.users(),
+  //     builder: (data) => user_model.User.fromDocumentSnapshot(data),
+  //   );
+  // }
 
-  // Method to retrieve a Post Cards based on postId
-  Stream<PostCard> postCardStream({
-    required String postId,
-  }) {
-    return _fireStoreService.documentStream(
-      path: FirestorePath.postCard(postId: postId),
-      builder: (data) => PostCard.fromDocumentSnapshot(data),
-    );
-  }
+  // // Method to retrieve a User
+  // Stream<user_model.User> userStream() {
+  //   return _fireStoreService.documentStream(
+  //     path: FirestorePath.user(uid: uid),
+  //     builder: (data) => user_model.User.fromDocumentSnapshot(data),
+  //   );
+  // }
+
+  // // Method to retrieve all Post Cards from the same user based on uid
+  // Stream<List<PostCard>> userPostCardsStream() {
+  //   return _fireStoreService.collectionStream(
+  //     path: FirestorePath.userPostCards(uid: uid),
+  //     builder: (data) => PostCard.fromDocumentSnapshot(data),
+  //   );
+  // }
+
+  // // Method to retrieve all Post Cards
+  // Stream<List<PostCard>> postCardsStream() {
+  //   return _fireStoreService.collectionStream(
+  //     path: FirestorePath.postCards(),
+  //     builder: (data) => PostCard.fromDocumentSnapshot(data),
+  //   );
+  // }
+
+  // // Method to retrieve a Post Cards based on postId
+  // Stream<PostCard> postCardStream({
+  //   required String postId,
+  // }) {
+  //   return _fireStoreService.documentStream(
+  //     path: FirestorePath.postCard(postId: postId),
+  //     builder: (data) => PostCard.fromDocumentSnapshot(data),
+  //   );
+  // }
 }

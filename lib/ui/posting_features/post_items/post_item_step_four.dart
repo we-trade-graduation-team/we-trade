@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
@@ -6,6 +8,7 @@ import 'package:provider/provider.dart';
 
 import '../../../../constants/app_colors.dart';
 import '../../../models/cloud_firestore/user_model/user/user.dart';
+import '../../../services/firestore/firestore_database.dart';
 import '../../../services/post_feature/post_service_algolia.dart';
 import '../../../services/post_feature/post_service_firestore.dart';
 import '../../../utils/helper/image_data_storage_helper/image_data_storage_helper.dart';
@@ -66,71 +69,6 @@ class _PostItemFourState extends State<PostItemFour> {
     });
   }
 
-  Future<bool> updatePost(Map<dynamic, dynamic> arguments) async {
-    try {
-      final address = <String, dynamic>{};
-      address['city'] = citySelected.name;
-      address['district'] = districtSelected.name;
-      address['address'] = addressController.text
-          .replaceAll('  ', ' ')
-          .replaceAll(',,', ',')
-          .replaceAll('.', ',');
-      //item
-      final item = <String, dynamic>{};
-      item['description'] = arguments['description'];
-      item['condition'] = arguments['condition'];
-      item['keyword'] = arguments['keyword'];
-      item['address'] = address;
-
-      //Category
-      final categoryMap = <String, dynamic>{};
-      categoryMap['mainCategoryId'] = arguments['mainCategoryId'];
-      categoryMap['subCategoryId'] = arguments['subCategoryId'];
-      //post
-      post['name'] = arguments['name'];
-      post['item'] = item;
-      post['ownerId'] = thisUser.uid;
-      post['category'] = categoryMap;
-      post['tradeForListId'] = arguments['tradeForListId'];
-      post['isHidden'] = false;
-      post['creatAt'] = DateTime.now();
-      post['price'] = arguments['price'];
-      final tempImageURL = <String>[];
-      for (final image in arguments['imagesUrl'] as List<Asset>) {
-        await ImageDataStorageHelper.getImageURL(
-                thisUser.uid.toString(),
-                '${arguments['name']}_${DateTime.now().millisecondsSinceEpoch}',
-                image)
-            .then(tempImageURL
-                .add); //lưu ảnh lên fire storage và trả về list imageURL
-      }
-      post['imagesUrl'] = tempImageURL;
-      postCardImage = tempImageURL.first;
-
-      return true;
-    } catch (e) {
-      rethrow;
-    }
-  }
-
-  Future<bool> updatePostCard(Map<dynamic, dynamic> arguments) async {
-    try {
-      //item
-      final item = <dynamic, dynamic>{};
-      item['condition'] = arguments['condition'];
-      item['price'] = arguments['price'];
-      item['district'] = districtSelected.name;
-      item['image'] = postCardImage;
-      //postCard
-      postCard['item'] = item;
-      postCard['title'] = arguments['name'];
-      postCard['view'] = 0;
-      return true;
-    } catch (e) {
-      rethrow;
-    }
-  }
-
   Widget citiesDropDown() {
     return DropdownButton<Cities>(
       value: citiesList.isNotEmpty ? citySelected : null,
@@ -183,6 +121,80 @@ class _PostItemFourState extends State<PostItemFour> {
             : [],
       );
 
+  Future<void> _setPostDetails(String postId) async {
+    try {
+      final _firebaseDatabase = context.read<FirestoreDatabase>();
+      await _firebaseDatabase.setPostDetails(postId: postId);
+    } catch (err) {
+      log(err.toString());
+    }
+  }
+
+  Future<bool> updatePost(Map<dynamic, dynamic> arguments) async {
+    try {
+      final addressInfo = <String, dynamic>{};
+      addressInfo['city'] = citySelected.name;
+      addressInfo['district'] = districtSelected.name;
+      addressInfo['address'] = addressController.text
+          .replaceAll('  ', ' ')
+          .replaceAll(',,', ',')
+          .replaceAll('.', ',');
+      //item
+      final itemInfo = <String, dynamic>{};
+      itemInfo['description'] = arguments['description'];
+      itemInfo['condition'] = arguments['condition'];
+      itemInfo['keywords'] = arguments['keyword'];
+      itemInfo['addressInfo'] = addressInfo;
+
+      //Category
+      final categoryInfo = <String, dynamic>{};
+      categoryInfo['mainCategoryId'] = arguments['mainCategoryId'];
+      categoryInfo['subCategoryId'] = arguments['subCategoryId'];
+      //post
+      post['name'] = arguments['name'];
+      post['itemInfo'] = itemInfo;
+      post['owner'] = thisUser.uid;
+      post['categoryInfo'] = categoryInfo;
+      post['tradeForList'] = arguments['tradeForList'];
+      post['isHidden'] = false;
+      post['createAt'] = DateTime.now();
+      post['price'] = arguments['price'];
+      final tempImageURL = <String>[];
+      for (final image in arguments['imagesUrl'] as List<Asset>) {
+        await ImageDataStorageHelper.getImageURL(
+                thisUser.uid.toString(),
+                '${arguments['name']}_${DateTime.now().millisecondsSinceEpoch}',
+                image)
+            .then(tempImageURL
+                .add); //lưu ảnh lên fire storage và trả về list imageURL
+      }
+      post['imagesUrl'] = tempImageURL;
+      postCardImage = tempImageURL.first;
+
+      return true;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<bool> updatePostCard(Map<dynamic, dynamic> arguments) async {
+    try {
+      //item
+      final item = <dynamic, dynamic>{};
+      item['condition'] = arguments['condition'];
+      item['price'] = arguments['price'];
+      item['district'] = districtSelected.name;
+      item['image'] = postCardImage;
+      //postCard
+      postCard['item'] = item;
+      postCard['title'] = arguments['name'];
+      postCard['view'] = 0;
+      return true;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
   void _showMessgage() {
     showDialog<dynamic>(
       context: context,
@@ -213,7 +225,13 @@ class _PostItemFourState extends State<PostItemFour> {
         dataServiceFireStore.addPost(post).then((postID) {
           updatePostCard(arguments).then((value) {
             if (value) {
-              dataServiceFireStore.addPostCard(postCard, postID);
+              dataServiceFireStore
+                  .addPostCard(postCard, postID)
+                  .whenComplete(() {
+                _setPostDetails(postID);
+                //   final db = FirestoreDatabase(uid: '');
+                //   db.setPostDetails(postId: postID);
+              });
               dataServiceFireStore.addJunctionKeywordPost(
                   arguments['keywordId'] as List<String>, postID);
             }
@@ -222,9 +240,9 @@ class _PostItemFourState extends State<PostItemFour> {
           dataServiceAlgolia.addPost(
               objectID: postID,
               name: arguments['name'] as String,
-              mainCategoyId: arguments['mainCategoryId'] as int,
-              subCategoryId: arguments['subCategoryId'] as int,
-              tradeForListId: arguments['tradeForListId'] as List<int>,
+              mainCategoyId: arguments['mainCategoryId'] as String,
+              subCategoryId: arguments['subCategoryId'] as String,
+              tradeForList: arguments['tradeForList'] as List<String>,
               imageURL: post['imagesUrl'][0] as String,
               condition: arguments['condition'] as String,
               price: arguments['price'] as int,
