@@ -4,9 +4,10 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
-import '../../../constants/app_dimens.dart';
 
+import '../../../constants/app_dimens.dart';
 import '../../../utils/routes/routes.dart';
+import '../../posting_features/update_items/update_post_step_one.dart';
 import '../post_management/hide_post_screen.dart';
 import 'custom_overlay_icon_button.dart';
 import 'trading_prod_overlay.dart';
@@ -105,6 +106,21 @@ class TradingProductCard extends StatelessWidget {
           // Navigator.of(context).pushNamed(HidePostScreen.routeName);
         },
       ),
+      OverlayItem(
+        text: 'Đổi thông tin bài đăng',
+        iconData: Icons.change_circle,
+        handleFunction: () {
+          pushNewScreenWithRouteSettings<void>(
+            context,
+            settings: const RouteSettings(
+                name: Routes.updateItemStepOneScreenRouteName),
+            screen: UpdatePostOne(postId: id),
+            // withNavBar: true,
+            pageTransitionAnimation: PageTransitionAnimation.cupertino,
+          );
+          // Navigator.of(context).pushNamed(HidePostScreen.routeName);
+        },
+      ),
     ];
 
     return GestureDetector(
@@ -143,11 +159,11 @@ class TradingProductCard extends StatelessWidget {
                   children: [
                     Container(
                       width: width * 0.45,
-                      child: const Text(
-                        'LApTop moiw 12 12sqwrqwq eqweqwe qweqt qwrqmua2121212121222121qwq qwxcvf',
+                      child: Text(
+                        name,
                         overflow: TextOverflow.ellipsis,
                         maxLines: 2,
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.w600,
                         ),
@@ -155,7 +171,7 @@ class TradingProductCard extends StatelessWidget {
                     ),
                     const SizedBox(height: 10),
                     Text(
-                      r'$200-$300',
+                      price,
                       style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.w400,

@@ -6,20 +6,31 @@ import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 import 'package:search_choices/search_choices.dart';
 
 import '../../../../constants/app_colors.dart';
-import 'post_item_step_four.dart';
+import '../../../models/cloud_firestore/post_model/post/post.dart';
+import 'update_post_step_four.dart';
 
-class PostItemThree extends StatefulWidget {
-  const PostItemThree({Key? key}) : super(key: key);
+class UpdatePostThree extends StatefulWidget {
+  const UpdatePostThree({
+    Key? key,
+    required this.oldPost,
+  }) : super(key: key);
+
   static final navKey = GlobalKey<NavigatorState>();
-
+  final Post oldPost;
   static const routeName = '/postitem3';
 
   @override
-  _PostItemThreeState createState() => _PostItemThreeState();
+  _UpdatePostThreeState createState() => _UpdatePostThreeState();
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(DiagnosticsProperty<Post>('oldPost', oldPost));
+  }
 }
 
-class _PostItemThreeState extends State<PostItemThree> {
-  bool isLoading = false;
+class _UpdatePostThreeState extends State<UpdatePostThree> {
+  late final Post _oldPostInfo = widget.oldPost;
+  bool isLoading = true;
   final _formKey = GlobalKey<FormBuilderState>();
   final _formKeyName = GlobalKey<FormState>();
 
@@ -38,7 +49,7 @@ class _PostItemThreeState extends State<PostItemThree> {
 
   Future<dynamic> addItemDialog() {
     return showDialog<dynamic>(
-      context: PostItemThree.navKey.currentState?.overlay?.context ?? context,
+      context: UpdatePostThree.navKey.currentState?.overlay?.context ?? context,
       builder: (alertContext) {
         return AlertDialog(
           title: const Text('Nhập tên sản phẩm'),
@@ -193,20 +204,29 @@ class _PostItemThreeState extends State<PostItemThree> {
     );
   }
 
+  Future<void> loadingOldValue() async {
+    for (final word in _oldPostInfo.tradeForList) {
+      if (editableItems.indexWhere((item) {
+            return item.value == word;
+          }) ==
+          -1) {
+        editableItems.add(DropdownMenuItem<dynamic>(
+          value: word,
+          child: Text(word),
+        ));
+      }
+      editableSelectedItems.add(editableItems.indexWhere((item) {
+        return item.value == word;
+      }));
+    }
+    priceController.text = _oldPostInfo.price.toString();
+  }
+
   @override
   void initState() {
     super.initState();
     input = TextFormField(
       validator: (value) {
-        // var validateString = '';
-        // var flag = false;
-        // if ((value?.length ?? 0) < 3) {
-        //   validateString = 'Tên sản phẩm có ít nhất 3 kí tự';
-        //   flag = true;
-        // } else {
-        //   flag = false;
-        // }
-
         return ((value?.length ?? 0) < 3)
             ? 'Tên sản phẩm có ít nhất 3 kí tự'
             : null;
@@ -218,17 +238,25 @@ class _PostItemThreeState extends State<PostItemThree> {
       },
       autofocus: true,
     );
+    if (_oldPostInfo.postId != null) {
+      loadingOldValue().then((value) {
+        setState(() {
+          isLoading = false;
+        });
+      });
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     final arguments = ModalRoute.of(context)!.settings.arguments as Map;
+
     node = FocusScope.of(context);
     return Scaffold(
       backgroundColor: AppColors.kScreenBackgroundColor,
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
-        title: const Text('Tạo bài đăng mới - 3',
+        title: const Text('Chỉnh sửa bài đăng - 3',
             style: TextStyle(color: AppColors.kTextColor)),
       ),
       body: GestureDetector(
@@ -319,7 +347,7 @@ class _PostItemThreeState extends State<PostItemThree> {
                                         pushNewScreenWithRouteSettings<void>(
                                           context,
                                           settings: RouteSettings(
-                                            name: PostItemFour.routeName,
+                                            name: UpdatePostFour.routeName,
                                             arguments: {
                                               'name':
                                                   arguments['name'] as String,
@@ -345,9 +373,10 @@ class _PostItemThreeState extends State<PostItemThree> {
                                               'price': int.parse(
                                                   priceController.text),
                                               'tradeForList': tradeForList,
+                                              'oldPost': _oldPostInfo,
                                             },
                                           ),
-                                          screen: const PostItemFour(),
+                                          screen: const UpdatePostFour(),
                                           withNavBar: true,
                                           pageTransitionAnimation:
                                               PageTransitionAnimation.cupertino,

@@ -156,7 +156,7 @@ class AuthProvider extends ChangeNotifier {
         initialUserData['followers'] = <String>[];
         initialUserData['following'] = <String>[];
         initialUserData['hiddenPosts'] = <String>[];
-        initialUserData['location'] = <String>[];
+        initialUserData['location'] = '';
         initialUserData['objectID'] = _newUser.uid;
         initialUserData['phoneNumber'] = '';
         initialUserData['posts'] = <String>[];

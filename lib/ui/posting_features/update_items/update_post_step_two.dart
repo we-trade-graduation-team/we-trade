@@ -1,3 +1,4 @@
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:multi_image_picker2/multi_image_picker2.dart';
@@ -6,19 +7,22 @@ import 'package:search_choices/search_choices.dart';
 
 import '../../../../constants/app_colors.dart';
 import '../../../../services/post_feature/post_service_firestore.dart';
+import '../../../models/cloud_firestore/post_model/post/post.dart';
 import '../component/class.dart';
-import 'post_item_step_three.dart';
+import 'update_post_step_three.dart';
 
-class PostItemTwo extends StatefulWidget {
-  const PostItemTwo({Key? navKey}) : super(key: navKey);
+class UpdatePostTwo extends StatefulWidget {
+  const UpdatePostTwo({Key? navKey}) : super(key: navKey);
   static final navKey = GlobalKey<NavigatorState>();
 
   static const routeName = '/postitem2';
   @override
-  _PostItemTwoState createState() => _PostItemTwoState();
+  _UpdatePostTwoState createState() => _UpdatePostTwoState();
 }
 
-class _PostItemTwoState extends State<PostItemTwo> {
+class _UpdatePostTwoState extends State<UpdatePostTwo> {
+  late Post _oldPostInfo;
+
   PostServiceFireStore dataServiceFireStore = PostServiceFireStore();
   bool isLoading = true;
   //argument for next screen
@@ -172,7 +176,7 @@ class _PostItemTwoState extends State<PostItemTwo> {
 
   Future<dynamic> addItemDialog() {
     return showDialog<dynamic>(
-      context: PostItemTwo.navKey.currentState?.overlay?.context ?? context,
+      context: UpdatePostTwo.navKey.currentState?.overlay?.context ?? context,
       builder: (alertContext) {
         return AlertDialog(
           title: const Text('Nhập keyword'),
@@ -366,16 +370,34 @@ class _PostItemTwoState extends State<PostItemTwo> {
         }
         wordPair = '';
       }
+      for (final word in _oldPostInfo.itemInfo.keywords as List<String>) {
+        wordPair = word;
+        if (editableItems.indexWhere((item) {
+              return item.value == wordPair;
+            }) ==
+            -1) {
+          editableItems.add(DropdownMenuItem<dynamic>(
+            value: wordPair,
+            child: Text(wordPair),
+          ));
+        }
+        editableSelectedItems.add(editableItems.indexWhere((item) {
+          return item.value == wordPair;
+        }));
+        wordPair = '';
+      }
     });
     getConditions().then((value) {
       conditionsList = value;
-      conditions = value.first;
+      conditions = value.firstWhere(
+          (element) => element.description == _oldPostInfo.itemInfo.condition);
     });
 
     getMainCategoryData().then((value) {
       setState(() {
         _type = value;
-        mainCategory = value.first;
+        mainCategory = value.firstWhere((element) =>
+            element.id == _oldPostInfo.categoryInfo.mainCategoryId);
       });
     });
   }
@@ -383,6 +405,7 @@ class _PostItemTwoState extends State<PostItemTwo> {
   @override
   Widget build(BuildContext context) {
     final arguments = ModalRoute.of(context)!.settings.arguments as Map;
+    _oldPostInfo = arguments['oldPost'] as Post;
 
     if (mainCategory.id == '' || mainCategory.id == previousID) {
       //no run getSub when setState
@@ -391,7 +414,12 @@ class _PostItemTwoState extends State<PostItemTwo> {
         if (value.isNotEmpty) {
           setState(() {
             _subType = value;
-            subCategory = value.first;
+            if (_oldPostInfo.categoryInfo.mainCategoryId == mainCategory.id) {
+              subCategory = value.firstWhere((element) =>
+                  element.id == _oldPostInfo.categoryInfo.subCategoryId);
+            } else {
+              subCategory = value.first;
+            }
             previousID = mainCategory.id;
             isLoading = false;
           });
@@ -409,7 +437,7 @@ class _PostItemTwoState extends State<PostItemTwo> {
       backgroundColor: AppColors.kScreenBackgroundColor,
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
-        title: const Text('Tạo bài đăng mới - 2',
+        title: const Text('Chỉnh sửa bài đăng- 2',
             style: TextStyle(color: AppColors.kTextColor)),
       ),
       body: Container(
@@ -482,7 +510,7 @@ class _PostItemTwoState extends State<PostItemTwo> {
                               pushNewScreenWithRouteSettings<void>(
                                 context,
                                 settings: RouteSettings(
-                                    name: PostItemThree.routeName,
+                                    name: UpdatePostThree.routeName,
                                     arguments: {
                                       'name': arguments['name'] as String,
                                       'description':
@@ -495,7 +523,8 @@ class _PostItemTwoState extends State<PostItemTwo> {
                                       'keyword': keywordToSave,
                                       'keywordId': idKeywordToSave,
                                     }),
-                                screen: const PostItemThree(),
+                                screen:
+                                    UpdatePostThree(oldPost: _oldPostInfo),
                                 withNavBar: true,
                                 pageTransitionAnimation:
                                     PageTransitionAnimation.cupertino,

@@ -699,12 +699,12 @@ class FirestoreDatabase {
     try {
       // Get post info
       final _postInfo = await getPost(postId: postId);
-      log('postInfo ne ${_postInfo.name} ');
+      //log('postInfo ne ${_postInfo.name} ');
 
       // Get owner info
       final _ownerInfo = await _getCurrentUser();
 
-      log('ownerInfo ne $_ownerInfo');
+      //log('ownerInfo ne $_ownerInfo');
        final _postDetailsToSet = PostDetails(
         // postId: postId,
         title: _postInfo.name,

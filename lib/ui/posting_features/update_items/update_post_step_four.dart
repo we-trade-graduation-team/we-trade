@@ -7,23 +7,24 @@ import 'package:multi_image_picker2/multi_image_picker2.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../constants/app_colors.dart';
+import '../../../models/cloud_firestore/post_model/post/post.dart';
 import '../../../models/cloud_firestore/user_model/user/user.dart';
 import '../../../services/firestore/firestore_database.dart';
 import '../../../services/post_feature/post_service_algolia.dart';
 import '../../../services/post_feature/post_service_firestore.dart';
 import '../../../utils/helper/image_data_storage_helper/image_data_storage_helper.dart';
 import '../component/class.dart';
-import 'post_item_step_one.dart';
 
-class PostItemFour extends StatefulWidget {
-  const PostItemFour({Key? key}) : super(key: key);
-  static const routeName = '/PostItemFour';
+class UpdatePostFour extends StatefulWidget {
+  const UpdatePostFour({Key? key}) : super(key: key);
+  static const routeName = '/UpdatePostFour';
   @override
-  _PostItemFourState createState() => _PostItemFourState();
+  _UpdatePostFourState createState() => _UpdatePostFourState();
 }
 
-class _PostItemFourState extends State<PostItemFour> {
+class _UpdatePostFourState extends State<UpdatePostFour> {
   late User thisUser = Provider.of<User?>(context, listen: false)!;
+  late Post _oldPostInfo;
 
   bool isLoading = true;
   late FocusScopeNode node;
@@ -153,20 +154,25 @@ class _PostItemFourState extends State<PostItemFour> {
       //post
       post['name'] = arguments['name'];
       post['itemInfo'] = itemInfo;
-      post['owner'] = thisUser.uid;
+      post['owner'] = _oldPostInfo.owner;
       post['categoryInfo'] = categoryInfo;
       post['tradeForList'] = arguments['tradeForList'];
-      post['isHidden'] = false;
+      post['isHidden'] = _oldPostInfo.isHidden;
       post['createAt'] = DateTime.now();
       post['price'] = arguments['price'];
-      final tempImageURL = <String>[];
-      for (final image in arguments['imagesUrl'] as List<Asset>) {
-        await ImageDataStorageHelper.getImageURL(
-                thisUser.uid.toString(),
-                '${arguments['name']}_${DateTime.now().millisecondsSinceEpoch}',
-                image)
-            .then(tempImageURL
-                .add); //lưu ảnh lên fire storage và trả về list imageURL
+      var tempImageURL = <String>[];
+      final imagesTemp = arguments['imagesUrl'] as List<Asset>;
+      if (imagesTemp.isEmpty) {
+        tempImageURL = _oldPostInfo.imagesUrl;
+      } else {
+        for (final image in arguments['imagesUrl'] as List<Asset>) {
+          await ImageDataStorageHelper.getImageURL(
+                  thisUser.uid.toString(),
+                  '${arguments['name']}_${DateTime.now().millisecondsSinceEpoch}',
+                  image)
+              .then(tempImageURL
+                  .add); //lưu ảnh lên fire storage và trả về list imageURL
+        }
       }
       post['imagesUrl'] = tempImageURL;
       postCardImage = tempImageURL.first;
@@ -195,52 +201,33 @@ class _PostItemFourState extends State<PostItemFour> {
     }
   }
 
-  void _showMessgage() {
-    showDialog<dynamic>(
-      context: context,
-      builder: (arlertContext) {
-        return AlertDialog(
-          content: const Text('Đăng sản phẩm thành công'),
-          actions: <Widget>[
-            TextButton(
-              onPressed: () {
-                Navigator.of(arlertContext).pop();
-                Navigator.pushAndRemoveUntil<void>(
-                  context,
-                  MaterialPageRoute(builder: (context) => const PostItemOne()),
-                  (route) => false,
-                );
-              },
-              child: const Text('Xác nhận'),
-            ),
-          ],
-        );
-      },
-    );
-  }
-
   void _onLoading(Map<dynamic, dynamic> arguments) {
     updatePost(arguments).then((value) {
       if (value) {
-        dataServiceFireStore.addPost(post).then((postId) {
-          dataServiceFireStore.addPostUser(
-              thisUserId: thisUser.uid!, postId: postId);
+        dataServiceFireStore
+            .updatePost(post, _oldPostInfo.postId!)
+            .then((value) {
+          // dataServiceFireStore.addPostUser(
+          //     thisUserId: thisUser.uid!, postId: _oldPostInfo.postId!);
           updatePostCard(arguments).then((value) {
             if (value) {
               dataServiceFireStore
-                  .addPostCard(postCard, postId)
+                  .addPostCard(postCard, _oldPostInfo.postId!)
                   .whenComplete(() {
-                _setPostDetails(postId);
-                //   final db = FirestoreDatabase(uid: '');
-                //   db.setPostDetails(postId: postId);
+                _setPostDetails(_oldPostInfo.postId!);
               });
-              dataServiceFireStore.addJunctionKeywordPost(
-                  arguments['keywordId'] as List<String>, postId);
+              dataServiceFireStore
+                  .deleteJunctionKeywordPost(_oldPostInfo.postId!)
+                  .whenComplete(() {
+                dataServiceFireStore.addJunctionKeywordPost(
+                    arguments['keywordId'] as List<String>,
+                    _oldPostInfo.postId!);
+              });
             }
           });
 
-          dataServiceAlgolia.addPost(
-              objectID: postId,
+          dataServiceAlgolia.updatePost(
+              objectID: _oldPostInfo.postId!,
               name: arguments['name'] as String,
               mainCategoyId: arguments['mainCategoryId'] as String,
               subCategoryId: arguments['subCategoryId'] as String,
@@ -251,7 +238,32 @@ class _PostItemFourState extends State<PostItemFour> {
               district: districtSelected.name);
         });
       } else {}
-    }).whenComplete(_showMessgage);
+    }).whenComplete(_showCompleteStatus);
+  }
+
+  void _showCompleteStatus() {
+    showDialog<dynamic>(
+      context: context,
+      builder: (arlertContext) {
+        return AlertDialog(
+          content: const Text('Cập nhật thông tin sản phẩm thành công'),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(arlertContext).pop();
+                Navigator.popUntil(context, ModalRoute.withName('/'));
+                // Navigator.pushAndRemoveUntil<void>(
+                //   context,
+                //   MaterialPageRoute(builder: (context) => const PostItemOne()),
+                //   (route) => false,
+                // );
+              },
+              child: const Text('Xác nhận'),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
@@ -259,13 +271,17 @@ class _PostItemFourState extends State<PostItemFour> {
     super.initState();
     getCities().then((value) {
       citiesList = value;
-      citySelected = value.first;
+      citySelected = value.firstWhere(
+          (element) => element.name == _oldPostInfo.itemInfo.addressInfo.city);
+      addressController.text = _oldPostInfo.itemInfo.addressInfo.address;
     }).whenComplete(() => setState(() {}));
   }
 
   @override
   Widget build(BuildContext context) {
     final arguments = ModalRoute.of(context)!.settings.arguments as Map;
+    _oldPostInfo = arguments['oldPost'] as Post;
+
     node = FocusScope.of(context);
     if (citySelected.id == 'init' || citySelected.id == previousID) {
       //no run getSub when setState
@@ -274,7 +290,12 @@ class _PostItemFourState extends State<PostItemFour> {
         if (value.isNotEmpty) {
           setState(() {
             districtList = value;
-            districtSelected = value.first;
+            if (_oldPostInfo.itemInfo.addressInfo.city == citySelected.name) {
+              districtSelected = value.firstWhere((element) =>
+                  element.name == _oldPostInfo.itemInfo.addressInfo.district);
+            } else {
+              districtSelected = value.first;
+            }
             previousID = citySelected.id;
             isLoading = false;
           });
@@ -291,7 +312,7 @@ class _PostItemFourState extends State<PostItemFour> {
       backgroundColor: AppColors.kScreenBackgroundColor,
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
-        title: const Text('Tạo bài đăng mới - 4'),
+        title: const Text('Chỉnh sửa bài đăng - 4'),
       ),
       body: isLoading
           ? const Center(
@@ -377,7 +398,7 @@ class _PostItemFourState extends State<PostItemFour> {
                                   });
                                 }
                               },
-                              child: const Text('Đăng sản phẩm'),
+                              child: const Text('Cập nhật'),
                             ),
                           ),
                         ],

@@ -71,10 +71,14 @@ class Routes {
   static const chatRoomScreenRouteName = '/chat-room';
 
   // Posting features
-  
+
   static const postItemStepTwoScreenRouteName = '/post-item-step-two';
   static const postItemStepThreeScreenRouteName = '/post-item-step-three';
   static const postItemStepFourScreenRouteName = '/post-item-step-four';
+
+  // Update features
+
+  static const updateItemStepOneScreenRouteName = '/post-item-step-one';
 
   static final Map<String, WidgetBuilder> accountFeaturesRoutes = {
     followScreenRouteName: (_) => const FollowScreen(),

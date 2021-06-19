@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class PostServiceFireStore {
@@ -105,6 +107,17 @@ class PostServiceFireStore {
     }
   }
 
+  Future<String> updatePost(Map arguments, String postId) async {
+    try {
+      final CollectionReference postCard =
+          FirebaseFirestore.instance.collection('posts');
+      await postCard.doc(postId).set(arguments);
+      return 'true';
+    } catch (e) {
+      rethrow;
+    }
+  }
+
   Future<String> addPostCard(Map arguments, String postId) async {
     try {
       final CollectionReference postCard =
@@ -121,7 +134,6 @@ class PostServiceFireStore {
     try {
       final CollectionReference keywordPost =
           FirebaseFirestore.instance.collection('junctionKeywordPost');
-
       for (final idKey in idKeyword) {
         final docId = '${idKey}_$postId';
         await keywordPost.doc(docId).set({
@@ -133,5 +145,44 @@ class PostServiceFireStore {
     } catch (e) {
       rethrow;
     }
+  }
+
+  Future<String> deleteJunctionKeywordPost(String postId) async {
+    try {
+      await FirebaseFirestore.instance
+          .collection('junctionKeywordPost')
+          .where('postId', isEqualTo: postId)
+          .get()
+          .then((value) {
+        for (final element in value.docs) {
+          FirebaseFirestore.instance
+              .collection('junctionKeywordPost')
+              .doc(element.id)
+              .delete()
+              .then((value) {
+            log('thanh cong');
+          });
+        }
+      });
+      return '1';
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<void> addPostUser({
+    required String thisUserId,
+    required String postId,
+  }) async {
+    return FirebaseFirestore.instance
+        .collection('users')
+        .doc(thisUserId)
+        .get()
+        .then((user) {
+      final allPostId =
+          (user.data()!['posts'] as List<dynamic>).cast<String>().toList();
+      allPostId.add(postId);
+      user.reference.update({'posts': allPostId});
+    });
   }
 }

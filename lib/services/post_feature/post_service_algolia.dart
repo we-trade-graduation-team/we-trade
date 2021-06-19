@@ -34,9 +34,9 @@ class PostServiceAlgolia {
   Future<void> updatePost(
       {required String objectID,
       required String name,
-      required int mainCategoyId,
-      required int subCategoryId,
-      required List<int> tradeForList,
+      required String mainCategoyId,
+      required String subCategoryId,
+      required List<String> tradeForList,
       required String imageURL, // lẩy ảnh đầu [0] bỏ vô đc r
       required String condition,
       required int price,
@@ -55,7 +55,7 @@ class PostServiceAlgolia {
       'district': district,
     };
     await algolia.instance
-        .index(usersAlgoliaIndex)
+        .index(postsAlgoliaIndex)
         .object(objectID)
         .updateData(mapData);
   }
