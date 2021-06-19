@@ -3,7 +3,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
-import '../../../models/ui/chat/temp_class.dart';
 
 import 'tabs/rate_tab.dart';
 
@@ -13,7 +12,6 @@ class MyRateScreen extends StatefulWidget {
   }) : super(key: key);
 
   static const routeName = '/myrate';
-  final UserDetail userDetail = userDetailTemp;
   final referenceDatabase = FirebaseFirestore.instance;
   final userID = FirebaseAuth.instance.currentUser!.uid;
 
@@ -22,7 +20,6 @@ class MyRateScreen extends StatefulWidget {
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
-    properties.add(DiagnosticsProperty<UserDetail>('userDetail', userDetail));
     properties.add(StringProperty('userID', userID));
     properties.add(DiagnosticsProperty<FirebaseFirestore>(
         'referenceDatabase', referenceDatabase));

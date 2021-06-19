@@ -62,7 +62,7 @@ dependencies:
   dropdown_formfield: ^0.1.3
   firebase_storage: ^8.1.0
   permission_handler: ^8.0.0+2
-  multi_image_picker2: ^5.0.0
+  multi_image_picker2: 5.0.0
   path_provider: ^2.0.2
   cached_network_image: ^3.0.0
   pinch_zoom: ^0.1.0

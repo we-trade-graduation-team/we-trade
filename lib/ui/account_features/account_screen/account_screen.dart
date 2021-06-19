@@ -123,7 +123,7 @@ class _AccountScreenState extends State<AccountScreen> {
             settings: const RouteSettings(
               name: Routes.postManagementScreenRouteName,
             ),
-            screen: PostManagementScreen(),
+            screen: const PostManagementScreen(),
             withNavBar: false,
             pageTransitionAnimation: PageTransitionAnimation.cupertino,
           );

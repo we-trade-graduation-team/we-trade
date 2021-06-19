@@ -7,7 +7,7 @@ const String seenHistoryCollection = 'seen_history';
 
 const String emailStr = 'email';
 const String lastActiveStr = 'lastActive';
-const String avatarURLStr = 'avatarURL';
+const String avatarURLStr = 'avatarUrl';
 const String presenceStr = 'presence';
 const String nameStr = 'name';
 const String phoneNumberStr = 'phoneNumber';

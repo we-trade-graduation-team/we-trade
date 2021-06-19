@@ -3,8 +3,8 @@ import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:collection/collection.dart';
-import '../../constants/app_assets.dart';
 
+import '../../constants/app_assets.dart';
 import '../../constants/app_firestore_constant.dart';
 import '../../models/cloud_firestore/category_card/category_card.dart';
 import '../../models/cloud_firestore/category_events/category_events.dart';
@@ -215,6 +215,16 @@ class FirestoreDatabase {
       },
       builder: (data) => PostCard.fromDocumentSnapshot(data),
     );
+    return _result;
+  }
+
+  Future<List<PostCard>> getPostCardsByPostIdList({
+    required List<String> postIdList,
+  }) async {
+    final _result = await Stream.fromIterable(postIdList)
+        .asyncMap((postId) => getPostCard(postId: postId))
+        .toList();
+
     return _result;
   }
 
@@ -488,6 +498,29 @@ class FirestoreDatabase {
     ];
 
     return _fullList;
+  }
+
+  Future<List<PostCard>> getPostCardsByUserId({
+    String? userId,
+  }) async {
+    final _postsFromUser = await _fireStoreService.collectionFuture(
+      path: FirestorePath.posts(),
+      queryBuilder: (query) {
+        const _ownerId = ModelProperties.postOwnerIdProperty;
+
+        return query.where(
+          _ownerId,
+          isEqualTo: userId ?? uid,
+        );
+      },
+      builder: (data) => Post.fromDocumentSnapshot(data),
+    );
+
+    final _postIdList = _postsFromUser.map((post) => post.postId!).toList();
+
+    final _result = await getPostCardsByPostIdList(postIdList: _postIdList);
+
+    return _result;
   }
 
   // Increase view of category in all path by one (default)

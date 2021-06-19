@@ -4,33 +4,30 @@ import 'package:flutter/material.dart';
 import '../../../../models/ui/chat/temp_class.dart';
 import '../../../../widgets/review_card.dart';
 
-class ReviewTab extends StatelessWidget {
-  const ReviewTab({Key? key, required this.userDetail}) : super(key: key);
+class ReviewTab extends StatefulWidget {
+  const ReviewTab({Key? key, required this.reviews}) : super(key: key);
 
-  final UserDetail userDetail;
+  final List<Review> reviews;
 
   @override
-  Widget build(BuildContext context) {
-    // final size = MediaQuery.of(context).size;
-    return ListView.builder(
-      // shrinkWrap: true,
-      // physics: const NeverScrollableScrollPhysics(),
-      itemCount: userDetail.reviews!.length,
-      itemBuilder: (context, index) => ReviewCard(
-        review: userDetail.reviews![index],
-        //press: () {},
-        // press: () => Navigator.push(
-        //   context,
-        //   MaterialPageRoute(
-        //     builder: (context) => MessagesScreen(),
-        //   ),
-      ),
-    );
-  }
-
+  _ReviewTabState createState() => _ReviewTabState();
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
-    properties.add(DiagnosticsProperty<UserDetail>('userDetail', userDetail));
+    properties.add(IterableProperty<Review>('reviews', reviews));
+  }
+}
+
+class _ReviewTabState extends State<ReviewTab> {
+  @override
+  Widget build(BuildContext context) {
+    return widget.reviews.isNotEmpty
+        ? ListView.builder(
+            itemCount: widget.reviews.length,
+            itemBuilder: (context, index) => ReviewCard(
+              review: widget.reviews[index],
+            ),
+          )
+        : const Center(child: Text('no data'));
   }
 }

@@ -84,7 +84,7 @@ class Routes {
     followScreenRouteName: (_) => const FollowScreen(),
     myRateScreenRouteName: (_) => MyRateScreen(),
     hidePostScreenRouteName: (_) => const HidePostScreen(),
-    postManagementScreenRouteName: (_) => PostManagementScreen(),
+    postManagementScreenRouteName: (_) => const PostManagementScreen(),
     // rateForTradingScreenRouteName: (_) => const RateForTrading(),
     tradingHistoryScreenRouteName: (_) => const TradingHistoryScreen(),
     changePasswordScreenRouteName: (_) => const ChangePasswordScreen(),
@@ -119,7 +119,7 @@ class Routes {
   static final Map<String, WidgetBuilder> messageFeaturesRoutes = {
     chatRoomScreenRouteName: (_) => ChatRoomScreen(chat: Chat.nullChat()),
     matchPostsScreenRouteName: (_) => const MatchPostsScreen(),
-    makeOfferScreenRouteName: (_) => const MakeOfferScreen(),
+    makeOfferScreenRouteName: (_) => const MakeOfferScreen(otherUserPostId: '', ),
     offerDetailScreenRouteName: (_) => const OfferDetailScreen(),
     ...sharedFeaturesRoutes,
   };
