@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
+import '../../shared_widgets/geting_data_status.dart';
 import '../../shared_widgets/rate_cart.dart';
 
 class RateTab extends StatefulWidget {
@@ -106,31 +107,11 @@ class _RateTabState extends State<RateTab> {
                       showingPost: showingPost,
                     );
                   })
-              : const Center(
-                  child: Text(
-                    'Chưa có dữ liệu.',
-                    style: TextStyle(
-                      fontSize: 35,
-                      color: Colors.black45,
-                    ),
-                  ),
-                );
+              : const CenterNotificationWhenHaveNoRecord(
+                  text: 'Bạn chưa có đánh giá');
         },
       ),
     );
-
-    // return ListView.builder(
-    //   itemCount: widget.userDetail.reviews!.length,
-    //   itemBuilder: (context, index) => ReviewCard(
-    //     review: widget.userDetail.reviews![index],
-    //     //press: () {},
-    //     // press: () => Navigator.push(
-    //     //   context,
-    //     //   MaterialPageRoute(
-    //     //     builder: (context) => MessagesScreen(),
-    //     //   ),
-    //   ),
-    // );
   }
 
   @override

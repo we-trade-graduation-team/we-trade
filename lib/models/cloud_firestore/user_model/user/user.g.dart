@@ -10,15 +10,17 @@ User _$UserFromJson(Map<String, dynamic> json) {
   $checkKeys(json, requiredKeys: const [
     'email',
     'name',
+    'avatarUrl',
     'presence',
     'lastSeen',
     'isEmailVerified'
   ]);
   return User(
     isEmailVerified: json['isEmailVerified'] as bool?,
+    legit: (json['legit'] as num?)?.toDouble() ?? 0,
     email: json['email'] as String?,
     name: json['name'] as String?,
-    photoURL: json['avatarUrl'] as String?,
+    avatarUrl: json['avatarUrl'] as String?,
     phoneNumber: json['phone'] as String?,
     presence: json['presence'] as bool?,
     lastSeen: json['lastSeen'] as int?,
@@ -37,11 +39,12 @@ User _$UserFromJson(Map<String, dynamic> json) {
 Map<String, dynamic> _$UserToJson(User instance) => <String, dynamic>{
       'email': instance.email,
       'name': instance.name,
-      'avatarUrl': instance.photoURL,
+      'avatarUrl': instance.avatarUrl,
       'phone': instance.phoneNumber,
       'presence': instance.presence,
       'lastSeen': instance.lastSeen,
       'isEmailVerified': instance.isEmailVerified,
+      'legit': instance.legit,
       'searchHistory': instance.searchHistory?.map((e) => e.toJson()).toList(),
       'keywordHistory':
           instance.keywordHistory?.map((e) => e.toJson()).toList(),

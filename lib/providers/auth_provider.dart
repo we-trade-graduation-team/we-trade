@@ -64,7 +64,7 @@ class AuthProvider extends ChangeNotifier {
       email: user.email,
       name: user.displayName,
       isEmailVerified: user.emailVerified,
-      photoURL: user.photoURL,
+      avatarUrl: user.photoURL,
     );
   }
 
@@ -156,7 +156,7 @@ class AuthProvider extends ChangeNotifier {
         initialUserData['followers'] = <String>[];
         initialUserData['following'] = <String>[];
         initialUserData['hiddenPosts'] = <String>[];
-        initialUserData['location'] = <String>[];
+        initialUserData['location'] = '';
         initialUserData['objectID'] = _newUser.uid;
         initialUserData['phoneNumber'] = '';
         initialUserData['posts'] = <String>[];

@@ -13,7 +13,6 @@ PostDetailsItemAddress _$PostDetailsItemAddressFromJson(
     address: json['address'] as String,
     city: json['city'] as String,
     district: json['district'] as String,
-    address2: json['address2'] as String?,
   );
 }
 
@@ -21,7 +20,6 @@ Map<String, dynamic> _$PostDetailsItemAddressToJson(
         PostDetailsItemAddress instance) =>
     <String, dynamic>{
       'address': instance.address,
-      'address2': instance.address2,
       'district': instance.district,
       'city': instance.city,
     };

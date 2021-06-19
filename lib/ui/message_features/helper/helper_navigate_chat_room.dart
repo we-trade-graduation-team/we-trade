@@ -146,7 +146,7 @@ class HelperNavigateChatRoom {
     usersId.add(thisUser.uid!);
 
     usersName.add((thisUser.name ?? thisUser.email)!);
-    usersAva.add(thisUser.photoURL ?? '');
+    usersAva.add(thisUser.avatarUrl ?? '');
     usersEmail.add(thisUser.email ?? '');
 
     if (users.length > 1) {

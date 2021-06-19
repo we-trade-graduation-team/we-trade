@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 
 import '../../../constants/app_colors.dart';
 import '../account_screen/local_widgets/getter.dart';
+import '../shared_widgets/geting_data_status.dart';
 import '../utils.dart';
 
 class FollowScreen extends StatefulWidget {
@@ -215,8 +216,8 @@ class _FollowScreenState extends State<FollowScreen> {
                         if (screen.screenName == Follow_Screen_Name.following)
                           buildUnfollowButton(usersRender[index] as String)
                         else
-                        //chang: logic đoạn này, nếu trong user['following'] có id user kia rồi
-                        //thì hiện nút unfollow, ngược lại hiện hiện follow
+                          //chang: logic đoạn này, nếu trong user['following'] có id user kia rồi
+                          //thì hiện nút unfollow, ngược lại hiện hiện follow
                           followingUsers.contains(usersRender[index])
                               ? buildUnfollowButton(
                                   usersRender[index] as String)
@@ -226,15 +227,8 @@ class _FollowScreenState extends State<FollowScreen> {
                   ),
                   itemCount: usersRender.length,
                 )
-              : const Center(
-                  child: Text(
-                    'Chưa có dữ liệu.',
-                    style: TextStyle(
-                      fontSize: 35,
-                      color: Colors.black45,
-                    ),
-                  ),
-                ))
+              : const CenterNotificationWhenHaveNoRecord(
+                  text: 'Bạn chưa có theo dõi'))
           : const Center(
               child: CircularProgressIndicator(),
             ),
