@@ -61,6 +61,17 @@ class FirestorePath {
   }) =>
       '${allPostDetails()}/$postId';
 
+  static String postDetailsQuestions({
+    required String postId,
+  }) =>
+      '${postDetails(postId: postId)}/questions';
+
+  static String postDetailsQuestionAnswers({
+    required String postId,
+    required String questionId,
+  }) =>
+      '${postDetailsQuestions(postId: postId)}/$questionId';
+
   static String keywords() => 'keywords';
 
   static String keyword({
@@ -69,4 +80,12 @@ class FirestorePath {
       '${keywords()}/$keywordId';
 
   static String junctionKeywordPost() => 'junctionKeywordPost';
+
+  static String allJunctionUserFavoritePost() => 'junctionUserFavoritePost';
+
+  static String junctionUserFavoritePost({
+    required String uid,
+    required String postId,
+  }) =>
+      '${allJunctionUserFavoritePost()}/${uid}_$postId';
 }

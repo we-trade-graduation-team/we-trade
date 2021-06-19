@@ -185,4 +185,12 @@ class PostServiceFireStore {
       user.reference.update({'posts': allPostId});
     });
   }
+
+  Future<String> getFirstPostImage(String postId) {
+    return FirebaseFirestore.instance
+        .collection('postCards')
+        .doc(postId)
+        .get()
+        .then((value) => value.data()!['item']['image'].toString());
+  }
 }

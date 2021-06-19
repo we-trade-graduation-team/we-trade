@@ -2,7 +2,7 @@ class ModelProperties {
   ModelProperties._();
 
   // Post Card
-  // static const postCardIdProperty = 'postId';
+  static const postCardIdProperty = 'postId';
   static const postCardViewProperty = 'view';
 
   // Category Card
@@ -20,10 +20,14 @@ class ModelProperties {
   static const keywordPostIdProperty = 'postId';
 
   // User
+  static const userUidProperty = 'uid';
   static const userLastSeenProperty = 'lastSeen';
   static const userPresenceProperty = 'presence';
   static const userCategoryHistoryProperty = 'categoryHistory';
   static const userCategoryHistoryIdProperty = 'categoryId';
   static const userCategoryHistoryTimesProperty = 'times';
   static const userKeywordHistoryProperty = 'keywordHistory';
+
+  // Post
+  static const postOwnerIdProperty = 'owner';
 }

@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
+import 'package:we_trade/ui/message_features/offer_screens/make_offer_screen.dart';
 
 import 'app_localizations.dart';
 import 'auth_widget_builder.dart';

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 
 import '../models/cloud_firestore/user_model/user/user.dart' as user_model;
 import '../services/firestore/firestore_path.dart';
+import '../services/message/algolia_user_service.dart';
 import '../ui/message_features/const_string/const_str.dart';
 import '../utils/model_properties/model_properties.dart';
 
@@ -168,6 +169,8 @@ class AuthProvider extends ChangeNotifier {
           // Set display name
           _firebaseAuthUser.updateDisplayName(name),
         ]);
+
+        await UserServiceAlgolia().addUser(_newUser);
       }
     } on FirebaseAuthException catch (e) {
       // print("Error on the new user registration = " + e.toString());

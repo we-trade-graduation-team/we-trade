@@ -7,6 +7,7 @@ import 'package:provider/provider.dart';
 import '../app_localizations.dart';
 // import '../models/arguments/shared/post_details_arguments.dart';
 import '../models/cloud_firestore/post_card_model/post_card/post_card.dart';
+import '../models/cloud_firestore/post_card_model/post_card_item/post_card_item.dart';
 import '../models/ui/home_features/detail_screen/question_model.dart';
 import '../models/ui/shared_models/account_model.dart';
 import '../models/ui/shared_models/product_model.dart';
@@ -35,6 +36,24 @@ final tempProduct = Product(
   questions: demoQuestions,
 );
 
+final tempPostCardItem = PostCardItem(
+    image:
+        'https://images.unsplash.com/photo-1605899435973-ca2d1a8861cf?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=675&q=80',
+    condition: 'mới',
+    district: 'quận 5',
+    price: 300);
+
+final tempPostCardList = <PostCard>[
+  PostCard(
+      postId: '8Dzp1L2GBTENRWaMNJuV',
+      item: tempPostCardItem,
+      title: 'sản phẩm tạm'),
+  PostCard(
+      postId: 'znR6eLnm2KpWBseKI7aJ',
+      item: tempPostCardItem,
+      title: 'sản phẩm tạm'),
+];
+
 bool _isNumeric(String? s) {
   if (s == null) {
     return false;
@@ -46,9 +65,11 @@ class ItemPostCard extends StatefulWidget {
   const ItemPostCard({
     Key? key,
     required this.postCard,
+    this.isNavigateToDetailScreen = true,
   }) : super(key: key);
 
   final PostCard postCard;
+  final bool isNavigateToDetailScreen;
 
   @override
   _ItemPostCardState createState() => _ItemPostCardState();
@@ -57,6 +78,8 @@ class ItemPostCard extends StatefulWidget {
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
     properties.add(DiagnosticsProperty<PostCard>('postCard', postCard));
+    properties.add(DiagnosticsProperty<bool>(
+        'isNavigateToDetailScreen', isNavigateToDetailScreen));
   }
 }
 
@@ -74,9 +97,8 @@ class _ItemPostCardState extends State<ItemPostCard> {
       _districtTextToShow = '$_districtText $_districtTextToShow';
     }
 
-    return GestureDetector(
-      onTap: _onTap,
-      child: Container(
+    Widget buildContent() {
+      return Container(
         // color: Colors.blue,
         width: 160,
         height: 260,
@@ -179,8 +201,15 @@ class _ItemPostCardState extends State<ItemPostCard> {
             ),
           ],
         ),
-      ),
-    );
+      );
+    }
+
+    return !widget.isNavigateToDetailScreen
+        ? buildContent()
+        : GestureDetector(
+            onTap: _onTap,
+            child: buildContent(),
+          );
   }
 
   Future<void> _onTap() async {

@@ -1,5 +1,15 @@
+import 'dart:developer';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
+import 'package:provider/provider.dart';
+import 'package:we_trade/models/cloud_firestore/post_card_model/post_card/post_card.dart';
+import 'package:we_trade/models/cloud_firestore/user_model/user/user.dart';
+import 'package:we_trade/services/firestore/firestore_database.dart';
+import 'package:we_trade/services/trading_feature/trading_service_firestore.dart';
+import 'package:we_trade/ui/message_features/const_string/const_str.dart';
+import 'package:we_trade/widgets/item_post_card.dart';
 
 import '../../../constants/app_colors.dart';
 import '../../../models/ui/shared_models/product_model.dart';
@@ -7,16 +17,143 @@ import '../../../widgets/custom_material_button.dart';
 // import '../../../widgets/item_post_card.dart';
 
 class MakeOfferScreen extends StatefulWidget {
-  const MakeOfferScreen({Key? key}) : super(key: key);
-
+  const MakeOfferScreen({
+    Key? key,
+    required this.otherUserPostId,
+  }) : super(key: key);
+  final String otherUserPostId;
   @override
   _MakeOfferScreenState createState() => _MakeOfferScreenState();
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(StringProperty('otherUserPostId', otherUserPostId));
+  }
 }
 
 class _MakeOfferScreenState extends State<MakeOfferScreen> {
   final _formKey = GlobalKey<FormState>();
   final _textEditingController = TextEditingController();
   late bool _isHaveMoney = false;
+  late List<String> choosedPostsId = [];
+  late List<PostCard> posts = [];
+  late bool loading = true;
+
+  void clickPostCard(String postId) {
+    if (!choosedPostsId.contains(postId)) {
+      setState(() {
+        choosedPostsId.add(postId);
+      });
+    } else {
+      setState(() {
+        choosedPostsId.remove(postId);
+      });
+    }
+  }
+
+  Future<void> sendOfferClick() async {
+    setState(() {
+      loading = true;
+    });
+    final thisUserId = Provider.of<User?>(context, listen: false)!.uid!;
+    if (_isHaveMoney) {
+      await TradingServiceFireStore()
+          .addTrading(
+              makeOfferUser: thisUserId,
+              ownerPost: widget.otherUserPostId,
+              offerUserPosts: choosedPostsId,
+              money: int.parse(_textEditingController.text))
+          .then((value) {
+        Navigator.of(context).pop(_textEditingController.text);
+      });
+    } else {
+      if (choosedPostsId.isNotEmpty) {
+        await TradingServiceFireStore()
+            .addTrading(
+          makeOfferUser: thisUserId,
+          ownerPost: widget.otherUserPostId,
+          offerUserPosts: choosedPostsId,
+        )
+            .then((value) {
+          Navigator.of(context).pop(_textEditingController.text);
+        });
+      } else {
+        setState(() {
+          loading = false;
+        });
+      }
+    }
+  }
+
+  Widget buildListPostCard() {
+    return loading
+        ? Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+            Lottie.network(messageLoadingStr2, width: 100, height: 100),
+            const Text('loading ...'),
+          ])
+        : SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: posts.isNotEmpty
+                ? Row(
+                    children: [
+                      ...List.generate(
+                        posts.length,
+                        (index) {
+                          return Row(
+                            children: [
+                              GestureDetector(
+                                onTap: () {
+                                  clickPostCard(posts[index].postId!);
+                                },
+                                child: Stack(
+                                  children: [
+                                    ItemPostCard(
+                                        isNavigateToDetailScreen: false,
+                                        postCard: posts[index]),
+                                    if (choosedPostsId
+                                        .contains(posts[index].postId))
+                                      Align(
+                                        alignment: Alignment.topRight,
+                                        child: IconButton(
+                                          icon: const Icon(
+                                              Icons.check_box_rounded),
+                                          color: Colors.white,
+                                          onPressed: () {},
+                                        ),
+                                      ),
+                                  ],
+                                ),
+                              ),
+                              const SizedBox(width: 20),
+                            ],
+                          );
+                        },
+                      )
+                    ],
+                  )
+                : Row(
+                    children: const [
+                      SizedBox(width: 20),
+                      Text(
+                        'no data',
+                        style: TextStyle(color: AppColors.kReviewTextLabel),
+                      ),
+                    ],
+                  ));
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    final thisUserId = Provider.of<User?>(context, listen: false)!.uid!;
+    final _firestoreDatabase = context.read<FirestoreDatabase>();
+    _firestoreDatabase.getPostCardsByUserId(userId: thisUserId).then((value) {
+      setState(() {
+        loading = false;
+        posts = value;
+      });
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -33,73 +170,7 @@ class _MakeOfferScreenState extends State<MakeOfferScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text(
-                      'Các sản phẩm phù hợp',
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    const SizedBox(height: 20),
-                    SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      child: Row(
-                        children: [
-                          ...List.generate(
-                            demoProducts.length,
-                            (index) {
-                              return Row(
-                                children: [
-                                  Stack(
-                                    children: [
-                                      // TODO: <Trang> Replace Product with PostCard
-                                      // ItemPostCard(postCard: demoProducts[index]),
-                                      Positioned(
-                                        top: 10,
-                                        right: 10,
-                                        child: Container(
-                                          decoration: BoxDecoration(
-                                            color: Colors.white,
-                                            borderRadius:
-                                                BorderRadius.circular(3),
-                                            border: Border.all(
-                                                color:
-                                                    AppColors.kTextLightColor),
-                                          ),
-                                          child: Theme(
-                                            data: ThemeData(
-                                              unselectedWidgetColor:
-                                                  Colors.white,
-                                            ),
-                                            child: SizedBox(
-                                              height: 20,
-                                              width: 20,
-                                              child: Checkbox(
-                                                checkColor: Colors.white,
-                                                activeColor: Theme.of(context)
-                                                    .primaryColor,
-                                                value: _isHaveMoney,
-                                                onChanged: (value) {
-                                                  setState(() {
-                                                    _isHaveMoney = value!;
-                                                  });
-                                                },
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  const SizedBox(width: 20),
-                                ],
-                              );
-                            },
-                          ),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(height: 20),
+                    const SizedBox(height: 5),
                     const Text(
                       'Tất cả sản phẩm',
                       style: TextStyle(
@@ -108,71 +179,13 @@ class _MakeOfferScreenState extends State<MakeOfferScreen> {
                       ),
                     ),
                     const SizedBox(height: 20),
-                    SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      child: Row(
-                        children: [
-                          ...List.generate(
-                            demoProducts.length,
-                            (index) {
-                              return Row(
-                                children: [
-                                  Stack(
-                                    children: [
-                                      // TODO: <Trang> Replace Product with PostCard
-                                      // ItemPostCard(
-                                      //     postCard: demoProducts[index]),
-                                      Positioned(
-                                        top: 10,
-                                        right: 10,
-                                        child: Container(
-                                          decoration: BoxDecoration(
-                                              color: Colors.white,
-                                              borderRadius:
-                                                  BorderRadius.circular(3),
-                                              border: Border.all(
-                                                  color: AppColors
-                                                      .kTextLightColor)),
-                                          child: SizedBox(
-                                            height: 20,
-                                            width: 20,
-                                            child: Theme(
-                                              data: ThemeData(
-                                                  unselectedWidgetColor:
-                                                      Colors.white),
-                                              child: Checkbox(
-                                                checkColor: Colors.white,
-                                                activeColor: Theme.of(context)
-                                                    .primaryColor,
-                                                value: _isHaveMoney,
-                                                onChanged: (value) {
-                                                  setState(() {
-                                                    _isHaveMoney = value!;
-                                                  });
-                                                },
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  const SizedBox(width: 20),
-                                ],
-                              );
-                            },
-                          ),
-                        ],
-                      ),
-                    ),
+                    buildListPostCard(),
                     const SizedBox(height: 20),
                     Column(
                       children: [
                         Row(
                           children: [
                             Checkbox(
-                              // ? Should be delete?
-                              // activeColor: Theme.of(context).primaryColor,
                               checkColor: Colors.white,
                               value: _isHaveMoney,
                               onChanged: (value) {
@@ -192,7 +205,6 @@ class _MakeOfferScreenState extends State<MakeOfferScreen> {
                         ),
                         Container(
                           padding: const EdgeInsets.fromLTRB(15, 0, 15, 0),
-                          //color: Colors.red,
                           child: Form(
                             key: _formKey,
                             child: TextFormField(
@@ -214,7 +226,6 @@ class _MakeOfferScreenState extends State<MakeOfferScreen> {
                                 contentPadding: EdgeInsets.fromLTRB(0, 0, 0, 5),
                                 hintText: 'VND',
                                 hintStyle: TextStyle(height: 2),
-                                labelText: 'Nhập số tiền',
                                 labelStyle: TextStyle(
                                   fontSize: 20,
                                   fontWeight: FontWeight.bold,
@@ -240,7 +251,7 @@ class _MakeOfferScreenState extends State<MakeOfferScreen> {
                     padding: const EdgeInsets.all(8),
                     child: CustomMaterialButton(
                         press: () {
-                          //Navigator.of(context).pop();
+                          Navigator.of(context).pop();
                         },
                         isFilled: false,
                         text: 'Hủy',
@@ -254,9 +265,9 @@ class _MakeOfferScreenState extends State<MakeOfferScreen> {
                     padding: const EdgeInsets.all(8),
                     child: CustomMaterialButton(
                         press: () {
-                          if (_formKey.currentState!.validate()) {
-                            Navigator.of(context)
-                                .pop(_textEditingController.text);
+                          if (_formKey.currentState!.validate() ||
+                              !_isHaveMoney) {
+                            sendOfferClick();
                           }
                         },
                         text: 'Gửi offer',
@@ -271,5 +282,13 @@ class _MakeOfferScreenState extends State<MakeOfferScreen> {
         ],
       ),
     );
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(IterableProperty<String>('choosedPostsId', choosedPostsId));
+    properties.add(IterableProperty<PostCard>('posts', posts));
+    properties.add(DiagnosticsProperty<bool>('loading', loading));
   }
 }

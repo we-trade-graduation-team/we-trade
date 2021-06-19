@@ -1,25 +1,18 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import '../../../models/ui/chat/temp_class.dart';
 
 import 'tabs/trading_products_tab.dart';
 
 class PostManagementScreen extends StatefulWidget {
-  PostManagementScreen({
+  const PostManagementScreen({
     Key? key,
   }) : super(key: key);
 
   static const routeName = '/postmanagement';
-  final UserDetail userDetail = userDetailTemp;
+//  final UserDetail userDetail = userDetailTemp;
 
   @override
   _PostManagementScreenState createState() => _PostManagementScreenState();
-
-  @override
-  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
-    super.debugFillProperties(properties);
-    properties.add(DiagnosticsProperty<UserDetail>('userDetail', userDetail));
-  }
 }
 
 class _PostManagementScreenState extends State<PostManagementScreen> {
@@ -87,7 +80,7 @@ class MyDelegate extends SliverPersistentHeaderDelegate {
   Widget build(
       BuildContext context, double shrinkOffset, bool overlapsContent) {
     return Container(
-      decoration:  BoxDecoration(
+      decoration: BoxDecoration(
         color: Colors.white,
         border: Border(
           top: BorderSide(

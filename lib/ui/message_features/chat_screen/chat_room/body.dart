@@ -86,7 +86,6 @@ class _BodyState extends State<Body> {
               itemBuilder: (context, index) {
                 final data =
                     snapshot.data!.docs[index].data() as Map<String, dynamic>;
-                // TODO : add images seen do
                 final usersImageWhoSeen = <String>[];
                 seenHistoryMap.forEach((key, value) {
                   if (value == snapshot.data!.docs[index].id &&
@@ -123,6 +122,7 @@ class _BodyState extends State<Body> {
     final offerSideProducts = [allProduct[0], allProduct[1]];
     const money = 100000;
     final forProduct = allProduct[3];
+
     return isHaveOfferDeal
         ? Container(
             alignment: Alignment.topCenter,
