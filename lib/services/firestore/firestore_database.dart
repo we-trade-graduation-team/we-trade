@@ -506,7 +506,7 @@ class FirestoreDatabase {
     final _postsFromUser = await _fireStoreService.collectionFuture(
       path: FirestorePath.posts(),
       queryBuilder: (query) {
-        final _ownerId = ModelProperties.postOwnerIdProperty;
+        const _ownerId = ModelProperties.postOwnerIdProperty;
 
         return query.where(
           _ownerId,
