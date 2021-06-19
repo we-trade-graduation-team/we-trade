@@ -97,15 +97,8 @@ class _TradingProductsTabState extends State<TradingProductsTab> {
                     );
                   },
                 )
-              : const Center(
-                  child: Text(
-                    'Chưa có dữ liệu.',
-                    style: TextStyle(
-                      fontSize: 35,
-                      color: Colors.black45,
-                    ),
-                  ),
-                );
+              : const CenterNotificationWhenHaveNoRecord(
+                  text: 'Bạn chưa có bài đăng nào ở đây');
         });
   }
 

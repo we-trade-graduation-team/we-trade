@@ -75,6 +75,34 @@ class _AccountScreenState extends State<AccountScreen> {
     'tradingHistory': <dynamic>[],
   };
 
+  //chang: hàm cho nút make offer
+  Future<void> _addTrading({
+    required String makeOfferUser, // đứa bấm nút make offer
+    List<String>? offerUserPosts, // bài đăng của đứa bấm make offer
+    required String owner, // đứa kia được make offer
+    required String ownerPost, // bài đăng của đứa kia
+    int? money,
+  }) async {
+    final trading = <String, dynamic>{
+      'createAt': DateTime.now(),
+      'makeOfferUser': makeOfferUser,
+      'offerUserPosts': offerUserPosts ?? [], //không có posts thì là mảng rỗng
+      'owner': owner,
+      'ownerPosts': [ownerPost],
+      'status': 2, // đang giao dịch
+      'isHaveMoney': money != null,
+      'money': money ??
+          0, //nếu không có tiền thì giá trị là 0,truyền vào giá trị dương
+    };
+    try {
+      await referenceDatabase
+          .collection('tradings')
+          .add(trading)
+          .then((value) => print('added!'));
+    } on FirebaseException catch (error) {
+      print('Lỗi make offer: $error');
+    }
+  }
   @override
   Widget build(BuildContext context) {
     final height = MediaQuery.of(context).size.height;
@@ -199,6 +227,20 @@ class _AccountScreenState extends State<AccountScreen> {
                               onPressed: () {
                                 // ignore: avoid_print
                                 print('setting pressed');
+                              },
+                            ),
+                            IconButton(
+                              color: AppColors.kPrimaryLightColor,
+                              icon: const Icon(Icons.add),
+                              onPressed: () {
+                                print('add ');
+                                //chang: test nè
+                                _addTrading(
+                                  makeOfferUser: 'makeOfferUser',
+                                  owner: 'owner',
+                                  ownerPost: 'ownerPost',
+                                  offerUserPosts: ['ádasf', '1234'],
+                                );
                               },
                             ),
                           ],

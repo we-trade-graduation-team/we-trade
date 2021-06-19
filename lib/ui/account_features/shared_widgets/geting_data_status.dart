@@ -55,3 +55,31 @@ class WentWrong extends StatelessWidget {
         ));
   }
 }
+
+class CenterNotificationWhenHaveNoRecord extends StatelessWidget {
+  const CenterNotificationWhenHaveNoRecord({Key? key, required this.text})
+      : super(key: key);
+  final String text;
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 18),
+        child: Text(
+          text,
+          textAlign: TextAlign.center,
+          style: const TextStyle(
+            fontSize: 35,
+            color: Colors.black45,
+          ),
+        ),
+      ),
+    );
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(StringProperty('text', text));
+  }
+}
