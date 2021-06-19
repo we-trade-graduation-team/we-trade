@@ -170,7 +170,7 @@ class FirestoreDatabase {
   }
 
   // Method to retrieve a Post Card
-  Future<PostCard> _getPostCard({
+  Future<PostCard> getPostCard({
     required String postId,
   }) async {
     final _result = await _fireStoreService.documentFuture(
@@ -389,7 +389,7 @@ class FirestoreDatabase {
     ) async {
       // Fetch for each retrieved junction, fetch the associated postCard
       final _postCardsFromJunction = await Stream.fromIterable(_junctions)
-          .asyncMap((junction) => _getPostCard(postId: junction.postId))
+          .asyncMap((junction) => getPostCard(postId: junction.postId))
           .toList();
 
       // Sort descending by view
@@ -705,7 +705,7 @@ class FirestoreDatabase {
       final _ownerInfo = await _getCurrentUser();
 
       //log('ownerInfo ne $_ownerInfo');
-       final _postDetailsToSet = PostDetails(
+      final _postDetailsToSet = PostDetails(
         // postId: postId,
         title: _postInfo.name,
         itemInfo: PostDetailsItem(
@@ -721,12 +721,13 @@ class FirestoreDatabase {
           ),
         ),
         ownerInfo: PostDetailsOwner(
-        uid: _ownerInfo.uid!,
-        name: _ownerInfo.name ?? 'Unknown',
-        lastSeen: _ownerInfo.lastSeen ?? DateTime.now().millisecondsSinceEpoch,
-        avatarURL: _ownerInfo.avatarUrl ?? AppAssets.userImageStr,
-        legitimacy: _ownerInfo.legit,
-      ),
+          uid: _ownerInfo.uid!,
+          name: _ownerInfo.name ?? 'Unknown',
+          lastSeen:
+              _ownerInfo.lastSeen ?? DateTime.now().millisecondsSinceEpoch,
+          avatarURL: _ownerInfo.avatarUrl ?? AppAssets.userImageStr,
+          legitimacy: _ownerInfo.legit,
+        ),
       );
       return _fireStoreService.setData(
         path: FirestorePath.postDetails(postId: postId),

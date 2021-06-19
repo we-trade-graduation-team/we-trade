@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:multi_image_picker2/multi_image_picker2.dart';
 import 'package:provider/provider.dart';
+import 'package:we_trade/models/cloud_firestore/post_card_model/post_card/post_card.dart';
 
 import '../../../../constants/app_colors.dart';
 import '../../../models/cloud_firestore/post_model/post/post.dart';
@@ -131,6 +132,17 @@ class _UpdatePostFourState extends State<UpdatePostFour> {
     }
   }
 
+  Future<PostCard> getPostCard(String postId) async {
+    try {
+      final _firebaseDatabase = context.read<FirestoreDatabase>();
+      final _postCardInfo = await _firebaseDatabase.getPostCard(postId: postId);
+      return _postCardInfo;
+    } catch (err) {
+      log(err.toString());
+      rethrow;
+    }
+  }
+
   Future<bool> updatePost(Map<dynamic, dynamic> arguments) async {
     try {
       final addressInfo = <String, dynamic>{};
@@ -186,6 +198,7 @@ class _UpdatePostFourState extends State<UpdatePostFour> {
   Future<bool> updatePostCard(Map<dynamic, dynamic> arguments) async {
     try {
       //item
+      await getPostCard(_oldPostInfo.postId!).then((value) {
       final item = <dynamic, dynamic>{};
       item['condition'] = arguments['condition'];
       item['price'] = arguments['price'];
@@ -194,7 +207,9 @@ class _UpdatePostFourState extends State<UpdatePostFour> {
       //postCard
       postCard['item'] = item;
       postCard['title'] = arguments['name'];
-      postCard['view'] = 0;
+      postCard['view'] = value.view;
+      });
+      
       return true;
     } catch (e) {
       rethrow;
