@@ -1,19 +1,16 @@
-import 'dart:developer';
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
-import 'package:we_trade/models/cloud_firestore/post_card_model/post_card/post_card.dart';
-import 'package:we_trade/models/cloud_firestore/user_model/user/user.dart';
-import 'package:we_trade/services/firestore/firestore_database.dart';
-import 'package:we_trade/services/trading_feature/trading_service_firestore.dart';
-import 'package:we_trade/ui/message_features/const_string/const_str.dart';
-import 'package:we_trade/widgets/item_post_card.dart';
 
 import '../../../constants/app_colors.dart';
-import '../../../models/ui/shared_models/product_model.dart';
+import '../../../models/cloud_firestore/post_card_model/post_card/post_card.dart';
+import '../../../models/cloud_firestore/user_model/user/user.dart';
+import '../../../services/firestore/firestore_database.dart';
+import '../../../services/trading_feature/trading_service_firestore.dart';
 import '../../../widgets/custom_material_button.dart';
+import '../../../widgets/item_post_card.dart';
+import '../const_string/const_str.dart';
 // import '../../../widgets/item_post_card.dart';
 
 class MakeOfferScreen extends StatefulWidget {

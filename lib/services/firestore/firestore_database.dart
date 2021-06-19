@@ -222,7 +222,7 @@ class FirestoreDatabase {
     required List<String> postIdList,
   }) async {
     final _result = await Stream.fromIterable(postIdList)
-        .asyncMap((postId) => _getPostCard(postId: postId))
+        .asyncMap((postId) => getPostCard(postId: postId))
         .toList();
 
     return _result;

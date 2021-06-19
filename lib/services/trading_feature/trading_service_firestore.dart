@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class TradingServiceFireStore {
@@ -31,9 +33,9 @@ class TradingServiceFireStore {
       await FirebaseFirestore.instance
           .collection('tradings')
           .add(trading)
-          .then((value) => print('added!'));
+          .then((value) => log('added!'));
     } on FirebaseException catch (error) {
-      print('Lỗi make offer: $error');
+      log('Lỗi make offer: $error');
     }
   }
 }

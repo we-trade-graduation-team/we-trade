@@ -40,3 +40,8 @@ Map<String, dynamic> _$PostToJson(Post instance) => <String, dynamic>{
       'createAt': instance.createAt.toIso8601String(),
       'categoryInfo': instance.categoryInfo.toJson(),
       'itemInfo': instance.itemInfo.toJson(),
+      'imagesUrl': instance.imagesUrl,
+      'tradeForList': instance.tradeForList,
+      'isHidden': instance.isHidden,
+      'price': instance.price,
+    };
