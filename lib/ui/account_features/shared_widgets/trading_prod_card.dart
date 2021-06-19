@@ -33,58 +33,58 @@ class TradingProductCard extends StatelessWidget {
   final referenceDatabase = FirebaseFirestore.instance;
   final userID = FirebaseAuth.instance.currentUser!.uid;
 
-  Future<void> _removePost(String postID) async {
-    try {
-      await referenceDatabase
-          .collection('users')
-          .doc(userID)
-          .get()
-          .then((documentSnapshot) async {
-        final _user = documentSnapshot.data();
-        final hiddenPosts = _user!['hiddenPosts'] as List;
-        final posts = _user['posts'] as List;
+  // Future<void> _removePost(String postID) async {
+  //   try {
+  //     await referenceDatabase
+  //         .collection('users')
+  //         .doc(userID)
+  //         .get()
+  //         .then((documentSnapshot) async {
+  //       final _user = documentSnapshot.data();
+  //       final hiddenPosts = _user!['hiddenPosts'] as List;
+  //       final posts = _user['posts'] as List;
 
-        hiddenPosts.remove(postID);
-        posts.remove(postID);
-        await referenceDatabase.collection('users').doc(userID).update({
-          'hiddenPosts': hiddenPosts,
-          'posts': posts,
-        });
-      });
-    } catch (error) {
-      rethrow;
-    }
-  }
+  //       hiddenPosts.remove(postID);
+  //       posts.remove(postID);
+  //       await referenceDatabase.collection('users').doc(userID).update({
+  //         'hiddenPosts': hiddenPosts,
+  //         'posts': posts,
+  //       });
+  //     });
+  //   } catch (error) {
+  //     rethrow;
+  //   }
+  // }
 
-  Future<void> _reShowPost(String postID) async {
-    try {
-      await referenceDatabase
-          .collection('users')
-          .doc(userID)
-          .get()
-          .then((documentSnapshot) async {
-        final _user = documentSnapshot.data();
-        final hiddenPosts = _user!['hiddenPosts'] as List;
-        final posts = _user['posts'] as List;
-        final res = hiddenPosts.remove(postID);
+  // Future<void> _reShowPost(String postID) async {
+  //   try {
+  //     await referenceDatabase
+  //         .collection('users')
+  //         .doc(userID)
+  //         .get()
+  //         .then((documentSnapshot) async {
+  //       final _user = documentSnapshot.data();
+  //       final hiddenPosts = _user!['hiddenPosts'] as List;
+  //       final posts = _user['posts'] as List;
+  //       final res = hiddenPosts.remove(postID);
 
-        if (res) {
-          posts.add(postID);
-          await referenceDatabase
-              .collection('posts')
-              .doc(postID)
-              .update({'isHidden': false});
+  //       if (res) {
+  //         posts.add(postID);
+  //         await referenceDatabase
+  //             .collection('posts')
+  //             .doc(postID)
+  //             .update({'isHidden': false});
 
-          await referenceDatabase.collection('users').doc(userID).update({
-            'hiddenPosts': hiddenPosts,
-            'posts': posts,
-          });
-        }
-      });
-    } catch (error) {
-      rethrow;
-    }
-  }
+  //         await referenceDatabase.collection('users').doc(userID).update({
+  //           'hiddenPosts': hiddenPosts,
+  //           'posts': posts,
+  //         });
+  //       }
+  //     });
+  //   } catch (error) {
+  //     rethrow;
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -118,7 +118,6 @@ class TradingProductCard extends StatelessWidget {
             // withNavBar: true,
             pageTransitionAnimation: PageTransitionAnimation.cupertino,
           );
-          // Navigator.of(context).pushNamed(HidePostScreen.routeName);
         },
       ),
     ];

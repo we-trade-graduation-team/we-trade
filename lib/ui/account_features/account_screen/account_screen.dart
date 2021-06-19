@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -98,9 +100,9 @@ class _AccountScreenState extends State<AccountScreen> {
       await referenceDatabase
           .collection('tradings')
           .add(trading)
-          .then((value) => print('added!'));
+          .then((value) => log('added!'));
     } on FirebaseException catch (error) {
-      print('Lỗi make offer: $error');
+      log('Lỗi make offer: $error');
     }
   }
   @override
@@ -233,7 +235,7 @@ class _AccountScreenState extends State<AccountScreen> {
                               color: AppColors.kPrimaryLightColor,
                               icon: const Icon(Icons.add),
                               onPressed: () {
-                                print('add ');
+                                log('add ');
                                 //chang: test nè
                                 _addTrading(
                                   makeOfferUser: 'makeOfferUser',
