@@ -6,6 +6,7 @@ import 'package:intl/intl.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 
 import '../../../models/ui/shared_models/product_model.dart';
+import '../../../services/trading_feature/trading_service_firestore.dart';
 import '../../../utils/routes/routes.dart';
 import '../../message_features/offer_screens/offer_detail_screen.dart';
 import '../account_screen/local_widgets/getter.dart';
@@ -179,22 +180,21 @@ class _HistoryProductCardState extends State<HistoryProductCard> {
 
     return _isLoaded
         ? GestureDetector(
-            onTap: () {
-              pushNewScreenWithRouteSettings<void>(
+            onTap: () async {
+              // TODO Quang ơi, màn hình sửa truyền vào trading model nha
+              final trading = await TradingServiceFireStore()
+                  .getTradingByTradingId(tradingId: widget.tradingID);
+              await pushNewScreenWithRouteSettings<void>(
                 context,
-                settings: RouteSettings(
-                    name: Routes.offerDetailScreenRouteName,
-                    arguments: OfferDetailScreenArguments(
-                        forProduct: widget.forProduct,
-                        isOfferSide: true,
-                        offerSideProducts: widget.offerSideProducts,
-                        offerSideMoney: widget.offerSideMoney)),
-                screen: const OfferDetailScreen(),
+                settings: const RouteSettings(
+                  name: Routes.offerDetailScreenRouteName,
+                ),
+                screen: OfferDetailScreen(trading: trading),
                 pageTransitionAnimation: PageTransitionAnimation.cupertino,
               );
             },
             child: Container(
-              margin: const EdgeInsets.fromLTRB(15, 5, 0, 5),
+              margin: const EdgeInsets.fromLTRB(0, 5, 0, 5),
               padding: const EdgeInsets.symmetric(vertical: 10),
               decoration: BoxDecoration(
                 //color: Colors.white,
@@ -291,7 +291,7 @@ class _HistoryProductCardState extends State<HistoryProductCard> {
                           ),
                           const SizedBox(height: 7),
                           Container(
-                            width: width * 0.45,
+                            width: width * 0.30,
                             child: Text(
                               dateTime.toString(),
                               overflow: TextOverflow.ellipsis,

@@ -193,4 +193,12 @@ class PostServiceFireStore {
         .get()
         .then((value) => value.data()!['item']['image'].toString());
   }
+
+  Future<String> getFirstPostTitle(String postId) {
+    return FirebaseFirestore.instance
+        .collection('postCards')
+        .doc(postId)
+        .get()
+        .then((value) => value.data()!['title'].toString());
+  }
 }

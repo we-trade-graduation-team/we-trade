@@ -78,7 +78,6 @@ class _UserImagePickerState extends State<UserImagePicker> {
               .update(updateData);
           await UserServiceAlgolia().updateUser(updateData);
           //TODO: Nếu ai cần cập nhật  User(avatarUrl) của provider thì cập nhật ở đây
-          //
         } on FirebaseException catch (_) {
           await showMyNotificationDialog(
               context: context,

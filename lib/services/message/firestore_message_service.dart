@@ -33,7 +33,7 @@ class MessageServiceFireStore {
     await FirebaseFirestore.instance
         .collection(chatRoomCollection)
         .doc(id)
-        .set(chatData)
+        .set(chatData, SetOptions(merge: true))
         .catchError((dynamic onError) {});
   }
 
@@ -436,21 +436,38 @@ class MessageServiceFireStore {
       {required String userId,
       required String thisUserId,
       required bool isAddFollowing}) async {
-    return FirebaseFirestore.instance
+    await updateFollowingOrFollower(
+        thisUserId: thisUserId,
+        userId: userId,
+        field: 'following',
+        isAdding: isAddFollowing);
+    await updateFollowingOrFollower(
+        thisUserId: userId,
+        userId: thisUserId,
+        field: 'followers',
+        isAdding: isAddFollowing);
+  }
+
+  Future<void> updateFollowingOrFollower(
+      {required String thisUserId,
+      required String userId,
+      required String field,
+      required bool isAdding}) async {
+    await FirebaseFirestore.instance
         .collection('users')
         .doc(thisUserId)
         .get()
         .then((user) {
       final allUsersId =
-          (user.data()!['following'] as List<dynamic>).cast<String>().toList();
-      if (isAddFollowing) {
+          (user.data()![field] as List<dynamic>).cast<String>().toList();
+      if (isAdding) {
         if (!allUsersId.contains(userId)) {
           allUsersId.add(userId);
         }
       } else {
         allUsersId.removeWhere((element) => element == userId);
       }
-      user.reference.update({'following': allUsersId});
+      user.reference.update({field: allUsersId});
     });
   }
 

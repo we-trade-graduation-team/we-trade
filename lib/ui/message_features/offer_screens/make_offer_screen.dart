@@ -11,7 +11,7 @@ import '../../../services/trading_feature/trading_service_firestore.dart';
 import '../../../widgets/custom_material_button.dart';
 import '../../../widgets/item_post_card.dart';
 import '../const_string/const_str.dart';
-// import '../../../widgets/item_post_card.dart';
+import '../helper/helper_navigate_chat_room.dart';
 
 class MakeOfferScreen extends StatefulWidget {
   const MakeOfferScreen({
@@ -19,6 +19,7 @@ class MakeOfferScreen extends StatefulWidget {
     required this.otherUserPostId,
   }) : super(key: key);
   final String otherUserPostId;
+
   @override
   _MakeOfferScreenState createState() => _MakeOfferScreenState();
   @override
@@ -52,27 +53,31 @@ class _MakeOfferScreenState extends State<MakeOfferScreen> {
     setState(() {
       loading = true;
     });
-    final thisUserId = Provider.of<User?>(context, listen: false)!.uid!;
+    final thisUser = Provider.of<User?>(context, listen: false)!;
+    final ownerId = await TradingServiceFireStore()
+        .getOwnerIdOfPost(widget.otherUserPostId);
     if (_isHaveMoney) {
       await TradingServiceFireStore()
           .addTrading(
-              makeOfferUser: thisUserId,
+              makeOfferUser: thisUser.uid!,
               ownerPost: widget.otherUserPostId,
               offerUserPosts: choosedPostsId,
               money: int.parse(_textEditingController.text))
           .then((value) {
-        Navigator.of(context).pop(_textEditingController.text);
+        HelperNavigateChatRoom.checkAndSendChatRoomOneUserByIds(
+            context: context, thisUser: thisUser, userId: ownerId);
       });
     } else {
       if (choosedPostsId.isNotEmpty) {
         await TradingServiceFireStore()
             .addTrading(
-          makeOfferUser: thisUserId,
+          makeOfferUser: thisUser.uid!,
           ownerPost: widget.otherUserPostId,
           offerUserPosts: choosedPostsId,
         )
-            .then((value) {
-          Navigator.of(context).pop(_textEditingController.text);
+            .then((value) async {
+          HelperNavigateChatRoom.checkAndSendChatRoomOneUserByIds(
+              context: context, thisUser: thisUser, userId: ownerId);
         });
       } else {
         setState(() {
