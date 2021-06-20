@@ -4,8 +4,8 @@ import '../../../../constants/app_dimens.dart';
 
 import 'post_details_section_container.dart';
 
-class NoItemsSection extends StatelessWidget {
-  const NoItemsSection({
+class PostDetailsNoItemsSection extends StatelessWidget {
+  const PostDetailsNoItemsSection({
     Key? key,
     required this.text,
   }) : super(key: key);
@@ -14,11 +14,12 @@ class NoItemsSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
-    return DetailSectionContainer(
+    final _size = MediaQuery.of(context).size;
+    
+    return PostDetailsSectionContainer(
       child: Padding(
         padding: EdgeInsets.only(
-          right: size.width * AppDimens.kDetailHorizontalPaddingPercent * 2,
+          right: _size.width * AppDimens.kDetailHorizontalPaddingPercent * 2,
         ),
         child: Text(
           text,

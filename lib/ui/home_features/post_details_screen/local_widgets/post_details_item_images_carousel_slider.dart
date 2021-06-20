@@ -1,20 +1,24 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import '../../../../models/ui/shared_models/product_model.dart';
+import 'package:provider/provider.dart';
+
+import '../../../../models/arguments/shared/post_details_arguments.dart';
 import '../../shared_widgets/custom_carousel_slider.dart';
 
-class ProductCarouselSlider extends StatelessWidget {
-  const ProductCarouselSlider({
+class PostDetailsItemImagesCarouselSlider extends StatelessWidget {
+  const PostDetailsItemImagesCarouselSlider({
     Key? key,
-    required this.product,
   }) : super(key: key);
-
-  final Product product;
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
-    final productImages = product.images
+    final _postDetailsImages =
+        context.select<PostDetailsArguments, List<String>>(
+            (arguments) => arguments.postDetails.itemInfo.images);
+
+    final _size = MediaQuery.of(context).size;
+
+    final _productImages = _postDetailsImages
         .map(
           (item) => Builder(
             builder: (_) => Image.network(
@@ -28,17 +32,11 @@ class ProductCarouselSlider extends StatelessWidget {
         .toList();
 
     return CustomCarouselSlider(
-      items: productImages,
+      items: _productImages,
       enableInfiniteScroll: false,
       height: 414 - 56,
-      width: size.width,
+      width: _size.width,
       dotActiveColor: Colors.white,
     );
-  }
-
-  @override
-  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
-    super.debugFillProperties(properties);
-    properties.add(DiagnosticsProperty<Product>('product', product));
   }
 }

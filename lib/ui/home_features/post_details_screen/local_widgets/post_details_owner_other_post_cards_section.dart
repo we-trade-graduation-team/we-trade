@@ -9,16 +9,16 @@ import 'post_details_no_items_section.dart';
 import 'post_details_section_container.dart';
 import 'post_details_separator.dart';
 
-class PostDetailsSimilarProductsSection extends StatelessWidget {
-  const PostDetailsSimilarProductsSection({
+class PostDetailsOwnerOtherPostCardsSection extends StatelessWidget {
+  const PostDetailsOwnerOtherPostCardsSection({
     Key? key,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final _similarPostCards =
+    final _postOwnerOtherPostCards =
         context.select<PostDetailsArguments, List<PostCard>>(
-            (arguments) => arguments.similarPostCards);
+            (arguments) => arguments.postOwnerOtherPostCards);
 
     final _size = MediaQuery.of(context).size;
 
@@ -26,24 +26,24 @@ class PostDetailsSimilarProductsSection extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const PostDetailsSectionContainer(
-          child: Text('Similar products'),
+          child: Text("Seller's other products"),
         ),
         PostDetailsSeparator(height: _size.height * 0.004),
         Container(
-          width: _size.width,
           color: Colors.white,
+          width: _size.width,
           padding: EdgeInsets.only(
             left: _size.width * 0.05,
             top: _size.height * 0.02,
             bottom: _size.height * 0.02,
           ),
-          child: verifyIfNoProduct(_similarPostCards),
+          child: _verifyIfNoProduct(_postOwnerOtherPostCards),
         ),
       ],
     );
   }
 
-  Widget verifyIfNoProduct(List<PostCard> postCards) {
+  Widget _verifyIfNoProduct(List<PostCard> postCards) {
     return postCards.isNotEmpty
         ? HorizontalScrollPostCardListView(postCards: postCards)
         : const PostDetailsNoItemsSection(text: 'No products');

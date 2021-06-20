@@ -1,32 +1,31 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import '../../../../models/ui/home_features/detail_screen/answer_model.dart';
+import '../../../../models/cloud_firestore/post_details_model/post_details_question_answer/post_details_question_answer.dart';
 
-import '../../../../models/ui/shared_models/account_model.dart';
-
-class AnswerColumn extends StatelessWidget {
-  const AnswerColumn({
+class PostDetailsAnswerColumn extends StatelessWidget {
+  const PostDetailsAnswerColumn({
     Key? key,
     required this.answer,
   }) : super(key: key);
 
-  final Answer answer;
+  final PostDetailsQuestionAnswer answer;
 
   @override
   Widget build(BuildContext context) {
-    final userName =
-        demoUsers.firstWhere((user) => user.id == answer.answerUserId).username;
-    final date = DateFormat.yMMMMd('en_US').format(answer.date);
-    final size = MediaQuery.of(context).size;
+    final _date = DateTime.fromMillisecondsSinceEpoch(answer.createdAt);
+
+    final _formattedDate = DateFormat.yMMMMd('en_US').format(_date);
+
+    final _size = MediaQuery.of(context).size;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(answer.answer),
-        SizedBox(height: size.height * 0.01),
+        SizedBox(height: _size.height * 0.01),
         Text(
-          'By $userName on $date',
+          'By ${answer.respondentName} on $_formattedDate',
           style: TextStyle(
             color: ((Theme.of(context).textTheme.bodyText2)!.color)!
                 .withOpacity(0.6),
@@ -39,6 +38,7 @@ class AnswerColumn extends StatelessWidget {
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
-    properties.add(DiagnosticsProperty<Answer>('answer', answer));
+    properties
+        .add(DiagnosticsProperty<PostDetailsQuestionAnswer>('answer', answer));
   }
 }

@@ -1,36 +1,20 @@
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../../../../models/arguments/shared/post_details_arguments.dart';
 
-class FavouriteToggleButton extends StatefulWidget {
-  const FavouriteToggleButton({
+class PostDetailsFavoriteToggleButton extends StatelessWidget {
+  const PostDetailsFavoriteToggleButton({
     Key? key,
-    required this.isFavourite,
   }) : super(key: key);
-
-  final bool isFavourite;
-
-  @override
-  _FavouriteToggleButtonState createState() => _FavouriteToggleButtonState();
-
-  @override
-  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
-    super.debugFillProperties(properties);
-    properties.add(DiagnosticsProperty<bool>('isFavourite', isFavourite));
-  }
-}
-
-class _FavouriteToggleButtonState extends State<FavouriteToggleButton> {
-  late List<bool> _selections;
-
-  @override
-  void initState() {
-    super.initState();
-    _selections = [widget.isFavourite];
-  }
 
   @override
   Widget build(BuildContext context) {
+    final _isCurrentUserFavoritePost =
+        context.select<PostDetailsArguments, bool>(
+            (arguments) => arguments.isCurrentUserFavoritePost);
+
     return Container(
       padding: EdgeInsets.zero,
       decoration: BoxDecoration(
@@ -41,12 +25,12 @@ class _FavouriteToggleButtonState extends State<FavouriteToggleButton> {
         ),
       ),
       child: ToggleButtons(
-        isSelected: _selections,
+        isSelected: [_isCurrentUserFavoritePost],
         onPressed: (index) {
-          setState(() {
-            _selections[index] = !_selections[index];
-            // isFavourite = !widget.isFavourite;
-          });
+          // TODO: <Phuc> Update _isCurrentUserFavoritePost
+          // setState(() {
+          //   _selections[index] = !_selections[index];
+          // });
         },
         selectedColor: const Color(0xFFEB5757),
         color: const Color(0xFFBFC1C7),

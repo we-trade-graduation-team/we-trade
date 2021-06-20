@@ -2,8 +2,8 @@ import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-class ToVoteColumn extends StatefulWidget {
-  const ToVoteColumn({
+class PostDetailsToVoteColumn extends StatefulWidget {
+  const PostDetailsToVoteColumn({
     Key? key,
     required this.vote,
     this.isUserUpVoted = false,
@@ -14,7 +14,7 @@ class ToVoteColumn extends StatefulWidget {
   final bool isUserUpVoted, isUserDownVoted;
 
   @override
-  _ToVoteColumnState createState() => _ToVoteColumnState();
+  _PostDetailsToVoteColumnState createState() => _PostDetailsToVoteColumnState();
 
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
@@ -26,7 +26,7 @@ class ToVoteColumn extends StatefulWidget {
   }
 }
 
-class _ToVoteColumnState extends State<ToVoteColumn> {
+class _PostDetailsToVoteColumnState extends State<PostDetailsToVoteColumn> {
   late int _voteNumber;
   late List<bool> _upVoteSelections, _downVoteSelections;
 

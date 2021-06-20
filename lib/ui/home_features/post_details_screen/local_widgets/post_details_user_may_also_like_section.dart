@@ -1,56 +1,56 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:line_icons/line_icons.dart';
+import 'package:provider/provider.dart';
 
 import '../../../../constants/app_dimens.dart';
-import '../../../../models/ui/shared_models/product_model.dart';
-// import '../../../../widgets/post_card.dart';
+import '../../../../models/arguments/shared/post_details_arguments.dart';
+import '../../../../models/cloud_firestore/post_card_model/post_card/post_card.dart';
+import '../../../../widgets/item_post_card.dart';
 import 'post_details_section_container.dart';
 import 'post_details_separator.dart';
 
-class UserMayAlsoLikeSection extends StatelessWidget {
-  const UserMayAlsoLikeSection({
+class PostDetailsUserMayAlsoLikeSection extends StatelessWidget {
+  const PostDetailsUserMayAlsoLikeSection({
     Key? key,
-    required this.product,
   }) : super(key: key);
-
-  final Product product;
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
+    final _postCardsCurrentUserMayAlsoLike =
+        context.select<PostDetailsArguments, List<PostCard>>(
+            (arguments) => arguments.postCardsCurrentUserMayAlsoLike);
 
-    // final demoSimilarProducts = getSimilarProducts(product);
+    final _size = MediaQuery.of(context).size;
 
     return Column(
       children: [
-        const DetailSectionContainer(
+        const PostDetailsSectionContainer(
           child: Text('You may also like'),
         ),
-        DetailSeparator(height: size.height * 0.004),
+        PostDetailsSeparator(height: _size.height * 0.004),
         Container(
-          width: size.width,
+          width: _size.width,
           color: Colors.white,
           padding: EdgeInsets.symmetric(
             // horizontal: size.width * kDetailHorizontalPaddingPercent,
-            vertical: size.height * AppDimens.kDetailVerticalPaddingPercent,
+            vertical: _size.height * AppDimens.kDetailVerticalPaddingPercent,
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              // TODO: <Phuc> Replace Product with PostCard
-              // Center(
-              //   child: Wrap(
-              //     spacing: 20,
-              //     runSpacing: 15,
-              //     children: demoSimilarProducts
-              //         .map(
-              //           (product) => ItemPostCard(postCard: product),
-              //         )
-              //         .toList(),
-              //   ),
-              // ),
-              SizedBox(height: size.height * 0.004),
+              Center(
+                child: Wrap(
+                  spacing: 20,
+                  runSpacing: 15,
+                  children: _postCardsCurrentUserMayAlsoLike
+                      .map(
+                        (postCard) => ItemPostCard(postCard: postCard),
+                      )
+                      .toList(),
+                ),
+              ),
+              SizedBox(height: _size.height * 0.004),
               TextButton.icon(
                 icon: const Icon(LineIcons.angleDown),
                 // style: TextButton.styleFrom(
@@ -64,21 +64,5 @@ class UserMayAlsoLikeSection extends StatelessWidget {
         ),
       ],
     );
-  }
-
-  List<Product> getSimilarProducts(Product exampleProduct) {
-    final result = demoProducts
-        .where(
-          (element) => element.title.contains(product.title),
-        )
-        .toList();
-    result.remove(exampleProduct);
-    return result;
-  }
-
-  @override
-  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
-    super.debugFillProperties(properties);
-    properties.add(DiagnosticsProperty<Product>('product', product));
   }
 }

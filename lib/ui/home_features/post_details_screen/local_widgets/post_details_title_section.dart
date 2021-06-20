@@ -1,50 +1,53 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:line_icons/line_icons.dart';
+import 'package:provider/provider.dart';
 
-import '../../../../models/ui/shared_models/product_model.dart';
-import 'post_details_favourite_toggle_button.dart';
+import '../../../../models/arguments/shared/post_details_arguments.dart';
+import '../../../../models/cloud_firestore/post_details_model/post_details/post_details.dart';
+import 'post_details_favorite_toggle_button.dart';
 import 'post_details_section_container.dart';
 import 'post_details_separator.dart';
 
-class TitleSection extends StatelessWidget {
-  const TitleSection({
+class PostDetailsTitleSection extends StatelessWidget {
+  const PostDetailsTitleSection({
     Key? key,
-    required this.product,
   }) : super(key: key);
-
-  final Product product;
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
+    final _postDetails = context.select<PostDetailsArguments, PostDetails>(
+        (arguments) => arguments.postDetails);
+
+    final _size = MediaQuery.of(context).size;
+    
     return Column(
       children: [
-        DetailSectionContainer(
+        PostDetailsSectionContainer(
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               SizedBox(
-                width: size.width * 0.75,
+                width: _size.width * 0.75,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      product.title,
+                      _postDetails.title,
                       style: Theme.of(context).textTheme.headline6,
                     ),
-                    SizedBox(height: size.height * 0.02),
+                    SizedBox(height: _size.height * 0.02),
                     Text(
-                      '\$${product.price} - \$${product.price + 2}', // demo
+                      '\$${_postDetails.itemInfo.price}',
                       style: TextStyle(
                         fontSize: 18,
                         color: Theme.of(context).primaryColor,
                       ),
                     ),
-                    SizedBox(height: size.height * 0.02),
+                    SizedBox(height: _size.height * 0.02),
                     Text(
-                      product.condition,
+                      _postDetails.itemInfo.condition,
                       style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.w300,
@@ -55,12 +58,12 @@ class TitleSection extends StatelessWidget {
                   ],
                 ),
               ),
-              FavouriteToggleButton(isFavourite: product.isFavourite),
+              const PostDetailsFavoriteToggleButton(),
             ],
           ),
         ),
-        DetailSeparator(height: size.height * 0.004),
-        DetailSectionContainer(
+        PostDetailsSeparator(height: _size.height * 0.004),
+        PostDetailsSectionContainer(
           height: 50,
           child: FittedBox(
             fit: BoxFit.fitHeight,
@@ -72,9 +75,9 @@ class TitleSection extends StatelessWidget {
                   size: 18,
                   // color: Theme.of(context).primaryColor,
                 ),
-                SizedBox(width: size.width * 0.01),
+                SizedBox(width: _size.width * 0.01),
                 Text(
-                  product.productLocation,
+                  _postDetails.itemInfo.addressInfo.toString(),
                   style: TextStyle(
                     color: ((Theme.of(context).textTheme.bodyText2)!.color)!
                         .withOpacity(0.6),
@@ -86,11 +89,5 @@ class TitleSection extends StatelessWidget {
         ),
       ],
     );
-  }
-
-  @override
-  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
-    super.debugFillProperties(properties);
-    properties.add(DiagnosticsProperty<Product>('product', product));
   }
 }

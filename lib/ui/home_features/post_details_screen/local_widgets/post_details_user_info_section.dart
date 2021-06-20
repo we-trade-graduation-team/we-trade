@@ -1,44 +1,45 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
-import '../../../../constants/app_dimens.dart';
-import '../../../../models/ui/home_features/detail_screen/user_rating_model.dart';
-import '../../../../models/ui/shared_models/product_model.dart';
-import '../../../../widgets/custom_animation_limiter_for_list_view.dart';
+import '../../../../models/arguments/shared/post_details_arguments.dart';
+import '../../../../models/cloud_firestore/post_details_model/post_details_owner/post_details_owner.dart';
 import '../../shared_widgets/rounded_outline_button.dart';
 import 'post_details_follow_toggle_button.dart';
 import 'post_details_section_container.dart';
 import 'post_details_small_rating_thumbnail.dart';
 
-class DetailUserInfoSection extends StatelessWidget {
-  const DetailUserInfoSection({
+class PostDetailsUserInfoSection extends StatelessWidget {
+  const PostDetailsUserInfoSection({
     Key? key,
-    required this.product,
   }) : super(key: key);
-
-  final Product product;
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
+    final _postDetailsOwnerInfo =
+        context.select<PostDetailsArguments, PostDetailsOwner>(
+            (arguments) => arguments.postDetails.ownerInfo);
+
+    final _size = MediaQuery.of(context).size;
+
     return Container(
       color: Colors.white,
       child: Column(
         children: [
-          DetailSectionContainer(
+          PostDetailsSectionContainer(
             child: IntrinsicHeight(
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Flexible(
                     child: SizedBox(
-                      height: size.height * 0.068,
+                      height: _size.height * 0.068,
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(5),
                         child: AspectRatio(
                           aspectRatio: 1,
                           child: Image.network(
-                            product.owner.avatar,
+                            _postDetailsOwnerInfo.avatarURL,
                             fit: BoxFit.cover,
                             height: double.infinity,
                             width: double.infinity,
@@ -54,7 +55,7 @@ class DetailUserInfoSection extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          product.owner.username,
+                          _postDetailsOwnerInfo.name,
                           style: const TextStyle(
                             fontWeight: FontWeight.w500,
                           ),
@@ -76,23 +77,26 @@ class DetailUserInfoSection extends StatelessWidget {
             ),
           ),
           SizedBox(
-            height: size.height * 0.075,
+            height: _size.height * 0.075,
             child: Center(
-              child: CustomAnimationLimiterForListView<UserRating>(
-                scrollDirection: Axis.horizontal,
-                scrollPhysics: const NeverScrollableScrollPhysics(),
-                separatorWidth: 35,
-                duration: const Duration(
-                    milliseconds:
-                        AppDimens.kFlutterStaggeredAnimationsDuration ~/ 2),
-                endIndent: size.height * 0.04,
-                list: product.owner.ratings!,
-                builder: (_, userRating) {
-                  return SmallRatingThumbnail(
-                    userRating: userRating,
-                  );
-                },
+              child: PostDetailsSmallRatingThumbnail(
+                legitimacy: _postDetailsOwnerInfo.legitimacy,
               ),
+              // child: CustomAnimationLimiterForListView<UserRating>(
+              //   scrollDirection: Axis.horizontal,
+              //   scrollPhysics: const NeverScrollableScrollPhysics(),
+              //   separatorWidth: 35,
+              //   duration: const Duration(
+              //       milliseconds:
+              //           AppDimens.kFlutterStaggeredAnimationsDuration ~/ 2),
+              //   endIndent: _size.height * 0.04,
+              //   list: product.owner.ratings!,
+              //   builder: (_, userRating) {
+              //     return SmallRatingThumbnail(
+              //       userRating: userRating,
+              //     );
+              //   },
+              // ),
             ),
           ),
           Padding(
@@ -101,7 +105,7 @@ class DetailUserInfoSection extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               mainAxisSize: MainAxisSize.min,
               children: [
-                FollowToggleButton(product: product),
+                const PostDetailsFollowToggleButton(),
                 const SizedBox(width: 10),
                 RoundedOutlineButton(
                   text: 'Profile',
@@ -115,11 +119,5 @@ class DetailUserInfoSection extends StatelessWidget {
         ],
       ),
     );
-  }
-
-  @override
-  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
-    super.debugFillProperties(properties);
-    properties.add(DiagnosticsProperty<Product>('product', product));
   }
 }
