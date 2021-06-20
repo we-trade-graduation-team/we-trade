@@ -1,4 +1,3 @@
-import 'dart:developer';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -8,7 +7,6 @@ import 'package:provider/provider.dart';
 
 import '../../../../constants/app_colors.dart';
 import '../../../models/cloud_firestore/user_model/user/user.dart';
-import '../../../services/firestore/firestore_database.dart';
 import '../../../services/post_feature/post_service_algolia.dart';
 import '../../../services/post_feature/post_service_firestore.dart';
 import '../../../utils/helper/image_data_storage_helper/image_data_storage_helper.dart';
@@ -121,14 +119,14 @@ class _PostItemFourState extends State<PostItemFour> {
             : [],
       );
 
-  Future<void> _setPostDetails(String postId) async {
-    try {
-      final _firebaseDatabase = context.read<FirestoreDatabase>();
-      await _firebaseDatabase.setPostDetails(postId: postId);
-    } catch (err) {
-      log(err.toString());
-    }
-  }
+  // Future<void> _setPostDetails(String postId) async {
+  //   try {
+  //     final _firebaseDatabase = context.read<FirestoreDatabase>();
+  //     await _firebaseDatabase.setPostDetails(postId: postId);
+  //   } catch (err) {
+  //     log(err.toString());
+  //   }
+  // }
 
   Future<bool> updatePost(Map<dynamic, dynamic> arguments) async {
     try {
@@ -230,7 +228,7 @@ class _PostItemFourState extends State<PostItemFour> {
               dataServiceFireStore
                   .addPostCard(postCard, postId)
                   .whenComplete(() {
-                _setPostDetails(postId);
+                //_setPostDetails(postId);
                 //   final db = FirestoreDatabase(uid: '');
                 //   db.setPostDetails(postId: postId);
               });
@@ -248,7 +246,9 @@ class _PostItemFourState extends State<PostItemFour> {
               imageURL: post['imagesUrl'][0] as String,
               condition: arguments['condition'] as String,
               price: arguments['price'] as int,
-              district: districtSelected.name);
+              district: districtSelected.name,
+              city: citySelected.name,
+              );
         });
       } else {}
     }).whenComplete(_showMessgage);
