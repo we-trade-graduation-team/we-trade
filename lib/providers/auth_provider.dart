@@ -202,13 +202,15 @@ class AuthProvider extends ChangeNotifier {
 
     final _currentUser = _auth.currentUser;
 
+
     await Future.wait([
       // Update lastSeen and presence
       _usersRef.doc(_currentUser!.uid).update(_newData),
       // Sign out for current user
       _auth.signOut(),
     ]);
-
+    
+    // TODO update algolia presence
     _status = Status.unauthenticated;
 
     notifyListeners();

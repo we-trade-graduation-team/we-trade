@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -10,21 +8,14 @@ import 'package:provider/provider.dart';
 
 import '../../../../constants/app_colors.dart';
 import '../../../../models/cloud_firestore/user_model/user/user.dart';
-import '../../../../models/ui/shared_models/product_model.dart';
 import '../../../../services/message/firestore_message_service.dart';
+import '../../../../services/trading_feature/trading_service_firestore.dart';
 import '../../../../utils/helper/image_data_storage_helper/image_data_storage_helper.dart';
 import '../../../../widgets/custom_material_button.dart';
 import '../../const_string/const_str.dart';
 import '../../helper/ulti.dart';
 import '../../shared_widgets/offer_card.dart';
 import '../widgets/message_tile.dart';
-
-// TODO : T đây nè Tín ớiiiiii
-// loadAsset() --> hàm chạy lấy ảnh các kiểu nè
-// chạy xong sẽ trả ra resultImages ---> setState images = resultImages để
-// show buildGridView() lên, tùy theo m custom cho thêm nút bấm ok load
-// ảnh lên firestore ở đâu nữa, f12 vào hàm addMessageImageToChatRoom --> f12 tiếp
-// để dô đc hàm static UsersCard.... dùng chung, m cú dùng hàm này đi hen
 
 class Body extends StatefulWidget {
   const Body({
@@ -58,6 +49,9 @@ class _BodyState extends State<Body> {
   late Stream<QuerySnapshot> chats;
   // ignore: diagnostic_describe_all_properties
   late Stream<DocumentSnapshot<Map<String, dynamic>>> seenHistory;
+// ignore: diagnostic_describe_all_properties
+  late Stream<DocumentSnapshot<Map<String, dynamic>>> tradingDeal;
+
   late Map<String, String> seenHistoryMap = {};
   late bool isHaveOfferDeal = false;
   late bool isShowGallery = false;
@@ -122,23 +116,21 @@ class _BodyState extends State<Body> {
   }
 
   Widget buildOfferDealCard() {
-    //check if have offer chưa trả lời
-    //nếu có thì trả ra card_offer ghim đầu
-    //ko thì thôi :v
-    isHaveOfferDeal = false;
-    final offerSideProducts = [allProduct[0], allProduct[1]];
-    const money = 100000;
-    final forProduct = allProduct[3];
-
-    return isHaveOfferDeal
-        ? Container(
-            alignment: Alignment.topCenter,
-            child: OfferCard(
-                offerSideProducts: offerSideProducts,
-                forProduct: forProduct,
-                offerSideMoney: money),
-          )
-        : Container();
+    return StreamBuilder<DocumentSnapshot<Map<String, dynamic>>>(
+        stream: tradingDeal,
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            if (snapshot.data!.data() != null) {
+              final tradingID = (snapshot.data!.data()
+                      as Map<String, dynamic>)['latestTrading']
+                  .toString();
+              return OfferCard(
+                tradingID: tradingID,
+              );
+            }
+          }
+          return Container();
+        });
   }
 
   Widget buildGridViewSelectedImages() {
@@ -304,7 +296,6 @@ class _BodyState extends State<Body> {
 
   Future<void> loadAssets() async {
     var resultList = <Asset>[]; //start here list ảnh trả ra tạm thời
-    var error = 'No Error Detected';
 
     try {
       resultList = await MultiImagePicker.pickImages(
@@ -324,9 +315,10 @@ class _BodyState extends State<Body> {
           selectCircleStrokeColor: '#ffffff',
         ),
       );
+      // ignore: unused_catch_clause
     } on Exception catch (e) {
-      error = e.toString();
-      log(error);
+      //error = e.toString();
+      //log(error);
     }
 
     if (!mounted) {
@@ -340,6 +332,11 @@ class _BodyState extends State<Body> {
 
   @override
   void initState() {
+    TradingServiceFireStore()
+        .getLatestTradingForChatRoom(chatRoomId: widget.chatRoomId)
+        .then((value) => setState(() {
+              tradingDeal = value;
+            }));
     messageServiceFireStore.getChats(widget.chatRoomId).then((result) {
       setState(() {
         chats = result;

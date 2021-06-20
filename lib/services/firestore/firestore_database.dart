@@ -2,13 +2,13 @@ import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:collection/collection.dart';
-import 'package:we_trade/models/cloud_firestore/post_model/post/post.dart';
 
 import '../../constants/app_firestore_constant.dart';
 import '../../models/cloud_firestore/category_card/category_card.dart';
 import '../../models/cloud_firestore/category_events/category_events.dart';
 import '../../models/cloud_firestore/junction_keyword_post/junction_keyword_post.dart';
 import '../../models/cloud_firestore/post_card_model/post_card/post_card.dart';
+import '../../models/cloud_firestore/post_model/post/post.dart';
 import '../../models/cloud_firestore/special_category_card/special_category_card.dart';
 import '../../models/cloud_firestore/user_model/user/user.dart' as user_model;
 import '../../models/cloud_firestore/user_model/user_category_history/user_category_history.dart';
@@ -167,7 +167,7 @@ class FirestoreDatabase {
   }
 
   // Method to retrieve a Post Card
-  Future<PostCard> _getPostCard({
+  Future<PostCard> getPostCard({
     required String postId,
   }) async {
     final _result = await _fireStoreService.documentFuture(
@@ -219,7 +219,7 @@ class FirestoreDatabase {
     required List<String> postIdList,
   }) async {
     final _result = await Stream.fromIterable(postIdList)
-        .asyncMap((postId) => _getPostCard(postId: postId))
+        .asyncMap((postId) => getPostCard(postId: postId))
         .toList();
 
     return _result;
@@ -396,7 +396,7 @@ class FirestoreDatabase {
     ) async {
       // Fetch for each retrieved junction, fetch the associated postCard
       final _postCardsFromJunction = await Stream.fromIterable(_junctions)
-          .asyncMap((junction) => _getPostCard(postId: junction.postId))
+          .asyncMap((junction) => getPostCard(postId: junction.postId))
           .toList();
 
       // Sort descending by view
@@ -503,12 +503,19 @@ class FirestoreDatabase {
     final _postsFromUser = await _fireStoreService.collectionFuture(
       path: FirestorePath.posts(),
       queryBuilder: (query) {
-        final _ownerId = ModelProperties.postOwnerIdProperty;
+        const _ownerIdField = ModelProperties.postOwnerIdProperty;
 
-        return query.where(
-          _ownerId,
-          isEqualTo: userId ?? uid,
-        );
+        const _isHiddenField = ModelProperties.postIsHiddenProperty;
+
+        return query
+            .where(
+              _ownerIdField,
+              isEqualTo: userId ?? uid,
+            )
+            .where(
+              _isHiddenField,
+              isEqualTo: false,
+            );
       },
       builder: (data) => Post.fromDocumentSnapshot(data),
     );

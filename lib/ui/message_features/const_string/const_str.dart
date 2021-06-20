@@ -4,6 +4,8 @@ const String postsAlgoliaIndex = 'posts';
 const String chatRoomCollection = 'chat_rooms';
 const String chatCollection = 'chats';
 const String seenHistoryCollection = 'seen_history';
+const String latestTradingStr = 'latestTrading';
+const String tradingsCollectionStr = 'tradings';
 
 const String emailStr = 'email';
 const String lastActiveStr = 'lastActive';
@@ -41,3 +43,5 @@ const String messageLoadingStr2 =
     'https://assets7.lottiefiles.com/packages/lf20_Z4BhGL.json';
 const String userImageStr =
     'https://firebasestorage.googleapis.com/v0/b/wetrade-1712.appspot.com/o/user_image%2Fdefault-avatar.png?alt=media&token=158d2ea6-375c-4cfd-a25a-a5b12fe9493b';
+const String loadingImageStr =
+    'https://thumbs.dreamstime.com/b/white-loading-icon-isolated-long-shadow-progress-bar-icon-purple-hexagon-button-white-loading-icon-isolated-long-shadow-177056183.jpg';

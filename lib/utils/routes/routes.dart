@@ -102,6 +102,7 @@ class Routes {
         const DetailedNotificationScreen(),
     notificationScreenRouteName: (_) => const NotificationScreen(),
     searchScreenRouteName: (_) => const SearchScreen(),
+    ...sharedFeaturesRoutes,
   };
 
   static final Map<String, WidgetBuilder> sharedFeaturesRoutes = {
@@ -109,13 +110,17 @@ class Routes {
           userId: '',
         ),
     reportScreenRouteName: (_) => const ReportScreen(),
+    makeOfferScreenRouteName: (_) => const MakeOfferScreen(
+          otherUserPostId: '',
+        ),
   };
 
   static final Map<String, WidgetBuilder> messageFeaturesRoutes = {
     chatRoomScreenRouteName: (_) => ChatRoomScreen(chat: Chat.nullChat()),
     matchPostsScreenRouteName: (_) => const MatchPostsScreen(),
-    makeOfferScreenRouteName: (_) => const MakeOfferScreen(otherUserPostId: '', ),
-    offerDetailScreenRouteName: (_) => const OfferDetailScreen(),
+    offerDetailScreenRouteName: (_) => OfferDetailScreen(
+          trading: Trading.nullTrading(),
+        ),
     ...sharedFeaturesRoutes,
   };
 

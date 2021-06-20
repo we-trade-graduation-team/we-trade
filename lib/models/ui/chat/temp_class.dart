@@ -14,6 +14,7 @@ class Chat {
     required this.senderName,
     required this.senderId,
     required this.time,
+    this.latestTrading,
   });
 
   Chat.nullChat()
@@ -28,7 +29,8 @@ class Chat {
         senderId = '',
         senderName = '',
         time = '',
-        usersId = [];
+        usersId = [],
+        latestTrading = '';
 
   final String chatRoomId;
   final bool groupChat;
@@ -38,6 +40,7 @@ class Chat {
   final String lastMessage, lastMessageId;
   final String senderName;
   final String senderId;
+  final String? latestTrading;
 }
 
 @immutable
@@ -106,4 +109,33 @@ class Review {
 
   final String image;
   final String? reply;
+}
+
+class Trading {
+  Trading(
+      {required this.id,
+      required this.ownerId,
+      required this.offerId,
+      required this.ownerPost,
+      required this.offerPosts,
+      required this.status,
+      required this.money,
+      required this.isHaveMoney});
+
+  Trading.nullTrading()
+      : id = '',
+        ownerId = '',
+        offerId = '',
+        ownerPost = '',
+        offerPosts = [],
+        status = 0,
+        money = 0,
+        isHaveMoney = false;
+
+  final String id, ownerId, offerId;
+  final String ownerPost;
+  final List<String> offerPosts;
+  final int status;
+  final int money;
+  final bool isHaveMoney;
 }
