@@ -27,7 +27,6 @@ class AppAssets {
   static const String googleIcon = 'assets/icons/auth/google_icon.svg';
   static const String appleIcon = 'assets/icons/auth/apple_icon.svg';
   static const String facebookIcon = 'assets/icons/auth/facebook_icon.svg';
-
   static const String userImageStr =
       'https://firebasestorage.googleapis.com/v0/b/wetrade-1712.appspot.com/o/user_image%2Fdefault-avatar.png?alt=media&token=158d2ea6-375c-4cfd-a25a-a5b12fe9493b';
 }

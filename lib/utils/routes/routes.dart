@@ -5,7 +5,7 @@ import '../../ui/account_features/follow_screen/follow_screen.dart';
 import '../../ui/account_features/my_rate_screen/my_rate_screen.dart';
 import '../../ui/account_features/post_management/hide_post_screen.dart';
 import '../../ui/account_features/post_management/post_management_screen.dart';
-import '../../ui/account_features/trading_history/rate_for_trading.dart';
+// import '../../ui/account_features/trading_history/rate_for_trading.dart';
 import '../../ui/account_features/trading_history/trading_history_screen.dart';
 import '../../ui/account_features/user_info/change_password_screen.dart';
 import '../../ui/account_features/user_info/user_info_screen.dart';
@@ -22,9 +22,9 @@ import '../../ui/message_features/chat_screen/chat_room/chat_room.dart';
 import '../../ui/message_features/match_post/match_post_screen.dart';
 import '../../ui/message_features/offer_screens/make_offer_screen.dart';
 import '../../ui/message_features/offer_screens/offer_detail_screen.dart';
-import '../../ui/posting_features/post_items/component/post_item_step_four.dart';
-import '../../ui/posting_features/post_items/component/post_item_step_three.dart';
-import '../../ui/posting_features/post_items/component/post_item_step_two.dart';
+import '../../ui/posting_features/post_items/post_item_step_four.dart';
+import '../../ui/posting_features/post_items/post_item_step_three.dart';
+import '../../ui/posting_features/post_items/post_item_step_two.dart';
 import '../../ui/shared_features/other_user_profile/other_user_profile_screen.dart';
 import '../../ui/shared_features/report/report_screen.dart';
 import '../../ui/wish_list_features/wish_list/wish_list_screen.dart';
@@ -71,16 +71,21 @@ class Routes {
   static const chatRoomScreenRouteName = '/chat-room';
 
   // Posting features
+
   static const postItemStepTwoScreenRouteName = '/post-item-step-two';
   static const postItemStepThreeScreenRouteName = '/post-item-step-three';
   static const postItemStepFourScreenRouteName = '/post-item-step-four';
 
+  // Update features
+
+  static const updateItemStepOneScreenRouteName = '/post-item-step-one';
+
   static final Map<String, WidgetBuilder> accountFeaturesRoutes = {
     followScreenRouteName: (_) => const FollowScreen(),
-    myRateScreenRouteName: (_) => const MyRateScreen(),
+    myRateScreenRouteName: (_) => MyRateScreen(),
     hidePostScreenRouteName: (_) => const HidePostScreen(),
     postManagementScreenRouteName: (_) => const PostManagementScreen(),
-    rateForTradingScreenRouteName: (_) => const RateForTrading(),
+    // rateForTradingScreenRouteName: (_) => const RateForTrading(),
     tradingHistoryScreenRouteName: (_) => const TradingHistoryScreen(),
     changePasswordScreenRouteName: (_) => const ChangePasswordScreen(),
     userInfoScreenRouteName: (_) => const UserInfoScreen(),
@@ -102,6 +107,7 @@ class Routes {
         DetailedNotificationScreen(note: chosenNote,),
     notificationScreenRouteName: (_) => const NotificationScreen(),
     searchScreenRouteName: (_) => const SearchScreen(),
+    ...sharedFeaturesRoutes,
   };
 
   static final Map<String, WidgetBuilder> sharedFeaturesRoutes = {
@@ -109,19 +115,23 @@ class Routes {
           userId: '',
         ),
     reportScreenRouteName: (_) => const ReportScreen(),
+    makeOfferScreenRouteName: (_) => const MakeOfferScreen(
+          otherUserPostId: '',
+        ),
   };
 
   static final Map<String, WidgetBuilder> messageFeaturesRoutes = {
     chatRoomScreenRouteName: (_) => ChatRoomScreen(chat: Chat.nullChat()),
     matchPostsScreenRouteName: (_) => const MatchPostsScreen(),
-    makeOfferScreenRouteName: (_) => const MakeOfferScreen(),
-    offerDetailScreenRouteName: (_) => const OfferDetailScreen(),
+    offerDetailScreenRouteName: (_) => OfferDetailScreen(
+          trading: Trading.nullTrading(),
+        ),
     ...sharedFeaturesRoutes,
   };
 
   static final Map<String, WidgetBuilder> postingFeaturesRoutes = {
     postItemStepTwoScreenRouteName: (_) => const PostItemTwo(),
     postItemStepThreeScreenRouteName: (_) => const PostItemThree(),
-    postItemStepFourScreenRouteName: (_) => PostItemFour(),
+    postItemStepFourScreenRouteName: (_) => const PostItemFour(),
   };
 }

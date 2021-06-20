@@ -2,11 +2,21 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import '../../../../models/ui/chat/temp_class.dart';
 
-class AboutTab extends StatelessWidget {
+class AboutTab extends StatefulWidget {
   const AboutTab({Key? key, required this.userDetail}) : super(key: key);
 
   final UserDetail userDetail;
 
+  @override
+  _AboutTabState createState() => _AboutTabState();
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(DiagnosticsProperty<UserDetail>('userDetail', userDetail));
+  }
+}
+
+class _AboutTabState extends State<AboutTab> {
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
@@ -27,7 +37,7 @@ class AboutTab extends StatelessWidget {
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              initialValue: userDetail.user.name,
+              initialValue: widget.userDetail.name,
               enabled: false,
             ),
           ),
@@ -46,7 +56,7 @@ class AboutTab extends StatelessWidget {
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              initialValue: userDetail.phone,
+              initialValue: widget.userDetail.phoneNumber,
               enabled: false,
             ),
           ),
@@ -65,7 +75,7 @@ class AboutTab extends StatelessWidget {
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              initialValue: userDetail.email,
+              initialValue: widget.userDetail.email,
               enabled: false,
             ),
           ),
@@ -85,7 +95,7 @@ class AboutTab extends StatelessWidget {
                 ),
               ),
               maxLines: 3,
-              initialValue: userDetail.address,
+              initialValue: widget.userDetail.location,
               enabled: false,
             ),
           ),
@@ -97,6 +107,7 @@ class AboutTab extends StatelessWidget {
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
-    properties.add(DiagnosticsProperty<UserDetail>('userDetail', userDetail));
+    properties
+        .add(DiagnosticsProperty<UserDetail>('userDetail', widget.userDetail));
   }
 }

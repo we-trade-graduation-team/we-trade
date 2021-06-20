@@ -33,4 +33,5 @@ class ModelProperties {
   static const postCategoryInfoProperty = 'categoryInfo';
   static const postMainCategoryIdProperty =
       '$postCategoryInfoProperty.mainCategoryId';
+  static const postIsHiddenProperty = 'isHidden';
 }

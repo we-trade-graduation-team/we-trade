@@ -2,13 +2,16 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
+import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../constants/app_colors.dart';
 import '../../../../models/cloud_firestore/user_model/user/user.dart';
 import '../../../../models/ui/chat/temp_class.dart';
 import '../../../../services/message/firestore_message_service.dart';
+import '../../../../utils/routes/routes.dart';
 import '../../const_string/const_str.dart';
+import '../../offer_screens/make_offer_screen.dart';
 import '../widgets/chat_card.dart';
 
 class Body extends StatefulWidget {
@@ -96,6 +99,7 @@ class _BodyState extends State<Body> {
       child: Column(
         children: [
           buildSearchBar(),
+          buildTestingMakeOffer(),
           Expanded(
             child: !isLoading
                 ? chatRoomsList()
@@ -115,6 +119,31 @@ class _BodyState extends State<Body> {
                   ),
           ),
         ],
+      ),
+    );
+  }
+
+  Widget buildTestingMakeOffer() {
+    return GestureDetector(
+      onTap: () {
+        pushNewScreenWithRouteSettings<void>(
+          context,
+          settings: const RouteSettings(
+            name: Routes.makeOfferScreenRouteName,
+          ),
+          screen: const MakeOfferScreen(
+            otherUserPostId: '9LVcfeZWy94do0VCsjo7',
+          ),
+          withNavBar: false,
+          pageTransitionAnimation: PageTransitionAnimation.cupertino,
+        );
+      },
+      child: Container(
+        margin: const EdgeInsets.fromLTRB(10, 0, 20, 0),
+        child: Icon(
+          Icons.text_snippet,
+          color: Theme.of(context).primaryColor,
+        ),
       ),
     );
   }
