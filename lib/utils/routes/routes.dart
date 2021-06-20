@@ -96,7 +96,7 @@ class Routes {
   };
 
   static final Map<String, WidgetBuilder> homeFeaturesRoutes = {
-    categoryKindScreenRouteName: (_) => const CategoryKindScreen(),
+    categoryKindScreenRouteName: (_) => const CategoryKindScreen(mainCategory: '',),
     postDetailScreenRouteName: (_) => const PostDetailsScreen(),
     detailNotificationScreenRouteName: (_) =>
         DetailedNotificationScreen(note: chosenNote,),

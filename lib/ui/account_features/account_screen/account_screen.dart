@@ -204,10 +204,10 @@ class AccountScreen extends StatelessWidget {
                                 height: 55,
                                 width: 55,
                                 child: CircleAvatar(
-                                  child: Image.asset(
+                                  /*child: Image.asset(
                                     'assets/images/chat_screen_ava/user.png',
                                     fit: BoxFit.cover,
-                                  ),
+                                  ),*/
                                 ),
                               ),
                               Column(

@@ -292,7 +292,7 @@ class FirestoreDatabase {
   }
 
   // Method to retrieve a List of postCard by mainCategoryId
-  Future<List<PostCard>> _getPostCardsByMainCategoryId({
+  Future<List<PostCard>> getPostCardsByMainCategoryId({
     required String mainCategoryId,
     int? limit,
     List<String>? excludedPostIdList,
@@ -712,7 +712,7 @@ class FirestoreDatabase {
         _flattenPostCardList.map((postCard) => postCard.postId!).toList();
 
     // Get postCards by main category id, with missing amount
-    final _postCardsFromMainCategoryId = await _getPostCardsByMainCategoryId(
+    final _postCardsFromMainCategoryId = await getPostCardsByMainCategoryId(
       mainCategoryId: _postMainCategoryId,
       limit: _missingAmount,
       excludedPostIdList: _excludedPostIdList,

@@ -1,13 +1,16 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
+import 'package:provider/provider.dart';
+import 'package:we_trade/ui/home_features/category_kind_screen/local_widgets/category_post_card.dart';
 
+import '../../../models/cloud_firestore/post_card_model/post_card/post_card.dart';
+import '../../../services/firestore/firestore_database.dart';
 import '../../../utils/routes/routes.dart';
 import '../home_screen/local_widgets/home_screen_icon_button_with_counter.dart';
 import '../home_screen/local_widgets/home_screen_search_bar.dart';
 import '../notification_screen/notification_screen.dart';
 import '../searching_screen/local_widgets/filter_overlay.dart';
-
 
 // Flash Deal is deleted
 const productKind = ProductKind(name: 'Laptop');
@@ -15,16 +18,14 @@ const productKind = ProductKind(name: 'Laptop');
 class CategoryKindScreen extends StatelessWidget {
   const CategoryKindScreen({
     Key? key,
+    required this.mainCategory
   }) : super(key: key);
 
-  List<Post> posts=[];
-  @override
-  void initState(){
-
-  }
+  final String mainCategory;
 
   @override
   Widget build(BuildContext context) {
+    final _firestoreDatabase = context.watch<FirestoreDatabase>();
     final size = MediaQuery.of(context).size;
     return Scaffold(
       appBar: PreferredSize(
@@ -99,14 +100,17 @@ class CategoryKindScreen extends StatelessWidget {
                   Padding(
                     padding:
                         EdgeInsets.symmetric(horizontal: size.width * 0.05),
-                    /*child: SectionTitle(
-                            title: 'Sản phẩm mới',
-                            press: () {},
-                          ),*/
+                    child: Text(mainCategory),
                   ),
                   SizedBox(height: size.width * 0.05),
                   // TODO: <Vu> Replace List<Product> with List<PostCard> (wrap below StreamBuilder)
-                  // HorizontalScrollPostCardListView(postCards: demoProducts),
+                  FutureProvider<List<PostCard>>.value(
+                    initialData: const [],
+                    value: _firestoreDatabase.getPostCardsByMainCategoryId(mainCategoryId: mainCategory),
+                    catchError: (_, __) => const [],
+                    child: const CategoryPostCard(),
+                  ),
+
                   Padding(
                     padding:
                         EdgeInsets.symmetric(horizontal: size.width * 0.05),

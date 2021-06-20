@@ -75,7 +75,7 @@ class _MyAppState extends State<MyApp> {
         // Otherwise, show something whilst waiting for initialization to complete
         return const Center(
           child: CircularProgressIndicator(
-            color: Colors.white,
+            //color: Colors.white,
           ),
         );
       },
