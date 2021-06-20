@@ -16,16 +16,15 @@ class HorizontalScrollPostCardListView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // final size = MediaQuery.of(context).size;
-    const separatorWidth = 20.0;
+    const _separatorWidth = 20.0;
 
-    const productCardHeight = 260.0;
+    const _productCardHeight = 260.0;
 
     return SizedBox(
-      height: productCardHeight,
+      height: _productCardHeight,
       child: CustomAnimationLimiterForListView<PostCard>(
         scrollDirection: Axis.horizontal,
-        separatorWidth: separatorWidth,
+        separatorWidth: _separatorWidth,
         duration: const Duration(
           milliseconds: AppDimens.kFlutterStaggeredAnimationsDuration * 2,
         ),
