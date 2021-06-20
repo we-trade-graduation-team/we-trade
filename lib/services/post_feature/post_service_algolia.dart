@@ -15,8 +15,8 @@ class PostServiceAlgolia {
       required String condition,
       required int price,
       required String
-          district // từ map address lấy thông tin cái quận lưu dô thôi,ex: 5
-      }) async {
+          district, // từ map address lấy thông tin cái quận lưu dô thôi,ex: 5
+      required String city}) async {
     final mapData = <String, dynamic>{
       'objectID': objectID,
       'name': name,
@@ -27,6 +27,7 @@ class PostServiceAlgolia {
       'condition': condition,
       'price': price,
       'district': district,
+      'city': city
     };
     await algolia.instance.index(postsAlgoliaIndex).addObject(mapData);
   }
@@ -41,8 +42,8 @@ class PostServiceAlgolia {
       required String condition,
       required int price,
       required String
-          district // từ map address lấy thông tin cái quận lưu dô thôi,ex: 5
-      }) async {
+          district, // từ map address lấy thông tin cái quận lưu dô thôi,ex: 5
+      required String city}) async {
     final mapData = <String, dynamic>{
       'objectID': objectID,
       'name': name,
@@ -53,6 +54,7 @@ class PostServiceAlgolia {
       'condition': condition,
       'price': price,
       'district': district,
+      'city': city
     };
     await algolia.instance
         .index(postsAlgoliaIndex)
