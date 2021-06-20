@@ -2,13 +2,15 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 import 'package:provider/provider.dart';
+import 'package:we_trade/models/ui/home_features/post_details_screen/question_model.dart';
+import 'package:we_trade/ui/home_features/post_details_screen/post_details_screen.dart';
+import 'package:we_trade/utils/routes/routes.dart';
 
 // import '../app_localizations.dart';
 import '../app_localizations.dart';
 import '../models/arguments/shared/post_details_arguments.dart';
 import '../models/cloud_firestore/post_card_model/post_card/post_card.dart';
 import '../models/cloud_firestore/post_card_model/post_card_item/post_card_item.dart';
-import '../models/ui/home_features/detail_screen/question_model.dart';
 import '../models/ui/shared_models/account_model.dart';
 import '../models/ui/shared_models/product_model.dart';
 import '../services/firestore/firestore_database.dart';

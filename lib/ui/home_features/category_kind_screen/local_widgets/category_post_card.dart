@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../models/cloud_firestore/post_card_model/post_card/post_card.dart';
-import '../../shared_widgets/horizontal_scroll_post_card_list_view.dart';
+import '../../../../widgets/item_post_card.dart';
 
 class CategoryPostCard extends StatelessWidget {
   const CategoryPostCard({Key? key}):super(key:key);
@@ -11,8 +11,14 @@ class CategoryPostCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final postCards = context.watch<List<PostCard>>();
 
-    return HorizontalScrollPostCardListView(
-      postCards: postCards,
+    return Wrap(
+      spacing: 20,
+      runSpacing: 15,
+      children: postCards
+          .map(
+            (postCard) => ItemPostCard(postCard: postCard),
+      )
+          .toList(),
     );
   }
 }

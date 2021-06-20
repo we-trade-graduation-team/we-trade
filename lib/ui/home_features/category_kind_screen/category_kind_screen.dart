@@ -106,7 +106,7 @@ class CategoryKindScreen extends StatelessWidget {
                   // TODO: <Vu> Replace List<Product> with List<PostCard> (wrap below StreamBuilder)
                   FutureProvider<List<PostCard>>.value(
                     initialData: const [],
-                    value: _firestoreDatabase.getPostCardsByMainCategoryId(mainCategoryId: mainCategory),
+                    value: _firestoreDatabase.getPostCardsByMainCategoryId(mainCategoryId: 'ydWCfuzyUsiKHdLy1XwU'),
                     catchError: (_, __) => const [],
                     child: const CategoryPostCard(),
                   ),

@@ -213,7 +213,7 @@ class _FollowScreenState extends State<FollowScreen> {
 
                                 return const Center(
                                     child: CircularProgressIndicator(
-                                  color: Colors.black45,
+                                  //color: Colors.black45,
                                 ));
                               }),
                           const SizedBox(width: 15),

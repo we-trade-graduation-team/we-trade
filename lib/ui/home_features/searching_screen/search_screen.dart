@@ -62,7 +62,7 @@ class _SearchScreenFloatingSearchBarState
   String? _selectedTerm;
 
   // The "raw" history that we don't access from the UI, prefilled with values
-  late List<String> _searchHistory;
+  late List<String> _searchHistory=[];
 
   // The filtered & ordered history that's accessed from the UI
   late List<String> filteredSearchHistory;

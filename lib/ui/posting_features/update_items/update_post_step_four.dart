@@ -5,8 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:multi_image_picker2/multi_image_picker2.dart';
 import 'package:provider/provider.dart';
+import 'package:we_trade/constants/app_colors.dart';
 
-import '../../../../constants/app_colors.dart';
 import '../../../models/cloud_firestore/post_card_model/post_card/post_card.dart';
 import '../../../models/cloud_firestore/post_model/post/post.dart';
 import '../../../models/cloud_firestore/user_model/user/user.dart';

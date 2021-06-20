@@ -1,7 +1,7 @@
 import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import '../../models/ui/chat/temp_class.dart';
+import 'package:we_trade/models/ui/chat/temp_class.dart';
 import '../../ui/message_features/const_string/const_str.dart';
 import '../../ui/message_features/helper/helper_navigate_chat_room.dart';
 
