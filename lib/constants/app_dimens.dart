@@ -7,6 +7,8 @@ class AppDimens {
   // static const double horizontal_padding = 12.0;
   // static const double vertical_padding = 12.0;
 
+  static const kHomeScreenCategoryCardsEachPageAmount = 10;
+
   static const kDetailHorizontalPaddingPercent = 0.05;
   static const kDetailVerticalPaddingPercent = 0.02;
 
