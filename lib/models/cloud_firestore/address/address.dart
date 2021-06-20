@@ -43,9 +43,5 @@ class Address {
   @JsonKey(required: true)
   final String phone;
 
-  Map<String, dynamic> toJson() {
-    final json = _$AddressToJson(this);
-    json.removeWhere((key, dynamic value) => key == 'addressId');
-    return json;
-  }
+  Map<String, dynamic> toJson() => _$AddressToJson(this);
 }

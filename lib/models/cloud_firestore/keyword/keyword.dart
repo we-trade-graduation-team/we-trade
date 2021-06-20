@@ -24,9 +24,5 @@ class Keyword {
   @JsonKey(required: true)
   final String keyword;
 
-  Map<String, dynamic> toJson() {
-    final json = _$KeywordToJson(this);
-    json.removeWhere((key, dynamic value) => key == 'keywordId');
-    return json;
-  }
+  Map<String, dynamic> toJson() => _$KeywordToJson(this);
 }

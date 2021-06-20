@@ -11,7 +11,7 @@ class PostDetailsOwner {
     required this.legitimacy,
     required this.avatarURL,
     required this.name,
-    required this.lastActive,
+    required this.lastSeen,
   });
 
   factory PostDetailsOwner.fromJson(Map<String, dynamic> json) =>
@@ -30,9 +30,7 @@ class PostDetailsOwner {
   final String name;
 
   @JsonKey(required: true)
-  final int lastActive;
-
-  // other postCards
+  final int lastSeen;
 
   Map<String, dynamic> toJson() => _$PostDetailsOwnerToJson(this);
 }

@@ -13,16 +13,18 @@ part 'user.g.dart';
 class User {
   User({
     this.isEmailVerified = false,
+    this.legit = 0,
     this.email,
     this.name,
     this.uid,
-    this.photoURL,
+    this.avatarUrl,
     this.phoneNumber,
     this.presence,
     this.lastSeen,
     this.searchHistory,
     this.keywordHistory,
     this.categoryHistory,
+    this.location,
   });
 
   factory User.fromJson(Map<String, dynamic> json) => _$UserFromJson(json);
@@ -30,8 +32,6 @@ class User {
   factory User.fromDocumentSnapshot(DocumentSnapshot snapshot) =>
       _$UserFromJson(snapshot.data() as Map<String, dynamic>)
         ..uid = snapshot.id;
-
-  // factory User.initialData() => null;
 
   @JsonKey(ignore: true)
   String? uid;
@@ -42,10 +42,10 @@ class User {
   @JsonKey(required: true)
   String? name;
 
-  @JsonKey(name: 'avatarUrl')
-  final String? photoURL;
+  @JsonKey(required: true)
+  final String? avatarUrl;
 
-  @JsonKey(name: 'phone')
+  @JsonKey(required: true)
   final String? phoneNumber;
 
   @JsonKey(required: true)
@@ -56,6 +56,11 @@ class User {
 
   @JsonKey(required: true)
   final bool? isEmailVerified;
+
+  @JsonKey(defaultValue: 0)
+  double legit;
+
+  final String? location;
 
   final List<UserSearchHistory>? searchHistory;
 
