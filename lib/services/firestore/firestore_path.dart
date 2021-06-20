@@ -40,12 +40,37 @@ class FirestorePath {
   }) =>
       '${allCategoryEvents()}/$categoryId';
 
+  static String posts() => 'posts';
+
+  static String post({
+    required String postId,
+  }) =>
+      '${posts()}/$postId';
+
   static String postCards() => 'postCards';
 
   static String postCard({
     required String postId,
   }) =>
       '${postCards()}/$postId';
+
+  static String allPostDetails() => 'postDetails';
+
+  static String postDetails({
+    required String postId,
+  }) =>
+      '${allPostDetails()}/$postId';
+
+  static String postDetailsQuestions({
+    required String postId,
+  }) =>
+      '${postDetails(postId: postId)}/questions';
+
+  static String postDetailsQuestionAnswers({
+    required String postId,
+    required String questionId,
+  }) =>
+      '${postDetailsQuestions(postId: postId)}/$questionId';
 
   static String keywords() => 'keywords';
 
@@ -55,4 +80,20 @@ class FirestorePath {
       '${keywords()}/$keywordId';
 
   static String junctionKeywordPost() => 'junctionKeywordPost';
+
+  static String allJunctionUserFavoritePost() => 'junctionUserFavoritePost';
+
+  static String junctionUserFavoritePost({
+    required String uid,
+    required String postId,
+  }) =>
+      '${allJunctionUserFavoritePost()}/${uid}_$postId';
+
+  static String allJunctionUserFollower() => 'junctionUserFollower';
+
+  static String junctionUserFollower({
+    required String uid,
+    required String followerId,
+  }) =>
+      '${allJunctionUserFollower()}/${uid}_$followerId';
 }
