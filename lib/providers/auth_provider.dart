@@ -107,6 +107,7 @@ class AuthProvider extends ChangeNotifier {
         final _presenceData = {
           _presenceField: true,
         };
+        // ignore: unawaited_futures
         UserServiceAlgolia()
             .updateUserPresence(id: _newUser.uid!, presence: true);
         // Add new user to users Collection

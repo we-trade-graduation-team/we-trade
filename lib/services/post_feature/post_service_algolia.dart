@@ -1,5 +1,4 @@
 import 'package:algolia/algolia.dart';
-import 'package:we_trade/models/cloud_firestore/post_card_model/post_card/post_card.dart';
 import '../../ui/message_features/const_string/const_str.dart';
 import '../algolia/algolia.dart';
 
