@@ -99,7 +99,7 @@ class Routes {
     categoryKindScreenRouteName: (_) => const CategoryKindScreen(),
     postDetailScreenRouteName: (_) => const PostDetailsScreen(),
     detailNotificationScreenRouteName: (_) =>
-        const DetailedNotificationScreen(),
+        DetailedNotificationScreen(note: chosenNote,),
     notificationScreenRouteName: (_) => const NotificationScreen(),
     searchScreenRouteName: (_) => const SearchScreen(),
   };

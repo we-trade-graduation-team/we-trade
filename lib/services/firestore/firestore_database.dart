@@ -133,6 +133,8 @@ class FirestoreDatabase {
     );
   }
 
+  //Method to retieve a Post Cards based on categoryId
+
   // //Method to create/update todoModel
   // Future<void> setTodo(TodoModel todo) async {
   //   await _fireStoreService.setData(

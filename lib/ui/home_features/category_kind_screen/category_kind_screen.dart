@@ -18,6 +18,12 @@ class CategoryKindScreen extends StatelessWidget {
     Key? key,
   }) : super(key: key);
 
+  List<Post> posts=[];
+  @override
+  void initState(){
+
+  }
+
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
