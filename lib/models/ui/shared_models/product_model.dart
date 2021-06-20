@@ -1,4 +1,4 @@
-import '../home_features/detail_screen/question_model.dart';
+import '../home_features/post_details_screen/question_model.dart';
 
 import 'account_model.dart';
 
@@ -159,7 +159,7 @@ List<Product> demoProducts = [
     productLocation: location,
     ownerLocation: location,
     isFavourite: true,
-    owner: demoUsers[0],  
+    owner: demoUsers[0],
   ),
   Product(
     id: 9,
