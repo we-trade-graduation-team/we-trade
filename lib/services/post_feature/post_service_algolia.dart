@@ -5,18 +5,19 @@ import '../algolia/algolia.dart';
 class PostServiceAlgolia {
   final Algolia algolia = Application.algolia;
 
-  Future<void> addPost(
-      {required String objectID,
-      required String name,
-      required String mainCategoyId,
-      required String subCategoryId,
-      required List<String> tradeForList,
-      required String imageURL, // lẩy ảnh đầu [0] bỏ vô đc r
-      required String condition,
-      required int price,
-      required String
-          district, // từ map address lấy thông tin cái quận lưu dô thôi,ex: 5
-      required String city}) async {
+  Future<void> addPost({
+    required String objectID,
+    required String name,
+    required String mainCategoyId,
+    required String subCategoryId,
+    required List<String> tradeForList,
+    required String imageURL, // lẩy ảnh đầu [0] bỏ vô đc r
+    required String condition,
+    required int price,
+    required String
+        district, // từ map address lấy thông tin cái quận lưu dô thôi,ex: 5
+    required String city,
+  }) async {
     final mapData = <String, dynamic>{
       'objectID': objectID,
       'name': name,
@@ -32,18 +33,19 @@ class PostServiceAlgolia {
     await algolia.instance.index(postsAlgoliaIndex).addObject(mapData);
   }
 
-  Future<void> updatePost(
-      {required String objectID,
-      required String name,
-      required String mainCategoyId,
-      required String subCategoryId,
-      required List<String> tradeForList,
-      required String imageURL, // lẩy ảnh đầu [0] bỏ vô đc r
-      required String condition,
-      required int price,
-      required String
-          district, // từ map address lấy thông tin cái quận lưu dô thôi,ex: 5
-      required String city}) async {
+  Future<void> updatePost({
+    required String objectID,
+    required String name,
+    required String mainCategoyId,
+    required String subCategoryId,
+    required List<String> tradeForList,
+    required String imageURL, // lẩy ảnh đầu [0] bỏ vô đc r
+    required String condition,
+    required int price,
+    required String
+        district, // từ map address lấy thông tin cái quận lưu dô thôi,ex: 5
+    required String city,
+  }) async {
     final mapData = <String, dynamic>{
       'objectID': objectID,
       'name': name,
@@ -54,7 +56,7 @@ class PostServiceAlgolia {
       'condition': condition,
       'price': price,
       'district': district,
-      'city': city
+      'city': city,
     };
     await algolia.instance
         .index(postsAlgoliaIndex)

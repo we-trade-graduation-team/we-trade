@@ -80,4 +80,18 @@ class UserServiceAlgolia {
     // ignore: unawaited_futures
     messageServiceFireStore.updateChatRoomsWhenUpdateUser(userUpdate);
   }
+
+  // update active/presence
+  Future<void> updateUserPresence(
+      {required String id, required bool presence}) async {
+    final userFromAlgolia =
+        await algolia.instance.index(usersAlgoliaIndex).object(id).getObject();
+    final userUpdate = userFromAlgolia.data;
+    userUpdate['presence'] = presence;
+    userUpdate['lastActive'] = DateTime.now().millisecondsSinceEpoch;
+    await algolia.instance
+        .index(usersAlgoliaIndex)
+        .object(id)
+        .updateData(userUpdate);
+  }
 }
