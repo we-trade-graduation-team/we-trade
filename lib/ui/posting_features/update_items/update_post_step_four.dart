@@ -123,14 +123,14 @@ class _UpdatePostFourState extends State<UpdatePostFour> {
             : [],
       );
 
-  Future<void> _setPostDetails(String postId) async {
-    try {
-      final _firebaseDatabase = context.read<FirestoreDatabase>();
-      await _firebaseDatabase.setPostDetails(postId: postId);
-    } catch (err) {
-      log(err.toString());
-    }
-  }
+  // Future<void> _setPostDetails(String postId) async {
+  //   try {
+  //     final _firebaseDatabase = context.read<FirestoreDatabase>();
+  //     await _firebaseDatabase.setPostDetails(postId: postId);
+  //   } catch (err) {
+  //     log(err.toString());
+  //   }
+  // }
 
   Future<PostCard> getPostCard(String postId) async {
     try {
@@ -229,7 +229,7 @@ class _UpdatePostFourState extends State<UpdatePostFour> {
               dataServiceFireStore
                   .addPostCard(postCard, _oldPostInfo.postId!)
                   .whenComplete(() {
-                _setPostDetails(_oldPostInfo.postId!);
+                //_setPostDetails(_oldPostInfo.postId!);
               });
               dataServiceFireStore
                   .deleteJunctionKeywordPost(_oldPostInfo.postId!)
@@ -251,7 +251,8 @@ class _UpdatePostFourState extends State<UpdatePostFour> {
               condition: arguments['condition'] as String,
               price: arguments['price'] as int,
               district: districtSelected.name,
-              city: citySelected.name);
+              city: citySelected.name,
+              );
         });
       } else {}
     }).whenComplete(_showCompleteStatus);
