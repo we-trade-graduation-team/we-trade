@@ -248,7 +248,8 @@ class _PostItemFourState extends State<PostItemFour> {
               imageURL: post['imagesUrl'][0] as String,
               condition: arguments['condition'] as String,
               price: arguments['price'] as int,
-              district: districtSelected.name);
+              district: districtSelected.name,
+              city: citySelected.name);
         });
       } else {}
     }).whenComplete(_showMessgage);

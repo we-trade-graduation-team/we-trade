@@ -250,7 +250,8 @@ class _UpdatePostFourState extends State<UpdatePostFour> {
               imageURL: post['imagesUrl'][0] as String,
               condition: arguments['condition'] as String,
               price: arguments['price'] as int,
-              district: districtSelected.name);
+              district: districtSelected.name,
+              city: citySelected.name);
         });
       } else {}
     }).whenComplete(_showCompleteStatus);
