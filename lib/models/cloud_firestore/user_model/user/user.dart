@@ -13,7 +13,7 @@ part 'user.g.dart';
 class User {
   User({
     this.isEmailVerified = false,
-    this.legit= 0,
+    this.legit = 0,
     this.email,
     this.name,
     this.uid,
@@ -24,6 +24,7 @@ class User {
     this.searchHistory,
     this.keywordHistory,
     this.categoryHistory,
+    this.location,
   });
 
   factory User.fromJson(Map<String, dynamic> json) => _$UserFromJson(json);
@@ -44,7 +45,7 @@ class User {
   @JsonKey(required: true)
   final String? avatarUrl;
 
-  @JsonKey(name: 'phone')
+  @JsonKey(required: true)
   final String? phoneNumber;
 
   @JsonKey(required: true)
@@ -58,6 +59,8 @@ class User {
 
   @JsonKey(defaultValue: 0)
   double legit;
+
+  final String? location;
 
   final List<UserSearchHistory>? searchHistory;
 

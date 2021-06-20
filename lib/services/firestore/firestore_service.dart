@@ -25,64 +25,69 @@ class FirestoreService {
 
   final _fireStoreInstance = FirebaseFirestore.instance;
 
+  Future<bool> checkIfDocExists({
+    required String path,
+  }) async {
+    try {
+      final _doc = await _fireStoreInstance.doc(path).get();
+
+      return _doc.exists;
+    } catch (_) {
+      return false;
+    }
+  }
+
   Future<void> setData({
     required String path,
     required Map<String, dynamic> data,
     bool merge = false,
   }) async {
+    final _isDocExists = await checkIfDocExists(path: path);
+
+    if (!_isDocExists) {
+      ErrorHelper.throwArgumentError(
+        message: '${FirestoreErrors.errorDocumentNotExists}: $path',
+      );
+    }
+
     final _reference = _fireStoreInstance.doc(path);
 
-    await Future.wait([
-      // Check if doc is exists
-      _reference.get().then((snapshot) async {
-        if (!snapshot.exists) {
-          ErrorHelper.throwArgumentError(
-            message: FirestoreErrors.errorDocumentNotExists,
-          );
-        }
-      }),
-      // If doc is exists then update it
-      _reference.set(data, SetOptions(merge: merge)).catchError(_handleError),
-    ]);
+    return _reference
+        .set(data, SetOptions(merge: merge))
+        .catchError(_handleError);
   }
 
   Future<void> updateData({
     required String path,
     required Map<String, dynamic> data,
   }) async {
+    final _isDocExists = await checkIfDocExists(path: path);
+
+    if (!_isDocExists) {
+      ErrorHelper.throwArgumentError(
+        message: '${FirestoreErrors.errorDocumentNotExists}: $path',
+      );
+    }
+
     final _reference = _fireStoreInstance.doc(path);
 
-    await Future.wait([
-      // Check if doc is exists
-      _reference.get().then((snapshot) async {
-        if (!snapshot.exists) {
-          ErrorHelper.throwArgumentError(
-            message: FirestoreErrors.errorDocumentNotExists,
-          );
-        }
-      }),
-      // If doc is exists then update it
-      _reference.update(data).catchError(_handleError),
-    ]);
+    return _reference.update(data).catchError(_handleError);
   }
 
   Future<void> deleteData({
     required String path,
   }) async {
+    final _isDocExists = await checkIfDocExists(path: path);
+
+    if (!_isDocExists) {
+      ErrorHelper.throwArgumentError(
+        message: '${FirestoreErrors.errorDocumentNotExists}: $path',
+      );
+    }
+
     final _reference = _fireStoreInstance.doc(path);
 
-    await Future.wait([
-      // Check if doc is exists
-      _reference.get().then((snapshot) async {
-        if (!snapshot.exists) {
-          ErrorHelper.throwArgumentError(
-            message: FirestoreErrors.errorDocumentNotExists,
-          );
-        }
-      }),
-      // If doc is exists then delete it
-      _reference.delete().catchError(_handleError),
-    ]);
+    return _reference.delete().catchError(_handleError);
   }
 
   Stream<List<T>> collectionStream<T>({
@@ -100,14 +105,14 @@ class FirestoreService {
 
     return _snapshots.map((snapshot) {
       final _result = snapshot.docs
-          .map((snapshot) {
-            if (!snapshot.exists) {
+          .map((doc) {
+            if (!doc.exists) {
               ErrorHelper.throwArgumentError(
-                message: FirestoreErrors.errorDocumentNotExists,
+                message: '${FirestoreErrors.errorDocumentNotExists}: $path',
               );
             }
 
-            return builder(snapshot);
+            return builder(doc);
           })
           .where((value) => value != null)
           .toList();
@@ -119,20 +124,20 @@ class FirestoreService {
   Stream<T> documentStream<T>({
     required String path,
     required T Function(DocumentSnapshot) builder,
-  }) {
+  }) async* {
+    final _isDocExists = await checkIfDocExists(path: path);
+
+    if (!_isDocExists) {
+      ErrorHelper.throwArgumentError(
+        message: '${FirestoreErrors.errorDocumentNotExists}: $path',
+      );
+    }
+
     final _reference = _fireStoreInstance.doc(path);
 
     final _snapshots = _reference.snapshots();
 
-    return _snapshots.map((snapshot) {
-      if (!snapshot.exists) {
-        ErrorHelper.throwArgumentError(
-          message: FirestoreErrors.errorDocumentNotExists,
-        );
-      }
-
-      return builder(snapshot);
-    });
+    yield* _snapshots.map((doc) => builder(doc));
   }
 
   Future<List<T>> collectionFuture<T>({
@@ -149,14 +154,14 @@ class FirestoreService {
     final _querySnapshot = await _query.get();
 
     final _result = _querySnapshot.docs
-        .map((snapshot) {
-          if (!snapshot.exists) {
+        .map((doc) {
+          if (!doc.exists) {
             ErrorHelper.throwArgumentError(
-              message: FirestoreErrors.errorDocumentNotExists,
+              message: '${FirestoreErrors.errorDocumentNotExists}: $path',
             );
           }
 
-          return builder(snapshot);
+          return builder(doc);
         })
         .where((value) => value != null)
         .toList();
@@ -168,42 +173,20 @@ class FirestoreService {
     required String path,
     required T Function(DocumentSnapshot) builder,
   }) async {
+    final _isDocExists = await checkIfDocExists(path: path);
+
+    if (!_isDocExists) {
+      ErrorHelper.throwArgumentError(
+        message: '${FirestoreErrors.errorDocumentNotExists}: $path',
+      );
+    }
+
     final _reference = _fireStoreInstance.doc(path);
 
     final _snapshot = await _reference.get();
-
-    if (!_snapshot.exists) {
-      ErrorHelper.throwArgumentError(
-        message: FirestoreErrors.errorDocumentNotExists,
-      );
-    }
 
     final _result = builder(_snapshot);
 
     return _result;
   }
-
-  // Future<void> updateDataTransaction({
-  //   required String path,
-  //   required Map<String, dynamic> data,
-  // }) async {
-  //   final _reference = _fireStoreInstance.doc(path);
-
-  //   // This code may get re-run multiple times if there are conflicts.
-  //   await _fireStoreInstance
-  //       .runTransaction((transaction) {
-  //         return transaction.get(_reference).then((snapshot) {
-  //           if (!snapshot.exists) {
-  //             _throwArgumentError(
-  //                 message: FirestoreErrors.errorDocumentNotExists);
-  //           }
-
-  //           // var newPopulation = snapshot.data().population + 1;
-  //           // transaction.update(sfDocRef, { population: newPopulation });
-  //         });
-  //       })
-  //       .then((value) => null)
-  //       .catchError(__handleFutureError);
-  // }
-
 }

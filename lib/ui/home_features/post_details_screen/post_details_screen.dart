@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../../../constants/app_colors.dart';
 import '../../../models/arguments/shared/post_details_arguments.dart';
@@ -11,13 +12,16 @@ class PostDetailsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final arguments =
+    final _arguments =
         ModalRoute.of(context)!.settings.arguments as PostDetailsArguments;
 
     return Scaffold(
       extendBodyBehindAppBar: true,
       backgroundColor: AppColors.kScreenBackgroundColor,
-      body: Body(product: arguments.postCard),
+      body: Provider<PostDetailsArguments>.value(
+        value: _arguments,
+        child: const PostDetailsBody(),
+      ),
     );
   }
 }

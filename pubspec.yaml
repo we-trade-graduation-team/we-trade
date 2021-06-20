@@ -62,6 +62,7 @@ dependencies:
   cached_network_image: ^3.0.0
   pinch_zoom: ^0.1.0
   configurable_expansion_tile_null_safety: ^2.0.0
+  quiver: ^3.0.1
 
 dev_dependencies:
   flutter_test:

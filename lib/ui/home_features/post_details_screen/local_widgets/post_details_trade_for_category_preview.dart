@@ -1,8 +1,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-class TradeForCategoryPreview extends StatelessWidget {
-  const TradeForCategoryPreview({
+class PostDetailsTradeForCategoryPreview extends StatelessWidget {
+  const PostDetailsTradeForCategoryPreview({
     Key? key,
     required this.tradeForCategory,
   }) : super(key: key);
@@ -11,15 +11,16 @@ class TradeForCategoryPreview extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
+    final _size = MediaQuery.of(context).size;
+
     return ClipRRect(
       borderRadius: BorderRadius.circular(5),
       child: Container(
-        height: size.height * 0.043,
+        height: _size.height * 0.043,
         color: Theme.of(context).primaryColorLight,
         padding: EdgeInsets.symmetric(
           horizontal: 20,
-          vertical: size.height * 0.013,
+          vertical: _size.height * 0.013,
         ),
         child: Text(
           tradeForCategory,

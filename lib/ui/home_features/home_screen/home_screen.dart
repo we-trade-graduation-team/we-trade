@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:loading_overlay/loading_overlay.dart';
 
 import 'local_widgets/home_screen_body.dart';
 
@@ -10,31 +11,13 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // final size = MediaQuery.of(context).size;
-    // final user = context.watch<MyUser?>();
-
-    return const Scaffold(
+    return Scaffold(
       extendBodyBehindAppBar: true,
       resizeToAvoidBottomInset: false,
-      body: HomeScreenBody(),
+      body: LoadingOverlay(
+        isLoading: false,
+        child: const HomeScreenBody(),
+      ),
     );
   }
 }
-
-// abstract class Data {}
-
-// class Content implements Data {
-//   Content(this.data);
-
-//   final List<String> data;
-// }
-
-// class Error implements Data {
-//   Error(this.msg);
-
-//   final String msg;
-// }
-
-// class Loading implements Data {
-//   const Loading();
-// }

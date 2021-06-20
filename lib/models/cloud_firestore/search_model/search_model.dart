@@ -18,7 +18,7 @@ class SearchModel extends ChangeNotifier {
   String _query = '';
   String get query => _query;
 
-  late List<PostCard> _suggestions; // = history;
+  late List<PostCard> _suggestions=[]; // = history;
   List<PostCard> get suggestions => _suggestions;
 
   late List<String> _searchHistory;

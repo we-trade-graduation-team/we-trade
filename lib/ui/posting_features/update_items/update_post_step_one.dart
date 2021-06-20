@@ -6,8 +6,9 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:multi_image_picker2/multi_image_picker2.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 import 'package:provider/provider.dart';
+import 'package:we_trade/constants/app_colors.dart';
 
-import '../../../../constants/app_colors.dart';
+
 import '../../../models/cloud_firestore/post_model/post/post.dart';
 import '../../../services/firestore/firestore_database.dart';
 import 'update_post_step_two.dart';

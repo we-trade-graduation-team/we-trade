@@ -11,6 +11,7 @@ User _$UserFromJson(Map<String, dynamic> json) {
     'email',
     'name',
     'avatarUrl',
+    'phoneNumber',
     'presence',
     'lastSeen',
     'isEmailVerified'
@@ -21,7 +22,7 @@ User _$UserFromJson(Map<String, dynamic> json) {
     email: json['email'] as String?,
     name: json['name'] as String?,
     avatarUrl: json['avatarUrl'] as String?,
-    phoneNumber: json['phone'] as String?,
+    phoneNumber: json['phoneNumber'] as String?,
     presence: json['presence'] as bool?,
     lastSeen: json['lastSeen'] as int?,
     searchHistory: (json['searchHistory'] as List<dynamic>?)
@@ -33,6 +34,7 @@ User _$UserFromJson(Map<String, dynamic> json) {
     categoryHistory: (json['categoryHistory'] as List<dynamic>?)
         ?.map((e) => UserCategoryHistory.fromJson(e as Map<String, dynamic>))
         .toList(),
+    location: json['location'] as String?,
   );
 }
 
@@ -40,11 +42,12 @@ Map<String, dynamic> _$UserToJson(User instance) => <String, dynamic>{
       'email': instance.email,
       'name': instance.name,
       'avatarUrl': instance.avatarUrl,
-      'phone': instance.phoneNumber,
+      'phoneNumber': instance.phoneNumber,
       'presence': instance.presence,
       'lastSeen': instance.lastSeen,
       'isEmailVerified': instance.isEmailVerified,
       'legit': instance.legit,
+      'location': instance.location,
       'searchHistory': instance.searchHistory?.map((e) => e.toJson()).toList(),
       'keywordHistory':
           instance.keywordHistory?.map((e) => e.toJson()).toList(),

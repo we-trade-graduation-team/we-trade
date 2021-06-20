@@ -2,8 +2,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import '../../../../constants/app_dimens.dart';
 
-class DetailSectionContainer extends StatelessWidget {
-  const DetailSectionContainer({
+class PostDetailsSectionContainer extends StatelessWidget {
+  const PostDetailsSectionContainer({
     Key? key,
     required this.child,
     this.height,

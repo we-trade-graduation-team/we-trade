@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 
 import 'post_details_no_items_section.dart';
 
-class ExpandedChildColumn<T> extends StatelessWidget {
-  const ExpandedChildColumn({
+class PostDetailsExpandedChildColumn<T> extends StatelessWidget {
+  const PostDetailsExpandedChildColumn({
     Key? key,
     required this.generator,
     required this.expandChildCollapsedHint,
@@ -75,7 +75,7 @@ class ExpandedChildColumn<T> extends StatelessWidget {
                 ),
             ],
           )
-        : NoItemsSection(text: noItemsText);
+        : PostDetailsNoItemsSection(text: noItemsText);
   }
 
   @override
@@ -106,4 +106,4 @@ class ExpandedChildColumn<T> extends StatelessWidget {
   }
 }
 
-typedef CustomCallBack = Widget Function(Object item);
+typedef CustomCallBack = Widget Function(Object);

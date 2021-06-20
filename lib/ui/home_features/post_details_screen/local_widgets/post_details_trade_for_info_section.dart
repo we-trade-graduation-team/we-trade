@@ -1,24 +1,28 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import '../../../../models/ui/shared_models/product_model.dart';
+import 'package:provider/provider.dart';
+
+import '../../../../models/arguments/shared/post_details_arguments.dart';
 import 'post_details_section_container.dart';
 import 'post_details_separator.dart';
 import 'post_details_trade_for_category_preview.dart';
 
-class TradeForInfoSection extends StatelessWidget {
-  const TradeForInfoSection({
+class PostDetailsTradeForInfoSection extends StatelessWidget {
+  const PostDetailsTradeForInfoSection({
     Key? key,
-    required this.product,
   }) : super(key: key);
-
-  final Product product;
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
+    final _postDetailsTradeForList =
+        context.select<PostDetailsArguments, List<String>>(
+            (arguments) => arguments.postDetails.itemInfo.tradeForList);
+
+    final _size = MediaQuery.of(context).size;
+
     return Column(
       children: [
-        const DetailSectionContainer(
+        const PostDetailsSectionContainer(
           height: 50,
           child: FittedBox(
             fit: BoxFit.fitHeight,
@@ -26,25 +30,19 @@ class TradeForInfoSection extends StatelessWidget {
             child: Text('Trade for'),
           ),
         ),
-        DetailSeparator(height: size.height * 0.004),
-        DetailSectionContainer(
+        PostDetailsSeparator(height: _size.height * 0.004),
+        PostDetailsSectionContainer(
           child: Wrap(
             spacing: 15,
             runSpacing: 15,
             // alignment: WrapAlignment.center,
-            children: product.tradeForCategory
+            children: _postDetailsTradeForList
                 .map((category) =>
-                    TradeForCategoryPreview(tradeForCategory: category))
+                    PostDetailsTradeForCategoryPreview(tradeForCategory: category))
                 .toList(),
           ),
         ),
       ],
     );
-  }
-
-  @override
-  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
-    super.debugFillProperties(properties);
-    properties.add(DiagnosticsProperty<Product>('product', product));
   }
 }

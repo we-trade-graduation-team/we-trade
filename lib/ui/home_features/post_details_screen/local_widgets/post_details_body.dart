@@ -1,32 +1,22 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import '../../../../models/ui/shared_models/product_model.dart';
 
 import 'post_details_app_bar.dart';
 import 'post_details_sections_box.dart';
 
-class Body extends StatelessWidget {
-  const Body({
+class PostDetailsBody extends StatelessWidget {
+  const PostDetailsBody({
     Key? key,
-    required this.product,
   }) : super(key: key);
-
-  final Product product;
 
   @override
   Widget build(BuildContext context) {
-    return CustomScrollView(
-      physics: const ClampingScrollPhysics(),
+    return const CustomScrollView(
+      physics: ClampingScrollPhysics(),
       slivers: [
-        DetailAppBar(product: product),
-        DetailSectionsBox(product: product),
+        PostDetailsAppBar(),
+        PostDetailsSectionsBox(),
       ],
     );
-  }
-
-  @override
-  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
-    super.debugFillProperties(properties);
-    properties.add(DiagnosticsProperty<Product>('product', product));
   }
 }

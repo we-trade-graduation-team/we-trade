@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
-class DetailSection {
-  DetailSection({
-    this.titleSection,
+class PostDetailsSection {
+  PostDetailsSection({
     required this.children,
+    this.titleSection,
   });
 
   final String? titleSection;

@@ -2,8 +2,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import '../../../../constants/app_colors.dart';
 
-class DetailSeparator extends StatelessWidget {
-  const DetailSeparator({
+class PostDetailsSeparator extends StatelessWidget {
+  const PostDetailsSeparator({
     Key? key,
     required this.height,
     this.color = AppColors.kScreenBackgroundColor,

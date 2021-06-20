@@ -88,4 +88,12 @@ class FirestorePath {
     required String postId,
   }) =>
       '${allJunctionUserFavoritePost()}/${uid}_$postId';
+
+  static String allJunctionUserFollower() => 'junctionUserFollower';
+
+  static String junctionUserFollower({
+    required String uid,
+    required String followerId,
+  }) =>
+      '${allJunctionUserFollower()}/${uid}_$followerId';
 }

@@ -1,8 +1,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-class SectionSpacing extends StatelessWidget {
-  const SectionSpacing({
+class PostDetailsSectionSpacing extends StatelessWidget {
+  const PostDetailsSectionSpacing({
     Key? key,
     required this.percent,
   }) : super(key: key);
@@ -22,15 +22,15 @@ class SectionSpacing extends StatelessWidget {
   }
 }
 
-class BigSectionSpacing extends SectionSpacing {
-  const BigSectionSpacing({
+class PostDetailsBigSectionSpacing extends PostDetailsSectionSpacing {
+  const PostDetailsBigSectionSpacing({
     Key? key,
     double percent = bigSpacingPercent,
   }) : super(key: key, percent: percent);
 }
 
-class SmallSectionSpacing extends SectionSpacing {
-  const SmallSectionSpacing({
+class PostDetailsSmallSectionSpacing extends PostDetailsSectionSpacing {
+  const PostDetailsSmallSectionSpacing({
     Key? key,
     double percent = bigSpacingPercent / 5,
   }) : super(key: key, percent: percent);

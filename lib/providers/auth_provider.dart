@@ -85,7 +85,7 @@ class AuthProvider extends ChangeNotifier {
   //Method to handle user sign in using email and password
   Future<String?> signInWithEmailAndPassword({
     required String email,
-    required String password,
+    required String password, 
   }) async {
     try {
       _status = Status.authenticating;

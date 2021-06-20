@@ -30,5 +30,8 @@ class ModelProperties {
 
   // Post
   static const postOwnerIdProperty = 'owner';
+  static const postCategoryInfoProperty = 'categoryInfo';
+  static const postMainCategoryIdProperty =
+      '$postCategoryInfoProperty.mainCategoryId';
   static const postIsHiddenProperty = 'isHidden';
 }

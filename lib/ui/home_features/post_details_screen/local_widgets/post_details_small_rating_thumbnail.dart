@@ -1,24 +1,25 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import '../../../../models/ui/home_features/detail_screen/rating_thumbnail_model.dart';
-import '../../../../models/ui/home_features/detail_screen/user_rating_model.dart';
+import '../../../../models/ui/home_features/post_details_screen/rating_thumbnail_model.dart';
 import 'post_details_rating_level.dart';
 
 const highRatingLevel = 80;
 const mediumRatingLevel = 50;
 
-class SmallRatingThumbnail extends StatelessWidget {
-  const SmallRatingThumbnail({
+class PostDetailsSmallRatingThumbnail extends StatelessWidget {
+  const PostDetailsSmallRatingThumbnail({
     Key? key,
-    required this.userRating,
+    required this.legitimacy,
   }) : super(key: key);
 
-  final UserRating userRating;
+  final double legitimacy;
 
   @override
   Widget build(BuildContext context) {
-    final level = getRatingLevel(userRating.rating);
     // final size = MediaQuery.of(context).size;
+
+    final _level = _getRatingLevel(legitimacy);
+
     return SizedBox(
       // height: size.height * 0.075,
       width: 90,
@@ -39,7 +40,7 @@ class SmallRatingThumbnail extends StatelessWidget {
                       child: FittedBox(
                         fit: BoxFit.fitHeight,
                         child: Text(
-                          '${userRating.rating.round()}%',
+                          '${legitimacy.round()}%',
                           textAlign: TextAlign.center,
                           style: const TextStyle(
                             fontWeight: FontWeight.w500,
@@ -54,10 +55,10 @@ class SmallRatingThumbnail extends StatelessWidget {
                   ),
                   Expanded(
                     flex: 5,
-                    child: RatingLevel(
-                      ratingLevel: level,
-                      backgroundColor: ratingLevels[level]!.backgroundColor,
-                      textColor: ratingLevels[level]!.textColor,
+                    child: PostDetailsRatingLevel(
+                      ratingLevel: _level,
+                      backgroundColor: ratingLevels[_level]!.backgroundColor,
+                      textColor: ratingLevels[_level]!.textColor,
                     ),
                   ),
                 ],
@@ -71,7 +72,7 @@ class SmallRatingThumbnail extends StatelessWidget {
                 child: FittedBox(
                   fit: BoxFit.fitHeight,
                   child: Text(
-                    userRating.title,
+                    'Legit',
                     style: TextStyle(
                       color: ((Theme.of(context).textTheme.bodyText2)!.color)!
                           .withOpacity(0.6),
@@ -87,7 +88,7 @@ class SmallRatingThumbnail extends StatelessWidget {
     );
   }
 
-  String getRatingLevel(double rating) {
+  String _getRatingLevel(double rating) {
     if (rating >= highRatingLevel) {
       return 'High';
     } else if (rating >= mediumRatingLevel) {
@@ -99,6 +100,6 @@ class SmallRatingThumbnail extends StatelessWidget {
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
-    properties.add(DiagnosticsProperty<UserRating>('userRating', userRating));
+    properties.add(DoubleProperty('legitimacy', legitimacy));
   }
 }

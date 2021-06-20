@@ -29,7 +29,7 @@ class HomeScreenRecommendedSection extends StatelessWidget {
           press: () {},
         ),
         child: FutureProvider<List<PostCard>>.value(
-          value: _firestoreDatabase.recommendedPostCardsFuture(),
+          value: _firestoreDatabase.getHomeScreenRecommendedPostCards(),
           initialData: const [],
           catchError: (_, __) => const [],
           child: const Center(

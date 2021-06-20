@@ -32,7 +32,5 @@ class PostDetailsOwner {
   @JsonKey(required: true)
   final int lastSeen;
 
-  // other postCards
-
   Map<String, dynamic> toJson() => _$PostDetailsOwnerToJson(this);
 }

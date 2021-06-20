@@ -33,9 +33,5 @@ class CategoryCard {
   @JsonKey(required: true)
   final int priority;
 
-  Map<String, dynamic> toJson() {
-    final json = _$CategoryCardToJson(this);
-    json.removeWhere((key, dynamic value) => key == 'categoryId');
-    return json;
-  }
+  Map<String, dynamic> toJson() => _$CategoryCardToJson(this);
 }

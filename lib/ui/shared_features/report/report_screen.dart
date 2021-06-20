@@ -1,10 +1,12 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:group_button/group_button.dart';
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:provider/provider.dart';
+import 'package:we_trade/services/firestore/firestore_service.dart';
 
 import '../../../bloc/report_bloc.dart';
 import '../../../models/ui/shared_models/product_model.dart';
@@ -13,7 +15,13 @@ import 'local_widgets/pop_header.dart';
 class ReportScreenBody extends StatelessWidget {
   const ReportScreenBody({
     Key? key,
+    required this.objectId,
   }) : super(key: key);
+  final String objectId;
+
+  void report(String reason){
+
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -183,7 +191,7 @@ class ReportScreen extends StatelessWidget {
       // TODO: <Vu> Should remove MultiProvider (since there's only one ChangeNotifierProvider)
       body: MultiProvider(
         providers: [ChangeNotifierProvider(create: (context) => ReportBloc())],
-        child: const ReportScreenBody(),
+        child: const ReportScreenBody(objectId: '',),
       ),
     );
   }

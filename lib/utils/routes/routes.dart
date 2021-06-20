@@ -101,10 +101,10 @@ class Routes {
   };
 
   static final Map<String, WidgetBuilder> homeFeaturesRoutes = {
-    categoryKindScreenRouteName: (_) => const CategoryKindScreen(),
+    categoryKindScreenRouteName: (_) => const CategoryKindScreen(mainCategory: '',),
     postDetailScreenRouteName: (_) => const PostDetailsScreen(),
     detailNotificationScreenRouteName: (_) =>
-        const DetailedNotificationScreen(),
+        DetailedNotificationScreen(note: chosenNote,),
     notificationScreenRouteName: (_) => const NotificationScreen(),
     searchScreenRouteName: (_) => const SearchScreen(),
     ...sharedFeaturesRoutes,

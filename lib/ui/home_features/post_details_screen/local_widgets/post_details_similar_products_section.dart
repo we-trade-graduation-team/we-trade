@@ -1,67 +1,51 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
-import '../../../../models/ui/shared_models/product_model.dart';
+import '../../../../models/arguments/shared/post_details_arguments.dart';
+import '../../../../models/cloud_firestore/post_card_model/post_card/post_card.dart';
+import '../../shared_widgets/horizontal_scroll_post_card_list_view.dart';
 import 'post_details_no_items_section.dart';
-// import '../../shared_widgets/horizontal_scroll_post_card_list_view.dart';
-
 import 'post_details_section_container.dart';
 import 'post_details_separator.dart';
 
-class SimilarProductsSection extends StatelessWidget {
-  const SimilarProductsSection({
+class PostDetailsSimilarProductsSection extends StatelessWidget {
+  const PostDetailsSimilarProductsSection({
     Key? key,
-    required this.product,
   }) : super(key: key);
-
-  final Product product;
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
+    final _similarPostCards =
+        context.select<PostDetailsArguments, List<PostCard>>(
+            (arguments) => arguments.similarPostCards);
+
+    final _size = MediaQuery.of(context).size;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const DetailSectionContainer(
+        const PostDetailsSectionContainer(
           child: Text('Similar products'),
         ),
-        DetailSeparator(height: size.height * 0.004),
+        PostDetailsSeparator(height: _size.height * 0.004),
         Container(
-          width: size.width,
+          width: _size.width,
           color: Colors.white,
           padding: EdgeInsets.only(
-            left: size.width * 0.05,
-            top: size.height * 0.02,
-            bottom: size.height * 0.02,
+            left: _size.width * 0.05,
+            top: _size.height * 0.02,
+            bottom: _size.height * 0.02,
           ),
-          child: verifyIfNoProduct(),
+          child: verifyIfNoProduct(_similarPostCards),
         ),
       ],
     );
   }
 
-  List<Product> getSimilarProducts(Product exampleProduct) {
-    final result = demoProducts
-        .where((element) => element.title.contains(exampleProduct.title))
-        .toList();
-    result.remove(exampleProduct);
-    return result;
-  }
-
-  Widget verifyIfNoProduct() {
-    // final demoSimilarProducts = getSimilarProducts(product);
-
-    // TODO: <Phuc> Replace List<Product> with List<PostCard> (wrap below StreamBuilder)
-    // return demoSimilarProducts.isNotEmpty
-    //     ? HorizontalScrollPostCardListView(items: demoSimilarProducts)
-    //     : const NoItemsSection(text: 'No products');
-
-    return const NoItemsSection(text: 'No products');
-  }
-
-  @override
-  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
-    super.debugFillProperties(properties);
-    properties.add(DiagnosticsProperty<Product>('product', product));
+  Widget verifyIfNoProduct(List<PostCard> postCards) {
+    return postCards.isNotEmpty
+        ? HorizontalScrollPostCardListView(postCards: postCards)
+        : const PostDetailsNoItemsSection(text: 'No products');
   }
 }

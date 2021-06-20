@@ -1,14 +1,16 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-// import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
+import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 import 'package:provider/provider.dart';
+import 'package:we_trade/models/ui/home_features/post_details_screen/question_model.dart';
+import 'package:we_trade/ui/home_features/post_details_screen/post_details_screen.dart';
+import 'package:we_trade/utils/routes/routes.dart';
 
 // import '../app_localizations.dart';
 import '../app_localizations.dart';
-// import '../models/arguments/shared/post_details_arguments.dart';
+import '../models/arguments/shared/post_details_arguments.dart';
 import '../models/cloud_firestore/post_card_model/post_card/post_card.dart';
 import '../models/cloud_firestore/post_card_model/post_card_item/post_card_item.dart';
-import '../models/ui/home_features/detail_screen/question_model.dart';
 import '../models/ui/shared_models/account_model.dart';
 import '../models/ui/shared_models/product_model.dart';
 import '../services/firestore/firestore_database.dart';
@@ -213,46 +215,91 @@ class _ItemPostCardState extends State<ItemPostCard> {
   }
 
   Future<void> _onTap() async {
+    final _firestoreDatabase = context.read<FirestoreDatabase>();
+
+    final _postId = widget.postCard.postId!;
+
+    // Get post owner id
+    final _postOwnerId = await _firestoreDatabase.getPostOwnerId(
+      postId: _postId,
+    );
+
+    // Get this post details
+    final _postDetails = await _firestoreDatabase.getPostDetails(
+      postId: _postId,
+    );
+
+    // Check if this post is one of current user's favorite posts
+    final _isCurrentUserFavoritePost =
+        await _firestoreDatabase.isFavoritePostOfCurrentUser(
+      postId: _postId,
+    );
+
+    // Check if current user is a follower of post owner
+    final _isCurrentUserAFollowerOfPostOwner =
+        await _firestoreDatabase.isCurrentUserAFollowerOfUser(
+      userId: _postOwnerId,
+    );
+
+    // Get similar postCards
+    final _similarPostCards =
+        await _firestoreDatabase.getPostDetailsScreenSimilarPostCards(
+      postId: _postId,
+    );
+
+    // Get this post's owner other postCards
+    final _postOwnerOtherPostCards =
+        await _firestoreDatabase.getPostCardsByUserId(
+      userId: _postOwnerId,
+    );
+
+    // Remove this post card
+    _postOwnerOtherPostCards
+        .removeWhere((postCard) => postCard.postId == _postId);
+
+    // Get postCards that current user may also like
+    final _postCardsCurrentUserMayAlsoLike = await _firestoreDatabase
+        .getPostDetailsPostCardsCurrentUserMayAlsoLike();
+
+    // Create postDetailsArguments param
+    final _postDetailsArguments = PostDetailsArguments(
+      postDetails: _postDetails,
+      isCurrentUserFavoritePost: _isCurrentUserFavoritePost,
+      isCurrentUserAFollowerOfPostOwner: _isCurrentUserAFollowerOfPostOwner,
+      similarPostCards: _similarPostCards,
+      postOwnerOtherPostCards: _postOwnerOtherPostCards,
+      postCardsCurrentUserMayAlsoLike: _postCardsCurrentUserMayAlsoLike,
+    );
+
     await Future.wait([
       // Increase view by 1
-      _viewIncrement(),
+      _firestoreDatabase.increasePostCardView(postId: _postId),
       // Update current user's keyword history
-      _updateCurrentUserKeywordHistory(),
-      // // Navigate to post details screen
-      // _navigateToDetailsScreen(),
+      _firestoreDatabase.updateCurrentUserKeywordHistory(postId: _postId),
+      // Navigate to post details screen
+      _navigateToPostDetailsScreen(arguments: _postDetailsArguments),
     ]);
   }
 
-  Future<void> _viewIncrement() async {
-    final _firestoreDatabase = context.read<FirestoreDatabase>();
-
-    final _postId = widget.postCard.postId!;
-
-    await _firestoreDatabase.increasePostCardView(postId: _postId);
-  }
-
-  Future<void> _updateCurrentUserKeywordHistory() async {
-    final _firestoreDatabase = context.read<FirestoreDatabase>();
-
-    final _postId = widget.postCard.postId!;
-
-    await _firestoreDatabase.updateUserKeywordHistory(
-      postId: _postId,
+  Future<void> _navigateToPostDetailsScreen({
+    required PostDetailsArguments arguments,
+  }) async {
+    return pushNewScreenWithRouteSettings<void>(
+      context,
+      screen: const PostDetailsScreen(),
+      settings: RouteSettings(
+        name: Routes.postDetailScreenRouteName,
+        arguments: arguments,
+      ),
+      withNavBar: false,
+      pageTransitionAnimation: PageTransitionAnimation.cupertino,
     );
   }
 
-  // Future<void> _navigateToDetailsScreen() async {
-  //   await pushNewScreenWithRouteSettings<void>(
-  //     context,
-  //     screen: const PostDetailsScreen(),
-  //     settings: RouteSettings(
-  //       name: Routes.postDetailScreenRouteName,
-  //       arguments: PostDetailsArguments(
-  //         postCard: tempProduct,
-  //       ),
-  //     ),
-  //     withNavBar: false,
-  //     pageTransitionAnimation: PageTransitionAnimation.cupertino,
-  //   );
-  // }
+  bool _isNumeric(String? s) {
+    if (s == null) {
+      return false;
+    }
+    return double.tryParse(s) != null;
+  }
 }

@@ -8,8 +8,8 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:multi_image_picker2/multi_image_picker2.dart';
 // import cho upload image
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
+import 'package:we_trade/constants/app_colors.dart';
 
-import '../../../../constants/app_colors.dart';
 import 'post_item_step_two.dart';
 
 class PostItemOne extends StatefulWidget {

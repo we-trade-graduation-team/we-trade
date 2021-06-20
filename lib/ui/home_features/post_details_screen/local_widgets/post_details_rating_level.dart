@@ -1,8 +1,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-class RatingLevel extends StatelessWidget {
-  const RatingLevel({
+class PostDetailsRatingLevel extends StatelessWidget {
+  const PostDetailsRatingLevel({
     Key? key,
     required this.ratingLevel,
     required this.backgroundColor,
@@ -14,7 +14,6 @@ class RatingLevel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // final size = MediaQuery.of(context).size;
     return Container(
       color: backgroundColor,
       // width: 48,

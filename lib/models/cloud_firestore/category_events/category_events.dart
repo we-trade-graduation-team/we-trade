@@ -25,9 +25,5 @@ class CategoryEvents {
   @JsonKey(required: true)
   final List<String> events;
 
-  Map<String, dynamic> toJson() {
-    final json = _$CategoryEventsToJson(this);
-    json.removeWhere((key, dynamic value) => key == 'categoryId');
-    return json;
-  }
+  Map<String, dynamic> toJson() => _$CategoryEventsToJson(this);
 }

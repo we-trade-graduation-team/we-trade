@@ -7,8 +7,8 @@ import '../../../../constants/app_colors.dart';
 import '../../../../constants/app_dimens.dart';
 import '../../../shared_features/report/report_screen.dart';
 
-class PopupDialog extends StatelessWidget {
-  const PopupDialog({
+class PostDetailsPopupDialog extends StatelessWidget {
+  const PostDetailsPopupDialog({
     Key? key,
     required this.parentContext,
   }) : super(key: key);

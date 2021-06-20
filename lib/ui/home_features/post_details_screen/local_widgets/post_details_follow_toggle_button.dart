@@ -1,73 +1,39 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
-import '../../../../models/ui/home_features/detail_screen/user_followed_product.dart';
-import '../../../../models/ui/shared_models/product_model.dart';
+import '../../../../models/arguments/shared/post_details_arguments.dart';
 
-class FollowToggleButton extends StatefulWidget {
-  const FollowToggleButton({
+class PostDetailsFollowToggleButton extends StatelessWidget {
+  const PostDetailsFollowToggleButton({
     Key? key,
-    required this.product,
   }) : super(key: key);
-
-  final Product product;
-
-  @override
-  _FollowToggleButtonState createState() => _FollowToggleButtonState();
-
-  @override
-  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
-    super.debugFillProperties(properties);
-    properties.add(DiagnosticsProperty<Product>('product', product));
-  }
-}
-
-class _FollowToggleButtonState extends State<FollowToggleButton> {
-  late List<bool> _selections;
-  late String _text;
-  // late Color _color, _selectedColor, _fillColor, _highlightColor, _splashColor;
-
-  @override
-  void initState() {
-    super.initState();
-    _text = getButtonText(1, widget.product.id);
-
-    _selections = [_text == 'Followed'];
-  }
-
-  String getButtonText(int userId, int productId) {
-    final contain = demoUserFollowedProduct.where((element) =>
-        element.userId == userId &&
-        element.followedProductId.where((id) => id == productId).isNotEmpty);
-
-    if (contain.isNotEmpty) {
-      return 'Followed';
-    }
-    return 'Follow';
-  }
 
   @override
   Widget build(BuildContext context) {
-    // final size = MediaQuery.of(con_text).size;
-    const buttonWidth = 120.0;
+    final _isCurrentUserAFollowerOfPostOwner =
+        context.select<PostDetailsArguments, bool>(
+            (arguments) => arguments.isCurrentUserAFollowerOfPostOwner);
+
+    final _buttonText =
+        _isCurrentUserAFollowerOfPostOwner ? 'Followed' : 'Follow';
+
+    const _buttonWidth = 120.0;
+
     return SizedBox(
-      width: buttonWidth,
+      width: _buttonWidth,
       child: LayoutBuilder(
         builder: (_, constraints) => ToggleButtons(
-          isSelected: _selections,
+          isSelected: [_isCurrentUserAFollowerOfPostOwner],
           constraints: BoxConstraints.expand(
             width: constraints.maxWidth - 2,
-            height: buttonWidth / 4,
+            height: _buttonWidth / 4,
           ),
           onPressed: (index) {
-            setState(() {
-              _selections[index] = !_selections[index];
-              if (_selections[index]) {
-                _text = 'Followed';
-              } else {
-                _text = 'Follow';
-              }
-            });
+            // TODO: <Phuc> Update _isCurrentUserAFollowerOfPostOwner
+            // setState(() {
+            //   // _buttonText = _selections[index] ? 'Followed' : 'Follow';
+            // });
           },
           color: Theme.of(context).primaryColor,
           selectedColor: Colors.grey,
@@ -78,7 +44,7 @@ class _FollowToggleButtonState extends State<FollowToggleButton> {
           borderColor: Theme.of(context).primaryColor,
           borderRadius: BorderRadius.circular(23),
           children: [
-            Text(_text),
+            Text(_buttonText),
           ],
         ),
       ),
