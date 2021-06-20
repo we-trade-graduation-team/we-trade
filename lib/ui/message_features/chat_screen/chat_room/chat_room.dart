@@ -5,11 +5,11 @@ import 'package:line_icons/line_icons.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../constants/app_colors.dart';
-import '../../../../models/cloud_firestore/user/user.dart';
+import '../../../../models/cloud_firestore/user_model/user/user.dart';
 import '../../../../models/ui/chat/temp_class.dart';
 import '../../../../services/message/firestore_message_service.dart';
 import '../../const_string/const_str.dart';
-import '../../ulti.dart';
+import '../../helper/ulti.dart';
 import '../dialogs/chat_dialog.dart';
 import '../dialogs/group_chat_dialog.dart';
 import '../widgets/users_card.dart';
@@ -40,13 +40,14 @@ class ChatRoomScreen extends StatefulWidget {
 }
 
 class _ChatRoomScreenState extends State<ChatRoomScreen> {
-  MessageServiceFireStore dataServiceFireStore = MessageServiceFireStore();
+  MessageServiceFireStore messageServiceFireStore = MessageServiceFireStore();
   late User thisUser = Provider.of<User?>(context, listen: false)!;
   final TextEditingController newChatRoomNameController =
       TextEditingController();
   late List<String> usersImage = [];
   late String chatRoomName = '';
   late Map<String, String> userAndAva = {};
+  late Map<String, String> userAndName = {};
 
   void getImagesAndChatRoomName() {
     if (widget.usersImage.isNotEmpty && widget.chatRoomName.isNotEmpty) {
@@ -60,12 +61,13 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
             HelperClass.getImagesAndChatRoomName(widget.chat, thisUser.uid!);
         chatRoomName = mapData[chatRoomNameStr].toString();
         usersImage =
-            (mapData[usersImageStr] as List<dynamic>).cast<String>().toList();
+            (mapData[imagesStr] as List<dynamic>).cast<String>().toList();
       });
     }
 
     for (var i = 0; i < widget.chat.usersId.length; i++) {
       userAndAva[widget.chat.usersId[i]] = widget.chat.images[i];
+      userAndName[widget.chat.usersId[i]] = widget.chat.names[i];
     }
   }
 
@@ -119,6 +121,7 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
         body: Body(
           chatRoomId: widget.chat.chatRoomId,
           userAndAva: userAndAva,
+          userAndName: userAndName,
         ),
       ),
     );
@@ -151,7 +154,7 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
                 onPressed: () {
                   final newChatRoomName = newChatRoomNameController.text;
                   if (newChatRoomName != chatRoomName) {
-                    dataServiceFireStore.changeGroupChatName(
+                    messageServiceFireStore.changeGroupChatName(
                         widget.chat.chatRoomId, newChatRoomNameController.text);
                     setState(() {
                       chatRoomName = newChatRoomNameController.text;
@@ -195,8 +198,6 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
-    properties.add(DiagnosticsProperty<MessageServiceFireStore>(
-        'dataService', dataServiceFireStore));
     properties.add(IterableProperty<String>('usersImage', usersImage));
     properties.add(StringProperty('chatRoomName', chatRoomName));
     properties.add(DiagnosticsProperty<TextEditingController>(
@@ -204,5 +205,9 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
     properties
         .add(DiagnosticsProperty<Map<String, String>>('user_ava', userAndAva));
     properties.add(DiagnosticsProperty<User>('thisUser', thisUser));
+    properties.add(DiagnosticsProperty<MessageServiceFireStore>(
+        'messageServiceFireStore', messageServiceFireStore));
+    properties.add(
+        DiagnosticsProperty<Map<String, String>>('userAndName', userAndName));
   }
 }

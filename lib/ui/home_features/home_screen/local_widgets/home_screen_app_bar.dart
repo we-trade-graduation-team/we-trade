@@ -4,9 +4,9 @@ import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 import '../../../../constants/app_dimens.dart';
 import '../../../../utils/routes/routes.dart';
 import '../../notification_screen/notification_screen.dart';
+import 'home_screen_icon_button_with_counter.dart';
 import 'home_screen_search_bar.dart';
-import 'icon_button_with_counter.dart';
-import 'special_event_carousel_slider.dart';
+import 'home_screen_special_event_carousel_slider.dart';
 
 class HomeScreenAppBar extends StatelessWidget {
   const HomeScreenAppBar({
@@ -31,7 +31,7 @@ class HomeScreenAppBar extends StatelessWidget {
             vertical: size.height * 0.015,
             horizontal: size.width * 0.01,
           ),
-          child: IconButtonWithCounter(
+          child: HomeScreenIconButtonWithCounter(
             icon: 'bell',
             numOfItems: 4,
             press: () => pushNewScreenWithRouteSettings<void>(
@@ -45,7 +45,7 @@ class HomeScreenAppBar extends StatelessWidget {
         ),
       ],
       flexibleSpace: const FlexibleSpaceBar(
-        background: SpecialEventCarouselSlider(),
+        background: HomeScreenSpecialEventCarouselSlider(),
       ),
     );
   }

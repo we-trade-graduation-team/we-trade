@@ -1,14 +1,13 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
-import 'package:provider/provider.dart';
 
-import '../../../../models/cloud_firestore/user/user.dart';
 import '../../../../models/ui/chat/temp_class.dart';
-import '../../../../services/message/algolia_message_service.dart';
+import '../../../../services/message/algolia_user_service.dart';
 import '../../../../widgets/custom_user_avatar.dart';
 import '../../const_string/const_str.dart';
-import '../../ulti.dart';
+import '../../helper/ulti.dart';
 import '../chat_room/chat_room.dart';
 
 class ChatCard extends StatefulWidget {
@@ -16,33 +15,36 @@ class ChatCard extends StatefulWidget {
     Key? key,
     required this.chat,
     this.isActive = false,
-    this.isSendByMe = false,
+    required this.doc,
     required this.typeFunction,
+    required this.thisUserId,
   }) : super(key: key);
 
+  final QueryDocumentSnapshot<Object?> doc;
   final Chat chat;
-  final bool isSendByMe;
   final bool isActive;
-  final String typeFunction;
+  final String typeFunction, thisUserId;
 
   @override
   _ChatCardState createState() => _ChatCardState();
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
-    properties.add(DiagnosticsProperty<bool>('isSendByMe', isSendByMe));
     properties.add(DiagnosticsProperty<Chat>('chat', chat));
-    //properties.add(ObjectFlagProperty<VoidCallback>.has('press', press));
     properties.add(DiagnosticsProperty<bool>('isActive', isActive));
     properties.add(StringProperty('typeFunction', typeFunction));
+    properties
+        .add(DiagnosticsProperty<QueryDocumentSnapshot<Object?>>('doc', doc));
+    properties.add(StringProperty('thisUserId', thisUserId));
   }
 }
 
 class _ChatCardState extends State<ChatCard> {
-  late User thisUser = Provider.of<User?>(context, listen: false)!;
-  MessageServiceAlgolia dataServiceAlgolia = MessageServiceAlgolia();
+  UserServiceAlgolia userServiceAlgolia = UserServiceAlgolia();
   late List<String> images = [];
   late String chatRoomName = '';
+  late bool isSeen = false;
+  late bool isSendByMe = false;
 
   Widget buildChatRoomImage() {
     if (images.isNotEmpty) {
@@ -91,12 +93,24 @@ class _ChatCardState extends State<ChatCard> {
   }
 
   String getLastMessage() {
-    final name = widget.isSendByMe
+    final name = isSendByMe
         ? 'Bạn:'
         : (widget.chat.senderName.isNotEmpty
             ? '${widget.chat.senderName}:'
             : '');
     return '$name ${widget.chat.lastMessage}';
+  }
+
+  Future<bool> getIsSeen() {
+    var myLastMessageId = '';
+    return widget.doc.reference
+        .collection(seenHistoryCollection)
+        .doc(widget.chat.chatRoomId)
+        .get()
+        .then((value) {
+      myLastMessageId = value.data()![widget.thisUserId].toString();
+      return myLastMessageId == widget.chat.lastMessageId;
+    });
   }
 
   @override
@@ -106,9 +120,17 @@ class _ChatCardState extends State<ChatCard> {
 
   @override
   Widget build(BuildContext context) {
+    getIsSeen().then((value) {
+      setState(() {
+        isSeen = value;
+      });
+    });
+    setState(() {
+      isSendByMe = widget.chat.senderId == widget.thisUserId;
+    });
     final imagesAndChatRoomName =
-        HelperClass.getImagesAndChatRoomName(widget.chat, thisUser.uid!);
-    images = (imagesAndChatRoomName[usersImageStr] as List<dynamic>)
+        HelperClass.getImagesAndChatRoomName(widget.chat, widget.thisUserId);
+    images = (imagesAndChatRoomName[imagesStr] as List<dynamic>)
         .cast<String>()
         .toList();
     chatRoomName = imagesAndChatRoomName[chatRoomNameStr].toString();
@@ -142,12 +164,13 @@ class _ChatCardState extends State<ChatCard> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          //tODO fix name here
                           chatRoomName,
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
-                          style: const TextStyle(
-                              fontSize: 16, fontWeight: FontWeight.w500),
+                          style: TextStyle(
+                              fontSize: 16,
+                              fontWeight:
+                                  !isSeen ? FontWeight.bold : FontWeight.w500),
                         ),
                         const SizedBox(height: 5),
                         Row(
@@ -159,6 +182,13 @@ class _ChatCardState extends State<ChatCard> {
                                   getLastMessage(),
                                   maxLines: 1,
                                   overflow: TextOverflow.ellipsis,
+                                  style: !isSeen
+                                      ? const TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.black)
+                                      : const TextStyle(
+                                          fontWeight: FontWeight.normal,
+                                        ),
                                 ),
                               ),
                             ),
@@ -167,9 +197,11 @@ class _ChatCardState extends State<ChatCard> {
                               opacity: 0.64,
                               child: Text(
                                 widget.chat.time,
-                                style: const TextStyle(
-                                  fontSize: 10,
-                                ),
+                                style: TextStyle(
+                                    fontSize: 10,
+                                    fontWeight: !isSeen
+                                        ? FontWeight.bold
+                                        : FontWeight.normal),
                               ),
                             ),
                           ],
@@ -188,13 +220,12 @@ class _ChatCardState extends State<ChatCard> {
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
     properties.add(DiagnosticsProperty<Chat>('chat', widget.chat));
-    //properties.add(ObjectFlagProperty<VoidCallback>.has('press', widget.press));
     properties.add(DiagnosticsProperty<bool>('isActive', widget.isActive));
-    properties.add(DiagnosticsProperty<bool>('isSendByMe', widget.isSendByMe));
-    properties.add(DiagnosticsProperty<MessageServiceAlgolia>(
-        'dataServiceAlgolia', dataServiceAlgolia));
     properties.add(IterableProperty<String>('images', images));
     properties.add(StringProperty('chatRoomName', chatRoomName));
-    properties.add(DiagnosticsProperty<User>('thisUser', thisUser));
+    properties.add(DiagnosticsProperty<UserServiceAlgolia>(
+        'userServiceAlgolia', userServiceAlgolia));
+    properties.add(DiagnosticsProperty<bool>('isSeen', isSeen));
+    properties.add(DiagnosticsProperty<bool>('isSendByMe', isSendByMe));
   }
 }

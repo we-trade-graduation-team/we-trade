@@ -1,7 +1,13 @@
 {
     "java.configuration.updateBuildConfiguration": "interactive",
     "cSpell.words": [
+        "Appbar",
         "Firestore",
-        "Serializable"
+        "LTRB",
+        "Scrollable",
+        "Serializable",
+        "cupertino",
+        "reorderable",
+        "sublist"
     ]
 }

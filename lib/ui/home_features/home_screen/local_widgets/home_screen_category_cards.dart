@@ -1,10 +1,9 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_card_swipper/flutter_card_swiper.dart';
 import 'package:provider/provider.dart';
-
+import '../../../../constants/app_dimens.dart';
 import '../../../../models/cloud_firestore/category_card/category_card.dart';
-import '../../../../services/firestore/firestore_database.dart';
+
 import 'home_screen_category_card.dart';
 
 class HomeScreenCategoryCards extends StatelessWidget {
@@ -14,40 +13,33 @@ class HomeScreenCategoryCards extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final _firestoreDatabase = context.read<FirestoreDatabase>();
+    final _categoryCards = context.watch<List<CategoryCard>>();
 
-    final size = MediaQuery.of(context).size;
-    return ConstrainedBox(
-      constraints: BoxConstraints.loose(Size(size.width, size.height * 0.25)),
-      child: Swiper(
-        itemBuilder: (_, index) {
-          return Center(
-            child: StreamProvider<List<CategoryCard>>.value(
-              initialData: const [],
-              value: _firestoreDatabase.categoryCardsStream(),
-              child: Consumer<List<CategoryCard>>(
-                builder: (_, categoryCardList, __) {
-                  return Wrap(
-                    spacing: 5,
-                    runSpacing: 15,
-                    children: categoryCardList
-                        .map(
-                          (categoryCard) => HomeScreenCategoryCard(
-                            categoryCard: categoryCard,
-                          ),
-                        )
-                        .toList(),
-                  );
-                },
-              ),
-            ),
-          );
-        },
-        pagination: const SwiperPagination(
-          margin: EdgeInsets.all(5),
-        ),
-        itemCount: 2,
+    final _categoryCardsLength = _categoryCards.length;
+
+    const _numberOfCardsEachPage = AppDimens.kHomeScreenCategoryCardsEachPageAmount;
+
+    final _itemCount = (_categoryCardsLength / _numberOfCardsEachPage).ceil();
+
+    return Swiper(
+      itemBuilder: (_, index) {
+        return Center(
+          child: Wrap(
+            spacing: 5,
+            runSpacing: 15,
+            children: _categoryCards
+                .map(
+                  (categoryCard) =>
+                      HomeScreenCategoryCard(categoryCard: categoryCard),
+                )
+                .toList(),
+          ),
+        );
+      },
+      pagination: const SwiperPagination(
+        margin: EdgeInsets.all(5),
       ),
+      itemCount: _itemCount,
     );
   }
 }

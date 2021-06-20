@@ -2,16 +2,15 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 
-// import '../../../models/ui/shared_models/product_model.dart';
 import '../../../utils/routes/routes.dart';
+import '../home_screen/local_widgets/home_screen_icon_button_with_counter.dart';
 import '../home_screen/local_widgets/home_screen_search_bar.dart';
-import '../home_screen/local_widgets/icon_button_with_counter.dart';
 import '../notification_screen/notification_screen.dart';
-// import '../../../widgets/post_card.dart';
 import '../searching_screen/local_widgets/filter_overlay.dart';
-// import '../shared_widgets/horizontal_scroll_post_card_list_view.dart';
 
-const productKind = ProductKind(name: 'Flash Deal');
+
+// Flash Deal is deleted
+const productKind = ProductKind(name: 'Laptop');
 
 class CategoryKindScreen extends StatelessWidget {
   const CategoryKindScreen({
@@ -66,7 +65,7 @@ class CategoryKindScreen extends StatelessWidget {
                   child: SizedBox(
                     height: 40,
                     width: 40,
-                    child: IconButtonWithCounter(
+                    child: HomeScreenIconButtonWithCounter(
                       iconColor: Colors.grey,
                       icon: 'bell',
                       numOfItems: 4,

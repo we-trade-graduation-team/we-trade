@@ -7,21 +7,53 @@ import 'package:provider/provider.dart';
 
 import '../../../app_localizations.dart';
 import '../../../models/cloud_firestore/search_model/search_model.dart';
-import '../../../models/cloud_firestore/user/user.dart';
 import 'local_widgets/body.dart';
 import 'local_widgets/expandable_body.dart';
 import 'local_widgets/filter_overlay.dart';
 
-class SearchScreen extends StatefulWidget {
+class SearchScreen extends StatelessWidget {
   const SearchScreen({
     Key? key,
   }) : super(key: key);
 
   @override
-  _SearchScreenState createState() => _SearchScreenState();
+  Widget build(BuildContext context) {
+    return ChangeNotifierProvider(
+      create: (_) => SearchModel(),
+      child: const Scaffold(
+        resizeToAvoidBottomInset: false,
+        body: SearchScreenFloatingSearchBar(),
+      ),
+    );
+
+    // return MultiProvider(
+    //   providers: [
+    //     ChangeNotifierProvider(
+    //       create: (_) => SearchModel(
+    //         currentUser: _currentUser,
+    //       ),
+    //     ),
+    //   ],
+    //   child: const Scaffold(
+    //     resizeToAvoidBottomInset: false,
+    //     body: SearchScreenFloatingSearchBar(),
+    //   ),
+    // );
+  }
 }
 
-class _SearchScreenState extends State<SearchScreen> {
+class SearchScreenFloatingSearchBar extends StatefulWidget {
+  const SearchScreenFloatingSearchBar({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  _SearchScreenFloatingSearchBarState createState() =>
+      _SearchScreenFloatingSearchBarState();
+}
+
+class _SearchScreenFloatingSearchBarState
+    extends State<SearchScreenFloatingSearchBar> {
   static const _historyLength = 5;
 
   late FloatingSearchBarController _controller;
@@ -35,12 +67,12 @@ class _SearchScreenState extends State<SearchScreen> {
   // The filtered & ordered history that's accessed from the UI
   late List<String> filteredSearchHistory;
 
-  void loadSearchHistory() {
-    final user = context.read<User?>();
-    if (user != null) {
-      _searchHistory = user.searchHistory ?? [];
-    }
-  }
+  // void loadSearchHistory() {
+  //   final user = context.read<User?>();
+  //   if (user != null) {
+  //     _searchHistory = user.searchHistory ?? [];
+  //   }
+  // }
 
   List<String> filterSearchTerms({
     required String? filter,
@@ -55,9 +87,9 @@ class _SearchScreenState extends State<SearchScreen> {
     }
   }
 
-  void addSearchTerm(String term) {
+  void _addSearchTerm(String term) {
     if (_searchHistory.contains(term)) {
-      putSearchTermFirst(term);
+      _putSearchTermFirst(term);
       return;
     }
 
@@ -70,20 +102,20 @@ class _SearchScreenState extends State<SearchScreen> {
     filteredSearchHistory = filterSearchTerms(filter: null);
   }
 
-  void deleteSearchTerm(String term) {
+  void _deleteSearchTerm(String term) {
     _searchHistory.removeWhere((t) => t == term);
     filteredSearchHistory = filterSearchTerms(filter: null);
   }
 
-  void putSearchTermFirst(String term) {
-    deleteSearchTerm(term);
-    addSearchTerm(term);
+  void _putSearchTermFirst(String term) {
+    _deleteSearchTerm(term);
+    _addSearchTerm(term);
   }
 
-  void onSubmitted(String query) {
+  void _onSubmitted(String query) {
     setState(() {
       if (query.isNotEmpty) {
-        addSearchTerm(query);
+        _addSearchTerm(query);
         _selectedTerm = query;
       } else {
         _selectedTerm = null;
@@ -92,11 +124,11 @@ class _SearchScreenState extends State<SearchScreen> {
     _controller.close();
   }
 
-  void onQueryChanged(String query) {
-    setState(() {
-      filteredSearchHistory = filterSearchTerms(filter: query);
-    });
-  }
+  // void _onQueryChanged(String query) {
+  //   setState(() {
+  //     filteredSearchHistory = filterSearchTerms(filter: query);
+  //   });
+  // }
 
   @override
   void initState() {
@@ -114,15 +146,12 @@ class _SearchScreenState extends State<SearchScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final actions = [
+    final _actions = [
       Builder(
         builder: (_) {
           return FloatingSearchBarAction.icon(
-            icon: const Icon(
-              Icons.filter_alt_outlined,
-              // color: Theme.of(context).primaryColor,
-            ),
-            onTap: showFilterOverlay,
+            icon: const Icon(Icons.filter_alt_outlined),
+            onTap: _showFilterOverlay,
           );
         },
       ),
@@ -130,44 +159,38 @@ class _SearchScreenState extends State<SearchScreen> {
         showIfClosed: false,
       ),
     ];
-    final isPortrait =
+    final _isPortrait =
         MediaQuery.of(context).orientation == Orientation.portrait;
 
     final _appLocalizations = AppLocalizations.of(context);
 
-    return ChangeNotifierProvider(
-      create: (_) => SearchModel(),
-      child: Scaffold(
-        resizeToAvoidBottomInset: false,
-        body: Consumer<SearchModel>(
-          builder: (_, model, __) => FloatingSearchBar(
-            // automaticallyImplyBackButton: false,
-            controller: _controller,
-            iconColor: Colors.grey,
-            // transitionDuration: const Duration(milliseconds: 500),
-            transitionCurve: Curves.easeInOut,
-            // Bouncing physics for the search history
-            physics: const BouncingScrollPhysics(),
-            axisAlignment: isPortrait ? 0.0 : -1.0,
-            openAxisAlignment: 0,
-            // Title is displayed on an unopened (inactive) search bar
-            title: buildTitle(_appLocalizations.translate('appTxtTitle')),
-            actions: actions,
-            progress: model.isLoading,
-            debounceDelay: const Duration(microseconds: 500),
-            onQueryChanged: model.onQueryChanged,
-            onSubmitted: onSubmitted,
-            scrollPadding: EdgeInsets.zero,
-            transition: CircularFloatingSearchBarTransition(),
-            builder: (context, _) => ExpandableBody(model: model),
-            body: Body(selectedTerm: _selectedTerm),
-          ),
-        ),
-      ),
+    final _searchModel = context.watch<SearchModel>();
+
+    return FloatingSearchBar(
+      // automaticallyImplyBackButton: false,
+      controller: _controller,
+      iconColor: Colors.grey,
+      // transitionDuration: const Duration(milliseconds: 500),
+      transitionCurve: Curves.easeInOut,
+      // Bouncing physics for the search history
+      physics: const BouncingScrollPhysics(),
+      axisAlignment: _isPortrait ? 0.0 : -1.0,
+      openAxisAlignment: 0,
+      // Title is displayed on an unopened (inactive) search bar
+      title: _buildTitle(_appLocalizations.translate('appTxtTitle')),
+      actions: _actions,
+      progress: _searchModel.isLoading,
+      debounceDelay: const Duration(microseconds: 500),
+      onQueryChanged: _searchModel.onQueryChanged,
+      onSubmitted: _onSubmitted,
+      scrollPadding: EdgeInsets.zero,
+      transition: CircularFloatingSearchBarTransition(),
+      builder: (context, _) => ExpandableBody(model: _searchModel),
+      body: Body(selectedTerm: _selectedTerm),
     );
   }
 
-  Widget buildTitle(String title) {
+  Widget _buildTitle(String title) {
     return Text(
       _selectedTerm ?? title,
       style: const TextStyle(
@@ -177,7 +200,7 @@ class _SearchScreenState extends State<SearchScreen> {
     );
   }
 
-  void showFilterOverlay() {
+  void _showFilterOverlay() {
     showDialog<FilterOverlay>(
       context: context,
       builder: (_) => const FilterOverlay(),

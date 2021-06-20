@@ -19,33 +19,33 @@ class FirestorePath {
   }) =>
       '${user(uid: uid)}/postCards';
 
-  static String userSpecialOfferCards({
-    required String uid,
-  }) =>
-      '${user(uid: uid)}/specialOfferCards';
-
-  static String userRecommendedPostCards({
-    required String uid,
-  }) =>
-      '${user(uid: uid)}/recommendedPostCards';
-
-  static String userSearchHistory({
-    required String uid,
-  }) =>
-      '${user(uid: uid)}/searchHistory';
-
-  static String userFavoritePostCards({
-    required String uid,
-  }) =>
-      '${user(uid: uid)}/favoritePostCards';
-
-  // static String userPostCard({
-  //   required String uid,
-  //   required String postId,
-  // }) =>
-  //     'userPostCards/$uid/postCards/$postId';
-
   static String categoryCards() => 'categoryCards';
+
+  static String categoryCard({
+    required String categoryId,
+  }) =>
+      '${categoryCards()}/$categoryId';
+
+  static String specialCategoryCards() => 'specialCategoryCards';
+
+  static String specialCategoryCard({
+    required String categoryId,
+  }) =>
+      '${specialCategoryCards()}/$categoryId';
+
+  static String allCategoryEvents() => 'categoryEvents';
+
+  static String categoryEvents({
+    required String categoryId,
+  }) =>
+      '${allCategoryEvents()}/$categoryId';
+
+  static String posts() => 'posts';
+
+  static String post({
+    required String postId,
+  }) =>
+      '${posts()}/$postId';
 
   static String postCards() => 'postCards';
 
@@ -53,4 +53,47 @@ class FirestorePath {
     required String postId,
   }) =>
       '${postCards()}/$postId';
+
+  static String allPostDetails() => 'postDetails';
+
+  static String postDetails({
+    required String postId,
+  }) =>
+      '${allPostDetails()}/$postId';
+
+  static String postDetailsQuestions({
+    required String postId,
+  }) =>
+      '${postDetails(postId: postId)}/questions';
+
+  static String postDetailsQuestionAnswers({
+    required String postId,
+    required String questionId,
+  }) =>
+      '${postDetailsQuestions(postId: postId)}/$questionId';
+
+  static String keywords() => 'keywords';
+
+  static String keyword({
+    required String keywordId,
+  }) =>
+      '${keywords()}/$keywordId';
+
+  static String junctionKeywordPost() => 'junctionKeywordPost';
+
+  static String allJunctionUserFavoritePost() => 'junctionUserFavoritePost';
+
+  static String junctionUserFavoritePost({
+    required String uid,
+    required String postId,
+  }) =>
+      '${allJunctionUserFavoritePost()}/${uid}_$postId';
+
+  static String allJunctionUserFollower() => 'junctionUserFollower';
+
+  static String junctionUserFollower({
+    required String uid,
+    required String followerId,
+  }) =>
+      '${allJunctionUserFollower()}/${uid}_$followerId';
 }

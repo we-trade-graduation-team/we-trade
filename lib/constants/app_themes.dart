@@ -1,6 +1,5 @@
 // import 'package:flutter/material.dart';
 
-// import 'app_colors.dart';
 // import 'app_font_family.dart';
 
 // class AppThemes {
@@ -97,12 +96,11 @@
 //     floatingActionButtonTheme: const FloatingActionButtonThemeData(
 //       backgroundColor: _lightButtonPrimaryColor,
 //     ),
-//     appBarTheme: appBarTheme(),
-//     // const AppBarTheme(
-//     //   color: _lightAppBarColor,
-//     //   iconTheme: IconThemeData(color: _lightOnPrimaryColor),
-//     //   textTheme: _lightTextTheme,
-//     // ),
+//     appBarTheme: const AppBarTheme(
+//       color: _lightAppBarColor,
+//       iconTheme: IconThemeData(color: _lightOnPrimaryColor),
+//       textTheme: _lightTextTheme,
+//     ),
 //     colorScheme: const ColorScheme.light(
 //       primary: _lightPrimaryColor,
 //       primaryVariant: _lightPrimaryVariantColor,
@@ -211,7 +209,7 @@ import 'package:flutter/material.dart';
 import 'app_colors.dart';
 import 'app_font_family.dart';
 
-const _kPrimaryColor = Color(0xFF6F35A5);
+const _kPrimaryColor = Colors.deepPurple;
 
 ThemeData themeData() {
   return ThemeData(
@@ -227,8 +225,9 @@ ThemeData themeData() {
     fontFamily: AppFontFamily.roboto,
     backgroundColor: Colors.white,
     primarySwatch: Colors.deepPurple,
-    // primaryColor: _kPrimaryColor,
-    // primaryColorLight: const Color(0x6CF1E6FF),
+    iconTheme: const IconThemeData(
+      color: _kPrimaryColor,
+    ),
   );
 }
 
@@ -252,7 +251,7 @@ AppBarTheme appBarTheme() {
     centerTitle: true,
     backwardsCompatibility: true,
     iconTheme: IconThemeData(
-      color: Colors.deepPurple,
+      color: _kPrimaryColor,
     ),
     textTheme: TextTheme(
       headline6: TextStyle(color: Color(0xff8b8b8b), fontSize: 15),
@@ -286,10 +285,3 @@ TabBarTheme tabBarTheme() {
     ),
   );
 }
-
-// BorderSide AppDimens.kBorderSide() {
-//   return const BorderSide(
-//     color: AppColors.kTextColor,
-//     width: 0.2,
-//   );
-// }

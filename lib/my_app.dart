@@ -1,11 +1,11 @@
 import 'package:bot_toast/bot_toast.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flash/flash.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 
 import 'app_localizations.dart';
@@ -59,7 +59,12 @@ class _MyAppState extends State<MyApp> {
       builder: (_, snapshot) {
         // Check for errors
         if (snapshot.hasError) {
-          return _somethingWentWrong();
+          return Text(
+            '${snapshot.error}',
+            style: const TextStyle(
+              color: Colors.white,
+            ),
+          );
         }
 
         // Once complete, show your application
@@ -68,38 +73,26 @@ class _MyAppState extends State<MyApp> {
         }
 
         // Otherwise, show something whilst waiting for initialization to complete
-        return _loading();
+        return const Center(
+          child: CircularProgressIndicator(
+            color: Colors.white,
+          ),
+        );
       },
     );
   }
 
-  Widget _somethingWentWrong() {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      // locale: DevicePreview.locale(context), // Add the locale here
-      // builder: DevicePreview.appBuilder, // Add the builder here
-      home: const Scaffold(
-        backgroundColor: Colors.white,
-        body: Center(
-          child: Text('Something went wrong...'),
-        ),
-      ),
-    );
-  }
-
   Widget _myAwesomeApp() {
-    final botToastBuilder = BotToastInit(); //1. call BotToastInit
+    final _botToastBuilder = BotToastInit(); //1. call BotToastInit
 
     final _themeProvider = Provider.of<ThemeProvider>(context);
 
     final _languageProvider = Provider.of<LanguageProvider>(context);
 
-    // final _authProvider = Provider.of<AuthProvider>(context);
-
     return AuthWidgetBuilder(
       databaseBuilder: widget.databaseBuilder,
       builder: (context, user) {
-        final _flavor = context.watch<Flavor>();
+        final _flavor = context.read<Flavor>();
 
         return MaterialApp(
           debugShowCheckedModeBanner: false,
@@ -120,13 +113,13 @@ class _MyAppState extends State<MyApp> {
               child: child,
             );
 
-            child = botToastBuilder(context, child);
+            child = _botToastBuilder(context, child);
 
             return child;
           },
           navigatorObservers: [BotToastNavigatorObserver()],
           // locale: DevicePreview.locale(context),
-          // locale: _languageProvider.appLocale,
+          locale: _languageProvider.appLocale,
           //List of all supported locales
           supportedLocales: const [
             Locale('en', 'US'),
@@ -163,64 +156,8 @@ class _MyAppState extends State<MyApp> {
           themeMode:
               _themeProvider.isDarkModeOn ? ThemeMode.dark : ThemeMode.light,
           home: user != null ? const MainMenu() : const Authentication(),
-
-          // home: Consumer<AuthProvider>(
-          //   builder: (_, authProviderRef, __) {
-          //     if (user.connectionState == ConnectionState.active) {
-          //       return user.hasData
-          //           ? const MainMenu()
-          //           : const Authentication();
-          //     }
-
-          //     return const Material(
-          //       child: CircularProgressIndicator(),
-          //     );
-          //   },
-          // ),
         );
       },
     );
   }
-
-  Widget _loading() {
-    const lottieUrl =
-        'https://assets9.lottiefiles.com/packages/lf20_l2kZFi.json';
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      // locale: DevicePreview.locale(context), // Add the locale here
-      // builder: DevicePreview.appBuilder, // Add the builder here
-      home: Scaffold(
-        body: LayoutBuilder(
-          builder: (_, constraints) => ListView(
-            shrinkWrap: true,
-            children: [
-              // Load a Lottie file from a remote url
-              Container(
-                padding: const EdgeInsets.all(20),
-                constraints: BoxConstraints(
-                  minHeight: constraints.maxHeight,
-                ),
-                child: Center(
-                  child: Lottie.network(lottieUrl),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
 }
-
-// class AuthenticationWrapper extends StatelessWidget {
-//   const AuthenticationWrapper({
-//     Key? key,
-//   }) : super(key: key);
-
-//   @override
-//   Widget build(BuildContext context) {
-//     final user = context.watch<User?>();
-
-//     return user != null ? const MainMenu() : const Authentication();
-//   }
-// }

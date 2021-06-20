@@ -1,7 +1,10 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-import '../models/cloud_firestore/user/user.dart' as user_model;
+import '../models/cloud_firestore/user_model/user/user.dart' as user_model;
+import '../services/firestore/firestore_path.dart';
+import '../utils/model_properties/model_properties.dart';
 
 enum Status {
   uninitialized,
@@ -37,12 +40,17 @@ class AuthProvider extends ChangeNotifier {
 
   Status get status => _status;
 
-  /// Changed to idTokenChanges as it updates depending on more cases.
-  Stream<user_model.User?> get authStateChanges =>
-      _auth.idTokenChanges().map(_userFromFirebase);
+  final _usersRef =
+      FirebaseFirestore.instance.collection(FirestorePath.users());
+
+  // /// Changed to idTokenChanges as it updates depending on more cases.
+  // Stream<user_model.User?> get authStateChanges =>
+  //     _auth.idTokenChanges().map(_userFromFirebase);
 
   Stream<user_model.User?> get user =>
       _auth.authStateChanges().map(_userFromFirebase);
+
+  // user_model.User? get _currentUser => _userFromFirebase(_auth.currentUser);
 
   //Create user object based on the given FirebaseUser
   user_model.User? _userFromFirebase(User? user) {
@@ -53,9 +61,9 @@ class AuthProvider extends ChangeNotifier {
     return user_model.User(
       uid: user.uid,
       email: user.email,
-      displayName: user.displayName,
-      phoneNumber: user.phoneNumber,
-      photoURL: user.photoURL,
+      name: user.displayName,
+      isEmailVerified: user.emailVerified,
+      avatarUrl: user.photoURL,
     );
   }
 
@@ -75,19 +83,32 @@ class AuthProvider extends ChangeNotifier {
   //Method to handle user sign in using email and password
   Future<String?> signInWithEmailAndPassword({
     required String email,
-    required String password,
+    required String password, 
   }) async {
     try {
       _status = Status.authenticating;
 
       notifyListeners();
 
-      await _auth.signInWithEmailAndPassword(
+      final _result = await _auth.signInWithEmailAndPassword(
         email: email,
         password: password,
       );
 
-      // return true;
+      final _firebaseAuthUser = _result.user;
+
+      final _newUser = _userFromFirebase(_firebaseAuthUser);
+
+      if (_newUser != null) {
+        const _presenceField = ModelProperties.userPresenceProperty;
+
+        final _presenceData = {
+          _presenceField: true,
+        };
+
+        // Add new user to users Collection
+        await _usersRef.doc(_newUser.uid).update(_presenceData);
+      }
     } on FirebaseAuthException catch (e) {
       // print("Error on the sign in = " + e.toString());
       _status = Status.unauthenticated;
@@ -102,21 +123,34 @@ class AuthProvider extends ChangeNotifier {
   Future<String?> registerWithEmailAndPassword({
     required String email,
     required String password,
+    required String name,
   }) async {
     try {
       _status = Status.registering;
 
       notifyListeners();
 
-      final result = await _auth.createUserWithEmailAndPassword(
+      final _result = await _auth.createUserWithEmailAndPassword(
         email: email,
         password: password,
       );
 
-      final user = _userFromFirebase(result.user);
+      final _firebaseAuthUser = _result.user!;
 
-      if (user != null) {
-        // TODO: <Phuc> Add new user to users Collection
+      final _newUser = _userFromFirebase(_firebaseAuthUser);
+
+      if (_newUser != null) {
+        _newUser
+          ..name = name
+          ..lastSeen = DateTime.now().millisecondsSinceEpoch
+          ..presence = true;
+
+        await Future.wait([
+          // Set name in firestore database
+          _usersRef.doc(_newUser.uid).set(_newUser.toJson()),
+          // Set display name
+          _firebaseAuthUser.updateDisplayName(name),
+        ]);
       }
     } on FirebaseAuthException catch (e) {
       // print("Error on the new user registration = " + e.toString());
@@ -137,12 +171,26 @@ class AuthProvider extends ChangeNotifier {
 
   //Method to handle user signing out
   Future<void> signOut() async {
-    await _auth.signOut();
+    const _lastSeenField = ModelProperties.userLastSeenProperty;
+
+    const _presenceField = ModelProperties.userPresenceProperty;
+
+    final _newData = {
+      _lastSeenField: DateTime.now().millisecondsSinceEpoch,
+      _presenceField: false,
+    };
+
+    final _currentUser = _auth.currentUser;
+
+    await Future.wait([
+      // Update lastSeen and presence
+      _usersRef.doc(_currentUser!.uid).update(_newData),
+      // Sign out for current user
+      _auth.signOut(),
+    ]);
 
     _status = Status.unauthenticated;
 
     notifyListeners();
-
-    return Future<void>.delayed(Duration.zero);
   }
 }

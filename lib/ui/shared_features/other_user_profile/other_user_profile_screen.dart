@@ -2,11 +2,14 @@ import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:line_icons/line_icons.dart';
+import 'package:provider/provider.dart';
 
 import '../../../constants/app_dimens.dart';
+import '../../../models/cloud_firestore/user_model/user/user.dart';
 import '../../../models/ui/chat/temp_class.dart';
 import '../../../widgets/custom_material_button.dart';
 import '../../../widgets/custom_user_avatar.dart';
+import '../../message_features/helper/helper_navigate_chat_room.dart';
 import 'dialogs/other_user_profile_dialog.dart';
 import 'tabs/about_tab.dart';
 import 'tabs/posts_tab.dart';
@@ -15,10 +18,16 @@ import 'tabs/review_tab.dart';
 class OtherUserProfileScreen extends StatefulWidget {
   const OtherUserProfileScreen({
     Key? key,
+    required this.userId,
   }) : super(key: key);
-
+  final String userId;
   @override
   _OtherUserProfileScreenState createState() => _OtherUserProfileScreenState();
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(StringProperty('userId', userId));
+  }
 }
 
 class _OtherUserProfileScreenState extends State<OtherUserProfileScreen> {
@@ -26,6 +35,12 @@ class _OtherUserProfileScreenState extends State<OtherUserProfileScreen> {
   final mainInfoKey = GlobalKey();
   Size flexibleSpaceBarSize = const Size(0, 0);
   bool visible = true;
+
+  void navigateToChatRoom(String userid) {
+    final thisUser = Provider.of<User?>(context, listen: false)!;
+    HelperNavigateChatRoom.checkAndSendChatRoomOneUserByIds(
+        userId: userid, thisUser: thisUser, context: context);
+  }
 
   Future<void> getSizeAndPosition() async {
     final cardBox = mainInfoKey.currentContext!.findRenderObject() as RenderBox;
@@ -268,7 +283,8 @@ class _OtherUserProfileScreenState extends State<OtherUserProfileScreen> {
                                 size: 20,
                               ),
                               press: () {
-                                //TODO navigate to chat_room_screen (id)
+                                //TODO trang navigate to chat_room_screen (id)
+                                navigateToChatRoom(widget.userId);
                               },
                               text: 'Nhắn tin',
                               width: MediaQuery.of(context).size.width / 3.8,
@@ -437,7 +453,7 @@ class ReviewProperty extends StatelessWidget {
   }
 }
 
-class OtherUserProfileArguments {
-  OtherUserProfileArguments({required this.userId});
-  final String userId;
-}
+// class OtherUserProfileArguments {
+//   OtherUserProfileArguments({required this.userId});
+//   final String userId;
+// }

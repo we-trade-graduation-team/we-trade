@@ -25,7 +25,7 @@ class WishListScreen extends StatelessWidget {
           // alignment: WrapAlignment.spaceAround,
           spacing: 20,
           runSpacing: 15,
-          // TODO: <Tin> Replace List<Product> with List<PostCard>
+          // TODO: <Quang> Replace List<Product> with List<PostCard>
           // children: [
           //   ...products
           //       .map(

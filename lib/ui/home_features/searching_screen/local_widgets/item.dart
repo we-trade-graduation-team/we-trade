@@ -2,10 +2,10 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:material_floating_search_bar/material_floating_search_bar.dart';
 import 'package:provider/provider.dart';
+import '../../../../models/cloud_firestore/post_card_model/post_card/post_card.dart';
 
-import '../../../../models/cloud_firestore/post_card/post_card.dart';
 import '../../../../models/cloud_firestore/search_model/search_model.dart';
-import '../../../../models/cloud_firestore/user/user.dart';
+// import '../../../../models/cloud_firestore/user_model/user/user.dart';
 
 class Item extends StatelessWidget {
   const Item({
@@ -18,18 +18,19 @@ class Item extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    
+
     final textTheme = theme.textTheme;
 
-    final model = context.read<SearchModel>();
+    final model = context.watch<SearchModel>();
 
-    final user = context.read<User?>();
+    // TODO <Phuc> Get user search history
+    // final user = context.watch<User?>();
 
-    late List<String> history;
+    // late List<String> history;
 
-    if (user != null) {
-      history = user.searchHistory ?? [];
-    }
+    // if (user != null) {
+    //   history = user.searchHistory ?? [];
+    // }
 
     return Column(
       mainAxisSize: MainAxisSize.min,
@@ -46,15 +47,15 @@ class Item extends StatelessWidget {
             padding: const EdgeInsets.all(16),
             child: Row(
               children: [
-                SizedBox(
-                  width: 36,
-                  child: AnimatedSwitcher(
-                    duration: const Duration(milliseconds: 500),
-                    child: model.suggestions == history
-                        ? const Icon(Icons.history, key: Key('history'))
-                        : const Icon(Icons.place, key: Key('place')),
-                  ),
-                ),
+                // SizedBox(
+                //   width: 36,
+                //   child: AnimatedSwitcher(
+                //     duration: const Duration(milliseconds: 500),
+                //     child: model.suggestions == history
+                //         ? const Icon(Icons.history, key: Key('history'))
+                //         : const Icon(Icons.place, key: Key('place')),
+                //   ),
+                // ),
                 const SizedBox(width: 16),
                 Expanded(
                   child: Column(
@@ -67,7 +68,7 @@ class Item extends StatelessWidget {
                       ),
                       const SizedBox(height: 2),
                       Text(
-                        postCard.itemCondition,
+                        postCard.item.condition,
                         style: textTheme.bodyText2!.copyWith(
                           color: Colors.grey.shade600,
                         ),

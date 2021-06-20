@@ -1,13 +1,30 @@
 import 'dart:async';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:collection/collection.dart';
+
+import '../../constants/app_assets.dart';
+import '../../constants/app_firestore_constant.dart';
 import '../../models/cloud_firestore/category_card/category_card.dart';
-import '../../models/cloud_firestore/post_card/post_card.dart';
-import '../../models/cloud_firestore/special_offer_card/special_offer_card.dart';
-import '../../models/cloud_firestore/user/user.dart' as user_model;
+import '../../models/cloud_firestore/category_events/category_events.dart';
+import '../../models/cloud_firestore/junction_keyword_post/junction_keyword_post.dart';
+import '../../models/cloud_firestore/post_card_model/post_card/post_card.dart';
+import '../../models/cloud_firestore/post_details_model/post_details/post_details.dart';
+import '../../models/cloud_firestore/post_details_model/post_details_item/post_details_item.dart';
+import '../../models/cloud_firestore/post_details_model/post_details_item_address/post_details_item_address.dart';
+import '../../models/cloud_firestore/post_details_model/post_details_owner/post_details_owner.dart';
+import '../../models/cloud_firestore/post_details_model/post_details_question/post_details_question.dart';
+import '../../models/cloud_firestore/post_details_model/post_details_question_answer/post_details_question_answer.dart';
+import '../../models/cloud_firestore/post_model/post/post.dart';
+import '../../models/cloud_firestore/special_category_card/special_category_card.dart';
+import '../../models/cloud_firestore/user_model/user/user.dart' as user_model;
+import '../../models/cloud_firestore/user_model/user_category_history/user_category_history.dart';
+import '../../models/cloud_firestore/user_model/user_keyword_history/user_keyword_history.dart';
+import '../../utils/firestore_errors/firestore_errors.dart';
+import '../../utils/helper/error_helper/error_helper.dart';
+import '../../utils/model_properties/model_properties.dart';
 import 'firestore_path.dart';
 import 'firestore_service.dart';
-
-// String documentIdFromCurrentDate() => DateTime.now().toIso8601String();
 
 /*
 This is the main class access/call for any UI widgets that require to perform
@@ -31,63 +48,1006 @@ class FirestoreDatabase {
 
   final _fireStoreService = FirestoreService.instance;
 
-  // Method to retrieve all user details from Firestore
-  Stream<List<user_model.User>> usersStream() {
-    return _fireStoreService.collectionStream(
-      path: FirestorePath.users(),
-      builder: (data) => user_model.User.fromDocumentSnapshot(data),
-    );
-  }
+  final _fireStoreInstance = FirebaseFirestore.instance;
 
-  // Method to retrieve a User
-  Stream<user_model.User> userStream() {
-    return _fireStoreService.documentStream(
+  // Method to retrieve info about current user
+  Future<user_model.User> _getCurrentUser() async {
+    final _result = await _fireStoreService.documentFuture(
       path: FirestorePath.user(uid: uid),
       builder: (data) => user_model.User.fromDocumentSnapshot(data),
     );
+    return _result;
   }
 
-  // Method to retrieve all Post Cards from the same user based on uid
-  Stream<List<PostCard>> userPostCardsStream() {
-    return _fireStoreService.collectionStream(
-      path: FirestorePath.userPostCards(uid: uid),
-      builder: (data) => PostCard.fromDocumentSnapshot(data),
+  // Method to update current user info
+  Future<void> _updateCurrentUser({
+    // required String uid,
+    required Map<String, dynamic> newData,
+  }) async {
+    await _fireStoreService.updateData(
+      path: FirestorePath.user(uid: uid),
+      data: newData,
     );
   }
 
-  // Method to retrieve all Special Offer Cards from the same user based on uid
-  Stream<List<SpecialOfferCard>> userSpecialOfferCardsStream() {
-    return _fireStoreService.collectionStream(
-      path: FirestorePath.userSpecialOfferCards(uid: uid),
+  // Method to update postCard info
+  Future<void> _updatePostCard({
+    required String postId,
+    required Map<String, dynamic> newData,
+  }) async {
+    await _fireStoreService.updateData(
+      path: FirestorePath.postCard(postId: postId),
+      data: newData,
+    );
+  }
+
+  // Method to increase postCard's view
+  Future<void> increasePostCardView({
+    required String postId,
+    // Default, amount is one
+    int amount = 1,
+  }) async {
+    const _viewField = ModelProperties.postCardViewProperty;
+
+    final _newData = {
+      _viewField: FieldValue.increment(amount),
+    };
+
+    await _updatePostCard(
+      postId: postId,
+      newData: _newData,
+    );
+  }
+
+  // Method to retrieve a Special Category Card
+  Future<SpecialCategoryCard> _getSpecialCategoryCard({
+    required String categoryId,
+  }) async {
+    final _result = await _fireStoreService.documentFuture(
+      path: FirestorePath.specialCategoryCard(categoryId: categoryId),
+      builder: (data) => SpecialCategoryCard.fromDocumentSnapshot(data),
+    );
+    return _result;
+  }
+
+  // Method to retrieve a Category Events
+  Future<CategoryEvents> _getCategoryEvents({
+    required String categoryId,
+  }) async {
+    final _result = await _fireStoreService.documentFuture(
+      path: FirestorePath.categoryEvents(categoryId: categoryId),
+      builder: (data) => CategoryEvents.fromDocumentSnapshot(data),
+    );
+    return _result;
+  }
+
+  // Method to retrieve a List of Special Category Card
+  Future<List<SpecialCategoryCard>> _getSpecialCategoryCardsWithLimit({
+    required int limit,
+    String? fieldToOrder,
+    List<String>? excludedCategoryIdList,
+  }) async {
+    final _result = await _fireStoreService.collectionFuture(
+      path: FirestorePath.specialCategoryCards(),
       queryBuilder: (query) {
-        return query
-            .orderBy(
-              'view',
-              descending: true,
-            )
-            .limit(10);
+        // If has this argument
+        if (excludedCategoryIdList != null &&
+            excludedCategoryIdList.isNotEmpty) {
+          const _maxWhereNotInAmount =
+              AppFirestoreConstant.whereNotInAmountMaximum;
+
+          if (excludedCategoryIdList.length > _maxWhereNotInAmount) {
+            ErrorHelper.throwArgumentError(
+              message:
+                  FirestoreErrors.errorWhereNotInMaximumUpToTenComparisonValues,
+            );
+          }
+          return query
+              .where(
+                FieldPath.documentId,
+                whereNotIn: excludedCategoryIdList,
+              )
+              .limit(limit);
+        }
+
+        const _defaultOrderField =
+            ModelProperties.specialCategoryCardViewProperty;
+
+        final _orderField = fieldToOrder ?? _defaultOrderField;
+
+        return query.orderBy(_orderField).limit(limit);
       },
-      builder: (data) => SpecialOfferCard.fromDocumentSnapshot(data),
+      builder: (data) => SpecialCategoryCard.fromDocumentSnapshot(data),
     );
+    return _result;
   }
 
-  // Method to retrieve all Recommended Post Cards from the same user based on uid
-  Stream<List<PostCard>> userRecommendedPostCardsStream() {
-    return _fireStoreService.collectionStream(
-      path: FirestorePath.userRecommendedPostCards(uid: uid),
+  // Method to retrieve a Post Card
+  Future<PostCard> getPostCard({
+    required String postId,
+  }) async {
+    final _result = await _fireStoreService.documentFuture(
+      path: FirestorePath.postCard(postId: postId),
       builder: (data) => PostCard.fromDocumentSnapshot(data),
     );
+    return _result;
   }
 
-  // Method to retrieve all Favorite Post Cards from the same user based on uid
-  Stream<List<PostCard>> userFavoritePostCardsStream() {
-    return _fireStoreService.collectionStream(
-      path: FirestorePath.userFavoritePostCards(uid: uid),
+  // Method to retrieve a List of Post Card with a limit amount
+  Future<List<PostCard>> _getPostCardsWithLimit({
+    required int limit,
+    String? fieldToOrder,
+    List<String>? excludedPostIdList,
+  }) async {
+    final _result = await _fireStoreService.collectionFuture(
+      path: FirestorePath.postCards(),
+      queryBuilder: (query) {
+        // If has this argument
+        if (excludedPostIdList != null) {
+          const _maxWhereNotInAmount =
+              AppFirestoreConstant.whereNotInAmountMaximum;
+
+          if (excludedPostIdList.length > _maxWhereNotInAmount) {
+            ErrorHelper.throwArgumentError(
+              message:
+                  FirestoreErrors.errorWhereNotInMaximumUpToTenComparisonValues,
+            );
+          }
+          return query
+              .where(
+                FieldPath.documentId,
+                whereNotIn: excludedPostIdList,
+              )
+              .limit(limit);
+        }
+
+        const _defaultOrderField = ModelProperties.postCardViewProperty;
+
+        final _orderField = fieldToOrder ?? _defaultOrderField;
+
+        return query.orderBy(_orderField).limit(limit);
+      },
       builder: (data) => PostCard.fromDocumentSnapshot(data),
+    );
+    return _result;
+  }
+
+  // Method to retrieve a List of Junction Keyword Post by keywordId
+  Future<List<JunctionKeywordPost>> _getJunctionKeywordPostListByKeywordId({
+    required String keywordId,
+    String? excludedPostId,
+  }) async {
+    final _result = await _fireStoreService.collectionFuture(
+      path: FirestorePath.junctionKeywordPost(),
+      queryBuilder: (query) {
+        const _keywordIdField = ModelProperties.keywordKeywordIdProperty;
+
+        if (excludedPostId != null) {
+          const _postIdField = ModelProperties.keywordPostIdProperty;
+
+          return query
+              .where(
+                _keywordIdField,
+                isEqualTo: keywordId,
+              )
+              .where(
+                _postIdField,
+                isNotEqualTo: excludedPostId,
+              );
+        }
+
+        return query.where(
+          _keywordIdField,
+          isEqualTo: keywordId,
+        );
+      },
+      builder: (data) => JunctionKeywordPost.fromDocumentSnapshot(data),
+    );
+
+    return _result;
+  }
+
+  // Method to retrieve a List of Junction Keyword Post by postId
+  Future<List<JunctionKeywordPost>> _getJunctionKeywordPostListByPostId({
+    required String postId,
+  }) async {
+    final _result = await _fireStoreService.collectionFuture(
+      path: FirestorePath.junctionKeywordPost(),
+      queryBuilder: (query) {
+        const _filterField = ModelProperties.postCardIdProperty;
+
+        return query.where(
+          _filterField,
+          isEqualTo: postId,
+        );
+      },
+      builder: (data) => JunctionKeywordPost.fromDocumentSnapshot(data),
+    );
+
+    return _result;
+  }
+
+  // Method to retrieve a List of postCard by userId
+  Future<List<PostCard>> getPostCardsByUserId({
+    String? userId,
+  }) async {
+    final _postsFromUser = await _fireStoreService.collectionFuture(
+      path: FirestorePath.posts(),
+      queryBuilder: (query) {
+        const _ownerIdField = ModelProperties.postOwnerIdProperty;
+
+        return query.where(
+          _ownerIdField,
+          isEqualTo: userId ?? uid,
+        );
+      },
+      builder: (data) => Post.fromDocumentSnapshot(data),
+    );
+
+    final _postIdList = _postsFromUser.map((post) => post.postId!).toList();
+
+    final _result = await getPostCardsByPostIdList(postIdList: _postIdList);
+
+    return _result;
+  }
+
+  // Method to retrieve a List of postCard by mainCategoryId
+  Future<List<PostCard>> _getPostCardsByMainCategoryId({
+    required String mainCategoryId,
+    int? limit,
+    List<String>? excludedPostIdList,
+  }) async {
+    final _postsFromUser = await _fireStoreService.collectionFuture(
+      path: FirestorePath.posts(),
+      queryBuilder: (query) {
+        const _mainCategoryIdField = ModelProperties.postMainCategoryIdProperty;
+
+        // If has this argument
+        if (excludedPostIdList != null) {
+          const _maxWhereNotInAmount =
+              AppFirestoreConstant.whereNotInAmountMaximum;
+
+          if (excludedPostIdList.length > _maxWhereNotInAmount) {
+            ErrorHelper.throwArgumentError(
+              message:
+                  FirestoreErrors.errorWhereNotInMaximumUpToTenComparisonValues,
+            );
+          }
+          if (limit != null) {
+            return query
+                .where(
+                  _mainCategoryIdField,
+                  isEqualTo: mainCategoryId,
+                )
+                .where(
+                  FieldPath.documentId,
+                  whereNotIn: excludedPostIdList,
+                )
+                .limit(limit);
+          }
+
+          return query
+              .where(
+                _mainCategoryIdField,
+                isEqualTo: mainCategoryId,
+              )
+              .where(
+                FieldPath.documentId,
+                whereNotIn: excludedPostIdList,
+              );
+        }
+
+        if (limit != null) {
+          return query
+              .where(
+                _mainCategoryIdField,
+                isEqualTo: mainCategoryId,
+              )
+              .limit(limit);
+        }
+
+        return query.where(
+          _mainCategoryIdField,
+          isEqualTo: mainCategoryId,
+        );
+      },
+      builder: (data) => Post.fromDocumentSnapshot(data),
+    );
+
+    final _postIdList = _postsFromUser.map((post) => post.postId!).toList();
+
+    final _result = await getPostCardsByPostIdList(postIdList: _postIdList);
+
+    return _result;
+  }
+
+  // Method to retrieve a List of post card by a List of postId
+  Future<List<PostCard>> getPostCardsByPostIdList({
+    required List<String> postIdList,
+  }) async {
+    final _result = await Stream.fromIterable(postIdList)
+        .asyncMap((postId) => getPostCard(postId: postId))
+        .toList();
+
+    return _result;
+  }
+
+  // Method to retrieve a List of Special Category Card
+  // by a List of categoryId
+  Future<List<SpecialCategoryCard>> _getSpecialCategoryCardsByCategoryIdList({
+    required List<String> categoryIdList,
+  }) async {
+    final _result = await Stream.fromIterable(categoryIdList)
+        .asyncMap(
+            (categoryId) => _getSpecialCategoryCard(categoryId: categoryId))
+        .toList();
+
+    return _result;
+  }
+
+  // Method to retrieve a List of Special Category Card at Home Screen
+  Future<List<SpecialCategoryCard>> getHomeScreenSpecialCategoryCards() async {
+    final _currentUser = await _getCurrentUser();
+
+    // Get user's category history
+    final _currentUserCategoryHistory = _currentUser.categoryHistory;
+
+    const _numberOfDocumentToTake =
+        AppFirestoreConstant.kHomeScreenSpecialCategoryCardAmount;
+
+    // If null or empty
+    if (_currentUserCategoryHistory == null ||
+        _currentUserCategoryHistory.isEmpty) {
+      final _result = await _getSpecialCategoryCardsWithLimit(
+          limit: _numberOfDocumentToTake);
+
+      return _result;
+    }
+
+    // Sort category history by times - descending
+    _currentUserCategoryHistory.sort((a, b) => b.times.compareTo(a.times));
+
+    // Get top times categoryId of user
+    final _topCategoryIdList = _currentUserCategoryHistory
+        .take(_numberOfDocumentToTake)
+        .map((categoryHistory) => categoryHistory.categoryId)
+        .toList();
+
+    // Get special category cards according category Id
+    final _specialCategoryCards =
+        await _getSpecialCategoryCardsByCategoryIdList(
+            categoryIdList: _topCategoryIdList);
+
+    // Return if has enough cards
+    if (_specialCategoryCards.length == _numberOfDocumentToTake) {
+      return _specialCategoryCards;
+    }
+
+    // Calculate number of missing cards
+    final _missingAmount =
+        _numberOfDocumentToTake - _specialCategoryCards.length;
+
+    // Get categoryId from existing specialCategoryCards
+    final _excludedCategoryIdList = _specialCategoryCards
+        .map((specialCategoryCard) => specialCategoryCard.categoryId!)
+        .toList();
+
+    // Don't have to check because we take only 5 special category cards
+    // const _maxWhereNotInAmount = AppFirestoreConstant.whereNotInAmountMaximum;
+    // if (_excludedCategoryIdList.length > _maxWhereNotInAmount) {}
+
+    // Get more to have enough special category card
+    final _mostViewSpecialCategoryCards =
+        await _getSpecialCategoryCardsWithLimit(
+      limit: _missingAmount,
+      excludedCategoryIdList: _excludedCategoryIdList,
+    );
+
+    // Locally sorting descending by view - because =>
+    // If you include a filter with a range comparison (<, <=, >, >=),
+    // your first ordering must be on the same field:
+    _mostViewSpecialCategoryCards.sort((a, b) => b.view.compareTo(a.view));
+
+    // Concatenate two list
+    final _fullList = [
+      ..._specialCategoryCards,
+      ..._mostViewSpecialCategoryCards
+    ];
+
+    return _fullList;
+  }
+
+  // Method to retrieve a List of postCard recommended for current user
+  // at Home Screen
+  Future<List<PostCard>> getHomeScreenRecommendedPostCards() async {
+    final _currentUser = await _getCurrentUser();
+
+    // Get user's keyword history
+    final _currentUserKeywordHistory = _currentUser.keywordHistory;
+
+    // Amount of postCards to take
+    const _numberOfPostCardToTake =
+        AppFirestoreConstant.kHomeScreenRecommendedPostCardEachPullAmount;
+
+    // If null or empty
+    if (_currentUserKeywordHistory == null ||
+        _currentUserKeywordHistory.isEmpty) {
+      // Take top most view post cards
+      final _result =
+          await _getPostCardsWithLimit(limit: _numberOfPostCardToTake);
+
+      return _result;
+    }
+
+    // Sort descending category history by times
+    _currentUserKeywordHistory.sort((a, b) => b.times.compareTo(a.times));
+
+    // Decide to take top most view times keyword
+    const _numberOfKeywordToTake =
+        AppFirestoreConstant.kHomeScreenRecommendedPostCardUserKeywordAmount;
+
+    // Get top _numberOfKeywordToTake times keyword of user
+    final _topKeyword = _currentUserKeywordHistory
+        .take(_numberOfKeywordToTake)
+        .map((keywordHistory) => keywordHistory.keywordId)
+        .toList();
+
+    // For each keywordId in _topKeyword, fetch all corresponding
+    // junctionKeywordPost
+    final _junctionsList = await Stream.fromIterable(_topKeyword)
+        .asyncMap((keywordId) =>
+            _getJunctionKeywordPostListByKeywordId(keywordId: keywordId))
+        .toList();
+
+    // Equally divided the quantity of post cards for each keyword
+    // Example: If user has less keyword than _numberOfKeywordToTake
+    // then take only those keyword, otherwise take _numberOfKeywordToTake
+    final _numberToDivide = _topKeyword.length < _numberOfKeywordToTake
+        ? _topKeyword.length
+        : _numberOfKeywordToTake;
+
+    final _numberOfPostCardEachKeywordToTake =
+        _numberOfPostCardToTake ~/ _numberToDivide;
+
+    // A list contains items, each item is a list of post cards
+    // getting from a list of junctionKeywordPost
+    final _postCardsListBasedOnKeywordList =
+        await Stream.fromIterable(_junctionsList).asyncMap((
+      _junctions,
+    ) async {
+      final _postCardIdListFromJunction =
+          _junctions.map((junction) => junction.postId).toList();
+
+      // Fetch for each retrieved junction, fetch the associated postCard
+      final _postCardsFromJunction = await getPostCardsByPostIdList(
+        postIdList: _postCardIdListFromJunction,
+      );
+
+      // Sort descending by view
+      _postCardsFromJunction.sort((a, b) => b.view.compareTo(a.view));
+
+      // Get most view post card
+      final _postCardToTake = _postCardsFromJunction
+          .take(_numberOfPostCardEachKeywordToTake)
+          .toList();
+
+      return _postCardToTake;
+    }).toList();
+
+    // Flatten list
+    final _flattenPostCardList = _postCardsListBasedOnKeywordList
+        .expand((postCards) => postCards)
+        .toList();
+
+    // Return if has enough cards
+    if (_flattenPostCardList.length == _numberOfPostCardToTake) {
+      return _flattenPostCardList;
+    }
+
+    // Calculate number of missing cards
+    final _missingAmount =
+        _numberOfPostCardToTake - _flattenPostCardList.length;
+
+    // Get postId from existing postCardList
+    final _excludedPostIdList =
+        _flattenPostCardList.map((postCard) => postCard.postId!).toList();
+
+    const _maxWhereNotInAmount = AppFirestoreConstant.whereNotInAmountMaximum;
+
+    if (_excludedPostIdList.length <= _maxWhereNotInAmount) {
+      // Get more to have enough post card
+      final _mostViewPostCards = await _getPostCardsWithLimit(
+        limit: _missingAmount,
+        excludedPostIdList: _excludedPostIdList,
+      );
+
+      // Locally sorting descending by view - because =>
+      // If you include a filter with a range comparison (<, <=, >, >=),
+      // your first ordering must be on the same field:
+      _mostViewPostCards.sort((a, b) => b.view.compareTo(a.view));
+
+      // Concatenate two list
+      final _fullList = [..._flattenPostCardList, ..._mostViewPostCards];
+
+      return _fullList;
+    }
+
+    // Separate list
+    // First list contains item from index 0 => 9
+    final _firstHalfExcludedPostIdList =
+        _excludedPostIdList.sublist(0, _maxWhereNotInAmount);
+
+    // Second list contains item from index 10 => end
+    final _secondHalfExcludedPostIdList =
+        _excludedPostIdList.sublist(_maxWhereNotInAmount);
+
+    // Get more postCard excluded first half
+    // plus _secondHalfExcludedPostIdList.length
+    final _mostViewPostCardsExcludedFirstHalf = await _getPostCardsWithLimit(
+      // Plus more
+      limit: _missingAmount + _secondHalfExcludedPostIdList.length,
+      excludedPostIdList: _firstHalfExcludedPostIdList,
+    );
+
+    // Remove postCard where postId is in second half
+    _mostViewPostCardsExcludedFirstHalf.removeWhere(
+        (postCard) => _secondHalfExcludedPostIdList.contains(postCard.postId));
+
+    // Sort descending by view
+    _mostViewPostCardsExcludedFirstHalf
+        .sort((a, b) => b.view.compareTo(a.view));
+
+    // If have take enough missing amount
+    if (_mostViewPostCardsExcludedFirstHalf.length == _missingAmount) {
+      // Concatenate two list
+      final _fullList = [
+        ..._flattenPostCardList,
+        ..._mostViewPostCardsExcludedFirstHalf
+      ];
+
+      return _fullList;
+    }
+
+    // Else, we have take more than enough than take exactly amount missing
+    final _exactlyAmountMissingPostCardList =
+        _mostViewPostCardsExcludedFirstHalf.take(_missingAmount).toList();
+
+    // Concatenate two list
+    final _fullList = [
+      ..._flattenPostCardList,
+      ..._exactlyAmountMissingPostCardList
+    ];
+
+    return _fullList;
+  }
+
+  // Method to retrieve a List of similar postCards by postId
+  // at postDetails screen
+  Future<List<PostCard>> getPostDetailsScreenSimilarPostCards({
+    required String postId,
+  }) async {
+    const _numberOfPostCardToTake =
+        AppFirestoreConstant.kPostDetailsScreenSimilarPostCardsAmount;
+
+    // Take a List of junction Keyword - Post corresponding to postId
+    final _junctionListBasedOnPostId =
+        await _getJunctionKeywordPostListByPostId(postId: postId);
+
+    // Get a List of keywordId corresponding with above list
+    final _keywordIdList = _junctionListBasedOnPostId
+        .map((junction) => junction.keywordId)
+        .toList();
+
+    // For each keywordId in _keywordIdList, fetch all corresponding
+    // junctionKeywordPost, except junction with this postId
+    final _junctionsListBasedOnKeywordIdList =
+        await Stream.fromIterable(_keywordIdList)
+            .asyncMap(
+              (keywordId) => _getJunctionKeywordPostListByKeywordId(
+                keywordId: keywordId,
+                excludedPostId: postId,
+              ),
+            )
+            .toList();
+
+    final _postCardsListBasedOnKeywordList =
+        await Stream.fromIterable(_junctionsListBasedOnKeywordIdList).asyncMap((
+      _junctions,
+    ) async {
+      final _postCardIdListFromJunction =
+          _junctions.map((junction) => junction.postId).toList();
+
+      // Fetch for each retrieved junction, fetch the associated postCard
+      final _postCardsFromJunction = await getPostCardsByPostIdList(
+        postIdList: _postCardIdListFromJunction,
+      );
+
+      return _postCardsFromJunction;
+    }).toList();
+
+    // Flatten list
+    final _flattenPostCardList = _postCardsListBasedOnKeywordList
+        .expand((postCards) => postCards)
+        .toList();
+
+    // Sort descending by view
+    _flattenPostCardList.sort((a, b) => b.view.compareTo(a.view));
+
+    // If has more than enough cards
+    if (_flattenPostCardList.length > _numberOfPostCardToTake) {
+      // Then take only _numberOfPostCardToTake
+      final _result =
+          _flattenPostCardList.take(_numberOfPostCardToTake).toList();
+
+      return _result;
+    }
+
+    // Return if has enough cards
+    if (_flattenPostCardList.length == _numberOfPostCardToTake) {
+      return _flattenPostCardList;
+    }
+
+    const _maxWhereNotInAmount = AppFirestoreConstant.whereNotInAmountMaximum;
+
+    // Check because similar postcards amount constants may be changed (> 10)!
+    if (_flattenPostCardList.length >= _maxWhereNotInAmount) {
+      throw Exception(
+        FirestoreErrors
+            .exceptionSimilarPostCardAmountGreaterThanConstantsAmount,
+      );
+    }
+
+    // Calculate number of missing cards
+    final _missingAmount =
+        _numberOfPostCardToTake - _flattenPostCardList.length;
+
+    // Retrieve post info from post id
+    final _postInfo = await _getPost(postId: postId);
+
+    // Get main category id
+    final _postMainCategoryId = _postInfo.categoryInfo.mainCategoryId;
+
+    // Get postId from existing postCardList
+    final _excludedPostIdList =
+        _flattenPostCardList.map((postCard) => postCard.postId!).toList();
+
+    // Get postCards by main category id, with missing amount
+    final _postCardsFromMainCategoryId = await _getPostCardsByMainCategoryId(
+      mainCategoryId: _postMainCategoryId,
+      limit: _missingAmount,
+      excludedPostIdList: _excludedPostIdList,
+    );
+
+    // Sort descending by view
+    _postCardsFromMainCategoryId.sort((a, b) => b.view.compareTo(a.view));
+
+    // Concatenate two list
+    final _fullList = [
+      ..._flattenPostCardList,
+      ..._postCardsFromMainCategoryId
+    ];
+
+    return _fullList;
+  }
+
+  // TODO: <Phuc> Get postCards by searchTerm with Algolia
+  // Method to retrieve a List of postCard that current user may also like
+  // by postId at postDetails screen
+  Future<List<PostCard>> getPostDetailsPostCardsCurrentUserMayAlsoLike() async {
+    // Amount of postCards to take
+    const _numberOfPostCardToTake = AppFirestoreConstant
+        .kPostDetailsScreenPostCardsCurrentYouMayAlsoLikeEachPullAmount;
+
+    // Take top most view post cards
+    final _result =
+        await _getPostCardsWithLimit(limit: _numberOfPostCardToTake);
+
+    return _result;
+  }
+
+  // Method to increase view of category in all path by 1 (default)
+  Future<void> increaseCategoryView({
+    required String categoryId,
+    int amount = 1,
+  }) async {
+    // Create a placeholder for update object
+    final _updateObj = <String, Map<String, FieldValue>>{};
+
+    // Get view's property name
+    const _viewField = ModelProperties.categoryViewProperty;
+
+    // Update value
+    final _newData = {
+      _viewField: FieldValue.increment(amount),
+    };
+
+    // Get category events
+    final _categoryEvents = await _getCategoryEvents(categoryId: categoryId);
+
+    final _events = _categoryEvents.events;
+
+    // Create entries
+    for (final event in _events) {
+      final _entry = '$event/$categoryId';
+      _updateObj[_entry] = _newData;
+    }
+    // Get a new write batch
+    final _batch = _fireStoreInstance.batch();
+
+    for (var i = 0; i < _updateObj.length; i++) {
+      // Get path
+      final _path = _updateObj.keys.elementAt(i);
+
+      // Get reference of path
+      final _ref = _fireStoreInstance.doc(_path);
+
+      // Get snapshot
+      final _snapshot = await _ref.get();
+
+      // Check if doc is exists
+      if (!_snapshot.exists) {
+        ErrorHelper.throwArgumentError(
+          message: FirestoreErrors.errorDocumentNotExists,
+        );
+      }
+
+      // Get data for update
+      final _data = _updateObj.values.elementAt(i);
+
+      // Update it
+      _batch.update(_ref, _data);
+    }
+
+    return _batch.commit();
+  }
+
+  // Method to update current user category's history
+  Future<void> updateCurrentUserCategoryHistory({
+    required String categoryId,
+  }) async {
+    // Get current user
+    final _currentUser = await _getCurrentUser();
+
+    // Get current user's category history
+    final _currentUserCategoryHistory = _currentUser.categoryHistory;
+
+    const _categoryHistoryField = ModelProperties.userCategoryHistoryProperty;
+
+    // Check if null or empty
+    if (_currentUserCategoryHistory != null &&
+        _currentUserCategoryHistory.isNotEmpty) {
+      for (final categoryHistory in _currentUserCategoryHistory) {
+        if (categoryHistory.categoryId == categoryId) {
+          // Update times by one
+          ++categoryHistory.times;
+
+          // Copy entire modified list
+          final _dataList = _currentUserCategoryHistory
+              .map((categoryHistory) => categoryHistory.toJson())
+              .toList();
+
+          // Create update object
+          final _newData = {
+            _categoryHistoryField: _dataList,
+          };
+
+          return _updateCurrentUser(
+            newData: _newData,
+          );
+        }
+      }
+    }
+
+    // Create new category history model
+    final _data = UserCategoryHistory(
+      categoryId: categoryId,
+    );
+
+    // Cast to list to paste in arrayUnion
+    final _dataList = [_data.toJson()];
+
+    // Atomically add new categoryHistory to the "categoryHistory" array field.
+    final _newData = {
+      _categoryHistoryField: FieldValue.arrayUnion(_dataList),
+    };
+
+    return _updateCurrentUser(
+      newData: _newData,
     );
   }
 
-  // Method to retrieve all Category Cards
+  // Method to update current user category's history
+  Future<void> updateCurrentUserKeywordHistory({
+    required String postId,
+  }) async {
+    final _currentUser = await _getCurrentUser();
+
+    // Get user's keyword history
+    final _currentUserKeywordHistory = _currentUser.keywordHistory;
+
+    const _keywordHistoryField = ModelProperties.userKeywordHistoryProperty;
+
+    // Get junction list
+    final _junctionList =
+        await _getJunctionKeywordPostListByPostId(postId: postId);
+
+    if (_junctionList.isEmpty) {
+      throw Exception('Post has no keyword!');
+    }
+
+    // Get keywordId list
+    final _keywordIdList =
+        _junctionList.map((junction) => junction.keywordId).toList();
+
+    // Check if null or empty
+    if (_currentUserKeywordHistory != null &&
+        _currentUserKeywordHistory.isNotEmpty) {
+      // Copy _currentUserKeywordHistory list for comparison later
+      final _cloneCurrentUserKeywordHistory = _currentUserKeywordHistory
+          .map((item) => UserKeywordHistory.clone(item))
+          .toList();
+
+      // For each keyword history of current user
+      for (final keywordHistory in _currentUserKeywordHistory) {
+        // For each keywordId of given post
+        for (final keywordId in _keywordIdList) {
+          // If keywordId has existed in _currentUserKeywordHistory list
+          if (keywordHistory.keywordId == keywordId) {
+            // Update times by one
+            ++keywordHistory.times;
+            break;
+          }
+        }
+      }
+
+      // Check if any item of _currentUserKeywordHistory list has changed
+      final _isNotChanged = const IterableEquality<UserKeywordHistory>()
+          .equals(_currentUserKeywordHistory, _cloneCurrentUserKeywordHistory);
+
+      // If some item has changed
+      if (_isNotChanged == false) {
+        // Then copy entire modified list
+        final _dataList = _currentUserKeywordHistory
+            .map((keywordHistory) => keywordHistory.toJson())
+            .toList();
+
+        final _newData = {
+          _keywordHistoryField: _dataList,
+        };
+
+        return _updateCurrentUser(
+          newData: _newData,
+        );
+      }
+    }
+
+    // Create new keyword history models
+    final _dataList = _keywordIdList
+        .map((keywordId) => UserKeywordHistory(keywordId: keywordId).toJson())
+        .toList();
+
+    // Atomically add new categoryHistory to the "categoryHistory" array field.
+    final _newData = {
+      _keywordHistoryField: FieldValue.arrayUnion(_dataList),
+    };
+
+    return _updateCurrentUser(
+      newData: _newData,
+    );
+  }
+
+  // Method to get post info by postId
+  Future<Post> _getPost({
+    required String postId,
+  }) async {
+    final _result = await _fireStoreService.documentFuture(
+      path: FirestorePath.post(postId: postId),
+      builder: (data) => Post.fromDocumentSnapshot(data),
+    );
+
+    return _result;
+  }
+
+  // Method to retrieve uid of post Owner by postId
+  Future<String> getPostOwnerId({
+    required String postId,
+  }) async {
+    final _post = await _getPost(postId: postId);
+
+    return _post.owner;
+  }
+
+  // Method to set post details by postId
+  Future<void> setPostDetails({
+    required String postId,
+  }) async {
+    // Get post info
+    final _postInfo = await _getPost(postId: postId);
+
+    // Get owner info
+    final _ownerInfo = await _getCurrentUser();
+
+    // Set post details item address
+    final _postDetailsItemAddress = PostDetailsItemAddress(
+      address: _postInfo.itemInfo.addressInfo.address,
+      district: _postInfo.itemInfo.addressInfo.district,
+      city: _postInfo.itemInfo.addressInfo.city,
+    );
+
+    // Set post details item info
+    final _postDetailsItemInfo = PostDetailsItem(
+      images: _postInfo.imagesUrl,
+      description: _postInfo.itemInfo.description,
+      price: _postInfo.price.toDouble(),
+      tradeForList: _postInfo.tradeForList,
+      condition: _postInfo.itemInfo.condition,
+      addressInfo: _postDetailsItemAddress,
+    );
+
+    // Set post details owner info
+    final _postDetailsOwner = PostDetailsOwner(
+      uid: _ownerInfo.uid!,
+      name: _ownerInfo.name ?? 'Unknown',
+      lastSeen: _ownerInfo.lastSeen ?? DateTime.now().millisecondsSinceEpoch,
+      avatarURL: _ownerInfo.avatarUrl ?? AppAssets.userImageStr,
+      legitimacy: _ownerInfo.legit,
+    );
+
+    // Set post details info
+    final _postDetailsToSet = PostDetails(
+      title: _postInfo.name,
+      itemInfo: _postDetailsItemInfo,
+      ownerInfo: _postDetailsOwner,
+    );
+
+    // Set data to firestore
+    return _fireStoreService.setData(
+      path: FirestorePath.postDetails(postId: postId),
+      data: _postDetailsToSet.toJson(),
+    );
+  }
+
+  // Method to retrieve post details by postId
+  Future<PostDetails> getPostDetails({
+    required String postId,
+  }) async {
+    final _result = await _fireStoreService.documentFuture(
+      path: FirestorePath.postDetails(postId: postId),
+      builder: (data) => PostDetails.fromDocumentSnapshot(data),
+    );
+
+    return _result;
+  }
+
+  // Method to check if a post is one of current user's favorites
+  Future<bool> isFavoritePostOfCurrentUser({
+    required String postId,
+  }) async {
+    final _result = await _fireStoreService.checkIfDocExists(
+      path: FirestorePath.junctionUserFavoritePost(
+        uid: uid,
+        postId: postId,
+      ),
+    );
+
+    return _result;
+  }
+
+  // Method to check if current user is a follower of an user
+  Future<bool> isCurrentUserAFollowerOfUser({
+    required String userId,
+  }) async {
+    final _result = await _fireStoreService.checkIfDocExists(
+      path: FirestorePath.junctionUserFollower(
+        uid: userId,
+        followerId: uid,
+      ),
+    );
+
+    return _result;
+  }
+
+  // Method to retrieve a List of Category Card (Stream)
   Stream<List<CategoryCard>> categoryCardsStream() {
     return _fireStoreService.collectionStream(
       path: FirestorePath.categoryCards(),
@@ -95,84 +1055,60 @@ class FirestoreDatabase {
     );
   }
 
-  // Method to retrieve all Popular Post Cards
+  // Method to retrieve a List of postDetailsQuestion (Stream)
+  Stream<List<PostDetailsQuestion>> postDetailsQuestionStream({
+    required String postId,
+  }) {
+    return _fireStoreService.collectionStream(
+      path: FirestorePath.postDetailsQuestions(
+        postId: postId,
+      ),
+      builder: (data) => PostDetailsQuestion.fromDocumentSnapshot(data),
+    );
+  }
+
+  // Method to retrieve a List of postDetailsQuestionAnswer (Stream)
+  Stream<List<PostDetailsQuestionAnswer>> postDetailsQuestionAnswerStream({
+    required String postId,
+    required String questionId,
+  }) {
+    return _fireStoreService.collectionStream(
+      path: FirestorePath.postDetailsQuestionAnswers(
+        postId: postId,
+        questionId: questionId,
+      ),
+      builder: (data) => PostDetailsQuestionAnswer.fromDocumentSnapshot(data),
+    );
+  }
+
+  // Method to retrieve a List of Popular Post Card (Stream)
   Stream<List<PostCard>> popularPostCardsStream() {
+    const _viewField = ModelProperties.postCardViewProperty;
+
+    const _defaultFilerField = _viewField;
+
+    const _defaultOrderField = _viewField;
+
+    const _numberOfDocumentToTake =
+        AppFirestoreConstant.kHomeScreenPopularPostCardAmount;
+
+    const _isDescendingOrder = true;
+
     return _fireStoreService.collectionStream(
       path: FirestorePath.postCards(),
       queryBuilder: (query) {
         return query
             .where(
-              'view',
+              _defaultFilerField,
               isGreaterThan: 0,
             )
             .orderBy(
-              'view',
-              descending: true,
+              _defaultOrderField,
+              descending: _isDescendingOrder,
             )
-            .limit(30);
+            .limit(_numberOfDocumentToTake);
       },
       builder: (data) => PostCard.fromDocumentSnapshot(data),
     );
   }
-
-  // Method to retrieve all Post Cards
-  Stream<List<PostCard>> postCardsStream() {
-    return _fireStoreService.collectionStream(
-      path: FirestorePath.postCards(),
-      builder: (data) => PostCard.fromDocumentSnapshot(data),
-    );
-  }
-
-  // Method to retrieve a Post Cards based on postId
-  Stream<List<PostCard>> postCardStream({
-    required String postId,
-  }) {
-    return _fireStoreService.collectionStream(
-      path: FirestorePath.postCard(postId: postId),
-      builder: (data) => PostCard.fromDocumentSnapshot(data),
-    );
-  }
-
-  //Method to retieve a Post Cards based on categoryId
-
-  // //Method to create/update todoModel
-  // Future<void> setTodo(TodoModel todo) async {
-  //   await _fireStoreService.setData(
-  //     path: FirestorePath.todo(uid, todo.id),
-  //     data: todo.toMap(),
-  //   );
-  // }
-
-  // //Method to delete todoModel entry
-  // Future<void> deleteTodo(TodoModel todo) async {
-  //   await _fireStoreService.deleteData(path: FirestorePath.todo(uid, todo.id));
-  // }
-
-  // //Method to mark all todoModel to be complete
-  // Future<void> setAllTodoComplete() async {
-  //   final batchUpdate = Firestore.instance.batch();
-
-  //   final querySnapshot = await Firestore.instance
-  //       .collection(FirestorePath.todo(uid))
-  //       .getDocuments();
-
-  //   for (DocumentSnapshot ds in querySnapshot.documents) {
-  //     batchUpdate.updateData(ds.reference, {'complete': true});
-  //   }
-  //   await batchUpdate.commit();
-  // }
-
-  // Future<void> deleteAllTodoWithComplete() async {
-  //   final batchDelete = Firestore.instance.batch();
-
-  //   final querySnapshot = await Firestore.instance
-  //       .collection(FirestorePath.todo(uid))
-  //       .where('complete', isEqualTo: true)
-  //       .getDocuments();
-
-  //   for (DocumentSnapshot ds in querySnapshot.documents) {
-  //     batchDelete.delete(ds.reference);
-  //   }
-  //   await batchDelete.commit();
-  // }
 }

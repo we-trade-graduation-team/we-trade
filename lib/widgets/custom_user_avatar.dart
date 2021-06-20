@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import '../ui/message_features/const_string/const_str.dart';
 
 class CustomUserAvatar extends StatelessWidget {
   const CustomUserAvatar({
@@ -19,8 +20,7 @@ class CustomUserAvatar extends StatelessWidget {
     }
     return CircleAvatar(
       radius: radius,
-      backgroundImage:
-          const AssetImage('assets/images/message/user_avatar.png'),
+      backgroundImage: const NetworkImage(userImageStr),
     );
   }
 
