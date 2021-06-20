@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_card_swipper/flutter_card_swiper.dart';
 import 'package:provider/provider.dart';
+import '../../../../constants/app_dimens.dart';
 import '../../../../models/cloud_firestore/category_card/category_card.dart';
 
 import 'home_screen_category_card.dart';
@@ -16,7 +17,7 @@ class HomeScreenCategoryCards extends StatelessWidget {
 
     final _categoryCardsLength = _categoryCards.length;
 
-    const _numberOfCardsEachPage = 10;
+    const _numberOfCardsEachPage = AppDimens.kHomeScreenCategoryCardsEachPageAmount;
 
     final _itemCount = (_categoryCardsLength / _numberOfCardsEachPage).ceil();
 

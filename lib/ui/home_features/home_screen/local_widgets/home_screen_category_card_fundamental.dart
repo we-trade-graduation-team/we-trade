@@ -39,39 +39,23 @@ class _HomeScreenCategoryCardFundamentalState
   }
 
   Future<void> _onTap() async {
+    final _firestoreDatabase = context.read<FirestoreDatabase>();
+
+    final _categoryId = widget.categoryId;
+
     await Future.wait([
       // Increase view by 1
-      _viewIncrement(),
+      _firestoreDatabase.increaseCategoryView(categoryId: _categoryId),
       // Update current user's category history
-      _updateCurrentUserCategoryHistory(),
+      _firestoreDatabase.updateCurrentUserCategoryHistory(categoryId: _categoryId),
       // // Navigate to category kind screen
       // _navigateToCategoryKindScreen(),
     ]);
   }
 
-  Future<void> _viewIncrement() async {
-    final _firestoreDatabase = context.read<FirestoreDatabase>();
-
-    final _categoryId = widget.categoryId;
-
-    await _firestoreDatabase.increaseCategoryView(
-      categoryId: _categoryId,
-    );
-  }
-
-  Future<void> _updateCurrentUserCategoryHistory() async {
-    final _firestoreDatabase = context.read<FirestoreDatabase>();
-
-    final _categoryId = widget.categoryId;
-
-    await _firestoreDatabase.updateUserCategoryHistory(
-      categoryId: _categoryId,
-    );
-  }
-
   // TODO: <Vu> Fix this Screen
   // Future<void> _navigateToCategoryKindScreen() async {
-  //   await pushNewScreenWithRouteSettings<void>(
+  //   return pushNewScreenWithRouteSettings<void>(
   //     context,
   //     screen: const CategoryKindScreen(),
   //     settings: const RouteSettings(
