@@ -43,6 +43,7 @@ class _RateForTradingState extends State<RateForTrading> {
   late List<Widget> postTexts = <Widget>[];
   late List<Widget> postImages = <Widget>[];
   late Map<String, dynamic> rating;
+  String money = '0';
   late String post; //ngo nha chang
 
   List<Widget> _buildPostsList(
@@ -130,6 +131,7 @@ class _RateForTradingState extends State<RateForTrading> {
           final posts = amIOwner
               ? trading['offerUserPosts'] as List
               : trading['ownerPosts'] as List;
+          money = trading['money'].toString();
           post = posts[0].toString(); //ngo nha chang
 
           for (var i = 0; i < posts.length; i++) {
@@ -232,10 +234,6 @@ class _RateForTradingState extends State<RateForTrading> {
   @override
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
-    // final products = [
-    //   productsData[0],
-    //   productsData[1],
-    // ];
     const titleWidth = 100.0;
 
     return Scaffold(
@@ -330,12 +328,44 @@ class _RateForTradingState extends State<RateForTrading> {
                                 ),
                               ),
                             ),
-                            const SizedBox(
-                              height: 15,
-                            ),
+                            const SizedBox(height: 15),
                             ..._buildPostsList(postTexts, postImages),
-                            const SizedBox(
-                              height: 10,
+                            const SizedBox(height: 10),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(height: 20),
+                      Container(
+                        alignment: Alignment.topLeft,
+                        decoration: BoxDecoration(
+                          //color: Colors.white,
+                          border: Border(
+                            bottom: BorderSide(
+                              color: Theme.of(context).primaryColor,
+                              width: 0.2,
+                            ),
+                          ),
+                        ),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Container(
+                              width: titleWidth,
+                              child: const Text(
+                                'Số tiền: ',
+                                style: TextStyle(
+                                  fontSize: 17,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ),
+                            const SizedBox(width: 15),
+                            Text(
+                              '$money  VND',
+                              style: TextStyle(
+                                fontSize: 18,
+                                color: Theme.of(context).primaryColor,
+                              ),
                             ),
                           ],
                         ),
@@ -496,5 +526,6 @@ class _RateForTradingState extends State<RateForTrading> {
     properties.add(StringProperty('post', post));
     properties.add(DiagnosticsProperty<FirebaseFirestore>(
         'referenceDatabase', referenceDatabase));
+    properties.add(StringProperty('money', money));
   }
 }

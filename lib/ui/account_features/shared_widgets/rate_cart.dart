@@ -34,7 +34,6 @@ class RateCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final referenceDatabase = FirebaseFirestore.instance;
-    final width = MediaQuery.of(context).size.width;
     final dateFormat = DateFormat.yMMMMd('en_US').add_jm().format(dateTime);
 
     return Container(
@@ -89,15 +88,16 @@ class RateCard extends StatelessWidget {
                 children: [
                   Container(
                     margin: const EdgeInsets.symmetric(vertical: 5),
-                    width: width * 0.7,
-                    child: DefaultTextStyle(
-                      style: TextStyle(
-                        color: Theme.of(context).primaryColor,
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600,
+                    child: Expanded(
+                      child: DefaultTextStyle(
+                        style: TextStyle(
+                          color: Theme.of(context).primaryColor,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                        ),
+                        child: GetUserName(
+                            documentId: otherSideUserID, isStream: false),
                       ),
-                      child: GetUserName(
-                          documentId: otherSideUserID, isStream: false),
                     ),
                   ),
                   RatingBar.builder(
@@ -112,7 +112,6 @@ class RateCard extends StatelessWidget {
                       Icons.star,
                       color: Colors.amber,
                     ),
-                    //onRatingUpdate: print,
                     ignoreGestures: true,
                     onRatingUpdate: (value) {},
                   ),

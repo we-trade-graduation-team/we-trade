@@ -12,14 +12,14 @@ PostDetailsOwner _$PostDetailsOwnerFromJson(Map<String, dynamic> json) {
     'legitimacy',
     'avatarURL',
     'name',
-    'lastActive'
+    'lastSeen'
   ]);
   return PostDetailsOwner(
     uid: json['uid'] as String,
     legitimacy: (json['legitimacy'] as num).toDouble(),
     avatarURL: json['avatarURL'] as String,
     name: json['name'] as String,
-    lastActive: json['lastActive'] as int,
+    lastSeen: json['lastSeen'] as int,
   );
 }
 
@@ -29,5 +29,5 @@ Map<String, dynamic> _$PostDetailsOwnerToJson(PostDetailsOwner instance) =>
       'legitimacy': instance.legitimacy,
       'avatarURL': instance.avatarURL,
       'name': instance.name,
-      'lastActive': instance.lastActive,
+      'lastSeen': instance.lastSeen,
     };

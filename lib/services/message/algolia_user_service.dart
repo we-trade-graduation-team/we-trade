@@ -45,7 +45,7 @@ class UserServiceAlgolia {
       phoneNumberStr: user.phoneNumber ?? '',
       nameStr: user.name ?? '',
       presenceStr: user.presence ?? false,
-      avatarURLStr: user.photoURL ?? userImageStr,
+      avatarURLStr: user.avatarUrl ?? userImageStr,
       lastActiveStr: user.lastSeen ?? 0
     };
   }

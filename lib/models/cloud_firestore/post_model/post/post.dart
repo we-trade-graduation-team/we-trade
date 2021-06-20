@@ -36,7 +36,10 @@ class Post {
   @JsonKey(required: true)
   final String owner;
 
-  final DateTime? createAt;
+  @JsonKey(fromJson: _rawDateTime)
+  final DateTime createAt;
+
+  static DateTime _rawDateTime(Timestamp t) => t.toDate();
 
   @JsonKey(required: true)
   final PostCategory categoryInfo;

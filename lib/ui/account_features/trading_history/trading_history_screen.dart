@@ -58,40 +58,44 @@ class _TradingHistoryScreenState extends State<TradingHistoryScreen> {
           final tradingHistory = data['tradingHistory'] as List;
           return Container(
             color: const Color.fromARGB(2, 3, 4, 2),
-            child: ListView.builder(
-              itemBuilder: (context, index) {
-                return FutureBuilder<DocumentSnapshot>(
-                  future: referenceDatabase
-                      .collection('tradings')
-                      .doc(tradingHistory[index].toString())
-                      .get(),
-                  builder: (context, snapshot) {
-                    if (snapshot.hasError) {
-                      return const WentWrong();
-                    }
+            child: tradingHistory.isNotEmpty
+                ? ListView.builder(
+                    itemBuilder: (context, index) {
+                      return FutureBuilder<DocumentSnapshot>(
+                        future: referenceDatabase
+                            .collection('tradings')
+                            .doc(tradingHistory[index].toString())
+                            .get(),
+                        builder: (context, snapshot) {
+                          if (snapshot.hasError) {
+                            return const WentWrong();
+                          }
 
-                    if (snapshot.hasData && !snapshot.data!.exists) {
-                      return const DataDoesNotExist();
-                    }
-                    if (snapshot.connectionState == ConnectionState.done) {
-                      return Padding(
-                        padding: const EdgeInsets.all(8),
-                        child: HistoryProductCard(
-                          key: Key(snapshot.data!.id.toString()),
-                          tradingID: snapshot.data!.id,
-                          offerSideProducts: offerSideProducts,
-                          forProduct: forProduct,
-                          offerSideMoney: money,
-                        ),
+                          if (snapshot.hasData && !snapshot.data!.exists) {
+                            return const DataDoesNotExist();
+                          }
+                          if (snapshot.connectionState ==
+                              ConnectionState.done) {
+                            return Padding(
+                              padding: const EdgeInsets.all(8),
+                              child: HistoryProductCard(
+                                key: Key(snapshot.data!.id.toString()),
+                                tradingID: snapshot.data!.id,
+                                offerSideProducts: offerSideProducts,
+                                forProduct: forProduct,
+                                offerSideMoney: money,
+                              ),
+                            );
+                          }
+                          return const CustomLinearProgressIndicator(
+                              verticalPadding: 65, horizontalPadding: 30);
+                        },
                       );
-                    }
-                    return const CustomLinearProgressIndicator(
-                        verticalPadding: 65, horizontalPadding: 30);
-                  },
-                );
-              },
-              itemCount: tradingHistory.length,
-            ),
+                    },
+                    itemCount: tradingHistory.length,
+                  )
+                : const CenterNotificationWhenHaveNoRecord(
+                    text: 'Bạn chưa thực hiện giao dịch nào'),
           );
         },
       ),

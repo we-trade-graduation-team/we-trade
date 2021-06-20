@@ -1,3 +1,4 @@
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
@@ -6,6 +7,7 @@ import 'package:intl/intl.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 
 import '../../../utils/routes/routes.dart';
+import '../../posting_features/update_items/update_post_step_one.dart';
 import '../post_management/hide_post_screen.dart';
 import '../utils.dart';
 import 'custom_overlay_icon_button.dart';
@@ -119,6 +121,20 @@ class TradingProductCard extends StatelessWidget {
               'id': id,
             }),
             screen: const HidePostScreen(),
+            pageTransitionAnimation: PageTransitionAnimation.cupertino,
+          );
+        },
+      ),
+      OverlayItem(
+        text: 'Đổi thông tin bài đăng',
+        iconData: Icons.change_circle,
+        handleFunction: () {
+          pushNewScreenWithRouteSettings<void>(
+            context,
+            settings: const RouteSettings(
+                name: Routes.updateItemStepOneScreenRouteName),
+            screen: UpdatePostOne(postId: id),
+            // withNavBar: true,
             pageTransitionAnimation: PageTransitionAnimation.cupertino,
           );
         },

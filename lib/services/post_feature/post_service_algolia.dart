@@ -8,9 +8,9 @@ class PostServiceAlgolia {
   Future<void> addPost(
       {required String objectID,
       required String name,
-      required String mainCategoy,
-      required String subCategory,
-      required List<String> wishMainCategory,
+      required String mainCategoyId,
+      required String subCategoryId,
+      required List<String> tradeForList,
       required String imageURL, // lẩy ảnh đầu [0] bỏ vô đc r
       required String condition,
       required int price,
@@ -20,9 +20,9 @@ class PostServiceAlgolia {
     final mapData = <String, dynamic>{
       'objectID': objectID,
       'name': name,
-      'mainCategoy': mainCategoy,
-      'subCategory': subCategory,
-      'wishMainCategory': wishMainCategory,
+      'mainCategoyId': mainCategoyId,
+      'subCategoryId': subCategoryId,
+      'tradeForList': tradeForList,
       'imageURL': imageURL,
       'condition': condition,
       'price': price,
@@ -34,9 +34,9 @@ class PostServiceAlgolia {
   Future<void> updatePost(
       {required String objectID,
       required String name,
-      required String mainCategoy,
-      required String subCategory,
-      required List<String> wishMainCategory,
+      required String mainCategoyId,
+      required String subCategoryId,
+      required List<String> tradeForList,
       required String imageURL, // lẩy ảnh đầu [0] bỏ vô đc r
       required String condition,
       required int price,
@@ -46,16 +46,16 @@ class PostServiceAlgolia {
     final mapData = <String, dynamic>{
       'objectID': objectID,
       'name': name,
-      'mainCategoy': mainCategoy,
-      'subCategory': subCategory,
-      'wishMainCategory': wishMainCategory,
+      'mainCategoyId': mainCategoyId,
+      'subCategoryId': subCategoryId,
+      'tradeForList': tradeForList,
       'imageURL': imageURL,
       'condition': condition,
       'price': price,
       'district': district,
     };
     await algolia.instance
-        .index(usersAlgoliaIndex)
+        .index(postsAlgoliaIndex)
         .object(objectID)
         .updateData(mapData);
   }

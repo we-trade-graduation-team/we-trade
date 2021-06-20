@@ -12,7 +12,7 @@ class PostDetailsItemAddress {
     required this.address,
     required this.city,
     required this.district,
-    this.address2,
+    // this.address2,
   });
 
   /// A necessary factory constructor for creating a new Address instance
@@ -28,7 +28,7 @@ class PostDetailsItemAddress {
   @JsonKey(required: true)
   final String address;
 
-  final String? address2;
+  // final String? address2;
 
   @JsonKey(required: true)
   final String district;

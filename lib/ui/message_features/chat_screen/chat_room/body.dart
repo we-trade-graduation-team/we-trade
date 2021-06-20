@@ -134,7 +134,6 @@ class _BodyState extends State<Body> {
   }
 
   Widget buildGridViewSelectedImages() {
-    // hàm này show list ảnh images lên nè, m có thể chỉnh sửa tùy ý
     final height = MediaQuery.of(context).size.height;
     final width = MediaQuery.of(context).size.width;
     return images.isNotEmpty

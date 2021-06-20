@@ -65,7 +65,7 @@ class AuthProvider extends ChangeNotifier {
       email: user.email,
       name: user.displayName,
       isEmailVerified: user.emailVerified,
-      photoURL: user.photoURL,
+      avatarUrl: user.photoURL,
     );
   }
 

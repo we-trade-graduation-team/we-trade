@@ -8,6 +8,7 @@ import '../../../constants/app_colors.dart';
 import '../../../utils/routes/routes.dart';
 import '../../shared_features/other_user_profile/other_user_profile_screen.dart';
 import '../account_screen/local_widgets/getter.dart';
+import '../shared_widgets/geting_data_status.dart';
 import '../utils.dart';
 
 class FollowScreen extends StatefulWidget {
@@ -246,15 +247,8 @@ class _FollowScreenState extends State<FollowScreen> {
                   ),
                   itemCount: usersRender.length,
                 )
-              : const Center(
-                  child: Text(
-                    'Chưa có dữ liệu.',
-                    style: TextStyle(
-                      fontSize: 35,
-                      color: Colors.black45,
-                    ),
-                  ),
-                ))
+              : const CenterNotificationWhenHaveNoRecord(
+                  text: 'Bạn chưa có theo dõi'))
           : const Center(
               child: CircularProgressIndicator(),
             ),

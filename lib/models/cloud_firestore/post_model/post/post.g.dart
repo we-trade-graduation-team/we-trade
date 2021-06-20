@@ -29,10 +29,7 @@ Post _$PostFromJson(Map<String, dynamic> json) {
         .map((e) => e as String)
         .toList(),
     price: json['price'] as int,
-    createAt: json['createAt'] == null
-        ? null
-        : (json['createAt'] as Timestamp).toDate(),
-    //: DateTime.parse(json['createAt'] as Timestamp),
+    createAt: Post._rawDateTime(json['createAt'] as Timestamp),
     isHidden: json['isHidden'] as bool? ?? false,
   );
 }
@@ -40,7 +37,7 @@ Post _$PostFromJson(Map<String, dynamic> json) {
 Map<String, dynamic> _$PostToJson(Post instance) => <String, dynamic>{
       'name': instance.name,
       'owner': instance.owner,
-      'createAt': instance.createAt?.toIso8601String(),
+      'createAt': instance.createAt.toIso8601String(),
       'categoryInfo': instance.categoryInfo.toJson(),
       'itemInfo': instance.itemInfo.toJson(),
       'imagesUrl': instance.imagesUrl,

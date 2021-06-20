@@ -51,6 +51,7 @@ dependencies:
   persistent_bottom_nav_bar: ^4.0.2
   pin_code_fields: ^7.0.0
   provider: ^5.0.0
+  search_choices: ^2.0.3
   shared_preferences: ^2.0.5
   toggle_switch: ^1.1.0
   image_picker: ^0.8.0+3
