@@ -30,4 +30,5 @@ class ModelProperties {
 
   // Post
   static const postOwnerIdProperty = 'owner';
+  static const postIsHiddenProperty = 'isHidden';
 }

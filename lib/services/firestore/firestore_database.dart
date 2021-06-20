@@ -506,12 +506,19 @@ class FirestoreDatabase {
     final _postsFromUser = await _fireStoreService.collectionFuture(
       path: FirestorePath.posts(),
       queryBuilder: (query) {
-        const _ownerId = ModelProperties.postOwnerIdProperty;
+        const _ownerIdField = ModelProperties.postOwnerIdProperty;
 
-        return query.where(
-          _ownerId,
-          isEqualTo: userId ?? uid,
-        );
+        const _isHiddenField = ModelProperties.postIsHiddenProperty;
+
+        return query
+            .where(
+              _ownerIdField,
+              isEqualTo: userId ?? uid,
+            )
+            .where(
+              _isHiddenField,
+              isEqualTo: false,
+            );
       },
       builder: (data) => Post.fromDocumentSnapshot(data),
     );

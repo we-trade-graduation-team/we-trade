@@ -120,7 +120,6 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
 
         await UserServiceAlgolia().updateUser(data);
         //TODO: Nếu ai cần cập nhật  User(name, email, ...) của provider thì cập nhật ở đây
-        //
       }).timeout(Duration(seconds: timeOut));
     } on FirebaseException catch (error) {
       // ignore: avoid_print
