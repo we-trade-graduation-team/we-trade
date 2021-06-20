@@ -317,7 +317,7 @@ class MessageServiceFireStore {
         final chat = createChatFromData(snapShot.data(), snapShot.id);
         for (var i = 0; i < chat.usersId.length; i++) {
           if (chat.usersId[i] == user.uid) {
-            chat.images[i] = user.photoURL!;
+            chat.images[i] = user.avatarUrl!;
             chat.names[i] = user.name!;
             chat.emails[i] = user.email!;
             break;
