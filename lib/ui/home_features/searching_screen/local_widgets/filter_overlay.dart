@@ -16,18 +16,14 @@ class FilterOverlay extends StatefulWidget {
 }
 
 class _FilterOverlayState extends State<FilterOverlay> {
-
   PostServiceFireStore dataServiceFireStore = PostServiceFireStore();
-
   List<Cities> citiesList = [];
   List<Cities> districtList = [];
   Cities citySelected = Cities(id: 'init', name: 'init');
   Cities districtSelected = Cities(id: 'init', name: 'init');
   String previousID = '';
-
   late TypeofGoods mainCategory = TypeofGoods(id: '', name: '');
   List<TypeofGoods> _type = [];
-
   bool isLoading = true;
 
   Future<List<Cities>> getCities() {
@@ -152,10 +148,8 @@ class _FilterOverlayState extends State<FilterOverlay> {
     }).toList()
         : [],
   );
-
   @override
   Widget build(BuildContext context) {
-
     if (citySelected.id == 'init' || citySelected.id == previousID) {
       //no run getSub when setState
     } else {

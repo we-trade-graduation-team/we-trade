@@ -41,6 +41,7 @@ class CategoryKindScreen extends StatelessWidget {
                   width: size.width * 0.05,
                 ),
                 Container(
+                  width: size.width * 0.75,
                   decoration: BoxDecoration(
                     border: Border.all(
                       color: Colors.grey,
@@ -114,35 +115,6 @@ class CategoryKindScreen extends StatelessWidget {
                   Padding(
                     padding:
                         EdgeInsets.symmetric(horizontal: size.width * 0.05),
-                    // child: SectionTitle(
-                    //   title: productKind.name,
-                    //   press: () {},
-                    // ),
-                  ),
-                  SizedBox(height: size.width * 0.05),
-
-                  /// TODO: <Vu> Replace GridView Widget with Wrap Widget to show list of post card
-                  /// (see example at home_screen/local_widgets/home_screen_recommended_section.dart)
-                  Padding(
-                    padding: EdgeInsets.only(right: size.width * 0.05),
-                    child: GridView.count(
-                      childAspectRatio: size.height / 1090,
-                      physics: const ScrollPhysics(),
-                      shrinkWrap: true,
-                      primary: true,
-                      crossAxisCount: 2,
-                      //padding: EdgeInsets.symmetric(horizontal: size.width * 0.05),
-                      crossAxisSpacing: size.width * 0.05,
-                      mainAxisSpacing: size.height * 0.01,
-                      // TODO: <Vu> Replace Product with PostCard
-                      // children: [
-                      //   ...List.generate(
-                      //     recommendedProducts.length,
-                      //     (index) => ItemPostCard(
-                      //         postCard: recommendedProducts[index]),
-                      //   ),
-                      // ],
-                    ),
                   ),
                 ],
               ),

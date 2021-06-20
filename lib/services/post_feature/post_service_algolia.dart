@@ -59,4 +59,22 @@ class PostServiceAlgolia {
         .object(objectID)
         .updateData(mapData);
   }
+
+  Future<List<AlgoliaObjectSnapshot>> searchPostByAlgolia(String query) {
+    return algolia.instance
+        .index(postsAlgoliaIndex)
+        .query(query)
+        .getObjects()
+        .then((result) => result.hits);
+  }
+
+  Future<List<String>> searchPostCard(String query) async {
+    final result = await searchPostByAlgolia(query);
+    final postsIds = <String>[];
+    for (final hit in result) {
+      postsIds.add(hit.data['objectID'].toString());
+    }
+    return postsIds;
+  }
+
 }
