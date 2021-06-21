@@ -28,7 +28,7 @@ class PostServiceAlgolia {
       'condition': condition,
       'price': price,
       'district': district,
-      'city': city,
+      'city': city
     };
     await algolia.instance.index(postsAlgoliaIndex).addObject(mapData);
   }

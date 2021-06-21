@@ -156,7 +156,7 @@ class _UpdatePostOneState extends State<UpdatePostOne> {
   //   );
   // }
 
-  Future<Post> _getPostDetails(String postId) async {
+  Future<Post> _getPostInfo(String postId) async {
     try {
       final _firebaseDatabase = context.read<FirestoreDatabase>();
       final _postInfo = await _firebaseDatabase.getPost(postId: postId);
@@ -170,7 +170,7 @@ class _UpdatePostOneState extends State<UpdatePostOne> {
   @override
   void initState() {
     super.initState();
-    _getPostDetails(widget.postId).then((value) {
+    _getPostInfo(widget.postId).then((value) {
       _oldPostInfo = value;
       itemNameController.text = value.name;
       itemDescriptionController.text = value.itemInfo.description;
