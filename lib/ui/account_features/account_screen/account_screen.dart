@@ -170,6 +170,7 @@ class _AccountScreenState extends State<AccountScreen> {
         child: Column(
           children: [
             Container(
+              padding: const EdgeInsets.only(top: 20),
               color: Theme.of(context).primaryColor,
               height: bannerHeight,
               child: Column(

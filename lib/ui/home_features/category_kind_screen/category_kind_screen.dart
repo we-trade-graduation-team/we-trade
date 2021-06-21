@@ -11,11 +11,11 @@ import '../../../utils/routes/routes.dart';
 import '../home_screen/local_widgets/home_screen_icon_button_with_counter.dart';
 import '../home_screen/local_widgets/home_screen_search_bar.dart';
 import '../notification_screen/notification_screen.dart';
-import '../searching_screen/local_widgets/filter_overlay.dart';
+// import '../searching_screen/local_widgets/filter_overlay.dart';
 import 'local_widgets/category_post_card.dart';
 
 // Flash Deal is deleted
-const productKind = ProductKind(name: 'Laptop');
+// const productKind = ProductKind(name: 'Laptop');
 
 class CategoryKindScreen extends StatelessWidget {
   const CategoryKindScreen({

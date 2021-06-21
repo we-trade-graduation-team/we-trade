@@ -16,7 +16,7 @@ class PostDetailsTradeForCategoryPreview extends StatelessWidget {
     return ClipRRect(
       borderRadius: BorderRadius.circular(5),
       child: Container(
-        height: _size.height * 0.043,
+        // height: _size.height * 0.043,
         color: Theme.of(context).primaryColorLight.withOpacity(0.5),
         padding: EdgeInsets.symmetric(
           horizontal: 20,

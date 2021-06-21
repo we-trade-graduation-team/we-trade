@@ -18,25 +18,29 @@ class HomeScreenCategoryCards extends StatelessWidget {
 
     final _categoryCardsLength = _categoryCards.length;
 
-    const _numberOfCardsEachPage = AppDimens.kHomeScreenCategoryCardsEachPageAmount;
+    const _numberOfCardsEachPage =
+        AppDimens.kHomeScreenCategoryCardsEachPageAmount;
 
     final _itemCount = (_categoryCardsLength / _numberOfCardsEachPage).ceil();
 
-    final categoryCards = List<List<CategoryCard>>.from(partition(_categoryCards,_numberOfCardsEachPage));
+    final categoryCards = List<List<CategoryCard>>.from(
+        partition(_categoryCards, _numberOfCardsEachPage));
 
     return Swiper(
       itemBuilder: (_, index) {
         return Padding(
           padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
-          child: Wrap(
-            spacing: 5,
-            runSpacing: 15,
-            children: categoryCards[index]
-                .map(
-                  (categoryCard) =>
-                      HomeScreenCategoryCard(categoryCard: categoryCard),
-                )
-                .toList(),
+          child: Center(
+            child: Wrap(
+              spacing: 5,
+              runSpacing: 15,
+              children: categoryCards[index]
+                  .map(
+                    (categoryCard) =>
+                        HomeScreenCategoryCard(categoryCard: categoryCard),
+                  )
+                  .toList(),
+            ),
           ),
         );
       },
