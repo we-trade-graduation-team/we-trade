@@ -59,7 +59,7 @@ class FirestoreDatabase {
   }
 
   // Method to update current user info
-  Future<void> _updateCurrentUser({
+  Future<void> updateCurrentUser({
     // required String uid,
     required Map<String, dynamic> newData,
   }) async {
@@ -769,7 +769,6 @@ class FirestoreDatabase {
     return _fullList;
   }
 
-  // TODO: <Phuc> Get postCards by searchTerm with Algolia
   // Method to retrieve a List of postCard that current user may also like
   // by postId at postDetails screen
   Future<List<PostCard>> getPostDetailsPostCardsCurrentUserMayAlsoLike() async {
@@ -870,7 +869,7 @@ class FirestoreDatabase {
             _categoryHistoryField: _dataList,
           };
 
-          return _updateCurrentUser(
+          return updateCurrentUser(
             newData: _newData,
           );
         }
@@ -890,7 +889,7 @@ class FirestoreDatabase {
       _categoryHistoryField: FieldValue.arrayUnion(_dataList),
     };
 
-    return _updateCurrentUser(
+    return updateCurrentUser(
       newData: _newData,
     );
   }
@@ -956,7 +955,7 @@ class FirestoreDatabase {
           _keywordHistoryField: _dataList,
         };
 
-        return _updateCurrentUser(
+        return updateCurrentUser(
           newData: _newData,
         );
       }
@@ -972,7 +971,7 @@ class FirestoreDatabase {
       _keywordHistoryField: FieldValue.arrayUnion(_dataList),
     };
 
-    return _updateCurrentUser(
+    return updateCurrentUser(
       newData: _newData,
     );
   }

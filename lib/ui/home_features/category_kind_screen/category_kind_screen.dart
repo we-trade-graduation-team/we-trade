@@ -4,16 +4,17 @@ import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 import 'package:provider/provider.dart';
 
 import '../../../models/cloud_firestore/post_card_model/post_card/post_card.dart';
+import '../../../providers/loading_overlay_provider.dart';
 import '../../../services/firestore/firestore_database.dart';
 import '../../../utils/routes/routes.dart';
 import '../home_screen/local_widgets/home_screen_icon_button_with_counter.dart';
 import '../home_screen/local_widgets/home_screen_search_bar.dart';
 import '../notification_screen/notification_screen.dart';
-import '../searching_screen/local_widgets/filter_overlay.dart';
+// import '../searching_screen/local_widgets/filter_overlay.dart';
 import 'local_widgets/category_post_card.dart';
 
 // Flash Deal is deleted
-const productKind = ProductKind(name: 'Laptop');
+// const productKind = ProductKind(name: 'Laptop');
 
 class CategoryKindScreen extends StatelessWidget {
   const CategoryKindScreen(
@@ -86,41 +87,53 @@ class CategoryKindScreen extends StatelessWidget {
           ],
         ),
       ),
-      body: LayoutBuilder(builder: (context, viewportConstraints) {
-        return SingleChildScrollView(
-          child: ConstrainedBox(
-            constraints: BoxConstraints(
-              minHeight: viewportConstraints.maxHeight,
-            ),
-            child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: size.width * 0.05),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  Padding(
-                    padding:
-                        EdgeInsets.symmetric(horizontal: size.width * 0.05),
-                    child: Text(mainCategoryName),
+      body: ChangeNotifierProvider<LoadingOverlayProvider>(
+        create: (_) => LoadingOverlayProvider(),
+        child: Consumer<LoadingOverlayProvider>(
+          builder: (_, loadingOverlay, __) {
+            return LayoutBuilder(
+              builder: (context, viewportConstraints) {
+                return SingleChildScrollView(
+                  child: ConstrainedBox(
+                    constraints: BoxConstraints(
+                      minHeight: viewportConstraints.maxHeight,
+                    ),
+                    child: Padding(
+                      padding:
+                          EdgeInsets.symmetric(horizontal: size.width * 0.05),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          Padding(
+                            padding: EdgeInsets.symmetric(
+                                horizontal: size.width * 0.05),
+                            child: Text(mainCategoryName),
+                          ),
+                          SizedBox(height: size.width * 0.05),
+                          FutureProvider<List<PostCard>?>.value(
+                            initialData: null,
+                            value:
+                                _firestoreDatabase.getPostCardsByMainCategoryId(
+                              mainCategoryId: mainCategory,
+                            ),
+                            catchError: (_, __) => const [],
+                            child: const CategoryPostCard(),
+                          ),
+                          Padding(
+                            padding: EdgeInsets.symmetric(
+                                horizontal: size.width * 0.05),
+                          ),
+                        ],
+                      ),
+                    ),
                   ),
-                  SizedBox(height: size.width * 0.05),
-                  FutureProvider<List<PostCard>>.value(
-                    initialData: const [],
-                    value: _firestoreDatabase.getPostCardsByMainCategoryId(
-                        mainCategoryId: mainCategory),
-                    catchError: (_, __) => const [],
-                    child: const CategoryPostCard(),
-                  ),
-                  Padding(
-                    padding:
-                        EdgeInsets.symmetric(horizontal: size.width * 0.05),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        );
-      }),
+                );
+              },
+            );
+          },
+        ),
+      ),
     );
   }
 
