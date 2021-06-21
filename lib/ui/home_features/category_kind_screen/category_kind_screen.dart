@@ -16,7 +16,8 @@ import 'local_widgets/category_post_card.dart';
 const productKind = ProductKind(name: 'Laptop');
 
 class CategoryKindScreen extends StatelessWidget {
-  const CategoryKindScreen({Key? key, required this.mainCategory,required this.mainCategoryName})
+  const CategoryKindScreen(
+      {Key? key, required this.mainCategory, required this.mainCategoryName})
       : super(key: key);
 
   final String mainCategory;
@@ -110,7 +111,6 @@ class CategoryKindScreen extends StatelessWidget {
                     catchError: (_, __) => const [],
                     child: const CategoryPostCard(),
                   ),
-
                   Padding(
                     padding:
                         EdgeInsets.symmetric(horizontal: size.width * 0.05),
@@ -128,5 +128,6 @@ class CategoryKindScreen extends StatelessWidget {
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
     properties.add(StringProperty('mainCategory', mainCategory));
+    properties.add(StringProperty('mainCategoryName', mainCategoryName));
   }
 }
