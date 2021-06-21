@@ -18,9 +18,11 @@ dependencies:
   auto_size_text: ^3.0.0-nullsafety.0
   back_button_interceptor: ^5.0.0
   bot_toast: ^4.0.1
+  cached_network_image: ^3.0.0
   carousel_slider: ^4.0.0-nullsafety.0
   cloud_firestore: ^2.1.0
   collection: ^1.15.0
+  configurable_expansion_tile_null_safety: ^2.0.0
   connectivity: ^3.0.3
   date_format: ^2.0.2
   dots_indicator: ^2.0.0
@@ -30,6 +32,7 @@ dependencies:
   firebase_auth: ^1.1.4
   firebase_core: ^1.1.1
   firebase_database: ^7.0.0
+  firebase_storage: ^8.1.0
   flash: ^2.0.0
   flutter_card_swipper: ^0.4.0
   flutter_form_builder: ^6.0.0
@@ -39,6 +42,7 @@ dependencies:
   google_sign_in: ^5.0.4
   group_button: ^2.1.0
   http: ^0.13.2
+  image_picker: ^0.8.0+3
   implicitly_animated_reorderable_list: ^0.4.0
   intl: ^0.17.0
   introduction_screen: ^2.1.0
@@ -48,21 +52,18 @@ dependencies:
   loading_overlay: ^0.3.0
   lottie: ^1.0.1
   material_floating_search_bar: ^0.3.4
-  persistent_bottom_nav_bar: ^4.0.2
-  pin_code_fields: ^7.0.0
-  provider: ^5.0.0
-  search_choices: ^2.0.3
-  shared_preferences: ^2.0.5
-  toggle_switch: ^1.1.0
-  image_picker: ^0.8.0+3
-  firebase_storage: ^8.1.0
-  permission_handler: ^8.0.0+2
   multi_image_picker2: 5.0.0
   path_provider: ^2.0.2
-  cached_network_image: ^3.0.0
+  permission_handler: ^8.0.0+2
+  persistent_bottom_nav_bar: ^4.0.2
+  pin_code_fields: ^7.0.0
   pinch_zoom: ^0.1.0
-  configurable_expansion_tile_null_safety: ^2.0.0
+  provider: ^5.0.0
   quiver: ^3.0.1
+  search_choices: ^2.0.3
+  shared_preferences: ^2.0.5
+  timeago: ^3.1.0
+  toggle_switch: ^1.1.0
 
 dev_dependencies:
   flutter_test:
