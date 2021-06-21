@@ -18,12 +18,12 @@ import 'local_widgets/category_post_card.dart';
 // const productKind = ProductKind(name: 'Laptop');
 
 class CategoryKindScreen extends StatelessWidget {
-  const CategoryKindScreen({
-    Key? key,
-    required this.mainCategoryId,
-  }) : super(key: key);
+  const CategoryKindScreen(
+      {Key? key, required this.mainCategory, required this.mainCategoryName})
+      : super(key: key);
 
-  final String mainCategoryId;
+  final String mainCategory;
+  final String mainCategoryName;
 
   @override
   Widget build(BuildContext context) {
@@ -111,23 +111,25 @@ class CategoryKindScreen extends StatelessWidget {
                             EdgeInsets.symmetric(horizontal: size.width * 0.05),
                         child: Column(
                           mainAxisSize: MainAxisSize.min,
-                          // crossAxisAlignment: CrossAxisAlignment.center
-                          // mainAxisAlignment: MainAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
                           children: [
+                            Padding(
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: size.width * 0.05),
+                              child: Text(mainCategoryName),
+                            ),
                             SizedBox(height: size.width * 0.05),
-                            FutureProvider<List<PostCard>?>.value(
-                              initialData: null,
+                            FutureProvider<List<PostCard>>.value(
+                              initialData: const [],
                               value: _firestoreDatabase
                                   .getPostCardsByMainCategoryId(
-                                mainCategoryId: mainCategoryId,
-                              ),
+                                      mainCategoryId: mainCategory),
                               catchError: (_, __) => const [],
                               child: const CategoryPostCard(),
                             ),
                             Padding(
                               padding: EdgeInsets.symmetric(
-                                horizontal: size.width * 0.05,
-                              ),
+                                  horizontal: size.width * 0.05),
                             ),
                           ],
                         ),
@@ -146,6 +148,7 @@ class CategoryKindScreen extends StatelessWidget {
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
-    properties.add(StringProperty('mainCategory', mainCategoryId));
+    properties.add(StringProperty('mainCategory', mainCategory));
+    properties.add(StringProperty('mainCategoryName', mainCategoryName));
   }
 }

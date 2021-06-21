@@ -15,27 +15,32 @@ class HomeScreenCategoryCardFundamental extends StatefulWidget {
     Key? key,
     required this.child,
     required this.categoryId,
+    required this.categoryName,
   }) : super(key: key);
 
   final Widget child;
   final String categoryId;
+  final String categoryName;
+
 
   @override
   _HomeScreenCategoryCardFundamentalState createState() =>
       // ignore: no_logic_in_create_state
-      _HomeScreenCategoryCardFundamentalState(categoryId: categoryId);
+      _HomeScreenCategoryCardFundamentalState(categoryId: categoryId,categoryName: categoryName);
 
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
     properties.add(StringProperty('categoryId', categoryId));
+    properties.add(StringProperty('categoryName', categoryName));
   }
 }
 
 class _HomeScreenCategoryCardFundamentalState
     extends State<HomeScreenCategoryCardFundamental> {
-  _HomeScreenCategoryCardFundamentalState({required this.categoryId});
+  _HomeScreenCategoryCardFundamentalState({required this.categoryId, required this.categoryName});
   final String categoryId;
+  final String categoryName;
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -63,12 +68,12 @@ class _HomeScreenCategoryCardFundamentalState
     ]);
   }
 
-  // TODO: <Vu> Fix this Screen
   Future<void> _navigateToCategoryKindScreen() async {
     return pushNewScreenWithRouteSettings<void>(
       context,
       screen: CategoryKindScreen(
-        mainCategoryId: categoryId,
+        mainCategory: categoryId,
+        mainCategoryName: categoryName,
       ),
       settings: const RouteSettings(
         name: Routes.categoryKindScreenRouteName,
@@ -81,5 +86,6 @@ class _HomeScreenCategoryCardFundamentalState
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
     properties.add(StringProperty('categoryId', categoryId));
+    properties.add(StringProperty('categoryName', categoryName));
   }
 }
