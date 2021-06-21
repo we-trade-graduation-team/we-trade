@@ -1,6 +1,5 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:loading_overlay/loading_overlay.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 import 'package:provider/provider.dart';
 
@@ -92,52 +91,45 @@ class CategoryKindScreen extends StatelessWidget {
         create: (_) => LoadingOverlayProvider(),
         child: Consumer<LoadingOverlayProvider>(
           builder: (_, loadingOverlay, __) {
-            return LoadingOverlay(
-              isLoading: loadingOverlay.isLoading,
-              color: Colors.white,
-              opacity: 1,
-              progressIndicator: CircularProgressIndicator(
-                color: Theme.of(context).primaryColor,
-              ),
-              child: LayoutBuilder(
-                builder: (context, viewportConstraints) {
-                  return SingleChildScrollView(
-                    child: ConstrainedBox(
-                      constraints: BoxConstraints(
-                        minHeight: viewportConstraints.maxHeight,
-                      ),
-                      child: Padding(
-                        padding:
-                            EdgeInsets.symmetric(horizontal: size.width * 0.05),
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: [
-                            Padding(
-                              padding: EdgeInsets.symmetric(
-                                  horizontal: size.width * 0.05),
-                              child: Text(mainCategoryName),
+            return LayoutBuilder(
+              builder: (context, viewportConstraints) {
+                return SingleChildScrollView(
+                  child: ConstrainedBox(
+                    constraints: BoxConstraints(
+                      minHeight: viewportConstraints.maxHeight,
+                    ),
+                    child: Padding(
+                      padding:
+                          EdgeInsets.symmetric(horizontal: size.width * 0.05),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          Padding(
+                            padding: EdgeInsets.symmetric(
+                                horizontal: size.width * 0.05),
+                            child: Text(mainCategoryName),
+                          ),
+                          SizedBox(height: size.width * 0.05),
+                          FutureProvider<List<PostCard>?>.value(
+                            initialData: null,
+                            value:
+                                _firestoreDatabase.getPostCardsByMainCategoryId(
+                              mainCategoryId: mainCategory,
                             ),
-                            SizedBox(height: size.width * 0.05),
-                            FutureProvider<List<PostCard>>.value(
-                              initialData: const [],
-                              value: _firestoreDatabase
-                                  .getPostCardsByMainCategoryId(
-                                      mainCategoryId: mainCategory),
-                              catchError: (_, __) => const [],
-                              child: const CategoryPostCard(),
-                            ),
-                            Padding(
-                              padding: EdgeInsets.symmetric(
-                                  horizontal: size.width * 0.05),
-                            ),
-                          ],
-                        ),
+                            catchError: (_, __) => const [],
+                            child: const CategoryPostCard(),
+                          ),
+                          Padding(
+                            padding: EdgeInsets.symmetric(
+                                horizontal: size.width * 0.05),
+                          ),
+                        ],
                       ),
                     ),
-                  );
-                },
-              ),
+                  ),
+                );
+              },
             );
           },
         ),
