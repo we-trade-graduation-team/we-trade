@@ -247,12 +247,10 @@ class _UpdatePostFourState extends State<UpdatePostFour> {
               mainCategoyId: arguments['mainCategoryId'] as String,
               subCategoryId: arguments['subCategoryId'] as String,
               tradeForList: arguments['tradeForList'] as List<String>,
-              imageURL: post['imagesUrl'][0] as String,
               condition: arguments['condition'] as String,
               price: arguments['price'] as int,
               district: districtSelected.name,
-              city: citySelected.name,
-              );
+              city: citySelected.name);
         });
       } else {}
     }).whenComplete(_showCompleteStatus);
