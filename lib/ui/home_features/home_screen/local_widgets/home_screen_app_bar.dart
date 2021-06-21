@@ -1,17 +1,106 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 
 import '../../../../constants/app_dimens.dart';
 import '../../../../utils/routes/routes.dart';
+import '../../notification_screen/notification.dart';
 import '../../notification_screen/notification_screen.dart';
 import 'home_screen_icon_button_with_counter.dart';
 import 'home_screen_search_bar.dart';
 import 'home_screen_special_event_carousel_slider.dart';
 
-class HomeScreenAppBar extends StatelessWidget {
+List<NotificationData> notes = [];
+
+class HomeScreenAppBar extends StatefulWidget {
   const HomeScreenAppBar({
     Key? key,
   }) : super(key: key);
+
+  @override
+  _HomeScreenAppBarState createState() => _HomeScreenAppBarState();
+}
+
+class _HomeScreenAppBarState extends State<HomeScreenAppBar> {
+
+  final FirebaseAuth auth = FirebaseAuth.instance;
+
+  Future<bool> getNotificationDatas() async {
+    final user = auth.currentUser!;
+    final myId = user.uid;
+    final _notes = <NotificationData>[];
+    await FirebaseFirestore.instance
+        .collection('notification')
+        .where('userId', isEqualTo: myId)
+        .get()
+        .then((querySnapshot) {
+      // ignore: avoid_function_literals_in_foreach_calls
+      querySnapshot.docs.forEach((doc) {
+        String follower='';
+        String offerer='';
+
+        FirebaseFirestore.instance
+            .collection('user')
+            .where('ObjectId', isEqualTo: doc['followerId'].toString())
+            .get().then((value)=>follower=value.docs[0]['name'].toString());
+
+        FirebaseFirestore.instance
+            .collection('user')
+            .where('ObjectId', isEqualTo: doc['offererId'].toString())
+            .get().then((value)=>offerer=value.docs[0]['name'].toString());
+
+        String title='';
+        String content='';
+        switch(int.parse(doc['type'].toString())){
+          case 0:
+            title='bài post của bạn đã được đăng';
+            content='bài post ${doc['postId'].toString()} của bạn đã được đăng lên hệ thống thành công.';
+            break;
+          case 1:
+            title='bài post của bạn đã vi phạm chính sách của hệ thống';
+            content='bài post ${doc['postId'].toString()} của bạn đã vi phạm chính sách hệ thống với lý do ${doc['reason'].toString()}. '
+                'Chúng tôi mong bạn chú ý hơn trong các bài post tương lai';
+            break;
+          case 2:
+            title='${offerer} mong muốn trao đổi sản phẩm với bạn';
+            content='${offerer} mong muốn trao đổi bài post ${doc['postId'].toString()} của bạn. Hãy vào phần chat để thảo luận thêm.';
+            break;
+          default:
+            title='${follower} vừa đăng sản phẩm mới';
+            content='${follower} vừa đăng bài post ${doc['postId'].toString()}.';
+            break;
+        }
+        var data = NotificationData(
+            title: title,
+            content: content,
+            seen: doc['seen'].toString().toLowerCase() == 'true',
+            createAt: doc['createAt'].toString(),
+            followerId: doc['followerId'].toString(),
+            offererId: doc['offererId'].toString(),
+            postId: doc['postId'].toString(),
+            type: int.parse(doc['type'].toString()),
+          reason: doc['reason'].toString(),
+        );
+
+
+        _notes.add(data);
+      });
+      setState(() {
+        notes = _notes;
+      });
+    });
+    return true;
+  }
+
+  @override
+  void initState(){
+    super.initState();
+    getNotificationDatas().then((value){
+      print('get notification data');
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +122,7 @@ class HomeScreenAppBar extends StatelessWidget {
           ),
           child: HomeScreenIconButtonWithCounter(
             icon: 'bell',
-            numOfItems: 4,
+            numOfItems: notes.length,
             press: () => pushNewScreenWithRouteSettings<void>(
               context,
               screen: const NotificationScreen(),
@@ -48,5 +137,10 @@ class HomeScreenAppBar extends StatelessWidget {
         background: HomeScreenSpecialEventCarouselSlider(),
       ),
     );
+  }
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(DiagnosticsProperty<FirebaseAuth>('auth', auth));
   }
 }

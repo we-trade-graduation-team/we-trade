@@ -114,7 +114,7 @@ class Routes {
     otherProfileScreenRouteName: (_) => const OtherUserProfileScreen(
           userId: '',
         ),
-    reportScreenRouteName: (_) => const ReportScreen(),
+    reportScreenRouteName: (_) => const ReportScreen(objectId: '',),
     makeOfferScreenRouteName: (_) => const MakeOfferScreen(
           otherUserPostId: '',
         ),
