@@ -166,6 +166,7 @@ class AuthProvider extends ChangeNotifier {
         initialUserData['phoneNumber'] = '';
         initialUserData['posts'] = <String>[];
         initialUserData['tradingHistory'] = <String>[];
+        initialUserData['wishList'] = <String>[];
 
         await Future.wait([
           // Set name in firestore database

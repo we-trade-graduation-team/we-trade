@@ -1,52 +1,109 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import '../../../models/ui/shared_models/product_model.dart';
+import 'tabs/wish_tab.dart';
 
-class WishListScreen extends StatelessWidget {
+class WishListScreen extends StatefulWidget {
   const WishListScreen({
     Key? key,
   }) : super(key: key);
 
   static const routeName = '/wish_list';
+//  final UserDetail userDetail = userDetailTemp;
 
-  List<Widget> buildProductsList(String title, List<Product> products) {
-    return [
-      Container(
-        margin: const EdgeInsets.fromLTRB(30, 18, 20, 12),
-        child: Text(
-          title,
-          style: const TextStyle(
-            fontSize: 20,
-            fontWeight: FontWeight.w400,
-          ),
-        ),
-      ),
-      Center(
-        child: Wrap(
-          spacing: 20,
-          runSpacing: 15,
-          // ignore: prefer_const_literals_to_create_immutables
-          children: [
-          //TODO: render postsList
-          ],
-        ),
-      ),
-      const SizedBox(height: 20),
-    ];
-  }
+  @override
+  _WishListScreenState createState() => _WishListScreenState();
+}
+
+class _WishListScreenState extends State<WishListScreen> {
+  final tabData = [
+    'ĐÃ THÍCH',
+    'CÓ THỂ THÍCH',
+  ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Lượt thích'),
+        title: const Text('lƯỢT THÍCH'),
       ),
-      body: ListView(
-        children: [
-          ...buildProductsList('Các sản phẩm đã thích', demoProducts),
-          ...buildProductsList('Các sản phẩm bạn có thể thích', demoProducts),
-        ],
+      body: DefaultTabController(
+        length: tabData.length,
+        child: NestedScrollView(
+          physics: const NeverScrollableScrollPhysics(),
+          headerSliverBuilder: (context, isScrolled) {
+            return [
+              SliverPersistentHeader(
+                delegate: MyDelegate(
+                  TabBar(
+                    tabs: tabData
+                        .map(
+                          (item) => Tab(
+                            child: Text(item),
+                          ),
+                        )
+                        .toList(),
+                  ),
+                ),
+                floating: true,
+                pinned: true,
+              )
+            ];
+          },
+          body: TabBarView(
+            children: getTabContent(),
+          ),
+        ),
       ),
     );
+  }
+
+  List<Widget> getTabContent() {
+    return [
+      const WishTab(),
+      const WishTab(),
+    ];
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(IterableProperty<String>('tabData', tabData));
+  }
+}
+
+class MyDelegate extends SliverPersistentHeaderDelegate {
+  MyDelegate(this.tabBar);
+  final TabBar tabBar;
+
+  @override
+  Widget build(
+      BuildContext context, double shrinkOffset, bool overlapsContent) {
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        border: Border(
+          top: BorderSide(
+            color: Theme.of(context).primaryColor,
+            width: 0.2,
+          ),
+          bottom: BorderSide(
+            color: Theme.of(context).primaryColor,
+            width: 0.2,
+          ),
+        ),
+      ),
+      child: tabBar,
+    );
+  }
+
+  @override
+  double get maxExtent => tabBar.preferredSize.height;
+
+  @override
+  double get minExtent => tabBar.preferredSize.height;
+
+  @override
+  bool shouldRebuild(SliverPersistentHeaderDelegate oldDelegate) {
+    return false;
   }
 }

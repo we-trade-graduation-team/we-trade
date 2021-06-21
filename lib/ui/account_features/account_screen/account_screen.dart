@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -65,46 +63,6 @@ class _AccountScreenState extends State<AccountScreen> {
     );
   }
 
-  final user = {
-    'name': 'Tranf Duy qunag',
-    'email': 'asdas@hail.com',
-    'phoneNumber': '0202424024',
-    'location': 'asdasaf',
-    'bio': 'I like trading',
-    'following': <dynamic>[],
-    'followers': <dynamic>[],
-    'legit': 0,
-    'tradingHistory': <dynamic>[],
-  };
-
-  //chang: hàm cho nút make offer
-  Future<void> _addTrading({
-    required String makeOfferUser, // đứa bấm nút make offer
-    List<String>? offerUserPosts, // bài đăng của đứa bấm make offer
-    required String owner, // đứa kia được make offer
-    required String ownerPost, // bài đăng của đứa kia
-    int? money,
-  }) async {
-    final trading = <String, dynamic>{
-      'createAt': DateTime.now(),
-      'makeOfferUser': makeOfferUser,
-      'offerUserPosts': offerUserPosts ?? [], //không có posts thì là mảng rỗng
-      'owner': owner,
-      'ownerPosts': [ownerPost],
-      'status': 2, // đang giao dịch
-      'isHaveMoney': money != null,
-      'money': money ??
-          0, //nếu không có tiền thì giá trị là 0,truyền vào giá trị dương
-    };
-    try {
-      await referenceDatabase
-          .collection('tradings')
-          .add(trading)
-          .then((value) => log('added!'));
-    } on FirebaseException catch (error) {
-      log('Lỗi make offer: $error');
-    }
-  }
   @override
   Widget build(BuildContext context) {
     final height = MediaQuery.of(context).size.height;
@@ -220,33 +178,6 @@ class _AccountScreenState extends State<AccountScreen> {
                     padding: const EdgeInsets.symmetric(horizontal: 20),
                     child: Column(
                       children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            IconButton(
-                              color: AppColors.kPrimaryLightColor,
-                              icon: const Icon(Icons.settings),
-                              onPressed: () {
-                                // ignore: avoid_print
-                                print('setting pressed');
-                              },
-                            ),
-                            IconButton(
-                              color: AppColors.kPrimaryLightColor,
-                              icon: const Icon(Icons.add),
-                              onPressed: () {
-                                log('add ');
-                                //chang: test nè
-                                _addTrading(
-                                  makeOfferUser: 'makeOfferUser',
-                                  owner: 'owner',
-                                  ownerPost: 'ownerPost',
-                                  offerUserPosts: ['ádasf', '1234'],
-                                );
-                              },
-                            ),
-                          ],
-                        ),
                         Row(
                           children: [
                             Container(
@@ -424,7 +355,6 @@ class _AccountScreenState extends State<AccountScreen> {
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
-    properties.add(DiagnosticsProperty<Map<String, Object>>('user', user));
     properties.add(DiagnosticsProperty<FirebaseFirestore>(
         'referenceDatabase', referenceDatabase));
   }
