@@ -11,8 +11,10 @@ class PostDetailsPopupDialog extends StatelessWidget {
   const PostDetailsPopupDialog({
     Key? key,
     required this.parentContext,
+    required this.objectId,
   }) : super(key: key);
 
+  final String objectId;
   final BuildContext parentContext;
 
   @override
@@ -72,7 +74,7 @@ class PostDetailsPopupDialog extends StatelessWidget {
                       onTap: () {
                         pushNewScreen<void>(
                           parentContext,
-                          screen: const ReportScreen(),
+                          screen: ReportScreen(objectId: objectId,),
                           withNavBar: true, // OPTIONAL VALUE. True by default.
                           pageTransitionAnimation:
                               PageTransitionAnimation.cupertino,
