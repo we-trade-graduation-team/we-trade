@@ -68,7 +68,7 @@ class _HomeScreenCategoryCardFundamentalState
     return pushNewScreenWithRouteSettings<void>(
       context,
       screen: CategoryKindScreen(
-        mainCategory: categoryId,
+        mainCategoryId: categoryId,
       ),
       settings: const RouteSettings(
         name: Routes.categoryKindScreenRouteName,

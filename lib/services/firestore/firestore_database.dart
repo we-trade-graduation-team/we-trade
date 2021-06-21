@@ -769,7 +769,6 @@ class FirestoreDatabase {
     return _fullList;
   }
 
-  // TODO: <Phuc> Get postCards by searchTerm with Algolia
   // Method to retrieve a List of postCard that current user may also like
   // by postId at postDetails screen
   Future<List<PostCard>> getPostDetailsPostCardsCurrentUserMayAlsoLike() async {

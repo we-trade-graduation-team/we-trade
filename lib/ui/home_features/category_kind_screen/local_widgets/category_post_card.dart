@@ -5,11 +5,24 @@ import '../../../../models/cloud_firestore/post_card_model/post_card/post_card.d
 import '../../../../widgets/item_post_card.dart';
 
 class CategoryPostCard extends StatelessWidget {
-  const CategoryPostCard({Key? key}):super(key:key);
+  const CategoryPostCard({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final postCards = context.watch<List<PostCard>>();
+    final postCards = context.watch<List<PostCard>?>();
+
+    if (postCards == null) {
+      return Center(
+        child: CircularProgressIndicator(
+          backgroundColor: Colors.white,
+          color: Theme.of(context).primaryColor,
+        ),
+      );
+    }
+
+    if (postCards.isEmpty) {
+      return const Center(child: Text('No post cards'));
+    }
 
     return Wrap(
       spacing: 20,
@@ -17,7 +30,7 @@ class CategoryPostCard extends StatelessWidget {
       children: postCards
           .map(
             (postCard) => ItemPostCard(postCard: postCard),
-      )
+          )
           .toList(),
     );
   }
