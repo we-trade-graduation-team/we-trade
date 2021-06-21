@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:multi_image_picker2/multi_image_picker2.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 import 'package:search_choices/search_choices.dart';
-import 'package:we_trade/constants/app_colors.dart';
-import 'package:we_trade/services/post_feature/post_service_firestore.dart';
+import '../../../constants/app_colors.dart';
+import '../../../services/post_feature/post_service_firestore.dart';
 
 import '../component/class.dart';
 import 'post_item_step_three.dart';

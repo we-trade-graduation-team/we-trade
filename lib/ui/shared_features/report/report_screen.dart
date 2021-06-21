@@ -1,12 +1,10 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:group_button/group_button.dart';
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:provider/provider.dart';
-import 'package:we_trade/services/firestore/firestore_service.dart';
 
 import '../../../bloc/report_bloc.dart';
 import '../../../models/ui/shared_models/product_model.dart';
@@ -19,9 +17,7 @@ class ReportScreenBody extends StatelessWidget {
   }) : super(key: key);
   final String objectId;
 
-  void report(String reason){
-
-  }
+  void report(String reason) {}
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +30,7 @@ class ReportScreenBody extends StatelessWidget {
     ];
 
     final reportBloc = context.watch<ReportBloc>();
-    
+
     final size = MediaQuery.of(context).size;
 
     return LayoutBuilder(
@@ -174,6 +170,12 @@ class ReportScreenBody extends StatelessWidget {
       },
     );
   }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(StringProperty('objectId', objectId));
+  }
 }
 
 class ReportScreen extends StatelessWidget {
@@ -191,7 +193,9 @@ class ReportScreen extends StatelessWidget {
       // TODO: <Vu> Should remove MultiProvider (since there's only one ChangeNotifierProvider)
       body: MultiProvider(
         providers: [ChangeNotifierProvider(create: (context) => ReportBloc())],
-        child: const ReportScreenBody(objectId: '',),
+        child: const ReportScreenBody(
+          objectId: '',
+        ),
       ),
     );
   }

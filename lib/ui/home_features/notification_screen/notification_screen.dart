@@ -2,7 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 import '../../../utils/routes/routes.dart';
 
@@ -21,32 +20,33 @@ class NotificationScreen extends StatefulWidget {
 
 class _NotificationScreenState extends State<NotificationScreen> {
   final FirebaseAuth auth = FirebaseAuth.instance;
-  List<NotificationData> notes=[];
+  List<NotificationData> notes = [];
 
-  Future<bool> getNotificationDatas() async{
+  Future<bool> getNotificationDatas() async {
     final user = auth.currentUser!;
     final myId = user.uid;
-    List<NotificationData> _notes=[];
+    final _notes = <NotificationData>[];
     await FirebaseFirestore.instance
         .collection('notification')
-        .where('userId',isEqualTo: myId)
+        .where('userId', isEqualTo: myId)
         .get()
-        .then((QuerySnapshot querySnapshot){
-          querySnapshot.docs.forEach((doc) {
-            final data=NotificationData(
-                title: doc['title'].toString(),
-                content: doc['content'].toString(),
-                seen: doc['seen'].toString().toLowerCase()=='true'?true:false,
-                createAt: doc['createAt'].toString(),
-                followerId: doc['followerId'].toString(),
-                offererId: doc['offererId'].toString(),
-                postId:doc['postId'].toString(),
-                type: int.parse(doc['type'].toString()));
-            _notes.add(data);
-          });
-          setState(() {
-            notes=_notes;
-          });
+        .then((querySnapshot) {
+      // ignore: avoid_function_literals_in_foreach_calls
+      querySnapshot.docs.forEach((doc) {
+        final data = NotificationData(
+            title: doc['title'].toString(),
+            content: doc['content'].toString(),
+            seen: doc['seen'].toString().toLowerCase() == 'true',
+            createAt: doc['createAt'].toString(),
+            followerId: doc['followerId'].toString(),
+            offererId: doc['offererId'].toString(),
+            postId: doc['postId'].toString(),
+            type: int.parse(doc['type'].toString()));
+        _notes.add(data);
+      });
+      setState(() {
+        notes = _notes;
+      });
     });
     return true;
   }
@@ -88,10 +88,19 @@ class _NotificationScreenState extends State<NotificationScreen> {
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
     properties.add(DiagnosticsProperty<FirebaseAuth>('auth', auth));
+    properties.add(IterableProperty<NotificationData>('notes', notes));
   }
 }
 
-NotificationData chosenNote= const NotificationData(title: '', content: '', seen: true, createAt: '', followerId: '', offererId: '', postId: '', type: 0);
+NotificationData chosenNote = const NotificationData(
+    title: '',
+    content: '',
+    seen: true,
+    createAt: '',
+    followerId: '',
+    offererId: '',
+    postId: '',
+    type: 0);
 
 class NotificationCard extends StatelessWidget {
   const NotificationCard({
@@ -103,7 +112,7 @@ class NotificationCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    chosenNote=note;
+    chosenNote = note;
     return Card(
       color: note.seen ? Colors.grey[400] : Colors.grey[200],
       margin: const EdgeInsets.fromLTRB(20, 10, 20, 10),

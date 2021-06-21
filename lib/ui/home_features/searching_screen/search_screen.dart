@@ -1,12 +1,14 @@
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
-import 'package:flutter/material.dart';
-import 'package:we_trade/constants/app_colors.dart';
-import 'package:we_trade/models/cloud_firestore/post_card_model/post_card/post_card.dart';
-import 'package:we_trade/services/firestore/firestore_database.dart';
-import 'package:we_trade/services/post_feature/post_service_algolia.dart';
-import 'package:we_trade/ui/message_features/const_string/const_str.dart';
-import 'package:we_trade/widgets/item_post_card.dart';
+
+import '../../../constants/app_colors.dart';
+import '../../../models/cloud_firestore/post_card_model/post_card/post_card.dart';
+import '../../../services/firestore/firestore_database.dart';
+import '../../../services/post_feature/post_service_algolia.dart';
+import '../../../widgets/item_post_card.dart';
+import '../../message_features/const_string/const_str.dart';
 
 class SearchScreen extends StatefulWidget {
   const SearchScreen({Key? key}) : super(key: key);
@@ -32,9 +34,9 @@ class _SearchScreenState extends State<SearchScreen> {
         _firestoreDatabase
             .getPostCardsByPostIdList(postIdList: listId)
             .then((value) => setState(() {
-          posts = value;
-          isLoading = false;
-        }));
+                  posts = value;
+                  isLoading = false;
+                }));
       });
     } else {
       posts = [];
@@ -94,36 +96,47 @@ class _SearchScreenState extends State<SearchScreen> {
                 Center(
                   child: posts.isNotEmpty
                       ? !isLoading
-                      ? Wrap(
-                    spacing: 20,
-                    runSpacing: 15,
-                    children: posts
-                        .map(
-                          (post) => ItemPostCard(postCard: post),
-                    )
-                        .toList(),
-                  )
-                      : Center(
-                    child: Column(
-                      children: [
-                        Lottie.network(
-                          messageLoadingStr2,
-                          width: 100,
-                          height: 100,
-                          fit: BoxFit.fill,
+                          ? Wrap(
+                              spacing: 20,
+                              runSpacing: 15,
+                              children: posts
+                                  .map(
+                                    (post) => ItemPostCard(postCard: post),
+                                  )
+                                  .toList(),
+                            )
+                          : Center(
+                              child: Column(
+                                children: [
+                                  Lottie.network(
+                                    messageLoadingStr2,
+                                    width: 100,
+                                    height: 100,
+                                    fit: BoxFit.fill,
+                                  ),
+                                  const SizedBox(height: 20),
+                                  const Text(loadingDataStr),
+                                ],
+                              ),
+                            )
+                      : const Center(
+                          child: Text('no data'),
                         ),
-                        const SizedBox(height: 20),
-                        const Text(loadingDataStr),
-                      ],
-                    ),
-                  )
-                      : Center(
-                    child: Text('no data'),
-                  ),
                 )
               ],
             ),
           ),
         ));
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(DiagnosticsProperty<PostServiceAlgolia>(
+        'serviceAlgolia', serviceAlgolia));
+    properties.add(DiagnosticsProperty<bool>('isLoading', isLoading));
+    properties.add(IterableProperty<PostCard>('posts', posts));
+    properties.add(DiagnosticsProperty<TextEditingController>(
+        'searchTextController', searchTextController));
   }
 }

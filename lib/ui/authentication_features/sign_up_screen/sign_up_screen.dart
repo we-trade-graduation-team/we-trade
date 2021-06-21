@@ -178,9 +178,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
         isLoading: _isLoading,
         color: Colors.white,
         opacity: 1,
-        progressIndicator: CircularProgressIndicator(
-          //color: Theme.of(context).primaryColor,
-        ),
+        // progressIndicator: const CircularProgressIndicator(
+        //   //color: Theme.of(context).primaryColor,
+        // ),
         child: AuthCustomBackground(
           title: _appLocalizations.translate('registerTxtTitle'),
           authFeatureTitle: _appLocalizations.translate('registerTxtSignUp'),

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_card_swipper/flutter_card_swiper.dart';
 import 'package:provider/provider.dart';
 import 'package:quiver/iterables.dart';
-import 'package:we_trade/models/cloud_firestore/post_card_model/post_card/post_card.dart';
 import '../../../../constants/app_dimens.dart';
 import '../../../../models/cloud_firestore/category_card/category_card.dart';
 

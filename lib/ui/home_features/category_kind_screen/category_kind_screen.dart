@@ -2,7 +2,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 import 'package:provider/provider.dart';
-import 'package:we_trade/ui/home_features/category_kind_screen/local_widgets/category_post_card.dart';
 
 import '../../../models/cloud_firestore/post_card_model/post_card/post_card.dart';
 import '../../../services/firestore/firestore_database.dart';
@@ -11,15 +10,14 @@ import '../home_screen/local_widgets/home_screen_icon_button_with_counter.dart';
 import '../home_screen/local_widgets/home_screen_search_bar.dart';
 import '../notification_screen/notification_screen.dart';
 import '../searching_screen/local_widgets/filter_overlay.dart';
+import 'local_widgets/category_post_card.dart';
 
 // Flash Deal is deleted
 const productKind = ProductKind(name: 'Laptop');
 
 class CategoryKindScreen extends StatelessWidget {
-  const CategoryKindScreen({
-    Key? key,
-    required this.mainCategory
-  }) : super(key: key);
+  const CategoryKindScreen({Key? key, required this.mainCategory})
+      : super(key: key);
 
   final String mainCategory;
 
@@ -107,7 +105,8 @@ class CategoryKindScreen extends StatelessWidget {
                   // TODO: <Vu> Replace List<Product> with List<PostCard> (wrap below StreamBuilder)
                   FutureProvider<List<PostCard>>.value(
                     initialData: const [],
-                    value: _firestoreDatabase.getPostCardsByMainCategoryId(mainCategoryId: 'ydWCfuzyUsiKHdLy1XwU'),
+                    value: _firestoreDatabase.getPostCardsByMainCategoryId(
+                        mainCategoryId: 'ydWCfuzyUsiKHdLy1XwU'),
                     catchError: (_, __) => const [],
                     child: const CategoryPostCard(),
                   ),
@@ -123,5 +122,11 @@ class CategoryKindScreen extends StatelessWidget {
         );
       }),
     );
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(StringProperty('mainCategory', mainCategory));
   }
 }
