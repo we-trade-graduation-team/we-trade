@@ -16,10 +16,11 @@ import 'local_widgets/category_post_card.dart';
 const productKind = ProductKind(name: 'Laptop');
 
 class CategoryKindScreen extends StatelessWidget {
-  const CategoryKindScreen({Key? key, required this.mainCategory})
+  const CategoryKindScreen({Key? key, required this.mainCategory,required this.mainCategoryName})
       : super(key: key);
 
   final String mainCategory;
+  final String mainCategoryName;
 
   @override
   Widget build(BuildContext context) {
@@ -99,14 +100,13 @@ class CategoryKindScreen extends StatelessWidget {
                   Padding(
                     padding:
                         EdgeInsets.symmetric(horizontal: size.width * 0.05),
-                    child: Text(mainCategory),
+                    child: Text(mainCategoryName),
                   ),
                   SizedBox(height: size.width * 0.05),
-                  // TODO: <Vu> Replace List<Product> with List<PostCard> (wrap below StreamBuilder)
                   FutureProvider<List<PostCard>>.value(
                     initialData: const [],
                     value: _firestoreDatabase.getPostCardsByMainCategoryId(
-                        mainCategoryId: 'ydWCfuzyUsiKHdLy1XwU'),
+                        mainCategoryId: mainCategory),
                     catchError: (_, __) => const [],
                     child: const CategoryPostCard(),
                   ),
