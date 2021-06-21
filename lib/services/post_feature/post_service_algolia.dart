@@ -11,7 +11,6 @@ class PostServiceAlgolia {
     required String mainCategoyId,
     required String subCategoryId,
     required List<String> tradeForList,
-    required String imageURL, // lẩy ảnh đầu [0] bỏ vô đc r
     required String condition,
     required int price,
     required String
@@ -24,11 +23,10 @@ class PostServiceAlgolia {
       'mainCategoyId': mainCategoyId,
       'subCategoryId': subCategoryId,
       'tradeForList': tradeForList,
-      'imageURL': imageURL,
       'condition': condition,
       'price': price,
       'district': district,
-      'city': city
+      'city': city,
     };
     await algolia.instance.index(postsAlgoliaIndex).addObject(mapData);
   }
@@ -39,7 +37,6 @@ class PostServiceAlgolia {
     required String mainCategoyId,
     required String subCategoryId,
     required List<String> tradeForList,
-    required String imageURL, // lẩy ảnh đầu [0] bỏ vô đc r
     required String condition,
     required int price,
     required String
@@ -52,7 +49,6 @@ class PostServiceAlgolia {
       'mainCategoyId': mainCategoyId,
       'subCategoryId': subCategoryId,
       'tradeForList': tradeForList,
-      'imageURL': imageURL,
       'condition': condition,
       'price': price,
       'district': district,
@@ -64,21 +60,30 @@ class PostServiceAlgolia {
         .updateData(mapData);
   }
 
-  Future<List<AlgoliaObjectSnapshot>> searchPostByAlgolia(String query) {
-    return algolia.instance
-        .index(postsAlgoliaIndex)
-        .query(query)
-        .getObjects()
-        .then((result) => result.hits);
+  Future<List<AlgoliaObjectSnapshot>> searchPostByAlgolia(
+      String str, String cateId, String city, String condition) async {
+    var query = algolia.instance.index(postsAlgoliaIndex).query(str);
+    if (cateId.isNotEmpty) {
+      query = query.facetFilter('mainCategoyId:$cateId');
+    }
+    if (city.isNotEmpty) {
+      query = query.facetFilter('city:$city');
+    }
+    if (condition.isNotEmpty) {
+      query = query.facetFilter('condition:$condition');
+    }
+
+    final result = await query.getObjects();
+    return result.hits;
   }
 
-  Future<List<String>> searchPostCard(String query) async {
-    final result = await searchPostByAlgolia(query);
+  Future<List<String>> searchPostCard(
+      String query, String cateId, String city, String condition) async {
+    final result = await searchPostByAlgolia(query, cateId, city, condition);
     final postsIds = <String>[];
     for (final hit in result) {
       postsIds.add(hit.data['objectID'].toString());
     }
     return postsIds;
   }
-
 }

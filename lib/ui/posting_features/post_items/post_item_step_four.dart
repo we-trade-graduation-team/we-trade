@@ -1,4 +1,3 @@
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
@@ -243,12 +242,10 @@ class _PostItemFourState extends State<PostItemFour> {
               mainCategoyId: arguments['mainCategoryId'] as String,
               subCategoryId: arguments['subCategoryId'] as String,
               tradeForList: arguments['tradeForList'] as List<String>,
-              imageURL: post['imagesUrl'][0] as String,
               condition: arguments['condition'] as String,
               price: arguments['price'] as int,
               district: districtSelected.name,
-              city: citySelected.name,
-              );
+              city: citySelected.name);
         });
       } else {}
     }).whenComplete(_showMessgage);

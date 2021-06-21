@@ -13,7 +13,6 @@ import '../../ui/authentication_features/complete_profile_screen/complete_profil
 import '../../ui/authentication_features/forgot_password_screen/forgot_password_screen.dart';
 import '../../ui/authentication_features/otp_screen/otp_screen.dart';
 import '../../ui/authentication_features/shared_widgets/authentication.dart';
-import '../../ui/home_features/category_kind_screen/category_kind_screen.dart';
 import '../../ui/home_features/notification_screen/detailed_notification_screen.dart';
 import '../../ui/home_features/notification_screen/notification_screen.dart';
 import '../../ui/home_features/post_details_screen/post_details_screen.dart';
@@ -101,10 +100,11 @@ class Routes {
   };
 
   static final Map<String, WidgetBuilder> homeFeaturesRoutes = {
-    categoryKindScreenRouteName: (_) => const CategoryKindScreen(mainCategory: '',mainCategoryName: '',),
+    // categoryKindScreenRouteName: (_) => const CategoryKindScreen(mainCategory: '',mainCategoryName: '',),
     postDetailScreenRouteName: (_) => const PostDetailsScreen(),
-    detailNotificationScreenRouteName: (_) =>
-        DetailedNotificationScreen(note: chosenNote,),
+    detailNotificationScreenRouteName: (_) => DetailedNotificationScreen(
+          note: chosenNote,
+        ),
     notificationScreenRouteName: (_) => const NotificationScreen(),
     searchScreenRouteName: (_) => const SearchScreen(),
     ...sharedFeaturesRoutes,
