@@ -1,10 +1,10 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+
 import '../constants/app_colors.dart';
 import '../constants/app_dimens.dart';
-import '../models/ui/review/temp_class.dart';
-
+import '../models/ui/chat/temp_class.dart';
 import 'custom_user_avatar.dart';
 
 class ReviewCard extends StatelessWidget {
@@ -42,7 +42,7 @@ class ReviewCard extends StatelessWidget {
                     child: Text(review.user.name),
                   ),
                   RatingBar.builder(
-                    initialRating: review.stars,
+                    initialRating: review.star,
                     allowHalfRating: true,
                     //itemCount: 5,
                     glowRadius: 10,
@@ -65,16 +65,16 @@ class ReviewCard extends StatelessWidget {
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              //if (review.posts.isNotEmpty)
-              Expanded(
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(10),
-                  child: Image.network(
-                    review.posts![0].images[0],
-                    fit: BoxFit.cover,
+              if (review.image.isNotEmpty)
+                Expanded(
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(10),
+                    child: Image.network(
+                      review.image,
+                      fit: BoxFit.cover,
+                    ),
                   ),
                 ),
-              ),
               const SizedBox(width: 15),
               Expanded(
                 flex: 3,
@@ -95,7 +95,7 @@ class ReviewCard extends StatelessWidget {
               ),
             ),
           ),
-          getWidgetReplie(review.replie),
+          if (review.reply!.isNotEmpty) getWidgetReplie(review.reply),
         ],
       ),
     );

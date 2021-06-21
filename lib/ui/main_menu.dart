@@ -10,7 +10,7 @@ import '../providers/loading_overlay_provider.dart';
 import 'account_features/account_screen/account_screen.dart';
 import 'home_features/home_screen/home_screen.dart';
 import 'message_features/chat_screen/all_chat/chat_screen.dart';
-import 'posting_features/post_items/component/post_item_step_one.dart';
+import 'posting_features/post_items/post_item_step_one.dart';
 import 'wish_list_features/wish_list/wish_list_screen.dart';
 
 class MainMenu extends StatefulWidget {

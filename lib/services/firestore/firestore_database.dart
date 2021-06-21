@@ -769,6 +769,19 @@ class FirestoreDatabase {
     return _fullList;
   }
 
+  // Method to set post details by postId
+  Future<Post> getPost({
+    required String postId,
+  }) async {
+    final _result = await _fireStoreService.documentFuture(
+      path: FirestorePath.post(postId: postId),
+      builder: (data) => Post.fromDocumentSnapshot(data),
+    );
+
+    return _result;
+  }
+
+
   // TODO: <Phuc> Get postCards by searchTerm with Algolia
   // Method to retrieve a List of postCard that current user may also like
   // by postId at postDetails screen

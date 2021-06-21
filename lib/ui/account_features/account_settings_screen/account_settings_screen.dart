@@ -56,8 +56,8 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
         progressIndicator: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            CircularProgressIndicator(
-              color: Theme.of(context).primaryColor,
+            const CircularProgressIndicator(
+              //color: Theme.of(context).primaryColor,
             ),
             const SizedBox(height: 20),
             Text(

@@ -45,7 +45,7 @@ class UserServiceAlgolia {
       phoneNumberStr: user.phoneNumber ?? '',
       nameStr: user.name ?? '',
       presenceStr: user.presence ?? false,
-      avatarURLStr: user.avatarUrl ?? '',
+      avatarURLStr: user.avatarUrl ?? userImageStr,
       lastActiveStr: user.lastSeen ?? 0
     };
   }
@@ -57,14 +57,41 @@ class UserServiceAlgolia {
   }
 
   //update nè :v
-  Future<void> updateUser(User updateUser) async {
-    final updateUserMap = createUserMapAlgolia(updateUser);
+  Future<void> updateUser(Map<String, dynamic> user) async {
     final messageServiceFireStore = MessageServiceFireStore();
+    final userFromAlgolia = await algolia.instance
+        .index(usersAlgoliaIndex)
+        .object(user['objectID'].toString())
+        .getObject();
+    final userUpdate = userFromAlgolia.data;
+    if (user['avatarUrl'] == null) {
+      userUpdate['objectID'] = user['objectID'].toString();
+      userUpdate['name'] = user['name'].toString();
+      userUpdate['email'] = user['email'].toString();
+      userUpdate['phoneNumber'] = user['phoneNumber'].toString();
+    } else {
+      userUpdate['avatarUrl'] = user['avatarUrl'].toString();
+    }
+
     await algolia.instance
         .index(usersAlgoliaIndex)
-        .object(updateUserMap['objectID'].toString())
-        .updateData(updateUserMap);
+        .object(user['objectID'].toString())
+        .updateData(userUpdate);
     // ignore: unawaited_futures
-    messageServiceFireStore.updateChatRoomsWhenUpdateUser(updateUser);
+    messageServiceFireStore.updateChatRoomsWhenUpdateUser(userUpdate);
+  }
+
+  // update active/presence
+  Future<void> updateUserPresence(
+      {required String id, required bool presence}) async {
+    final userFromAlgolia =
+        await algolia.instance.index(usersAlgoliaIndex).object(id).getObject();
+    final userUpdate = userFromAlgolia.data;
+    userUpdate['presence'] = presence;
+    userUpdate['lastActive'] = DateTime.now().millisecondsSinceEpoch;
+    await algolia.instance
+        .index(usersAlgoliaIndex)
+        .object(id)
+        .updateData(userUpdate);
   }
 }

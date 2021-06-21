@@ -13,7 +13,11 @@ import 'local_widgets/pop_header.dart';
 class ReportScreenBody extends StatelessWidget {
   const ReportScreenBody({
     Key? key,
+    required this.objectId,
   }) : super(key: key);
+  final String objectId;
+
+  void report(String reason) {}
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +30,7 @@ class ReportScreenBody extends StatelessWidget {
     ];
 
     final reportBloc = context.watch<ReportBloc>();
-    
+
     final size = MediaQuery.of(context).size;
 
     return LayoutBuilder(
@@ -166,6 +170,12 @@ class ReportScreenBody extends StatelessWidget {
       },
     );
   }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(StringProperty('objectId', objectId));
+  }
 }
 
 class ReportScreen extends StatelessWidget {
@@ -183,7 +193,9 @@ class ReportScreen extends StatelessWidget {
       // TODO: <Vu> Should remove MultiProvider (since there's only one ChangeNotifierProvider)
       body: MultiProvider(
         providers: [ChangeNotifierProvider(create: (context) => ReportBloc())],
-        child: const ReportScreenBody(),
+        child: const ReportScreenBody(
+          objectId: '',
+        ),
       ),
     );
   }

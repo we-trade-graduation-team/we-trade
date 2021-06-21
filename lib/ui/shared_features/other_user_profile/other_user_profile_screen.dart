@@ -2,13 +2,18 @@ import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:line_icons/line_icons.dart';
+import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 
 import '../../../constants/app_dimens.dart';
+import '../../../models/cloud_firestore/post_card_model/post_card/post_card.dart';
 import '../../../models/cloud_firestore/user_model/user/user.dart';
 import '../../../models/ui/chat/temp_class.dart';
+import '../../../services/firestore/firestore_database.dart';
+import '../../../services/message/firestore_message_service.dart';
 import '../../../widgets/custom_material_button.dart';
 import '../../../widgets/custom_user_avatar.dart';
+import '../../message_features/const_string/const_str.dart';
 import '../../message_features/helper/helper_navigate_chat_room.dart';
 import 'dialogs/other_user_profile_dialog.dart';
 import 'tabs/about_tab.dart';
@@ -34,35 +39,35 @@ class _OtherUserProfileScreenState extends State<OtherUserProfileScreen> {
   final tabData = ['ABOUT', 'POSTS', 'REVIEW'];
   final mainInfoKey = GlobalKey();
   Size flexibleSpaceBarSize = const Size(0, 0);
+  MessageServiceFireStore serviceFireStore = MessageServiceFireStore();
+  // ignore: diagnostic_describe_all_properties
+  late UserDetail userDetail;
+  // ignore: diagnostic_describe_all_properties
+  late User thisUser;
+  bool isFollow = false;
   bool visible = true;
+  bool loading = true;
+  List<PostCard> posts = [];
 
+// function handle ==================================
   void navigateToChatRoom(String userid) {
-    final thisUser = Provider.of<User?>(context, listen: false)!;
     HelperNavigateChatRoom.checkAndSendChatRoomOneUserByIds(
         userId: userid, thisUser: thisUser, context: context);
   }
 
+  void handleFollowButtonClick(String userId) {
+    serviceFireStore.handleFollowButton(
+        userId: userId, thisUserId: thisUser.uid!, isAddFollowing: !isFollow);
+    setState(() {
+      isFollow = !isFollow;
+    });
+  }
+
+// Widget UI ==========================================
+
   Future<void> getSizeAndPosition() async {
     final cardBox = mainInfoKey.currentContext!.findRenderObject() as RenderBox;
     flexibleSpaceBarSize = cardBox.size;
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance!.addPostFrameCallback(
-      (_) => getSizeAndPosition().whenComplete(
-        () => {
-          Future<void>.delayed(const Duration(microseconds: 1)).then(
-            (value) {
-              setState(() {
-                visible = false;
-              });
-            },
-          ),
-        },
-      ),
-    );
   }
 
   Widget getHeight(double width) {
@@ -144,11 +149,45 @@ class _OtherUserProfileScreenState extends State<OtherUserProfileScreen> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    thisUser = Provider.of<User?>(context, listen: false)!;
+
+    WidgetsBinding.instance!.addPostFrameCallback(
+      (_) => getSizeAndPosition().whenComplete(
+        () => {
+          Future<void>.delayed(const Duration(microseconds: 1)).then(
+            (value) {
+              setState(() {
+                visible = false;
+              });
+            },
+          ),
+        },
+      ),
+    );
+    serviceFireStore.getUserById(userId: widget.userId).then((resultUser) {
+      serviceFireStore
+          .isFollowUser(thisUserId: thisUser.uid!, userId: widget.userId)
+          .then((resultIsFollow) async {
+        final _firestoreDatabase = context.read<FirestoreDatabase>();
+        await _firestoreDatabase
+            .getPostCardsByPostIdList(
+              postIdList: resultUser.postsId,
+            )
+            .then((resultListPosts) => setState(() {
+                  posts = resultListPosts;
+                  isFollow = resultIsFollow;
+                  userDetail = resultUser;
+                  loading = false;
+                }));
+      });
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
-    //TODO, get userDetail by agrs.id
-    final userDetail = userDetailTemp;
-
     return Scaffold(
       appBar: AppBar(
         actions: [
@@ -166,7 +205,7 @@ class _OtherUserProfileScreenState extends State<OtherUserProfileScreen> {
       body: Column(
         children: [
           getHeight(width),
-          if (!visible)
+          if (!visible && !loading)
             Expanded(
               child: DefaultTabController(
                 length: tabData.length,
@@ -179,7 +218,10 @@ class _OtherUserProfileScreenState extends State<OtherUserProfileScreen> {
                         backgroundColor: Colors.white,
                         collapsedHeight: flexibleSpaceBarSize.height,
                         expandedHeight: flexibleSpaceBarSize.height,
-                        flexibleSpace: buildMainInfoWidget(userDetail, width),
+                        flexibleSpace: buildMainInfoWidget(
+                            userDetail: userDetail,
+                            isFollow: isFollow,
+                            width: width),
                       ),
                       SliverPersistentHeader(
                         delegate: MyDelegate(
@@ -199,25 +241,32 @@ class _OtherUserProfileScreenState extends State<OtherUserProfileScreen> {
                     ];
                   },
                   body: TabBarView(
-                    //children: getTabContent(),
                     children: [
                       AboutTab(userDetail: userDetail),
-                      PostsTab(userDetail: userDetail),
-                      ReviewTab(userDetail: userDetail),
+                      PostsTab(posts: posts),
+                      ReviewTab(reviews: userDetail.reviews),
                     ],
                   ),
                 ),
               ),
-            ),
+            )
+          else
+            Center(
+              child: Column(children: [
+                Lottie.network(messageLoadingStr2, width: 100, height: 100),
+                const Text('loading ...'),
+              ]),
+            )
         ],
       ),
     );
   }
 
-  Widget buildMainInfoWidget(
-    UserDetail userDetail,
-    double width,
-  ) {
+  Widget buildMainInfoWidget({
+    required UserDetail userDetail,
+    required bool isFollow,
+    required double width,
+  }) {
     return Padding(
       padding: const EdgeInsets.fromLTRB(10, 15, 10, 0),
       child: Column(
@@ -234,7 +283,7 @@ class _OtherUserProfileScreenState extends State<OtherUserProfileScreen> {
                     radius: width / 7 - 2.5,
                     backgroundColor: Colors.white,
                     child: CustomUserAvatar(
-                        image: userDetail.user.image, radius: width / 7 - 5),
+                        image: userDetail.avatarUrl, radius: width / 7 - 5),
                   ),
                 ),
               ),
@@ -242,7 +291,7 @@ class _OtherUserProfileScreenState extends State<OtherUserProfileScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(userDetail.user.name,
+                    Text(userDetail.name,
                         style: const TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.bold,
@@ -251,7 +300,7 @@ class _OtherUserProfileScreenState extends State<OtherUserProfileScreen> {
                         overflow: TextOverflow.ellipsis),
                     Container(
                       margin: const EdgeInsets.fromLTRB(0, 10, 0, 0),
-                      child: Text(userDetail.userDescription,
+                      child: Text(userDetail.bio,
                           style: const TextStyle(
                             fontSize: 14,
                             fontWeight: FontWeight.w300,
@@ -264,13 +313,10 @@ class _OtherUserProfileScreenState extends State<OtherUserProfileScreen> {
                         Container(
                             margin: const EdgeInsets.fromLTRB(0, 0, 10, 0),
                             child: CustomMaterialButton(
-                                icon: const Icon(
-                                  Icons.add,
-                                  color: Colors.white,
-                                  size: 20,
-                                ),
-                                press: () {},
-                                text: 'Theo dõi',
+                                press: () {
+                                  handleFollowButtonClick(widget.userId);
+                                },
+                                text: isFollow ? 'Đã theo dõi' : 'Theo dõi',
                                 width: MediaQuery.of(context).size.width / 3.8,
                                 fontSize: 10,
                                 height: 25)),
@@ -283,7 +329,6 @@ class _OtherUserProfileScreenState extends State<OtherUserProfileScreen> {
                                 size: 20,
                               ),
                               press: () {
-                                //TODO trang navigate to chat_room_screen (id)
                                 navigateToChatRoom(widget.userId);
                               },
                               text: 'Nhắn tin',
@@ -327,7 +372,7 @@ class _OtherUserProfileScreenState extends State<OtherUserProfileScreen> {
                 press: () {},
                 tittle: 'Posts',
                 content: Text(
-                  userDetail.postsNum.toString(),
+                  posts.length.toString(),
                   style: const TextStyle(
                     color: Colors.black,
                     fontSize: 20,
@@ -339,7 +384,7 @@ class _OtherUserProfileScreenState extends State<OtherUserProfileScreen> {
                 press: () {},
                 tittle: 'Followers',
                 content: Text(
-                  userDetail.followers.toString(),
+                  userDetail.following.toString(),
                   style: const TextStyle(
                     color: Colors.black,
                     fontSize: 20,
@@ -370,6 +415,11 @@ class _OtherUserProfileScreenState extends State<OtherUserProfileScreen> {
     properties.add(DiagnosticsProperty<Size>(
         'flexibleSpaceBarSize', flexibleSpaceBarSize));
     properties.add(DiagnosticsProperty<bool>('visible', visible));
+    properties.add(DiagnosticsProperty<bool>('loading', loading));
+    properties.add(DiagnosticsProperty<bool>('isFollow', isFollow));
+    properties.add(DiagnosticsProperty<MessageServiceFireStore>(
+        'serviceFireStore', serviceFireStore));
+    properties.add(IterableProperty<PostCard>('posts', posts));
   }
 }
 

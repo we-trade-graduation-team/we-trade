@@ -2,7 +2,8 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 // ignore: import_of_legacy_library_into_null_safe
-import 'package:group_button/group_button.dart';
+import '../../../../services/post_feature/post_service_firestore.dart';
+import '../../../posting_features/component/class.dart';
 
 class FilterOverlay extends StatefulWidget {
   const FilterOverlay({
@@ -14,37 +15,160 @@ class FilterOverlay extends StatefulWidget {
 }
 
 class _FilterOverlayState extends State<FilterOverlay> {
-  ProductKind _chosenKind = const ProductKind(name: 'Tất cả');
-  Province _chosenProvince = const Province(name: 'Tất cả');
-  District _chosenDistrict = const District(name: 'Tất cả');
+  PostServiceFireStore dataServiceFireStore = PostServiceFireStore();
+  List<Cities> citiesList = [];
+  List<Cities> districtList = [];
+  Cities citySelected = Cities(id: 'init', name: 'init');
+  Cities districtSelected = Cities(id: 'init', name: 'init');
+  String previousID = '';
+  late TypeofGoods mainCategory = TypeofGoods(id: '', name: '');
+  final List<TypeofGoods> _type = [];
+  bool isLoading = true;
+
+  Future<List<Cities>> getCities() {
+    final _tempCities = <Cities>[];
+    return dataServiceFireStore.getCities().then((value) {
+      for (final item in value.docs) {
+        final tempCity =
+            Cities(id: item.id, name: item.data()['city'].toString());
+        _tempCities.add(tempCity);
+      }
+      return _tempCities;
+    });
+  }
+
+  Future<List<Cities>> getDistrict(String city) {
+    final _typeSubTemp = <Cities>[];
+    return dataServiceFireStore.getDistrict(city).then((value) {
+      for (final item in value.docs) {
+        final subCate =
+            Cities(id: item.id, name: item.data()['district'].toString());
+        _typeSubTemp.add(subCate);
+      }
+      return _typeSubTemp;
+    });
+  }
+
+  Future<List<TypeofGoods>> getMainCategoryData() {
+    final _tempCategory = <TypeofGoods>[];
+    return dataServiceFireStore.getMainCategory().then((value) {
+      for (final item in value.docs) {
+        final itemCate =
+            TypeofGoods(id: item.id, name: item.data()['category'].toString());
+        _tempCategory.add(itemCate);
+      }
+      return _tempCategory;
+    });
+  }
 
   @override
-  Widget build(BuildContext context) {
-    final productKinds = [
-      const ProductKind(name: 'Tất cả'),
-      const ProductKind(name: 'Điện thoại'),
-      const ProductKind(name: 'QUần áo')
-    ];
-    final provinces = [
-      const Province(name: 'Tất cả'),
-      const Province(name: 'Hà Nội'),
-      const Province(name: 'TP. Hồ Chí Minh')
-    ];
-    final districts = [
-      const District(name: 'Tất cả'),
-      const District(name: 'Quận 1'),
-      const District(name: 'Quận 2')
-    ];
+  void initState() {
+    super.initState();
+    getCities().then((value) {
+      citiesList = value;
+      citySelected = value.first;
+    }).whenComplete(() => setState(() {}));
+  }
 
-    final costs = [
-      'Tất cả',
-      'Dưới 100.000',
-      'Từ 100.000 đến 500.000',
-      'Từ 500.000 đến 1000.000',
-      'Từ 1000.000 đến 5000.000',
-      'Từ 5000.000 đến 10.000.000',
-      'Trên 10.000.000'
-    ];
+  Widget citiesDropDown() {
+    return DropdownButton<Cities>(
+      value: citiesList.isNotEmpty ? citySelected : null,
+      icon: const Icon(Icons.arrow_drop_down),
+      elevation: 16,
+      isExpanded: true,
+      style: const TextStyle(color: Colors.deepPurple),
+      underline: Container(
+        height: 2,
+        color: Colors.deepPurpleAccent,
+      ),
+      onChanged: (newValue) {
+        setState(() {
+          citySelected = newValue!;
+        });
+      },
+      items: citiesList.isNotEmpty
+          ? citiesList.map<DropdownMenuItem<Cities>>((value) {
+              return DropdownMenuItem<Cities>(
+                value: value,
+                child: Text(value.name),
+              );
+            }).toList()
+          : [],
+    );
+  }
+
+  Widget districtDropDown() => DropdownButton<Cities>(
+        value: districtList.isNotEmpty ? districtSelected : null,
+        icon: const Icon(Icons.arrow_drop_down),
+        elevation: 16,
+        isExpanded: true,
+        style: const TextStyle(color: Colors.deepPurple),
+        underline: Container(
+          height: 2,
+          color: Colors.deepPurpleAccent,
+        ),
+        onChanged: (newValue) {
+          setState(() {
+            districtSelected = newValue!;
+          });
+        },
+        items: districtList.isNotEmpty
+            ? districtList.map<DropdownMenuItem<Cities>>((value) {
+                return DropdownMenuItem<Cities>(
+                  value: value,
+                  child: Text(value.name),
+                );
+              }).toList()
+            : [],
+      );
+
+  Widget categoryDropDown() => DropdownButton<TypeofGoods>(
+        value: _type.isNotEmpty ? mainCategory : null,
+        icon: const Icon(Icons.arrow_drop_down),
+        elevation: 16,
+        isExpanded: true,
+        style: const TextStyle(color: Colors.black87),
+        underline: Container(
+          height: 2,
+          color: Colors.deepPurpleAccent,
+        ),
+        onChanged: (newValue) {
+          setState(() {
+            mainCategory = newValue!;
+            isLoading = true; //thành loading
+          });
+        },
+        items: _type.isNotEmpty
+            ? _type.map<DropdownMenuItem<TypeofGoods>>((value) {
+                return DropdownMenuItem<TypeofGoods>(
+                  value: value,
+                  child: Text(value.name),
+                );
+              }).toList()
+            : [],
+      );
+  @override
+  Widget build(BuildContext context) {
+    if (citySelected.id == 'init' || citySelected.id == previousID) {
+      //no run getSub when setState
+    } else {
+      getDistrict(citySelected.name).then((value) {
+        if (value.isNotEmpty) {
+          setState(() {
+            districtList = value;
+            districtSelected = value.first;
+            previousID = citySelected.id;
+            isLoading = false;
+          });
+        } else {
+          setState(() {
+            districtList = [];
+            previousID = citySelected.id;
+            isLoading = false;
+          });
+        }
+      });
+    }
     return Dialog(
       child: Padding(
         padding: const EdgeInsets.all(12.5),
@@ -60,24 +184,10 @@ class _FilterOverlayState extends State<FilterOverlay> {
                           'Loại mặt hàng:',
                           style: TextStyle(fontSize: 20),
                         ),
-                        DropdownButton<ProductKind>(
-                          focusColor: Colors.grey,
-                          isExpanded: true,
-                          iconEnabledColor: const Color(0xFF6F35A5),
-                          hint: const Text('Tất cả'),
-                          value: _chosenKind,
-                          items: productKinds.map((kind) {
-                            return DropdownMenuItem<ProductKind>(
-                              value: kind,
-                              child: Text(kind.name),
-                            );
-                          }).toList(),
-                          onChanged: (value) {
-                            setState(() {
-                              _chosenKind = value!;
-                            });
-                          },
-                        ),
+                        if (mainCategory.id != '')
+                          categoryDropDown()
+                        else
+                          Container(),
                       ],
                     ),
                     const TableRow(
@@ -131,23 +241,7 @@ class _FilterOverlayState extends State<FilterOverlay> {
                           ),
                         ],
                       ),
-                      DropdownButton<Province>(
-                        isExpanded: true,
-                        iconEnabledColor: Theme.of(context).primaryColor,
-                        hint: const Text('Tất cả'),
-                        value: _chosenProvince,
-                        items: provinces.map((province) {
-                          return DropdownMenuItem<Province>(
-                            value: province,
-                            child: Text(province.name),
-                          );
-                        }).toList(),
-                        onChanged: (value) {
-                          setState(() {
-                            _chosenProvince = value!;
-                          });
-                        },
-                      )
+                      citiesDropDown(),
                     ]),
                     const TableRow(children: [
                       SizedBox(
@@ -174,23 +268,7 @@ class _FilterOverlayState extends State<FilterOverlay> {
                           ),
                         ],
                       ),
-                      DropdownButton<District>(
-                        isExpanded: true,
-                        iconEnabledColor: const Color(0xFF6F35A5),
-                        hint: const Text('Tất cả'),
-                        value: _chosenDistrict,
-                        items: districts.map((district) {
-                          return DropdownMenuItem<District>(
-                            value: district,
-                            child: Text(district.name),
-                          );
-                        }).toList(),
-                        onChanged: (value) {
-                          setState(() {
-                            _chosenDistrict = value!;
-                          });
-                        },
-                      )
+                      districtDropDown()
                     ])
                   ]),
             ]),
@@ -204,19 +282,26 @@ class _FilterOverlayState extends State<FilterOverlay> {
                 height: 10,
               ),
             ]),
-            TableRow(
-              children: [
-                GroupButton(
-                    selectedColor: const Color(0xFF6F35A5),
-                    buttons: costs,
-                    spacing: 10,
-                    onSelected: (index, isSelected) {}),
-              ],
-            )
           ],
         ),
       ),
     );
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(DiagnosticsProperty<PostServiceFireStore>(
+        'dataServiceFireStore', dataServiceFireStore));
+    properties.add(IterableProperty<Cities>('citiesList', citiesList));
+    properties.add(IterableProperty<Cities>('districtList', districtList));
+    properties.add(DiagnosticsProperty<Cities>('citySelected', citySelected));
+    properties
+        .add(DiagnosticsProperty<Cities>('districtSelected', districtSelected));
+    properties.add(StringProperty('previousID', previousID));
+    properties
+        .add(DiagnosticsProperty<TypeofGoods>('mainCategory', mainCategory));
+    properties.add(DiagnosticsProperty<bool>('isLoading', isLoading));
   }
 }
 

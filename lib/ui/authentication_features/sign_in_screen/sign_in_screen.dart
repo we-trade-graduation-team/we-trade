@@ -134,9 +134,7 @@ class _SignInScreenState extends State<SignInScreen> {
         isLoading: _isLoading,
         color: Colors.white,
         opacity: 1,
-        progressIndicator: CircularProgressIndicator(
-          color: Theme.of(context).primaryColor,
-        ),
+        // progressIndicator: const CircularProgressIndicator(),
         child: AuthCustomBackground(
           title: _appLocalizations.translate('loginTxtTitle'),
           authFeatureTitle: _appLocalizations.translate('loginTxtSignIn'),

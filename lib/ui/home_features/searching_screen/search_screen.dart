@@ -1,216 +1,142 @@
-import 'dart:async';
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:material_floating_search_bar/material_floating_search_bar.dart';
+import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 
-import '../../../app_localizations.dart';
-import '../../../models/cloud_firestore/search_model/search_model.dart';
-import 'local_widgets/body.dart';
-import 'local_widgets/expandable_body.dart';
-import 'local_widgets/filter_overlay.dart';
+import '../../../constants/app_colors.dart';
+import '../../../models/cloud_firestore/post_card_model/post_card/post_card.dart';
+import '../../../services/firestore/firestore_database.dart';
+import '../../../services/post_feature/post_service_algolia.dart';
+import '../../../widgets/item_post_card.dart';
+import '../../message_features/const_string/const_str.dart';
 
-class SearchScreen extends StatelessWidget {
-  const SearchScreen({
-    Key? key,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (_) => SearchModel(),
-      child: const Scaffold(
-        resizeToAvoidBottomInset: false,
-        body: SearchScreenFloatingSearchBar(),
-      ),
-    );
-
-    // return MultiProvider(
-    //   providers: [
-    //     ChangeNotifierProvider(
-    //       create: (_) => SearchModel(
-    //         currentUser: _currentUser,
-    //       ),
-    //     ),
-    //   ],
-    //   child: const Scaffold(
-    //     resizeToAvoidBottomInset: false,
-    //     body: SearchScreenFloatingSearchBar(),
-    //   ),
-    // );
-  }
-}
-
-class SearchScreenFloatingSearchBar extends StatefulWidget {
-  const SearchScreenFloatingSearchBar({
-    Key? key,
-  }) : super(key: key);
+class SearchScreen extends StatefulWidget {
+  const SearchScreen({Key? key}) : super(key: key);
+  static String routeName = '/chat/add_chat';
 
   @override
-  _SearchScreenFloatingSearchBarState createState() =>
-      _SearchScreenFloatingSearchBarState();
+  _SearchScreenState createState() => _SearchScreenState();
 }
 
-class _SearchScreenFloatingSearchBarState
-    extends State<SearchScreenFloatingSearchBar> {
-  static const _historyLength = 5;
+class _SearchScreenState extends State<SearchScreen> {
+  TextEditingController searchTextController = TextEditingController();
+  PostServiceAlgolia serviceAlgolia = PostServiceAlgolia();
+  List<PostCard> posts = [];
+  bool isLoading = true;
 
-  late FloatingSearchBarController _controller;
-
-  // The currently searched-for term
-  String? _selectedTerm;
-
-  // The "raw" history that we don't access from the UI, prefilled with values
-  late List<String> _searchHistory;
-
-  // The filtered & ordered history that's accessed from the UI
-  late List<String> filteredSearchHistory;
-
-  // void loadSearchHistory() {
-  //   final user = context.read<User?>();
-  //   if (user != null) {
-  //     _searchHistory = user.searchHistory ?? [];
-  //   }
-  // }
-
-  List<String> filterSearchTerms({
-    required String? filter,
-  }) {
-    if (filter != null && filter.isNotEmpty) {
-      // Reversed because we want the last added items to appear first in the UI
-      return _searchHistory.reversed
-          .where((term) => term.startsWith(filter))
-          .toList();
+  void initiateSearch() {
+    if (searchTextController.text.isNotEmpty) {
+      setState(() {
+        isLoading = true;
+      });
+      serviceAlgolia.searchPostCard(searchTextController.text).then((listId) {
+        final _firestoreDatabase = context.read<FirestoreDatabase>();
+        _firestoreDatabase
+            .getPostCardsByPostIdList(postIdList: listId)
+            .then((value) => setState(() {
+                  posts = value;
+                  isLoading = false;
+                }));
+      });
     } else {
-      return _searchHistory.reversed.toList();
+      posts = [];
+      isLoading = false;
     }
-  }
-
-  void _addSearchTerm(String term) {
-    if (_searchHistory.contains(term)) {
-      _putSearchTermFirst(term);
-      return;
-    }
-
-    _searchHistory.add(term);
-    if (_searchHistory.length > _historyLength) {
-      _searchHistory.removeRange(0, _searchHistory.length - _historyLength);
-    }
-
-    // Changes in _searchHistory mean that we have to update the filteredSearchHistory
-    filteredSearchHistory = filterSearchTerms(filter: null);
-  }
-
-  void _deleteSearchTerm(String term) {
-    _searchHistory.removeWhere((t) => t == term);
-    filteredSearchHistory = filterSearchTerms(filter: null);
-  }
-
-  void _putSearchTermFirst(String term) {
-    _deleteSearchTerm(term);
-    _addSearchTerm(term);
-  }
-
-  void _onSubmitted(String query) {
-    setState(() {
-      if (query.isNotEmpty) {
-        _addSearchTerm(query);
-        _selectedTerm = query;
-      } else {
-        _selectedTerm = null;
-      }
-    });
-    _controller.close();
-  }
-
-  // void _onQueryChanged(String query) {
-  //   setState(() {
-  //     filteredSearchHistory = filterSearchTerms(filter: query);
-  //   });
-  // }
-
-  @override
-  void initState() {
-    super.initState();
-    _controller = FloatingSearchBarController();
-    filteredSearchHistory = filterSearchTerms(filter: null);
-    Timer(const Duration(milliseconds: 300), _controller.open);
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    final _actions = [
-      Builder(
-        builder: (_) {
-          return FloatingSearchBarAction.icon(
-            icon: const Icon(Icons.filter_alt_outlined),
-            onTap: _showFilterOverlay,
-          );
+    return GestureDetector(
+        onTap: () {
+          FocusScope.of(context).requestFocus(FocusNode());
         },
-      ),
-      FloatingSearchBarAction.searchToClear(
-        showIfClosed: false,
-      ),
-    ];
-    final _isPortrait =
-        MediaQuery.of(context).orientation == Orientation.portrait;
-
-    final _appLocalizations = AppLocalizations.of(context);
-
-    final _searchModel = context.watch<SearchModel>();
-
-    return FloatingSearchBar(
-      // automaticallyImplyBackButton: false,
-      controller: _controller,
-      iconColor: Colors.grey,
-      // transitionDuration: const Duration(milliseconds: 500),
-      transitionCurve: Curves.easeInOut,
-      // Bouncing physics for the search history
-      physics: const BouncingScrollPhysics(),
-      axisAlignment: _isPortrait ? 0.0 : -1.0,
-      openAxisAlignment: 0,
-      // Title is displayed on an unopened (inactive) search bar
-      title: _buildTitle(_appLocalizations.translate('appTxtTitle')),
-      actions: _actions,
-      progress: _searchModel.isLoading,
-      debounceDelay: const Duration(microseconds: 500),
-      onQueryChanged: _searchModel.onQueryChanged,
-      onSubmitted: _onSubmitted,
-      scrollPadding: EdgeInsets.zero,
-      transition: CircularFloatingSearchBarTransition(),
-      builder: (context, _) => ExpandableBody(model: _searchModel),
-      body: Body(selectedTerm: _selectedTerm),
-    );
-  }
-
-  Widget _buildTitle(String title) {
-    return Text(
-      _selectedTerm ?? title,
-      style: const TextStyle(
-        fontSize: 16,
-        fontWeight: FontWeight.w400,
-      ),
-    );
-  }
-
-  void _showFilterOverlay() {
-    showDialog<FilterOverlay>(
-      context: context,
-      builder: (_) => const FilterOverlay(),
-    );
+        child: Scaffold(
+          appBar: AppBar(
+            title: Row(
+              children: [
+                Expanded(
+                  child: TextField(
+                    controller: searchTextController,
+                    decoration: const InputDecoration(
+                      contentPadding: EdgeInsets.only(left: 10),
+                      hintText: 'Search here ...',
+                      border: InputBorder.none,
+                      helperMaxLines: 1,
+                      enabledBorder: InputBorder.none,
+                      focusedBorder: InputBorder.none,
+                      errorBorder: InputBorder.none,
+                      disabledBorder: InputBorder.none,
+                    ),
+                    style: const TextStyle(
+                      fontSize: 14,
+                      color: AppColors.kTextLightColor,
+                    ),
+                  ),
+                ),
+                GestureDetector(
+                  onTap: initiateSearch,
+                  child: Container(
+                    margin: const EdgeInsets.fromLTRB(10, 0, 20, 0),
+                    child: Icon(
+                      Icons.search,
+                      color: Theme.of(context).primaryColor,
+                    ),
+                  ),
+                )
+                // TODO vũ overlay filter ở đây, thêm nút sort nữa
+              ],
+            ),
+          ),
+          body: SingleChildScrollView(
+            child: Column(
+              children: [
+                const SizedBox(
+                  height: 15,
+                ),
+                Center(
+                  child: posts.isNotEmpty
+                      ? !isLoading
+                          ? Wrap(
+                              spacing: 20,
+                              runSpacing: 15,
+                              children: posts
+                                  .map(
+                                    (post) => ItemPostCard(postCard: post),
+                                  )
+                                  .toList(),
+                            )
+                          : Center(
+                              child: Column(
+                                children: [
+                                  Lottie.network(
+                                    messageLoadingStr2,
+                                    width: 100,
+                                    height: 100,
+                                    fit: BoxFit.fill,
+                                  ),
+                                  const SizedBox(height: 20),
+                                  const Text(loadingDataStr),
+                                ],
+                              ),
+                            )
+                      : const Center(
+                          child: Text('no data'),
+                        ),
+                )
+              ],
+            ),
+          ),
+        ));
   }
 
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
-    properties.add(IterableProperty<String>(
-        'filteredSearchHistory', filteredSearchHistory));
+    properties.add(DiagnosticsProperty<PostServiceAlgolia>(
+        'serviceAlgolia', serviceAlgolia));
+    properties.add(DiagnosticsProperty<bool>('isLoading', isLoading));
+    properties.add(IterableProperty<PostCard>('posts', posts));
+    properties.add(DiagnosticsProperty<TextEditingController>(
+        'searchTextController', searchTextController));
   }
 }

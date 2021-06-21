@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 
 import '../models/cloud_firestore/user_model/user/user.dart' as user_model;
 import '../services/firestore/firestore_path.dart';
+import '../services/message/algolia_user_service.dart';
+import '../ui/message_features/const_string/const_str.dart';
 import '../utils/model_properties/model_properties.dart';
 
 enum Status {
@@ -107,9 +109,13 @@ class AuthProvider extends ChangeNotifier {
         final _presenceData = {
           _presenceField: true,
         };
-
+        // ignore: unawaited_futures
+        UserServiceAlgolia()
+            .updateUserPresence(id: _newUser.uid!, presence: true);
         // Add new user to users Collection
         await _usersRef.doc(_newUser.uid).update(_presenceData);
+        // ignore: unawaited_futures
+
       }
     } on FirebaseAuthException catch (e) {
       // print("Error on the sign in = " + e.toString());
@@ -147,12 +153,31 @@ class AuthProvider extends ChangeNotifier {
           ..lastSeen = DateTime.now().millisecondsSinceEpoch
           ..presence = true;
 
+        final initialUserData = _newUser.toJson();
+
+        initialUserData['avatarUrl'] = userImageStr;
+        initialUserData['bio'] = '';
+        initialUserData['createAt'] = DateTime.now();
+        initialUserData['legit'] = 0;
+        initialUserData['ratingCount'] = 0;
+        initialUserData['followers'] = <String>[];
+        initialUserData['following'] = <String>[];
+        initialUserData['hiddenPosts'] = <String>[];
+        initialUserData['location'] = '';
+        initialUserData['objectID'] = _newUser.uid;
+        initialUserData['phoneNumber'] = '';
+        initialUserData['posts'] = <String>[];
+        initialUserData['tradingHistory'] = <String>[];
+        initialUserData['wishList'] = <String>[];
+
         await Future.wait([
           // Set name in firestore database
-          _usersRef.doc(_newUser.uid).set(_newUser.toJson()),
+          _usersRef.doc(_newUser.uid).set(initialUserData),
           // Set display name
           _firebaseAuthUser.updateDisplayName(name),
         ]);
+
+        await UserServiceAlgolia().addUser(_newUser);
       }
     } on FirebaseAuthException catch (e) {
       // print("Error on the new user registration = " + e.toString());
@@ -184,13 +209,17 @@ class AuthProvider extends ChangeNotifier {
 
     final _currentUser = _auth.currentUser;
 
+    // ignore: unawaited_futures
+    await UserServiceAlgolia()
+        .updateUserPresence(id: _currentUser!.uid, presence: false);
     await Future.wait([
       // Update lastSeen and presence
-      _usersRef.doc(_currentUser!.uid).update(_newData),
+      _usersRef.doc(_currentUser.uid).update(_newData),
       // Sign out for current user
       _auth.signOut(),
     ]);
 
+    // TODO update algolia presence
     _status = Status.unauthenticated;
 
     notifyListeners();
