@@ -4,22 +4,21 @@ import 'package:line_icons/line_icons.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../constants/app_dimens.dart';
-import '../../../../models/arguments/shared/post_details_arguments.dart';
 import '../../../../models/cloud_firestore/post_card_model/post_card/post_card.dart';
-import '../../../../widgets/item_post_card.dart';
+import '../../../../services/firestore/firestore_database.dart';
+import 'post_details_post_cards_current_user_may_also_like.dart';
 import 'post_details_section_container.dart';
 import 'post_details_separator.dart';
 
-class PostDetailsUserMayAlsoLikeSection extends StatelessWidget {
-  const PostDetailsUserMayAlsoLikeSection({
+class PostDetailsPostCardsCurrentUserMayAlsoLikeSection
+    extends StatelessWidget {
+  const PostDetailsPostCardsCurrentUserMayAlsoLikeSection({
     Key? key,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final _postCardsCurrentUserMayAlsoLike =
-        context.select<PostDetailsArguments, List<PostCard>>(
-            (arguments) => arguments.postCardsCurrentUserMayAlsoLike);
+    final _firestoreDatabase = context.watch<FirestoreDatabase>();
 
     final _size = MediaQuery.of(context).size;
 
@@ -40,22 +39,17 @@ class PostDetailsUserMayAlsoLikeSection extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               Center(
-                child: Wrap(
-                  spacing: 20,
-                  runSpacing: 15,
-                  children: _postCardsCurrentUserMayAlsoLike
-                      .map(
-                        (postCard) => ItemPostCard(postCard: postCard),
-                      )
-                      .toList(),
+                child: FutureProvider<List<PostCard>?>.value(
+                  value: _firestoreDatabase
+                      .getPostDetailsPostCardsCurrentUserMayAlsoLike(),
+                  initialData: null,
+                  catchError: (_, __) => const [],
+                  child: const PostDetailsPostCardsCurrentUserMayAlsoLike(),
                 ),
               ),
               SizedBox(height: _size.height * 0.004),
               TextButton.icon(
                 icon: const Icon(LineIcons.angleDown),
-                // style: TextButton.styleFrom(
-                //   primary: Theme.of(context).primaryColor,
-                // ),
                 onPressed: () {},
                 label: const Text('Load more'),
               ),

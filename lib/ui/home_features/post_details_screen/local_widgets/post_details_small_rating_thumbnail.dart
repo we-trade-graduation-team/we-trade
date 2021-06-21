@@ -1,10 +1,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import '../../../../models/ui/home_features/post_details_screen/rating_thumbnail_model.dart';
-import 'post_details_rating_level.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
-const highRatingLevel = 80;
-const mediumRatingLevel = 50;
+import '../../../../constants/app_assets.dart';
 
 class PostDetailsSmallRatingThumbnail extends StatelessWidget {
   const PostDetailsSmallRatingThumbnail({
@@ -16,9 +14,7 @@ class PostDetailsSmallRatingThumbnail extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // final size = MediaQuery.of(context).size;
-
-    final _level = _getRatingLevel(legitimacy);
+    const _starLegitSize = 20.0;
 
     return SizedBox(
       // height: size.height * 0.075,
@@ -31,7 +27,7 @@ class PostDetailsSmallRatingThumbnail extends StatelessWidget {
             Expanded(
               child: Row(
                 mainAxisSize: MainAxisSize.min,
-                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   Flexible(
                     flex: 4,
@@ -41,7 +37,7 @@ class PostDetailsSmallRatingThumbnail extends StatelessWidget {
                         fit: BoxFit.fitHeight,
                         child: Text(
                           '${legitimacy.round()}%',
-                          textAlign: TextAlign.center,
+                          textAlign: TextAlign.right,
                           style: const TextStyle(
                             fontWeight: FontWeight.w500,
                           ),
@@ -49,16 +45,16 @@ class PostDetailsSmallRatingThumbnail extends StatelessWidget {
                       ),
                     ),
                   ),
-                  const Expanded(
-                    // flex: 2,
-                    child: SizedBox(),
-                  ),
+                  // const Expanded(
+                  //   // flex: 2,
+                  //   child: SizedBox(),
+                  // ),
                   Expanded(
                     flex: 5,
-                    child: PostDetailsRatingLevel(
-                      ratingLevel: _level,
-                      backgroundColor: ratingLevels[_level]!.backgroundColor,
-                      textColor: ratingLevels[_level]!.textColor,
+                    child: SvgPicture.asset(
+                      AppAssets.kPostDetailsLegitStar,
+                      height: _starLegitSize,
+                      width: _starLegitSize,
                     ),
                   ),
                 ],
@@ -86,15 +82,6 @@ class PostDetailsSmallRatingThumbnail extends StatelessWidget {
         ),
       ),
     );
-  }
-
-  String _getRatingLevel(double rating) {
-    if (rating >= highRatingLevel) {
-      return 'High';
-    } else if (rating >= mediumRatingLevel) {
-      return 'Medium';
-    }
-    return 'Low';
   }
 
   @override

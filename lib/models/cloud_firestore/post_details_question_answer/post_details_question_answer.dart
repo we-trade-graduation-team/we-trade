@@ -5,10 +5,10 @@ part 'post_details_question_answer.g.dart';
 
 @JsonSerializable(explicitToJson: true)
 
-/// Represents answer in a Post Details 's Question.
+/// Represents answer in a Post Details 's Question Answer.
 class PostDetailsQuestionAnswer {
   PostDetailsQuestionAnswer({
-    required this.respondentName,
+    required this.respondentId,
     required this.answer,
     required this.createdAt,
   });
@@ -26,7 +26,7 @@ class PostDetailsQuestionAnswer {
   String? answerId;
 
   @JsonKey(required: true)
-  final String respondentName;
+  final String respondentId;
 
   @JsonKey(required: true)
   final String answer;

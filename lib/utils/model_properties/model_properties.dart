@@ -33,4 +33,9 @@ class ModelProperties {
   static const postCategoryInfoProperty = 'categoryInfo';
   static const postMainCategoryIdProperty =
       '$postCategoryInfoProperty.mainCategoryId';
+  static const postIsHiddenProperty = 'isHidden';
+
+  // //Junction user favorite post
+  // static const junctionUserFavoritePostUidProperty = 'uid';
+  // static const junctionUserFavoritePostPostIdProperty = 'postId';
 }

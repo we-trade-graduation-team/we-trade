@@ -17,7 +17,7 @@ class PostDetailsTradeForCategoryPreview extends StatelessWidget {
       borderRadius: BorderRadius.circular(5),
       child: Container(
         height: _size.height * 0.043,
-        color: Theme.of(context).primaryColorLight,
+        color: Theme.of(context).primaryColorLight.withOpacity(0.5),
         padding: EdgeInsets.symmetric(
           horizontal: 20,
           vertical: _size.height * 0.013,

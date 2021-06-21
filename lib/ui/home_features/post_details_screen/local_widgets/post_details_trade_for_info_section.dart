@@ -2,7 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../../../models/arguments/shared/post_details_arguments.dart';
+import '../../../../models/cloud_firestore/post_model/post/post.dart';
 import 'post_details_section_container.dart';
 import 'post_details_separator.dart';
 import 'post_details_trade_for_category_preview.dart';
@@ -15,8 +15,7 @@ class PostDetailsTradeForInfoSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final _postDetailsTradeForList =
-        context.select<PostDetailsArguments, List<String>>(
-            (arguments) => arguments.postDetails.itemInfo.tradeForList);
+        context.select<Post, List<String>>((post) => post.tradeForList);
 
     final _size = MediaQuery.of(context).size;
 
@@ -35,10 +34,9 @@ class PostDetailsTradeForInfoSection extends StatelessWidget {
           child: Wrap(
             spacing: 15,
             runSpacing: 15,
-            // alignment: WrapAlignment.center,
             children: _postDetailsTradeForList
-                .map((category) =>
-                    PostDetailsTradeForCategoryPreview(tradeForCategory: category))
+                .map((category) => PostDetailsTradeForCategoryPreview(
+                    tradeForCategory: category))
                 .toList(),
           ),
         ),

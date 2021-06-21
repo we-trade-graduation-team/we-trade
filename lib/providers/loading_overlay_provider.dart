@@ -3,15 +3,15 @@ import 'package:flutter/material.dart';
 class LoadingOverlayProvider extends ChangeNotifier {
   LoadingOverlayProvider();
 
-  final _isLoading = false;
+  var _isLoading = false;
 
-  bool get isLoading {
-    return _isLoading;
-  }
+  bool get isLoading => _isLoading;
 
   void updateLoading({
     required bool isLoading,
   }) {
+    _isLoading = isLoading;
+
     notifyListeners();
   }
 }

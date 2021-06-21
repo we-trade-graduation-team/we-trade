@@ -3,17 +3,28 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../models/arguments/shared/post_details_arguments.dart';
+import '../../../../providers/post_details_follow_provider.dart';
+import '../../../../services/firestore/firestore_database.dart';
 
-class PostDetailsFollowToggleButton extends StatelessWidget {
+class PostDetailsFollowToggleButton extends StatefulWidget {
   const PostDetailsFollowToggleButton({
     Key? key,
   }) : super(key: key);
 
   @override
+  _PostDetailsFollowToggleButtonState createState() =>
+      _PostDetailsFollowToggleButtonState();
+}
+
+class _PostDetailsFollowToggleButtonState
+    extends State<PostDetailsFollowToggleButton> {
+  @override
   Widget build(BuildContext context) {
+    final _postDetailsFollowProvider =
+        context.watch<PostDetailsFollowProvider>();
+
     final _isCurrentUserAFollowerOfPostOwner =
-        context.select<PostDetailsArguments, bool>(
-            (arguments) => arguments.isCurrentUserAFollowerOfPostOwner);
+        _postDetailsFollowProvider.isFollowed;
 
     final _buttonText =
         _isCurrentUserAFollowerOfPostOwner ? 'Followed' : 'Follow';
@@ -29,12 +40,7 @@ class PostDetailsFollowToggleButton extends StatelessWidget {
             width: constraints.maxWidth - 2,
             height: _buttonWidth / 4,
           ),
-          onPressed: (index) {
-            // TODO: <Phuc> Update _isCurrentUserAFollowerOfPostOwner
-            // setState(() {
-            //   // _buttonText = _selections[index] ? 'Followed' : 'Follow';
-            // });
-          },
+          onPressed: _onPressed,
           color: Theme.of(context).primaryColor,
           selectedColor: Colors.grey,
           fillColor: Colors.white,
@@ -48,6 +54,32 @@ class PostDetailsFollowToggleButton extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+
+  Future<void> _onPressed(int _) async {
+    final _postDetailsFollowProvider =
+        context.read<PostDetailsFollowProvider>();
+
+    final _firestoreDatabase = context.read<FirestoreDatabase>();
+
+    final _isCurrentUserAFollowerOfPostOwner =
+        _postDetailsFollowProvider.isFollowed;
+
+    final _args = context.read<PostDetailsArguments>();
+
+    final _ownerId = _args.ownerId;
+
+    _postDetailsFollowProvider.updatePostDetailsFollow();
+
+    if (_isCurrentUserAFollowerOfPostOwner) {
+      return _firestoreDatabase.deleteJunctionUserFollower(
+        postOwnerId: _ownerId,
+      );
+    }
+
+    return _firestoreDatabase.setJunctionUserFollower(
+      postOwnerId: _ownerId,
     );
   }
 }

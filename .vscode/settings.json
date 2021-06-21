@@ -8,6 +8,7 @@
         "Serializable",
         "cupertino",
         "reorderable",
-        "sublist"
+        "sublist",
+        "timeago"
     ]
 }

@@ -43,6 +43,8 @@ class AuthProvider extends ChangeNotifier {
   final _usersRef =
       FirebaseFirestore.instance.collection(FirestorePath.users());
 
+  
+
   // /// Changed to idTokenChanges as it updates depending on more cases.
   // Stream<user_model.User?> get authStateChanges =>
   //     _auth.idTokenChanges().map(_userFromFirebase);

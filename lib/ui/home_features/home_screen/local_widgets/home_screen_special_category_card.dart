@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
@@ -27,11 +28,23 @@ class HomeScreenSpecialCategoryCard extends StatelessWidget {
             child: Stack(
               children: [
                 Positioned.fill(
-                  child: Image.network(
-                    specialCategoryCard.photoUrl,
-                    fit: BoxFit.cover,
-                    height: double.infinity,
-                    width: double.infinity,
+                  child: CachedNetworkImage(
+                    imageUrl: specialCategoryCard.photoUrl,
+                    imageBuilder: (_, imageProvider) => Container(
+                      decoration: BoxDecoration(
+                        image: DecorationImage(
+                          image: imageProvider,
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                    ),
+                    placeholder: (_, __) => const Center(
+                      child: CircularProgressIndicator(
+                        backgroundColor: Colors.white,
+                      ),
+                    ),
+                    errorWidget: (_, __, dynamic ___) =>
+                        const Icon(Icons.error),
                   ),
                 ),
                 Container(

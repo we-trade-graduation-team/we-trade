@@ -3,8 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:line_icons/line_icons.dart';
 import 'package:provider/provider.dart';
 
-import '../../../../models/arguments/shared/post_details_arguments.dart';
-import '../../../../models/cloud_firestore/post_details_model/post_details/post_details.dart';
+import '../../../../models/cloud_firestore/post_model/post/post.dart';
+import '../../../../providers/post_details_favorite_provider.dart';
+import '../../../../services/firestore/firestore_database.dart';
 import 'post_details_favorite_toggle_button.dart';
 import 'post_details_section_container.dart';
 import 'post_details_separator.dart';
@@ -16,11 +17,16 @@ class PostDetailsTitleSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final _postDetails = context.select<PostDetailsArguments, PostDetails>(
-        (arguments) => arguments.postDetails);
+    final _postDetails = context.watch<Post>();
+
+    final _postId = context.watch<String>();
+
+    final _itemInfo = _postDetails.itemInfo;
+
+    final _firestoreDatabase = context.watch<FirestoreDatabase>();
 
     final _size = MediaQuery.of(context).size;
-    
+
     return Column(
       children: [
         PostDetailsSectionContainer(
@@ -34,12 +40,12 @@ class PostDetailsTitleSection extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      _postDetails.title,
+                      _postDetails.name,
                       style: Theme.of(context).textTheme.headline6,
                     ),
                     SizedBox(height: _size.height * 0.02),
                     Text(
-                      '\$${_postDetails.itemInfo.price}',
+                      '${_postDetails.price.toInt()} đ',
                       style: TextStyle(
                         fontSize: 18,
                         color: Theme.of(context).primaryColor,
@@ -47,7 +53,7 @@ class PostDetailsTitleSection extends StatelessWidget {
                     ),
                     SizedBox(height: _size.height * 0.02),
                     Text(
-                      _postDetails.itemInfo.condition,
+                      _itemInfo.condition,
                       style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.w300,
@@ -58,7 +64,30 @@ class PostDetailsTitleSection extends StatelessWidget {
                   ],
                 ),
               ),
-              const PostDetailsFavoriteToggleButton(),
+              FutureProvider<bool?>.value(
+                value: _firestoreDatabase.isFavoritePostOfCurrentUser(
+                  postId: _postId,
+                ),
+                initialData: null,
+                catchError: (_, __) => false,
+                child: Consumer<bool?>(
+                  builder: (_, isFavorite, __) {
+                    return isFavorite == null
+                        ? Center(
+                            child: CircularProgressIndicator(
+                              backgroundColor: Colors.white,
+                              color: Theme.of(context).primaryColor,
+                            ),
+                          )
+                        : ChangeNotifierProvider<PostDetailsFavoriteProvider>(
+                            create: (_) => PostDetailsFavoriteProvider(
+                              isFavorite: isFavorite,
+                            ),
+                            child: const PostDetailsFavoriteToggleButton(),
+                          );
+                  },
+                ),
+              ),
             ],
           ),
         ),
@@ -77,7 +106,7 @@ class PostDetailsTitleSection extends StatelessWidget {
                 ),
                 SizedBox(width: _size.width * 0.01),
                 Text(
-                  _postDetails.itemInfo.addressInfo.toString(),
+                  _itemInfo.addressInfo.toString(),
                   style: TextStyle(
                     color: ((Theme.of(context).textTheme.bodyText2)!.color)!
                         .withOpacity(0.6),

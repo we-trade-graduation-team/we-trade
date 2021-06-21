@@ -13,7 +13,16 @@ class HomeScreenSpecialCategoryCards extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final _specialOfferCards = context.watch<List<SpecialCategoryCard>>();
+    final _specialOfferCards = context.watch<List<SpecialCategoryCard>?>();
+
+    if (_specialOfferCards == null) {
+      return Center(
+        child: CircularProgressIndicator(
+          backgroundColor: Colors.white,
+          color: Theme.of(context).primaryColor,
+        ),
+      );
+    }
 
     final _cardHeight = context.watch<double>();
 

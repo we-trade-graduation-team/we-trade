@@ -88,7 +88,6 @@ class _SearchResultsListViewState extends State<SearchResultsListView> {
               child: Padding(
                 padding: const EdgeInsets.symmetric(vertical: 25),
                 child: Column(
-                    // TODO: <Phuc> Replace List<Product> with List<PostCard>
                     // children: [
                     //   Center(
                     //     child: Wrap(

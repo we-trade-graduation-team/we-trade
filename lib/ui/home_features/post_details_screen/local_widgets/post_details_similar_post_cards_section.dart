@@ -2,23 +2,22 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../../../models/arguments/shared/post_details_arguments.dart';
 import '../../../../models/cloud_firestore/post_card_model/post_card/post_card.dart';
-import '../../shared_widgets/horizontal_scroll_post_card_list_view.dart';
-import 'post_details_no_items_section.dart';
+import '../../../../services/firestore/firestore_database.dart';
 import 'post_details_section_container.dart';
 import 'post_details_separator.dart';
+import 'post_details_similar_post_cards.dart';
 
-class PostDetailsSimilarProductsSection extends StatelessWidget {
-  const PostDetailsSimilarProductsSection({
+class PostDetailsSimilarPostCardsSection extends StatelessWidget {
+  const PostDetailsSimilarPostCardsSection({
     Key? key,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final _similarPostCards =
-        context.select<PostDetailsArguments, List<PostCard>>(
-            (arguments) => arguments.similarPostCards);
+    final _postId = context.watch<String>();
+
+    final _firestoreDatabase = context.watch<FirestoreDatabase>();
 
     final _size = MediaQuery.of(context).size;
 
@@ -37,15 +36,16 @@ class PostDetailsSimilarProductsSection extends StatelessWidget {
             top: _size.height * 0.02,
             bottom: _size.height * 0.02,
           ),
-          child: verifyIfNoProduct(_similarPostCards),
+          child: FutureProvider<List<PostCard>?>.value(
+            value: _firestoreDatabase.getPostDetailsScreenSimilarPostCards(
+              postId: _postId,
+            ),
+            initialData: null,
+            catchError: (_, __) => const [],
+            child: const PostDetailsSimilarPostCards(),
+          ),
         ),
       ],
     );
-  }
-
-  Widget verifyIfNoProduct(List<PostCard> postCards) {
-    return postCards.isNotEmpty
-        ? HorizontalScrollPostCardListView(postCards: postCards)
-        : const PostDetailsNoItemsSection(text: 'No products');
   }
 }

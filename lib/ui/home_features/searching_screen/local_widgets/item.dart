@@ -23,7 +23,6 @@ class Item extends StatelessWidget {
 
     final model = context.watch<SearchModel>();
 
-    // TODO <Phuc> Get user search history
     // final user = context.watch<User?>();
 
     // late List<String> history;
