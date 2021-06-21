@@ -49,6 +49,9 @@ class _HomeScreenCategoryCardFundamentalState
 
     final _categoryId = widget.categoryId;
 
+    // // Navigate to category kind screen
+    // await _navigateToCategoryKindScreen();
+
     await Future.wait([
       // Increase view by 1
       _firestoreDatabase.increaseCategoryView(categoryId: _categoryId),

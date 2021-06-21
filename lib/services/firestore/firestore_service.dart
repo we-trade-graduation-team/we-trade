@@ -37,19 +37,35 @@ class FirestoreService {
     }
   }
 
+  Future<bool> checkIfWishPost(String postId, String userId) {
+    return _fireStoreInstance
+        .collection('users')
+        .where('wishList', arrayContains: postId)
+        .get()
+        .then((value) {
+      for (final doc in value.docs) {
+        if (doc.id == userId) {
+          return true;
+        }
+      }
+      return false;
+    });
+  }
+
+  Future<DocumentReference<Map<String, dynamic>>> addData({
+    required String path,
+    required Map<String, dynamic> data,
+  }) async {
+    final _reference = _fireStoreInstance.collection(path);
+
+    return _reference.add(data);
+  }
+
   Future<void> setData({
     required String path,
     required Map<String, dynamic> data,
     bool merge = false,
   }) async {
-    final _isDocExists = await checkIfDocExists(path: path);
-
-    if (!_isDocExists) {
-      ErrorHelper.throwArgumentError(
-        message: '${FirestoreErrors.errorDocumentNotExists}: $path',
-      );
-    }
-
     final _reference = _fireStoreInstance.doc(path);
 
     return _reference
@@ -65,7 +81,8 @@ class FirestoreService {
 
     if (!_isDocExists) {
       ErrorHelper.throwArgumentError(
-        message: '${FirestoreErrors.errorDocumentNotExists}: $path',
+        message: FirestoreErrors.errorDocumentNotExists,
+        path: path,
       );
     }
 
@@ -81,7 +98,8 @@ class FirestoreService {
 
     if (!_isDocExists) {
       ErrorHelper.throwArgumentError(
-        message: '${FirestoreErrors.errorDocumentNotExists}: $path',
+        message: FirestoreErrors.errorDocumentNotExists,
+        path: path,
       );
     }
 
@@ -108,7 +126,8 @@ class FirestoreService {
           .map((doc) {
             if (!doc.exists) {
               ErrorHelper.throwArgumentError(
-                message: '${FirestoreErrors.errorDocumentNotExists}: $path',
+                message: FirestoreErrors.errorDocumentNotExists,
+                path: path,
               );
             }
 
@@ -129,7 +148,8 @@ class FirestoreService {
 
     if (!_isDocExists) {
       ErrorHelper.throwArgumentError(
-        message: '${FirestoreErrors.errorDocumentNotExists}: $path',
+        message: FirestoreErrors.errorDocumentNotExists,
+        path: path,
       );
     }
 
@@ -157,7 +177,8 @@ class FirestoreService {
         .map((doc) {
           if (!doc.exists) {
             ErrorHelper.throwArgumentError(
-              message: '${FirestoreErrors.errorDocumentNotExists}: $path',
+              message: FirestoreErrors.errorDocumentNotExists,
+              path: path,
             );
           }
 
@@ -177,7 +198,8 @@ class FirestoreService {
 
     if (!_isDocExists) {
       ErrorHelper.throwArgumentError(
-        message: '${FirestoreErrors.errorDocumentNotExists}: $path',
+        message: FirestoreErrors.errorDocumentNotExists,
+        path: path,
       );
     }
 

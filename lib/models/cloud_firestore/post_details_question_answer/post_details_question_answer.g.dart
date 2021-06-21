@@ -8,10 +8,9 @@ part of 'post_details_question_answer.dart';
 
 PostDetailsQuestionAnswer _$PostDetailsQuestionAnswerFromJson(
     Map<String, dynamic> json) {
-  $checkKeys(json,
-      requiredKeys: const ['respondentName', 'answer', 'createdAt']);
+  $checkKeys(json, requiredKeys: const ['respondentId', 'answer', 'createdAt']);
   return PostDetailsQuestionAnswer(
-    respondentName: json['respondentName'] as String,
+    respondentId: json['respondentId'] as String,
     answer: json['answer'] as String,
     createdAt: json['createdAt'] as int,
   );
@@ -20,7 +19,7 @@ PostDetailsQuestionAnswer _$PostDetailsQuestionAnswerFromJson(
 Map<String, dynamic> _$PostDetailsQuestionAnswerToJson(
         PostDetailsQuestionAnswer instance) =>
     <String, dynamic>{
-      'respondentName': instance.respondentName,
+      'respondentId': instance.respondentId,
       'answer': instance.answer,
       'createdAt': instance.createdAt,
     };

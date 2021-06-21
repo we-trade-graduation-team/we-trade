@@ -83,16 +83,16 @@ class _MyAppState extends State<MyApp> {
   }
 
   Widget _myAwesomeApp() {
-    final _botToastBuilder = BotToastInit(); //1. call BotToastInit
-
-    final _themeProvider = Provider.of<ThemeProvider>(context);
-
-    final _languageProvider = Provider.of<LanguageProvider>(context);
-
     return AuthWidgetBuilder(
       databaseBuilder: widget.databaseBuilder,
       builder: (context, user) {
         final _flavor = context.read<Flavor>();
+
+        final _botToastBuilder = BotToastInit(); //1. call BotToastInit
+
+        final _themeProvider = context.read<ThemeProvider>();
+
+        final _languageProvider = context.read<LanguageProvider>();
 
         return MaterialApp(
           debugShowCheckedModeBanner: false,

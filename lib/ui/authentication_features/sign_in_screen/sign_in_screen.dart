@@ -3,19 +3,16 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:loading_overlay/loading_overlay.dart';
 import 'package:provider/provider.dart';
 
 import '../../../app_localizations.dart';
-import '../../../constants/app_assets.dart';
 import '../../../providers/auth_provider.dart';
 import '../../../utils/helper/authentication/dialog_content_helper/dialog_content_helper.dart';
 import '../../../utils/helper/flash/flash_helper.dart';
 import '../../../utils/routes/routes.dart';
 import '../shared_widgets/auth_custom_background.dart';
 import '../shared_widgets/custom_form_builder_text_field.dart';
-import '../shared_widgets/rounded_icon_button.dart';
 
 class SignInScreen extends StatefulWidget {
   const SignInScreen({
@@ -73,42 +70,9 @@ class _SignInScreenState extends State<SignInScreen> {
 
     final node = FocusScope.of(context);
 
-    final socialIcons = [
-      AppAssets.googleIcon,
-      AppAssets.appleIcon,
-      AppAssets.facebookIcon,
-    ];
-
     final _appLocalizations = AppLocalizations.of(context);
 
     final footerChildren = [
-      Padding(
-        padding: const EdgeInsets.only(
-          top: 20,
-          bottom: 50,
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: socialIcons
-              .map(
-                (icon) => RoundedIconButton(
-                  icon: SvgPicture.asset(
-                    icon,
-                    height: 25,
-                    width: 25,
-                    placeholderBuilder: (context) => Container(
-                      padding: const EdgeInsets.all(30),
-                      child: const CircularProgressIndicator(),
-                    ),
-                  ),
-                  elevation: 2,
-                  width: 50,
-                  onPressed: () {},
-                ),
-              )
-              .toList(),
-        ),
-      ),
       Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [

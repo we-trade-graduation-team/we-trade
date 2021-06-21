@@ -1,60 +1,57 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 import 'package:provider/provider.dart';
 
-// import '../app_localizations.dart';
 import '../app_localizations.dart';
 import '../models/arguments/shared/post_details_arguments.dart';
 import '../models/cloud_firestore/post_card_model/post_card/post_card.dart';
-import '../models/cloud_firestore/post_card_model/post_card_item/post_card_item.dart';
-import '../models/ui/home_features/post_details_screen/question_model.dart';
-import '../models/ui/shared_models/account_model.dart';
-import '../models/ui/shared_models/product_model.dart';
+import '../providers/loading_overlay_provider.dart';
 import '../services/firestore/firestore_database.dart';
 import '../ui/home_features/post_details_screen/post_details_screen.dart';
 import '../utils/routes/routes.dart';
 // import '../ui/home_features/post_details_screen/post_details_screen.dart';
-// import '../utils/routes/routes.dart';
+// // import '../utils/routes/routes.dart';
 
-final tempProduct = Product(
-  id: 1,
-  images: [
-    'https://images.unsplash.com/photo-1605899435973-ca2d1a8861cf?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=675&q=80',
-    'https://images.unsplash.com/photo-1509198397868-475647b2a1e5?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=598&q=80',
-    'https://images.unsplash.com/photo-1529448155365-b176d2c6906b?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=675&q=80',
-    'https://images.unsplash.com/photo-1529154691717-3306083d869e?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1050&q=80',
-  ],
-  tradeForCategory: tradeForList,
-  title: 'Wireless Controller for PS4™ whole new level',
-  price: 64.99,
-  description: description,
-  condition: condition,
-  productLocation: location,
-  ownerLocation: location,
-  isFavourite: true,
-  isPopular: true,
-  owner: demoUsers[1],
-  questions: demoQuestions,
-);
+// final tempProduct = Product(
+//   id: 1,
+//   images: [
+//     'https://images.unsplash.com/photo-1605899435973-ca2d1a8861cf?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=675&q=80',
+//     'https://images.unsplash.com/photo-1509198397868-475647b2a1e5?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=598&q=80',
+//     'https://images.unsplash.com/photo-1529448155365-b176d2c6906b?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=675&q=80',
+//     'https://images.unsplash.com/photo-1529154691717-3306083d869e?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1050&q=80',
+//   ],
+//   tradeForCategory: tradeForList,
+//   title: 'Wireless Controller for PS4™ whole new level',
+//   price: 64.99,
+//   description: description,
+//   condition: condition,
+//   productLocation: location,
+//   ownerLocation: location,
+//   isFavourite: true,
+//   isPopular: true,
+//   owner: demoUsers[1],
+//   questions: demoQuestions,
+// );
 
-final tempPostCardItem = PostCardItem(
-    image:
-        'https://images.unsplash.com/photo-1605899435973-ca2d1a8861cf?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=675&q=80',
-    condition: 'mới',
-    district: 'quận 5',
-    price: 300);
+// final tempPostCardItem = PostCardItem(
+//     image:
+//         'https://images.unsplash.com/photo-1605899435973-ca2d1a8861cf?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=675&q=80',
+//     condition: 'mới',
+//     district: 'quận 5',
+//     price: 300);
 
-final tempPostCardList = <PostCard>[
-  PostCard(
-      postId: '8Dzp1L2GBTENRWaMNJuV',
-      item: tempPostCardItem,
-      title: 'sản phẩm tạm'),
-  PostCard(
-      postId: 'znR6eLnm2KpWBseKI7aJ',
-      item: tempPostCardItem,
-      title: 'sản phẩm tạm'),
-];
+// final tempPostCardList = <PostCard>[
+//   PostCard(
+//       postId: '8Dzp1L2GBTENRWaMNJuV',
+//       item: tempPostCardItem,
+//       title: 'sản phẩm tạm'),
+//   PostCard(
+//       postId: 'znR6eLnm2KpWBseKI7aJ',
+//       item: tempPostCardItem,
+//       title: 'sản phẩm tạm'),
+// ];
 
 // bool _isNumeric(String? s) {
 //   if (s == null) {
@@ -111,11 +108,23 @@ class _ItemPostCardState extends State<ItemPostCard> {
               aspectRatio: 1,
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(8),
-                child: Image.network(
-                  widget.postCard.item.image,
-                  fit: BoxFit.cover,
-                  height: double.infinity,
-                  width: double.infinity,
+                child: CachedNetworkImage(
+                  imageUrl: widget.postCard.item.image,
+                  imageBuilder: (_, imageProvider) => Container(
+                    decoration: BoxDecoration(
+                      image: DecorationImage(
+                        image: imageProvider,
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                  ),
+                  placeholder: (_, __) => Center(
+                    child: CircularProgressIndicator(
+                      backgroundColor: Colors.white,
+                      color: Theme.of(context).primaryColor,
+                    ),
+                  ),
+                  errorWidget: (_, __, dynamic ___) => const Icon(Icons.error),
                 ),
               ),
             ),
@@ -158,7 +167,7 @@ class _ItemPostCardState extends State<ItemPostCard> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
-                            '\$${widget.postCard.item.price}',
+                            '${widget.postCard.item.price.toInt()} đ',
                             overflow: TextOverflow.ellipsis,
                             style:
                                 Theme.of(context).textTheme.bodyText2!.copyWith(
@@ -215,60 +224,35 @@ class _ItemPostCardState extends State<ItemPostCard> {
   }
 
   Future<void> _onTap() async {
+    final _loadingOverlayProvider = context.read<LoadingOverlayProvider>();
+
+    _loadingOverlayProvider.updateLoading(
+      isLoading: true,
+    );
+
     final _firestoreDatabase = context.read<FirestoreDatabase>();
 
     final _postId = widget.postCard.postId!;
 
-    // Get post owner id
-    final _postOwnerId = await _firestoreDatabase.getPostOwnerId(
+    final _post = await _firestoreDatabase.getPost(
       postId: _postId,
     );
 
-    // Get this post details
-    final _postDetails = await _firestoreDatabase.getPostDetails(
-      postId: _postId,
-    );
-
-    // Check if this post is one of current user's favorite posts
-    final _isCurrentUserFavoritePost =
-        await _firestoreDatabase.isFavoritePostOfCurrentUser(
-      postId: _postId,
-    );
-
-    // Check if current user is a follower of post owner
-    final _isCurrentUserAFollowerOfPostOwner =
-        await _firestoreDatabase.isCurrentUserAFollowerOfUser(
-      userId: _postOwnerId,
-    );
-
-    // Get similar postCards
-    final _similarPostCards =
-        await _firestoreDatabase.getPostDetailsScreenSimilarPostCards(
-      postId: _postId,
-    );
-
-    // Get this post's owner other postCards
-    final _postOwnerOtherPostCards =
-        await _firestoreDatabase.getPostCardsByUserId(
-      userId: _postOwnerId,
-    );
-
-    // Remove this post card
-    _postOwnerOtherPostCards
-        .removeWhere((postCard) => postCard.postId == _postId);
-
-    // Get postCards that current user may also like
-    final _postCardsCurrentUserMayAlsoLike = await _firestoreDatabase
-        .getPostDetailsPostCardsCurrentUserMayAlsoLike();
+    final _ownerId = _post.owner;
 
     // Create postDetailsArguments param
     final _postDetailsArguments = PostDetailsArguments(
-      postDetails: _postDetails,
-      isCurrentUserFavoritePost: _isCurrentUserFavoritePost,
-      isCurrentUserAFollowerOfPostOwner: _isCurrentUserAFollowerOfPostOwner,
-      similarPostCards: _similarPostCards,
-      postOwnerOtherPostCards: _postOwnerOtherPostCards,
-      postCardsCurrentUserMayAlsoLike: _postCardsCurrentUserMayAlsoLike,
+      postId: _postId,
+      ownerId: _ownerId,
+    );
+
+    // Navigate to post details screen
+    await _navigateToPostDetailsScreen(
+      arguments: _postDetailsArguments,
+    );
+
+    _loadingOverlayProvider.updateLoading(
+      isLoading: false,
     );
 
     await Future.wait([
@@ -276,8 +260,6 @@ class _ItemPostCardState extends State<ItemPostCard> {
       _firestoreDatabase.increasePostCardView(postId: _postId),
       // Update current user's keyword history
       _firestoreDatabase.updateCurrentUserKeywordHistory(postId: _postId),
-      // Navigate to post details screen
-      _navigateToPostDetailsScreen(arguments: _postDetailsArguments),
     ]);
   }
 

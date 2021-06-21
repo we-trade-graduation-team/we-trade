@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:json_annotation/json_annotation.dart';
-import '../post_details_question_answer/post_details_question_answer.dart';
 
 part 'post_details_question.g.dart';
 
@@ -10,9 +9,10 @@ part 'post_details_question.g.dart';
 class PostDetailsQuestion {
   PostDetailsQuestion({
     required this.question,
-    this.votes = 0,
+    required this.askerId,
+    required this.createdAt,
+    // this.votes = 0,
     this.questionId,
-    this.answers,
   });
 
   factory PostDetailsQuestion.fromJson(Map<String, dynamic> json) =>
@@ -28,11 +28,14 @@ class PostDetailsQuestion {
   @JsonKey(required: true)
   final String question;
 
-  @JsonKey(required: true, defaultValue: 0)
-  int votes;
+  @JsonKey(required: true)
+  final String askerId;
 
-  @JsonKey(ignore: true)
-  final List<PostDetailsQuestionAnswer>? answers;
+  // @JsonKey(required: true, defaultValue: 0)
+  // int votes;
+
+  @JsonKey(required: true)
+  final int createdAt;
 
   Map<String, dynamic> toJson() => _$PostDetailsQuestionToJson(this);
 }

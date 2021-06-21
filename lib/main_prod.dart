@@ -9,6 +9,7 @@ import 'flavor.dart';
 import 'my_app.dart';
 import 'providers/auth_provider.dart';
 import 'providers/language_provider.dart';
+import 'providers/loading_overlay_provider.dart';
 import 'providers/theme_provider.dart';
 import 'services/firestore/firestore_database.dart';
 
@@ -43,6 +44,9 @@ void main() {
                 SharedPreferences.getInstance(),
               ),
             ),
+          ),
+          ChangeNotifierProvider<LoadingOverlayProvider>(
+            create: (_) => LoadingOverlayProvider(),
           ),
         ],
         child: MyApp(

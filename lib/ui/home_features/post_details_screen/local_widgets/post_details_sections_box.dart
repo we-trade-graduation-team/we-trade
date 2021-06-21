@@ -5,12 +5,12 @@ import '../../../../constants/app_dimens.dart';
 import '../../../../widgets/custom_animation_limiter_for_list_view.dart';
 import 'post_details_description_section.dart';
 import 'post_details_faq_section.dart';
+import 'post_details_owner_info_section.dart';
 import 'post_details_owner_other_post_cards_section.dart';
-import 'post_details_similar_products_section.dart';
+import 'post_details_post_cards_current_user_may_also_like_section.dart';
+import 'post_details_similar_post_cards_section.dart';
 import 'post_details_title_section.dart';
 import 'post_details_trade_for_info_section.dart';
-import 'post_details_user_info_section.dart';
-import 'post_details_user_may_also_like_section.dart';
 
 class PostDetailsSectionsBox extends StatelessWidget {
   const PostDetailsSectionsBox({
@@ -25,11 +25,11 @@ class PostDetailsSectionsBox extends StatelessWidget {
       PostDetailsTitleSection(),
       PostDetailsTradeForInfoSection(),
       PostDetailsDescriptionSection(),
-      PostDetailsUserInfoSection(),
+      PostDetailsOwnerInfoSection(),
       PostDetailsOwnerOtherPostCardsSection(),
       PostDetailsFaqSection(),
-      PostDetailsSimilarProductsSection(),
-      PostDetailsUserMayAlsoLikeSection(),
+      PostDetailsSimilarPostCardsSection(),
+      PostDetailsPostCardsCurrentUserMayAlsoLikeSection(),
     ];
 
     return SliverToBoxAdapter(

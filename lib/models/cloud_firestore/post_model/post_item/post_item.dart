@@ -15,6 +15,12 @@ class PostItem {
   factory PostItem.fromJson(Map<String, dynamic> json) =>
       _$PostItemFromJson(json);
 
+  factory PostItem.initialData() => PostItem(
+        condition: '',
+        description: '',
+        addressInfo: PostItemAddress.initialData(),
+      );
+
   @JsonKey(required: true)
   final String condition;
 
@@ -28,4 +34,3 @@ class PostItem {
 
   Map<String, dynamic> toJson() => _$PostItemToJson(this);
 }
-  

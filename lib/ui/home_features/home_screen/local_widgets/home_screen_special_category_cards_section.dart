@@ -36,9 +36,9 @@ class HomeScreenSpecialCategoryCardsSection extends StatelessWidget {
           height: _cardHeight,
           child: MultiProvider(
             providers: [
-              FutureProvider<List<SpecialCategoryCard>>.value(
+              FutureProvider<List<SpecialCategoryCard>?>.value(
                 value: _firestoreDatabase.getHomeScreenSpecialCategoryCards(),
-                initialData: const [],
+                initialData: null,
                 catchError: (_, __) => const [],
               ),
               Provider<double>.value(value: _cardHeight),

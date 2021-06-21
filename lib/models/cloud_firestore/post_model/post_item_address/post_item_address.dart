@@ -13,6 +13,12 @@ class PostItemAddress {
   factory PostItemAddress.fromJson(Map<String, dynamic> json) =>
       _$PostItemAddressFromJson(json);
 
+  factory PostItemAddress.initialData() => PostItemAddress(
+        address: '',
+        city: '',
+        district: '',
+      );
+
   @JsonKey(required: true)
   final String address;
 
@@ -21,6 +27,9 @@ class PostItemAddress {
 
   @JsonKey(required: true)
   final String district;
+
+  @override
+  String toString() => '$address, $district, $city';
 
   Map<String, dynamic> toJson() => _$PostItemAddressToJson(this);
 }

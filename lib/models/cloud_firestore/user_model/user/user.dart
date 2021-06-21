@@ -33,6 +33,8 @@ class User {
       _$UserFromJson(snapshot.data() as Map<String, dynamic>)
         ..uid = snapshot.id;
 
+  factory User.initialData() => User();
+
   @JsonKey(ignore: true)
   String? uid;
 

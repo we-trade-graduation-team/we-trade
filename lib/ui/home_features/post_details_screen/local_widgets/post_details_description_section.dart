@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../constants/app_dimens.dart';
-import '../../../../models/arguments/shared/post_details_arguments.dart';
+import '../../../../models/cloud_firestore/post_model/post/post.dart';
 import 'post_details_section_container.dart';
 import 'post_details_separator.dart';
 
@@ -16,8 +16,7 @@ class PostDetailsDescriptionSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final _postDetailsDescription =
-        context.select<PostDetailsArguments, String>(
-            (arguments) => arguments.postDetails.itemInfo.description);
+        context.select<Post, String>((post) => post.itemInfo.description);
 
     final _size = MediaQuery.of(context).size;
 

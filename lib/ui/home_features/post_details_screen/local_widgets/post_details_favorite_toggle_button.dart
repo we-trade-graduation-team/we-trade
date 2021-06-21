@@ -2,18 +2,30 @@ import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../../../../models/arguments/shared/post_details_arguments.dart';
 
-class PostDetailsFavoriteToggleButton extends StatelessWidget {
+import '../../../../providers/post_details_favorite_provider.dart';
+import '../../../../services/firestore/firestore_database.dart';
+
+class PostDetailsFavoriteToggleButton extends StatefulWidget {
   const PostDetailsFavoriteToggleButton({
     Key? key,
   }) : super(key: key);
 
   @override
+  _PostDetailsFavoriteToggleButtonState createState() =>
+      _PostDetailsFavoriteToggleButtonState();
+}
+
+class _PostDetailsFavoriteToggleButtonState
+    extends State<PostDetailsFavoriteToggleButton> {
+  @override
   Widget build(BuildContext context) {
-    final _isCurrentUserFavoritePost =
-        context.select<PostDetailsArguments, bool>(
-            (arguments) => arguments.isCurrentUserFavoritePost);
+    final _postDetailsFavoriteProvider =
+        context.watch<PostDetailsFavoriteProvider>();
+
+    final _isCurrentUserFavoritePost = _postDetailsFavoriteProvider.isFavorite;
+
+    final _isSelected = [_isCurrentUserFavoritePost];
 
     return Container(
       padding: EdgeInsets.zero,
@@ -25,13 +37,8 @@ class PostDetailsFavoriteToggleButton extends StatelessWidget {
         ),
       ),
       child: ToggleButtons(
-        isSelected: [_isCurrentUserFavoritePost],
-        onPressed: (index) {
-          // TODO: <Phuc> Update _isCurrentUserFavoritePost
-          // setState(() {
-          //   _selections[index] = !_selections[index];
-          // });
-        },
+        isSelected: _isSelected,
+        onPressed: _onPressed,
         selectedColor: const Color(0xFFEB5757),
         color: const Color(0xFFBFC1C7),
         fillColor: const Color(0xFFFFE6E6),
@@ -46,6 +53,29 @@ class PostDetailsFavoriteToggleButton extends StatelessWidget {
           Icon(EvaIcons.heart),
         ],
       ),
+    );
+  }
+
+  Future<void> _onPressed(int _) async {
+    final _postDetailsFavoriteProvider =
+        context.read<PostDetailsFavoriteProvider>();
+
+    final _firestoreDatabase = context.read<FirestoreDatabase>();
+
+    final _isCurrentUserFavoritePost = _postDetailsFavoriteProvider.isFavorite;
+
+    final _postId = context.read<String>();
+
+    _postDetailsFavoriteProvider.updatePostDetailsFavorite();
+
+    if (_isCurrentUserFavoritePost) {
+      return _firestoreDatabase.deleteJunctionUserFavoritePost(
+        postId: _postId,
+      );
+    }
+
+    return _firestoreDatabase.setJunctionUserFavoritePost(
+      postId: _postId,
     );
   }
 }

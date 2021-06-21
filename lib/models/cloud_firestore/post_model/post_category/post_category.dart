@@ -12,6 +12,11 @@ class PostCategory {
   factory PostCategory.fromJson(Map<String, dynamic> json) =>
       _$PostCategoryFromJson(json);
 
+  factory PostCategory.initialData() => PostCategory(
+        mainCategoryId: '',
+        subCategoryId: '',
+      );
+
   @JsonKey(required: true)
   final String mainCategoryId;
 

@@ -2,10 +2,10 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../../../models/arguments/shared/post_details_arguments.dart';
 import '../../../../models/cloud_firestore/post_card_model/post_card/post_card.dart';
-import '../../shared_widgets/horizontal_scroll_post_card_list_view.dart';
-import 'post_details_no_items_section.dart';
+import '../../../../models/cloud_firestore/post_model/post/post.dart';
+import '../../../../services/firestore/firestore_database.dart';
+import 'post_details_owner_other_post_cards.dart';
 import 'post_details_section_container.dart';
 import 'post_details_separator.dart';
 
@@ -16,9 +16,9 @@ class PostDetailsOwnerOtherPostCardsSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final _postOwnerOtherPostCards =
-        context.select<PostDetailsArguments, List<PostCard>>(
-            (arguments) => arguments.postOwnerOtherPostCards);
+    final _postOwnerId = context.select<Post, String>((post) => post.owner);
+
+    final _firestoreDatabase = context.watch<FirestoreDatabase>();
 
     final _size = MediaQuery.of(context).size;
 
@@ -37,15 +37,16 @@ class PostDetailsOwnerOtherPostCardsSection extends StatelessWidget {
             top: _size.height * 0.02,
             bottom: _size.height * 0.02,
           ),
-          child: _verifyIfNoProduct(_postOwnerOtherPostCards),
+          child: FutureProvider<List<PostCard>?>.value(
+            value: _firestoreDatabase.getPostCardsByUserId(
+              userId: _postOwnerId,
+            ),
+            initialData: null,
+            catchError: (_, __) => const [],
+            child: const PostDetailsOwnerOtherPostCards(),
+          ),
         ),
       ],
     );
-  }
-
-  Widget _verifyIfNoProduct(List<PostCard> postCards) {
-    return postCards.isNotEmpty
-        ? HorizontalScrollPostCardListView(postCards: postCards)
-        : const PostDetailsNoItemsSection(text: 'No products');
   }
 }

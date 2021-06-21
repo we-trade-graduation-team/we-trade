@@ -1,5 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:json_annotation/json_annotation.dart';
+
+import '../../../../constants/app_assets.dart';
 import '../post_category/post_category.dart';
 import '../post_item/post_item.dart';
 
@@ -26,6 +28,17 @@ class Post {
   factory Post.fromDocumentSnapshot(DocumentSnapshot snapshot) =>
       _$PostFromJson(snapshot.data() as Map<String, dynamic>)
         ..postId = snapshot.id;
+
+  factory Post.initialData() => Post(
+        name: '',
+        owner: '',
+        createAt: DateTime.now(),
+        categoryInfo: PostCategory.initialData(),
+        itemInfo: PostItem.initialData(),
+        imagesUrl: [AppAssets.kPostDetailsDefaultCarouselImage],
+        tradeForList: [],
+        price: 0,
+      );
 
   @JsonKey(ignore: true)
   String? postId;

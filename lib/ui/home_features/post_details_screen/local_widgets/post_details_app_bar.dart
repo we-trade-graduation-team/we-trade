@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:line_icons/line_icons.dart';
 import 'package:provider/provider.dart';
 
-import '../../../../models/arguments/shared/post_details_arguments.dart';
+import '../../../../models/cloud_firestore/post_model/post/post.dart';
 import 'post_details_item_images_carousel_slider.dart';
 import 'post_details_popup_dialog.dart';
 
@@ -18,8 +18,8 @@ class PostDetailsAppBar extends StatelessWidget {
   Widget build(BuildContext context) {
     // const appBarExpandedHeight = 414.0 - 100.0;
 
-    final _postDetailsTitle = context.select<PostDetailsArguments, String>(
-        (arguments) => arguments.postDetails.title);
+    final _postDetailsTitle =
+        context.select<Post, String>((post) => post.name);
 
     final _size = MediaQuery.of(context).size;
 

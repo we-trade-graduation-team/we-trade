@@ -1,8 +1,9 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../../../models/arguments/shared/post_details_arguments.dart';
+import '../../../../models/cloud_firestore/post_model/post/post.dart';
 import '../../shared_widgets/custom_carousel_slider.dart';
 
 class PostDetailsItemImagesCarouselSlider extends StatelessWidget {
@@ -13,19 +14,30 @@ class PostDetailsItemImagesCarouselSlider extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final _postDetailsImages =
-        context.select<PostDetailsArguments, List<String>>(
-            (arguments) => arguments.postDetails.itemInfo.images);
+        context.select<Post, List<String>>((post) => post.imagesUrl);
 
     final _size = MediaQuery.of(context).size;
 
     final _productImages = _postDetailsImages
         .map(
-          (item) => Builder(
-            builder: (_) => Image.network(
-              item,
-              fit: BoxFit.cover,
-              height: double.infinity,
-              width: double.infinity,
+          (image) => Builder(
+            builder: (_) => CachedNetworkImage(
+              imageUrl: image,
+              imageBuilder: (_, imageProvider) => Container(
+                decoration: BoxDecoration(
+                  image: DecorationImage(
+                    image: imageProvider,
+                    fit: BoxFit.cover,
+                  ),
+                ),
+              ),
+              placeholder: (_, __) => Center(
+                child: CircularProgressIndicator(
+                  backgroundColor: Colors.white,
+                  color: Theme.of(context).primaryColor,
+                ),
+              ),
+              errorWidget: (_, __, dynamic ___) => const Icon(Icons.error),
             ),
           ),
         )

@@ -54,23 +54,16 @@ class FirestorePath {
   }) =>
       '${postCards()}/$postId';
 
-  static String allPostDetails() => 'postDetails';
-
-  static String postDetails({
+  static String postQuestions({
     required String postId,
   }) =>
-      '${allPostDetails()}/$postId';
+      '${post(postId: postId)}/questions';
 
-  static String postDetailsQuestions({
-    required String postId,
-  }) =>
-      '${postDetails(postId: postId)}/questions';
-
-  static String postDetailsQuestionAnswers({
+  static String postQuestionAnswers({
     required String postId,
     required String questionId,
   }) =>
-      '${postDetailsQuestions(postId: postId)}/$questionId';
+      '${postQuestions(postId: postId)}/$questionId/answers';
 
   static String keywords() => 'keywords';
 

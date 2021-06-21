@@ -3,8 +3,10 @@ class ErrorHelper {
 
   static void throwArgumentError({
     required String message,
+    String? path,
   }) {
-    final _error = ArgumentError(message);
+    final _error = ArgumentError(message + (path ?? ''));
     throw _error;
   }
 }
+  

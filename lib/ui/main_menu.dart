@@ -1,9 +1,12 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:loading_overlay/loading_overlay.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
+import 'package:provider/provider.dart';
 
 import '../models/ui/main_menu/bottom_navigation_bar_item_model.dart';
+import '../providers/loading_overlay_provider.dart';
 import 'account_features/account_screen/account_screen.dart';
 import 'home_features/home_screen/home_screen.dart';
 import 'message_features/chat_screen/all_chat/chat_screen.dart';
@@ -32,35 +35,45 @@ class _MainMenuState extends State<MainMenu> {
         statusBarColor: Colors.transparent,
       ),
     );
-    return PersistentTabView(
-      context,
-      controller: _controller,
-      screens: _buildScreens(),
-      items: _navBarsItems(),
-      resizeToAvoidBottomInset: true,
-      navBarHeight: MediaQuery.of(context).viewInsets.bottom > 0
-          ? 0.0
-          : kBottomNavigationBarHeight,
-      //bottomScreenMargin: AppDimens.kDefaultBottomNavigationBarHeight,
-      hideNavigationBar: _hideNavBar,
-      itemAnimationProperties: const ItemAnimationProperties(
-        duration: Duration(milliseconds: 400),
-        curve: Curves.ease,
+
+    final _loadingOverlayProvider = context.watch<LoadingOverlayProvider>();
+
+    return LoadingOverlay(
+      isLoading: _loadingOverlayProvider.isLoading,
+      color: Colors.white,
+      opacity: 1,
+      progressIndicator: CircularProgressIndicator(
+        color: Theme.of(context).primaryColor,
       ),
-      screenTransitionAnimation: const ScreenTransitionAnimation(
-        animateTabTransition: true,
+      child: PersistentTabView(
+        context,
+        controller: _controller,
+        screens: _buildScreens(),
+        items: _navBarsItems(),
+        resizeToAvoidBottomInset: true,
+        navBarHeight: MediaQuery.of(context).viewInsets.bottom > 0
+            ? 0.0
+            : kBottomNavigationBarHeight,
+        hideNavigationBar: _hideNavBar,
+        itemAnimationProperties: const ItemAnimationProperties(
+          duration: Duration(milliseconds: 400),
+          curve: Curves.ease,
+        ),
+        screenTransitionAnimation: const ScreenTransitionAnimation(
+          animateTabTransition: true,
+        ),
+        navBarStyle: NavBarStyle.style13,
       ),
-      navBarStyle: NavBarStyle.style13,
     );
   }
 
   List<Widget> _buildScreens() {
-    return [
-      const HomeScreen(),
-      const ChatScreen(),
-      const PostItemOne(),
-      const WishListScreen(),
-      const AccountScreen(),
+    return const [
+      HomeScreen(),
+      ChatScreen(),
+      PostItemOne(),
+      WishListScreen(),
+      AccountScreen(),
     ];
   }
 

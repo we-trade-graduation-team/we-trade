@@ -1,8 +1,3 @@
-import '../home_features/post_details_screen/question_model.dart';
-
-import 'account_model.dart';
-
-// @JsonSerializable()
 class Product {
   Product({
     required this.id,
@@ -14,10 +9,10 @@ class Product {
     required this.productLocation,
     required this.ownerLocation,
     required this.tradeForCategory,
-    required this.owner,
+    // required this.owner,
     this.isFavourite = false,
     this.isPopular = false,
-    this.questions,
+    // this.questions,
   });
 
   // factory Product.fromJson(Map<String, dynamic> json) =>
@@ -28,8 +23,8 @@ class Product {
   final List<String> images, tradeForCategory;
   final double price;
   final bool isFavourite, isPopular;
-  final Account owner;
-  final List<Question>? questions;
+  // final Account owner;
+  // final List<Question>? questions;
 }
 
 // Our demo Products
@@ -52,8 +47,8 @@ List<Product> demoProducts = [
     ownerLocation: location,
     isFavourite: true,
     isPopular: true,
-    owner: demoUsers[1],
-    questions: demoQuestions,
+
+    // questions: demoQuestions,
   ),
   Product(
     id: 2,
@@ -68,7 +63,6 @@ List<Product> demoProducts = [
     productLocation: location,
     ownerLocation: location,
     isPopular: true,
-    owner: demoUsers[0],
   ),
   Product(
     id: 3,
@@ -84,7 +78,6 @@ List<Product> demoProducts = [
     ownerLocation: location,
     isFavourite: true,
     isPopular: true,
-    owner: demoUsers[0],
   ),
   Product(
     id: 4,
@@ -99,7 +92,6 @@ List<Product> demoProducts = [
     productLocation: location,
     ownerLocation: location,
     isFavourite: true,
-    owner: demoUsers[0],
   ),
   Product(
     id: 5,
@@ -114,7 +106,6 @@ List<Product> demoProducts = [
     productLocation: location,
     ownerLocation: location,
     isFavourite: true,
-    owner: demoUsers[0],
   ),
   Product(
     id: 6,
@@ -129,7 +120,6 @@ List<Product> demoProducts = [
     productLocation: location,
     ownerLocation: location,
     isFavourite: true,
-    owner: demoUsers[0],
   ),
   Product(
     id: 7,
@@ -144,7 +134,6 @@ List<Product> demoProducts = [
     productLocation: location,
     ownerLocation: location,
     isFavourite: true,
-    owner: demoUsers[0],
   ),
   Product(
     id: 8,
@@ -159,7 +148,6 @@ List<Product> demoProducts = [
     productLocation: location,
     ownerLocation: location,
     isFavourite: true,
-    owner: demoUsers[0],
   ),
   Product(
     id: 9,
@@ -174,7 +162,6 @@ List<Product> demoProducts = [
     productLocation: location,
     ownerLocation: location,
     isFavourite: true,
-    owner: demoUsers[0],
   ),
 ];
 
@@ -195,7 +182,6 @@ List<Product> recommendedProducts = [
     ownerLocation: location,
     isFavourite: true,
     isPopular: true,
-    owner: demoUsers[0],
   ),
   Product(
     id: 11,
@@ -210,7 +196,6 @@ List<Product> recommendedProducts = [
     productLocation: location,
     ownerLocation: location,
     isPopular: true,
-    owner: demoUsers[0],
   ),
   Product(
     id: 12,
@@ -226,7 +211,6 @@ List<Product> recommendedProducts = [
     ownerLocation: location,
     isFavourite: true,
     isPopular: true,
-    owner: demoUsers[0],
   ),
   Product(
     id: 13,
@@ -241,7 +225,6 @@ List<Product> recommendedProducts = [
     productLocation: location,
     ownerLocation: location,
     isFavourite: true,
-    owner: demoUsers[0],
   ),
   Product(
     id: 14,
@@ -260,7 +243,6 @@ List<Product> recommendedProducts = [
     ownerLocation: location,
     isFavourite: true,
     isPopular: true,
-    owner: demoUsers[0],
   ),
   Product(
     id: 15,
@@ -275,7 +257,6 @@ List<Product> recommendedProducts = [
     productLocation: location,
     ownerLocation: location,
     isFavourite: true,
-    owner: demoUsers[0],
   ),
 ];
 
@@ -297,7 +278,6 @@ List<Product> demoUserProducts = [
     ownerLocation: location,
     isFavourite: true,
     isPopular: true,
-    owner: demoUsers[1],
   ),
   Product(
     id: 17,
@@ -313,7 +293,6 @@ List<Product> demoUserProducts = [
     ownerLocation: location,
     isFavourite: true,
     isPopular: true,
-    owner: demoUsers[1],
   ),
   Product(
     id: 18,
@@ -328,7 +307,6 @@ List<Product> demoUserProducts = [
     productLocation: location,
     ownerLocation: location,
     isPopular: true,
-    owner: demoUsers[1],
   ),
   Product(
     id: 19,
@@ -344,7 +322,6 @@ List<Product> demoUserProducts = [
     ownerLocation: location,
     isFavourite: true,
     isPopular: true,
-    owner: demoUsers[1],
   ),
 ];
 
