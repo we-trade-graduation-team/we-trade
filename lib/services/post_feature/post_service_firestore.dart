@@ -201,4 +201,25 @@ class PostServiceFireStore {
         .get()
         .then((value) => value.data()!['title'].toString());
   }
+
+  Future<void> updateWishList({
+    required String thisUserId,
+    required String postId,
+    required bool isAdd,
+  }) async {
+    return FirebaseFirestore.instance
+        .collection('users')
+        .doc(thisUserId)
+        .get()
+        .then((user) {
+      final allWishId =
+          (user.data()!['wishList'] as List<dynamic>).cast<String>().toList();
+      if (isAdd && !allWishId.contains(postId)) {
+        allWishId.add(postId);
+      } else {
+        allWishId.removeWhere((element) => element == postId);
+      }
+      user.reference.update({'wishList': allWishId});
+    });
+  }
 }
