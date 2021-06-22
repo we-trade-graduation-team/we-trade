@@ -1198,15 +1198,15 @@ class FirestoreDatabase {
     );
   }
 
-  // Method to retrieve post (Stream)
-  Stream<Post> postStream({
-    required String postId,
-  }) {
-    return _fireStoreService.documentStream(
-      path: FirestorePath.postQuestions(
-        postId: postId,
-      ),
-      builder: (data) => Post.fromDocumentSnapshot(data),
-    );
-  }
+  // // Method to retrieve post (Stream)
+  // Stream<Post> postStream({
+  //   required String postId,
+  // }) {
+  //   return _fireStoreService.documentStream(
+  //     path: FirestorePath.postQuestions(
+  //       postId: postId,
+  //     ),
+  //     builder: (data) => Post.fromDocumentSnapshot(data),
+  //   );
+  // }
 }

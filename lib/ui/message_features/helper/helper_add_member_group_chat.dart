@@ -27,8 +27,7 @@ class HelperAddMemberGroupChat {
 
     final name = HelperClass.finalSenderName(thisUser.name, thisUser.email);
 
-    // ignore: unawaited_futures
-    await messageServiceFireStore
+    return messageServiceFireStore
         .addUsersToGroupChat(
             chatRoomId, name, usersId, usersImage, usersEmail, usersName)
         .then((value) {

@@ -35,16 +35,17 @@ class TradingServiceFireStore {
           .collection(tradingsCollectionStr)
           .add(trading)
           .then((value) => value.id);
-      // ignore: unawaited_futures
-      updateTradingListInUser(userId: owner, tradingId: tradingId);
-      // ignore: unawaited_futures
-      updateTradingListInUser(userId: makeOfferUser, tradingId: tradingId);
-      // ignore: unawaited_futures
-      updateLatestTrading(
-          thisUserId: makeOfferUser, otherUserId: owner, tradingId: tradingId);
-    } on FirebaseException catch (error) {
-      // ignore: avoid_print
-      print('Lỗi make offer: $error');
+      await Future.wait([
+        updateTradingListInUser(userId: owner, tradingId: tradingId),
+        updateTradingListInUser(userId: makeOfferUser, tradingId: tradingId),
+        updateLatestTrading(
+          thisUserId: makeOfferUser,
+          otherUserId: owner,
+          tradingId: tradingId,
+        ),
+      ]);
+    } on FirebaseException catch (_) {
+      // print('Lỗi make offer: $error');
     }
   }
 
@@ -156,11 +157,9 @@ class TradingServiceFireStore {
     final ownerId = trading.ownerId;
     final ownerPost = trading.ownerPost;
     if (offerPosts.isNotEmpty) {
-      // ignore: unawaited_futures
-      updateUserPostAndHiddenPost(offerId, offerPosts);
+      await updateUserPostAndHiddenPost(offerId, offerPosts);
     }
-    // ignore: unawaited_futures
-    updateUserPostAndHiddenPost(ownerId, [ownerPost]);
+    await updateUserPostAndHiddenPost(ownerId, [ownerPost]);
   }
 
   Future<void> updateUserPostAndHiddenPost(
@@ -176,15 +175,13 @@ class TradingServiceFireStore {
       postsId.forEach(posts.remove);
       postsId.forEach(hiddenPosts.add);
 
-      // ignore: unawaited_futures
-      FirebaseFirestore.instance.collection('users').doc(userId).update({
+      await FirebaseFirestore.instance.collection('users').doc(userId).update({
         'hiddenPosts': hiddenPosts,
         'posts': posts,
       });
 
       for (final postId in postsId) {
-        // ignore: unawaited_futures
-        FirebaseFirestore.instance
+        await FirebaseFirestore.instance
             .collection('posts')
             .doc(postId)
             .update({'isHidden': true});

@@ -4,7 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import '../../../models/ui/shared_models/product_model.dart';
-import '../shared_widgets/geting_data_status.dart';
+import '../shared_widgets/getting_data_status.dart';
 import '../shared_widgets/history_prod_card.dart';
 import '../utils.dart';
 

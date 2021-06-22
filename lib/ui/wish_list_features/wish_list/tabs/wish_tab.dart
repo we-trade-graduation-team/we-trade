@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import '../../../../models/cloud_firestore/post_card_model/post_card/post_card.dart';
 import '../../../../models/cloud_firestore/post_card_model/post_card_item/post_card_item.dart';
 import '../../../../widgets/item_post_card.dart';
-import '../../../account_features/shared_widgets/geting_data_status.dart';
+import '../../../account_features/shared_widgets/getting_data_status.dart';
 import '../../../account_features/utils.dart';
 
 class WishTab extends StatefulWidget {

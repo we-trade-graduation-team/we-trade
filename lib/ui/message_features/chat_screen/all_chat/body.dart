@@ -25,7 +25,6 @@ class _BodyState extends State<Body> {
   bool isLoading = true;
   bool isSearching = false;
   String queryStr = '';
-  // ignore: diagnostic_describe_all_properties
   late Stream<QuerySnapshot> chatRooms;
 
   bool isContain(List<String> src, String queryStr) {
@@ -186,5 +185,7 @@ class _BodyState extends State<Body> {
     properties.add(DiagnosticsProperty<User>('thisUser', thisUser));
     properties.add(DiagnosticsProperty<MessageServiceFireStore>(
         'messageServiceFireStore', messageServiceFireStore));
+    properties.add(DiagnosticsProperty<Stream<QuerySnapshot<Object?>>>(
+        'chatRooms', chatRooms));
   }
 }

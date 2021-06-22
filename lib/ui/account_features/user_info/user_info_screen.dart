@@ -73,9 +73,8 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
           });
         }
       }).timeout(Duration(seconds: timeOut));
-    } on FirebaseException catch (e) {
-      // ignore: avoid_print
-      print('Lỗi: $e');
+    } on FirebaseException catch (_) {
+      // print('Lỗi: $e');
       showMyNotificationDialog(
           context: context,
           title: 'Lỗi',
@@ -120,10 +119,8 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
 
         await UserServiceAlgolia().updateUser(data);
       }).timeout(Duration(seconds: timeOut));
-    } on FirebaseException catch (error) {
-      // ignore: avoid_print
-      print('Lỗi khi lưu: $error');
-      await showMyNotificationDialog(
+    } on FirebaseException catch (_) {
+      return showMyNotificationDialog(
           context: context,
           title: 'Thông báo',
           content: 'Thao tác Không thành công. Vui lòng thử lại sau.',
@@ -142,7 +139,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
     });
   }
 
-  void _onEdittingCompleteHandleFunction() {
+  void _onEditingCompleteHandleFunction() {
     node.unfocus();
   }
 
@@ -180,7 +177,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                             FormBuilderValidators.required(context),
                             FormBuilderValidators.email(context),
                           ]),
-                          onEditingComplete: _onEdittingCompleteHandleFunction,
+                          onEditingComplete: _onEditingCompleteHandleFunction,
                           textInputAction: TextInputAction.done,
                           keyboardType: TextInputType.emailAddress,
                           controller: _emailController,
@@ -199,7 +196,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                           validator: FormBuilderValidators.compose([
                             FormBuilderValidators.required(context),
                           ]),
-                          onEditingComplete: _onEdittingCompleteHandleFunction,
+                          onEditingComplete: _onEditingCompleteHandleFunction,
                           textInputAction: TextInputAction.done,
                           keyboardType: TextInputType.text,
                           controller: _nameController,
@@ -214,7 +211,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                             hintText: 'Nhập số điện thoại',
                             floatingLabelBehavior: FloatingLabelBehavior.auto,
                           ),
-                          onEditingComplete: _onEdittingCompleteHandleFunction,
+                          onEditingComplete: _onEditingCompleteHandleFunction,
                           textInputAction: TextInputAction.done,
                           keyboardType: TextInputType.phone,
                           controller: _phoneNumController,
@@ -229,7 +226,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                             hintText: 'Chọn địa chỉ',
                             floatingLabelBehavior: FloatingLabelBehavior.auto,
                           ),
-                          onEditingComplete: _onEdittingCompleteHandleFunction,
+                          onEditingComplete: _onEditingCompleteHandleFunction,
                           textInputAction: TextInputAction.done,
                           controller: _locationController,
                           onChanged: _onChangedHandleFunction,
@@ -271,10 +268,10 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                         if (_formKey.currentState!.validate()) {
                           // print(_formKey.currentState!.value);
                           _saveChange();
-                        } else {
-                          // ignore: avoid_print
-                          print('validation failed');
                         }
+                        // else {
+                        //   print('validation failed');
+                        // }
                       }
                     : null,
                 style: ElevatedButton.styleFrom(

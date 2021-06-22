@@ -8,7 +8,7 @@ import '../../../constants/app_colors.dart';
 import '../../../utils/routes/routes.dart';
 import '../../shared_features/other_user_profile/other_user_profile_screen.dart';
 import '../account_screen/local_widgets/getter.dart';
-import '../shared_widgets/geting_data_status.dart';
+import '../shared_widgets/getting_data_status.dart';
 import '../utils.dart';
 
 class FollowScreen extends StatefulWidget {
@@ -57,9 +57,8 @@ class _FollowScreenState extends State<FollowScreen> {
           });
         }
       }).timeout(Duration(seconds: timeOut));
-    } on FirebaseException catch (e) {
-      // ignore: avoid_print
-      print('Lỗi: $e');
+    } on FirebaseException catch (_) {
+      // print('Lỗi: $e');
       showMyNotificationDialog(
           context: context,
           title: 'Lỗi',
@@ -101,9 +100,8 @@ class _FollowScreenState extends State<FollowScreen> {
                 _isLoaded = true;
               });
             }).timeout(Duration(seconds: timeOut));
-          } on FirebaseException catch (error) {
-            // ignore: avoid_print
-            print('Lỗi khi follow: $error');
+          } on FirebaseException catch (_) {
+            // print('Lỗi khi follow: $error');
           }
         },
         style: ElevatedButton.styleFrom(
@@ -140,9 +138,8 @@ class _FollowScreenState extends State<FollowScreen> {
                       _isLoaded = true;
                     });
                   }).timeout(Duration(seconds: timeOut));
-                } on FirebaseException catch (error) {
-                  // ignore: avoid_print
-                  print('Lỗi khi unfollow: $error');
+                } on FirebaseException catch (_) {
+                  // print('Lỗi khi unfollow: $error');
                 }
               },
               onCancelFunction: () {
@@ -213,8 +210,8 @@ class _FollowScreenState extends State<FollowScreen> {
 
                                 return const Center(
                                     child: CircularProgressIndicator(
-                                  //color: Colors.black45,
-                                ));
+                                        //color: Colors.black45,
+                                        ));
                               }),
                           const SizedBox(width: 15),
                           Expanded(

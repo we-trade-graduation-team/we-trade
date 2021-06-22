@@ -1,5 +1,5 @@
-class TypeofGoods {
-  TypeofGoods({required this.id, required this.name, this.selected = false});
+class TypeOfGoods {
+  TypeOfGoods({required this.id, required this.name, this.selected = false});
   final String id;
   bool selected;
   final String name;

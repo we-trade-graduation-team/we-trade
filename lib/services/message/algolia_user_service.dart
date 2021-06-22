@@ -77,8 +77,7 @@ class UserServiceAlgolia {
         .index(usersAlgoliaIndex)
         .object(user['objectID'].toString())
         .updateData(userUpdate);
-    // ignore: unawaited_futures
-    messageServiceFireStore.updateChatRoomsWhenUpdateUser(userUpdate);
+    return messageServiceFireStore.updateChatRoomsWhenUpdateUser(userUpdate);
   }
 
   // update active/presence

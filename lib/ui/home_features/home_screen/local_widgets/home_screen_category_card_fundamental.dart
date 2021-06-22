@@ -1,47 +1,35 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
-// import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../services/firestore/firestore_database.dart';
 import '../../../../utils/routes/routes.dart';
 import '../../searching_screen/search_screen.dart';
-// import '../../../../utils/routes/routes.dart';
-// import '../../category_kind_screen/category_kind_screen.dart';
 
 class HomeScreenCategoryCardFundamental extends StatefulWidget {
   const HomeScreenCategoryCardFundamental({
     Key? key,
     required this.child,
     required this.categoryId,
-    required this.categoryName,
   }) : super(key: key);
 
   final Widget child;
   final String categoryId;
-  final String categoryName;
 
   @override
   _HomeScreenCategoryCardFundamentalState createState() =>
-      // ignore: no_logic_in_create_state
-      _HomeScreenCategoryCardFundamentalState(
-          categoryId: categoryId, categoryName: categoryName);
+      _HomeScreenCategoryCardFundamentalState();
 
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
     properties.add(StringProperty('categoryId', categoryId));
-    properties.add(StringProperty('categoryName', categoryName));
   }
 }
 
 class _HomeScreenCategoryCardFundamentalState
     extends State<HomeScreenCategoryCardFundamental> {
-  _HomeScreenCategoryCardFundamentalState(
-      {required this.categoryId, required this.categoryName});
-  final String categoryId;
-  final String categoryName;
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -64,7 +52,7 @@ class _HomeScreenCategoryCardFundamentalState
       // Update current user's category history
       _firestoreDatabase.updateCurrentUserCategoryHistory(
           categoryId: _categoryId),
-      // // Navigate to category kind screen
+      // Navigate to category kind screen
       _navigateToCategoryKindScreen(),
     ]);
   }
@@ -73,17 +61,10 @@ class _HomeScreenCategoryCardFundamentalState
     return pushNewScreenWithRouteSettings<void>(
       context,
       screen: SearchScreen(
-        cateId: categoryId,
+        cateId: widget.categoryId,
       ),
       settings: const RouteSettings(name: Routes.searchScreenRouteName),
       withNavBar: false,
     );
-  }
-
-  @override
-  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
-    super.debugFillProperties(properties);
-    properties.add(StringProperty('categoryId', categoryId));
-    properties.add(StringProperty('categoryName', categoryName));
   }
 }

@@ -40,9 +40,7 @@ class _OtherUserProfileScreenState extends State<OtherUserProfileScreen> {
   final mainInfoKey = GlobalKey();
   Size flexibleSpaceBarSize = const Size(0, 0);
   MessageServiceFireStore serviceFireStore = MessageServiceFireStore();
-  // ignore: diagnostic_describe_all_properties
   late UserDetail userDetail;
-  // ignore: diagnostic_describe_all_properties
   late User thisUser;
   bool isFollow = false;
   bool visible = true;
@@ -420,6 +418,8 @@ class _OtherUserProfileScreenState extends State<OtherUserProfileScreen> {
     properties.add(DiagnosticsProperty<MessageServiceFireStore>(
         'serviceFireStore', serviceFireStore));
     properties.add(IterableProperty<PostCard>('posts', posts));
+    properties.add(DiagnosticsProperty<UserDetail>('userDetail', userDetail));
+    properties.add(DiagnosticsProperty<User>('thisUser', thisUser));
   }
 }
 

@@ -1,7 +1,6 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-// ignore: import_of_legacy_library_into_null_safe
 import '../../../../services/post_feature/post_service_firestore.dart';
 import '../../../posting_features/component/class.dart';
 
@@ -21,8 +20,8 @@ class _FilterOverlayState extends State<FilterOverlay> {
   Cities citySelected = Cities(id: 'init', name: 'init');
   Cities districtSelected = Cities(id: 'init', name: 'init');
   String previousID = '';
-  late TypeofGoods mainCategory = TypeofGoods(id: '', name: '');
-  final List<TypeofGoods> _type = [];
+  late TypeOfGoods mainCategory = TypeOfGoods(id: '', name: '');
+  final List<TypeOfGoods> _type = [];
   bool isLoading = true;
 
   Future<List<Cities>> getCities() {
@@ -49,12 +48,12 @@ class _FilterOverlayState extends State<FilterOverlay> {
     });
   }
 
-  Future<List<TypeofGoods>> getMainCategoryData() {
-    final _tempCategory = <TypeofGoods>[];
+  Future<List<TypeOfGoods>> getMainCategoryData() {
+    final _tempCategory = <TypeOfGoods>[];
     return dataServiceFireStore.getMainCategory().then((value) {
       for (final item in value.docs) {
         final itemCate =
-            TypeofGoods(id: item.id, name: item.data()['category'].toString());
+            TypeOfGoods(id: item.id, name: item.data()['category'].toString());
         _tempCategory.add(itemCate);
       }
       return _tempCategory;
@@ -122,7 +121,7 @@ class _FilterOverlayState extends State<FilterOverlay> {
             : [],
       );
 
-  Widget categoryDropDown() => DropdownButton<TypeofGoods>(
+  Widget categoryDropDown() => DropdownButton<TypeOfGoods>(
         value: _type.isNotEmpty ? mainCategory : null,
         icon: const Icon(Icons.arrow_drop_down),
         elevation: 16,
@@ -139,8 +138,8 @@ class _FilterOverlayState extends State<FilterOverlay> {
           });
         },
         items: _type.isNotEmpty
-            ? _type.map<DropdownMenuItem<TypeofGoods>>((value) {
-                return DropdownMenuItem<TypeofGoods>(
+            ? _type.map<DropdownMenuItem<TypeOfGoods>>((value) {
+                return DropdownMenuItem<TypeOfGoods>(
                   value: value,
                   child: Text(value.name),
                 );
@@ -300,7 +299,7 @@ class _FilterOverlayState extends State<FilterOverlay> {
         .add(DiagnosticsProperty<Cities>('districtSelected', districtSelected));
     properties.add(StringProperty('previousID', previousID));
     properties
-        .add(DiagnosticsProperty<TypeofGoods>('mainCategory', mainCategory));
+        .add(DiagnosticsProperty<TypeOfGoods>('mainCategory', mainCategory));
     properties.add(DiagnosticsProperty<bool>('isLoading', isLoading));
   }
 }

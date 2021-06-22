@@ -45,11 +45,8 @@ class _BodyState extends State<Body> {
   TextEditingController messageTextController = TextEditingController();
   final FocusNode focusNode = FocusNode();
   late User thisUser = Provider.of<User?>(context, listen: false)!;
-  // ignore: diagnostic_describe_all_properties
   late Stream<QuerySnapshot> chats;
-  // ignore: diagnostic_describe_all_properties
   late Stream<DocumentSnapshot<Map<String, dynamic>>> seenHistory;
-// ignore: diagnostic_describe_all_properties
   late Stream<DocumentSnapshot<Map<String, dynamic>>> tradingDeal;
 
   late Map<String, String> seenHistoryMap = {};
@@ -314,8 +311,7 @@ class _BodyState extends State<Body> {
           selectCircleStrokeColor: '#ffffff',
         ),
       );
-      // ignore: unused_catch_clause
-    } on Exception catch (e) {
+    } on Exception catch (_) {
       //error = e.toString();
       //log(error);
     }
@@ -481,5 +477,13 @@ class _BodyState extends State<Body> {
     properties.add(DiagnosticsProperty<bool>('isLoadingImage', isLoadingImage));
     properties.add(DiagnosticsProperty<Map<String, String>>(
         'seenHistoryMap', seenHistoryMap));
+    properties.add(
+        DiagnosticsProperty<Stream<DocumentSnapshot<Map<String, dynamic>>>>(
+            'seenHistory', seenHistory));
+    properties.add(
+        DiagnosticsProperty<Stream<QuerySnapshot<Object?>>>('chats', chats));
+    properties.add(
+        DiagnosticsProperty<Stream<DocumentSnapshot<Map<String, dynamic>>>>(
+            'tradingDeal', tradingDeal));
   }
 }

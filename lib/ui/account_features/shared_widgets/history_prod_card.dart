@@ -13,7 +13,7 @@ import '../account_screen/local_widgets/getter.dart';
 import '../trading_history/rate_for_trading.dart';
 import '../utils.dart';
 import 'custom_overlay_icon_button.dart';
-import 'geting_data_status.dart';
+import 'getting_data_status.dart';
 import 'trading_prod_overlay.dart';
 
 class HistoryProductCard extends StatefulWidget {
@@ -86,9 +86,8 @@ class _HistoryProductCardState extends State<HistoryProductCard> {
           });
         });
       });
-    } catch (error) {
-      // ignore: avoid_print
-      print(error);
+    } catch (_) {
+      // print(error);
     }
   }
 
