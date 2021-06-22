@@ -1,8 +1,9 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:line_icons/line_icons.dart';
+// import 'package:line_icons/line_icons.dart';
 import 'package:provider/provider.dart';
 
+import '../../../../app_localizations.dart';
 import '../../../../constants/app_dimens.dart';
 import '../../../../models/cloud_firestore/post_card_model/post_card/post_card.dart';
 import '../../../../services/firestore/firestore_database.dart';
@@ -22,10 +23,13 @@ class PostDetailsPostCardsCurrentUserMayAlsoLikeSection
 
     final _size = MediaQuery.of(context).size;
 
+    final _appLocalization = AppLocalizations.of(context);
+
     return Column(
       children: [
-        const PostDetailsSectionContainer(
-          child: Text('You may also like'),
+        PostDetailsSectionContainer(
+          child: Text(_appLocalization.translate(
+              'postDetailsTxtCurrentUserMayAlsoLikePostCardsSectionTitle')),
         ),
         PostDetailsSeparator(height: _size.height * 0.004),
         Container(
@@ -48,11 +52,11 @@ class PostDetailsPostCardsCurrentUserMayAlsoLikeSection
                 ),
               ),
               SizedBox(height: _size.height * 0.004),
-              TextButton.icon(
-                icon: const Icon(LineIcons.angleDown),
-                onPressed: () {},
-                label: const Text('Load more'),
-              ),
+              // TextButton.icon(
+              //   icon: const Icon(LineIcons.angleDown),
+              //   onPressed: () {},
+              //   label: const Text('Load more'),
+              // ),
             ],
           ),
         ),

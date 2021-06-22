@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 
 import '../../../../models/cloud_firestore/post_card_model/post_card/post_card.dart';
 import '../../../../widgets/item_post_card.dart';
+import '../../../../widgets/shared_circular_progress_indicator.dart';
 
 class CategoryPostCard extends StatelessWidget {
   const CategoryPostCard({Key? key}) : super(key: key);
@@ -12,12 +13,7 @@ class CategoryPostCard extends StatelessWidget {
     final postCards = context.watch<List<PostCard>?>();
 
     if (postCards == null) {
-      return Center(
-        child: CircularProgressIndicator(
-          backgroundColor: Colors.white,
-          color: Theme.of(context).primaryColor,
-        ),
-      );
+      return const SharedCircularProgressIndicator();
     }
 
     if (postCards.isEmpty) {

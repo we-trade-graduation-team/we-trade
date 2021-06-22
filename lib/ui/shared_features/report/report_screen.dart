@@ -190,7 +190,6 @@ class ReportScreen extends StatelessWidget {
         preferredSize: Size.fromHeight(AppBar().preferredSize.height + 20),
         child: const PopHeader(),
       ),
-      // TODO: <Vu> Should remove MultiProvider (since there's only one ChangeNotifierProvider)
       body: MultiProvider(
         providers: [ChangeNotifierProvider(create: (context) => ReportBloc())],
         child: const ReportScreenBody(

@@ -7,6 +7,7 @@ import 'package:provider/provider.dart';
 
 import '../models/ui/main_menu/bottom_navigation_bar_item_model.dart';
 import '../providers/loading_overlay_provider.dart';
+import '../widgets/shared_circular_progress_indicator.dart';
 import 'account_features/account_screen/account_screen.dart';
 import 'home_features/home_screen/home_screen.dart';
 import 'message_features/chat_screen/all_chat/chat_screen.dart';
@@ -42,9 +43,7 @@ class _MainMenuState extends State<MainMenu> {
       isLoading: _loadingOverlayProvider.isLoading,
       color: Colors.white,
       opacity: 1,
-      progressIndicator: CircularProgressIndicator(
-        color: Theme.of(context).primaryColor,
-      ),
+      progressIndicator: const SharedCircularProgressIndicator(),
       child: PersistentTabView(
         context,
         controller: _controller,

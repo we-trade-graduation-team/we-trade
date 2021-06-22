@@ -2,48 +2,54 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../../../app_localizations.dart';
+import '../../../../models/arguments/shared/post_details_arguments.dart';
 import '../../../../models/cloud_firestore/post_card_model/post_card/post_card.dart';
-import '../../../../models/cloud_firestore/post_model/post/post.dart';
 import '../../../../services/firestore/firestore_database.dart';
-import 'post_details_owner_other_post_cards.dart';
 import 'post_details_section_container.dart';
 import 'post_details_separator.dart';
+import 'post_details_similar_post_cards.dart';
 
-class PostDetailsOwnerOtherPostCardsSection extends StatelessWidget {
-  const PostDetailsOwnerOtherPostCardsSection({
+class PostDetailsSimilarPostCardsSection extends StatelessWidget {
+  const PostDetailsSimilarPostCardsSection({
     Key? key,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final _postOwnerId = context.select<Post, String>((post) => post.owner);
+    final _args = context.watch<PostDetailsArguments>();
+
+    final _postId = _args.postId;
 
     final _firestoreDatabase = context.watch<FirestoreDatabase>();
 
     final _size = MediaQuery.of(context).size;
 
+    final _appLocalization = AppLocalizations.of(context);
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const PostDetailsSectionContainer(
-          child: Text("Seller's other products"),
+        PostDetailsSectionContainer(
+          child: Text(_appLocalization
+              .translate('postDetailsTxtSimilarPostCardsSectionTitle')),
         ),
         PostDetailsSeparator(height: _size.height * 0.004),
         Container(
-          color: Colors.white,
           width: _size.width,
+          color: Colors.white,
           padding: EdgeInsets.only(
             left: _size.width * 0.05,
             top: _size.height * 0.02,
             bottom: _size.height * 0.02,
           ),
           child: FutureProvider<List<PostCard>?>.value(
-            value: _firestoreDatabase.getPostCardsByUserId(
-              userId: _postOwnerId,
+            value: _firestoreDatabase.getPostDetailsScreenSimilarPostCards(
+              postId: _postId,
             ),
             initialData: null,
             catchError: (_, __) => const [],
-            child: const PostDetailsOwnerOtherPostCards(),
+            child: const PostDetailsSimilarPostCards(),
           ),
         ),
       ],

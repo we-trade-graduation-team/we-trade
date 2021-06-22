@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../../../app_localizations.dart';
+import '../../../../models/arguments/shared/post_details_arguments.dart';
 import '../../../../providers/loading_overlay_provider.dart';
 import '../../../../providers/post_details_question_provider.dart';
 import '../../../../services/firestore/firestore_database.dart';
@@ -24,14 +26,20 @@ class _PostDetailsQuestionFormState extends State<PostDetailsQuestionForm> {
   Widget build(BuildContext context) {
     final _questionProvider = context.watch<PostDetailsQuestionProvider>();
 
-    final _hintTextChoose =
-        _questionProvider.questionId != null ? 'answer' : 'question';
+    final _appLocalization = AppLocalizations.of(context);
+
+    final _hintTextChooseKey = _questionProvider.questionId != null
+        ? 'postDetailsTxtAnswerTextFormField'
+        : 'postDetailsTxtQuestionTextFormField';
+
+    final _hintTextChoose = _appLocalization.translate(_hintTextChooseKey);
+
+    final _hintTextFirstPart =
+        _appLocalization.translate('postDetailsTxtTextFormFieldHint');
+
+    final _hintText = '$_hintTextFirstPart $_hintTextChoose';
 
     final _focusNode = FocusNode();
-
-    // if (_questionProvider.questionId != null) {
-    //   FocusScope.of(context).requestFocus(_focusNode);
-    // }
 
     final _inputBorder = OutlineInputBorder(
       borderRadius: BorderRadius.circular(8),
@@ -48,7 +56,7 @@ class _PostDetailsQuestionFormState extends State<PostDetailsQuestionForm> {
             textAlign: TextAlign.left,
             keyboardType: TextInputType.text,
             decoration: InputDecoration(
-              hintText: 'Type your $_hintTextChoose here',
+              hintText: _hintText,
               contentPadding: const EdgeInsets.symmetric(horizontal: 20),
               border: _inputBorder,
               focusedBorder: _inputBorder,
@@ -56,7 +64,8 @@ class _PostDetailsQuestionFormState extends State<PostDetailsQuestionForm> {
             ),
             validator: (value) {
               if (value == null || value.isEmpty) {
-                return 'Please enter some text';
+                return _appLocalization
+                    .translate('postDetailsTxtTextFormFieldWarning');
               }
               return null;
             },
@@ -65,7 +74,8 @@ class _PostDetailsQuestionFormState extends State<PostDetailsQuestionForm> {
             padding: const EdgeInsets.symmetric(vertical: 16),
             child: ElevatedButton(
               onPressed: _onPressed,
-              child: const Text('Submit'),
+              child: Text(
+                  _appLocalization.translate('postDetailsTxtButtonSubmit')),
             ),
           ),
         ],
@@ -91,7 +101,9 @@ class _PostDetailsQuestionFormState extends State<PostDetailsQuestionForm> {
 
     final _text = _textController.text;
 
-    final _postId = context.read<String>();
+    final _args = context.read<PostDetailsArguments>();
+
+    final _postId = _args.postId;
 
     final _firestoreDatabase = context.read<FirestoreDatabase>();
 

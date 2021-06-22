@@ -5,18 +5,13 @@ import '../../ui/account_features/follow_screen/follow_screen.dart';
 import '../../ui/account_features/my_rate_screen/my_rate_screen.dart';
 import '../../ui/account_features/post_management/hide_post_screen.dart';
 import '../../ui/account_features/post_management/post_management_screen.dart';
-// import '../../ui/account_features/trading_history/rate_for_trading.dart';
 import '../../ui/account_features/trading_history/trading_history_screen.dart';
 import '../../ui/account_features/user_info/change_password_screen.dart';
 import '../../ui/account_features/user_info/user_info_screen.dart';
-import '../../ui/authentication_features/complete_profile_screen/complete_profile_screen.dart';
-import '../../ui/authentication_features/forgot_password_screen/forgot_password_screen.dart';
-import '../../ui/authentication_features/otp_screen/otp_screen.dart';
 import '../../ui/authentication_features/shared_widgets/authentication.dart';
 import '../../ui/home_features/category_kind_screen/category_kind_screen.dart';
 import '../../ui/home_features/notification_screen/detailed_notification_screen.dart';
 import '../../ui/home_features/notification_screen/notification_screen.dart';
-import '../../ui/home_features/post_details_screen/post_details_screen.dart';
 import '../../ui/home_features/searching_screen/search_screen.dart';
 import '../../ui/message_features/chat_screen/chat_room/chat_room.dart';
 import '../../ui/message_features/match_post/match_post_screen.dart';
@@ -26,6 +21,7 @@ import '../../ui/posting_features/post_items/post_item_step_four.dart';
 import '../../ui/posting_features/post_items/post_item_step_three.dart';
 import '../../ui/posting_features/post_items/post_item_step_two.dart';
 import '../../ui/shared_features/other_user_profile/other_user_profile_screen.dart';
+import '../../ui/shared_features/post_details_screen/post_details_screen.dart';
 import '../../ui/shared_features/report/report_screen.dart';
 import '../../ui/wish_list_features/wish_list/wish_list_screen.dart';
 
@@ -94,17 +90,17 @@ class Routes {
   };
 
   static final Map<String, WidgetBuilder> authenticationFeaturesRoutes = {
-    completeProfileScreenRouteName: (_) => const CompleteProfileScreen(),
-    forgotPasswordScreenRouteName: (_) => const ForgotPasswordScreen(),
-    otpScreenRouteName: (_) => const OtpScreen(phoneNumber: '+8801376221100'),
     authenticationRouteName: (_) => const Authentication(),
   };
 
   static final Map<String, WidgetBuilder> homeFeaturesRoutes = {
-    categoryKindScreenRouteName: (_) => const CategoryKindScreen(mainCategory: '',mainCategoryName: '',),
-    postDetailScreenRouteName: (_) => const PostDetailsScreen(),
-    detailNotificationScreenRouteName: (_) =>
-        DetailedNotificationScreen(note: chosenNote,),
+    categoryKindScreenRouteName: (_) => const CategoryKindScreen(
+          mainCategory: '',
+          mainCategoryName: '',
+        ),
+    detailNotificationScreenRouteName: (_) => DetailedNotificationScreen(
+          note: chosenNote,
+        ),
     notificationScreenRouteName: (_) => const NotificationScreen(),
     searchScreenRouteName: (_) => const SearchScreen(),
     ...sharedFeaturesRoutes,
@@ -118,6 +114,7 @@ class Routes {
     makeOfferScreenRouteName: (_) => const MakeOfferScreen(
           otherUserPostId: '',
         ),
+    postDetailScreenRouteName: (_) => const PostDetailsScreen(),
   };
 
   static final Map<String, WidgetBuilder> messageFeaturesRoutes = {

@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../../../app_localizations.dart';
 import '../../../../models/cloud_firestore/post_card_model/post_card/post_card.dart';
-import '../../shared_widgets/horizontal_scroll_post_card_list_view.dart';
+import '../../../../widgets/shared_circular_progress_indicator.dart';
+import '../../../home_features/shared_widgets/horizontal_scroll_post_card_list_view.dart';
 import 'post_details_no_items_section.dart';
 
 class PostDetailsSimilarPostCards extends StatelessWidget {
@@ -15,16 +17,14 @@ class PostDetailsSimilarPostCards extends StatelessWidget {
     final _similarPostCards = context.watch<List<PostCard>?>();
 
     if (_similarPostCards == null) {
-      return Center(
-        child: CircularProgressIndicator(
-          backgroundColor: Colors.white,
-          color: Theme.of(context).primaryColor,
-        ),
-      );
+      return const SharedCircularProgressIndicator();
     }
 
     if (_similarPostCards.isEmpty) {
-      return const PostDetailsNoItemsSection(text: 'No products');
+      final _appLocalization = AppLocalizations.of(context);
+
+      return PostDetailsNoItemsSection(
+          text: _appLocalization.translate('postDetailsTxtNoPostCards'));
     }
 
     return HorizontalScrollPostCardListView(

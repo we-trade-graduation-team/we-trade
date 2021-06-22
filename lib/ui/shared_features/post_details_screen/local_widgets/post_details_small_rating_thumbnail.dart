@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
+import '../../../../app_localizations.dart';
 import '../../../../constants/app_assets.dart';
 
 class PostDetailsSmallRatingThumbnail extends StatelessWidget {
@@ -15,6 +16,8 @@ class PostDetailsSmallRatingThumbnail extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     const _starLegitSize = 20.0;
+
+    final _appLocalization = AppLocalizations.of(context);
 
     return SizedBox(
       // height: size.height * 0.075,
@@ -36,19 +39,16 @@ class PostDetailsSmallRatingThumbnail extends StatelessWidget {
                       child: FittedBox(
                         fit: BoxFit.fitHeight,
                         child: Text(
-                          '${legitimacy.round()}%',
+                          '${legitimacy.round()} / 5',
                           textAlign: TextAlign.right,
-                          style: const TextStyle(
+                          style: TextStyle(
+                            color: Theme.of(context).primaryColor,
                             fontWeight: FontWeight.w500,
                           ),
                         ),
                       ),
                     ),
                   ),
-                  // const Expanded(
-                  //   // flex: 2,
-                  //   child: SizedBox(),
-                  // ),
                   Expanded(
                     flex: 5,
                     child: SvgPicture.asset(
@@ -68,7 +68,7 @@ class PostDetailsSmallRatingThumbnail extends StatelessWidget {
                 child: FittedBox(
                   fit: BoxFit.fitHeight,
                   child: Text(
-                    'Legit',
+                    _appLocalization.translate('postDetailsTxtLegit'),
                     style: TextStyle(
                       color: ((Theme.of(context).textTheme.bodyText2)!.color)!
                           .withOpacity(0.6),

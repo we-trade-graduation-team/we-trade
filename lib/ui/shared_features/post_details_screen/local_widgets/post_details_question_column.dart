@@ -2,6 +2,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../../../app_localizations.dart';
+import '../../../../models/arguments/shared/post_details_arguments.dart';
 import '../../../../models/cloud_firestore/post_details_question/post_details_question.dart';
 import '../../../../models/cloud_firestore/post_details_question_answer/post_details_question_answer.dart';
 import '../../../../providers/post_details_question_provider.dart';
@@ -31,21 +33,29 @@ class PostDetailsQuestionColumn extends StatefulWidget {
 class _PostDetailsQuestionColumnState extends State<PostDetailsQuestionColumn> {
   @override
   Widget build(BuildContext context) {
-    final _postId = context.watch<String>();
+    final _args = context.watch<PostDetailsArguments>();
+
+    final _postId = _args.postId;
 
     final _firestoreDatabase = context.watch<FirestoreDatabase>();
 
     final _questionProvider = context.watch<PostDetailsQuestionProvider>();
 
-    final _questionId = _questionProvider.getPostQuestionId;
+    final _formQuestionId = _questionProvider.getPostQuestionId;
 
-    final _buttonText =
-        (_questionId != null && _questionId == widget.question.questionId)
-            ? 'Cancel'
-            : 'Answer';
+    final _questionId = widget.question.questionId;
+
+    final _appLocalization = AppLocalizations.of(context);
+
+    final _buttonTextKey =
+        (_formQuestionId != null && _formQuestionId == _questionId)
+            ? 'postDetailsTxtButtonCancel'
+            : 'postDetailsTxtButtonAnswer';
+
+    final _buttonText = _appLocalization.translate(_buttonTextKey);
 
     final _buttonStyle =
-        (_questionId != null && _questionId == widget.question.questionId)
+        (_formQuestionId != null && _formQuestionId == _questionId)
             ? ElevatedButton.styleFrom(
                 primary: Colors.white,
                 onPrimary: Colors.red,
@@ -54,6 +64,9 @@ class _PostDetailsQuestionColumnState extends State<PostDetailsQuestionColumn> {
                 primary: Colors.deepPurple[400],
                 onPrimary: Colors.white,
               );
+
+    final _questionTitleFirstPart =
+        _appLocalization.translate('postDetailsTxEveryQuestionTitle');
 
     final _size = MediaQuery.of(context).size;
 
@@ -70,7 +83,7 @@ class _PostDetailsQuestionColumnState extends State<PostDetailsQuestionColumn> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                'Question: ${widget.question.question}',
+                '$_questionTitleFirstPart: ${widget.question.question}',
                 style: TextStyle(
                   color: Theme.of(context).primaryColor,
                   fontSize: 18,
@@ -89,45 +102,12 @@ class _PostDetailsQuestionColumnState extends State<PostDetailsQuestionColumn> {
           initialData: const [],
           value: _firestoreDatabase.postDetailsQuestionAnswerStream(
             postId: _postId,
-            questionId: widget.question.questionId!,
+            questionId: _questionId!,
           ),
           catchError: (_, __) => const [],
           child: const PostDetailsQuestionColumnAnswersSection(),
         ),
       ],
-      // children: [
-      //   Row(
-      //     crossAxisAlignment: CrossAxisAlignment.start,
-      //     children: [
-      //       // PostDetailsToVoteColumn(vote: _vote),
-      //       const Expanded(child: SizedBox()),
-      //       Expanded(
-      //         flex: 18,
-      //         child: Column(
-      //           crossAxisAlignment: CrossAxisAlignment.start,
-      //           children: [
-      //             Text(
-      //               widget.question.question,
-      //               style: TextStyle(
-      //                 color: Theme.of(context).primaryColor,
-      //               ),
-      //             ),
-      //             SizedBox(height: _size.height * 0.02),
-      //             StreamProvider<List<PostDetailsQuestionAnswer>>.value(
-      //               initialData: const [],
-      //               value: _firestoreDatabase.postDetailsQuestionAnswerStream(
-      //                 postId: _postId,
-      //                 questionId: widget.question.questionId!,
-      //               ),
-      //               catchError: (_, __) => const [],
-      //               child: const PostDetailsQuestionColumnAnswersSection(),
-      //             )
-      //           ],
-      //         ),
-      //       ),
-      //     ],
-      //   ),
-      // ],
     );
   }
 
@@ -136,8 +116,9 @@ class _PostDetailsQuestionColumnState extends State<PostDetailsQuestionColumn> {
 
     final _questionId = widget.question.questionId;
 
-    if (_questionProvider.getPostQuestionId == null ||
-        _questionProvider.getPostQuestionId != _questionId) {
+    final _formQuestionId = _questionProvider.getPostQuestionId;
+
+    if (_formQuestionId == null || _formQuestionId != _questionId) {
       _questionProvider.updatePostDetailsQuestionId(
         questionID: _questionId,
       );

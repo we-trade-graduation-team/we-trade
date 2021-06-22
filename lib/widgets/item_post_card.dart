@@ -9,56 +9,9 @@ import '../models/arguments/shared/post_details_arguments.dart';
 import '../models/cloud_firestore/post_card_model/post_card/post_card.dart';
 import '../providers/loading_overlay_provider.dart';
 import '../services/firestore/firestore_database.dart';
-import '../ui/home_features/post_details_screen/post_details_screen.dart';
+import '../ui/shared_features/post_details_screen/post_details_screen.dart';
 import '../utils/routes/routes.dart';
-// import '../ui/home_features/post_details_screen/post_details_screen.dart';
-// // import '../utils/routes/routes.dart';
-
-// final tempProduct = Product(
-//   id: 1,
-//   images: [
-//     'https://images.unsplash.com/photo-1605899435973-ca2d1a8861cf?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=675&q=80',
-//     'https://images.unsplash.com/photo-1509198397868-475647b2a1e5?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=598&q=80',
-//     'https://images.unsplash.com/photo-1529448155365-b176d2c6906b?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=675&q=80',
-//     'https://images.unsplash.com/photo-1529154691717-3306083d869e?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1050&q=80',
-//   ],
-//   tradeForCategory: tradeForList,
-//   title: 'Wireless Controller for PS4™ whole new level',
-//   price: 64.99,
-//   description: description,
-//   condition: condition,
-//   productLocation: location,
-//   ownerLocation: location,
-//   isFavourite: true,
-//   isPopular: true,
-//   owner: demoUsers[1],
-//   questions: demoQuestions,
-// );
-
-// final tempPostCardItem = PostCardItem(
-//     image:
-//         'https://images.unsplash.com/photo-1605899435973-ca2d1a8861cf?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=675&q=80',
-//     condition: 'mới',
-//     district: 'quận 5',
-//     price: 300);
-
-// final tempPostCardList = <PostCard>[
-//   PostCard(
-//       postId: '8Dzp1L2GBTENRWaMNJuV',
-//       item: tempPostCardItem,
-//       title: 'sản phẩm tạm'),
-//   PostCard(
-//       postId: 'znR6eLnm2KpWBseKI7aJ',
-//       item: tempPostCardItem,
-//       title: 'sản phẩm tạm'),
-// ];
-
-// bool _isNumeric(String? s) {
-//   if (s == null) {
-//     return false;
-//   }
-//   return double.tryParse(s) != null;
-// }
+import 'shared_circular_progress_indicator.dart';
 
 class ItemPostCard extends StatefulWidget {
   const ItemPostCard({
@@ -118,12 +71,8 @@ class _ItemPostCardState extends State<ItemPostCard> {
                       ),
                     ),
                   ),
-                  placeholder: (_, __) => Center(
-                    child: CircularProgressIndicator(
-                      backgroundColor: Colors.white,
-                      color: Theme.of(context).primaryColor,
-                    ),
-                  ),
+                  placeholder: (_, __) =>
+                      const SharedCircularProgressIndicator(),
                   errorWidget: (_, __, dynamic ___) => const Icon(Icons.error),
                 ),
               ),

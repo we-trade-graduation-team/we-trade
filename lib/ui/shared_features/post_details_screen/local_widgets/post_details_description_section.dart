@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../../../app_localizations.dart';
 import '../../../../constants/app_dimens.dart';
 import '../../../../models/cloud_firestore/post_model/post/post.dart';
 import 'post_details_section_container.dart';
@@ -20,14 +21,17 @@ class PostDetailsDescriptionSection extends StatelessWidget {
 
     final _size = MediaQuery.of(context).size;
 
+    final _appLocalization = AppLocalizations.of(context);
+
     return Column(
       children: [
-        const PostDetailsSectionContainer(
+        PostDetailsSectionContainer(
           height: 50,
           child: FittedBox(
             fit: BoxFit.fitHeight,
             alignment: Alignment.centerLeft,
-            child: Text('Description'),
+            child: Text(_appLocalization
+                .translate('postDetailsTxtDescriptionSectionTitle')),
           ),
         ),
         PostDetailsSeparator(height: _size.height * 0.004),
@@ -42,8 +46,10 @@ class PostDetailsDescriptionSection extends StatelessWidget {
             _postDetailsDescription,
             style: const TextStyle(fontWeight: FontWeight.w300),
             maxLines: 3,
-            collapsedHint: 'Show more',
-            expandedHint: 'Show less',
+            collapsedHint:
+                _appLocalization.translate('postDetailsTxtDescriptionShowMore'),
+            expandedHint:
+                _appLocalization.translate('postDetailsTxtDescriptionShowLess'),
             hintTextStyle: TextStyle(color: Theme.of(context).primaryColor),
             arrowColor: Theme.of(context).primaryColor,
             arrowSize: 24,

@@ -10,7 +10,6 @@ import '../../../app_localizations.dart';
 import '../../../providers/auth_provider.dart';
 import '../../../utils/helper/authentication/dialog_content_helper/dialog_content_helper.dart';
 import '../../../utils/helper/flash/flash_helper.dart';
-import '../../../utils/routes/routes.dart';
 import '../shared_widgets/auth_custom_background.dart';
 import '../shared_widgets/custom_form_builder_text_field.dart';
 
@@ -73,36 +72,50 @@ class _SignInScreenState extends State<SignInScreen> {
     final _appLocalizations = AppLocalizations.of(context);
 
     final footerChildren = [
-      Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          GestureDetector(
-            onTap: widget.toggleView,
-            child: Text(
-              _appLocalizations.translate('loginTxtSignUp'),
-              style: const TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.w700,
-                decoration: TextDecoration.underline,
-              ),
+      GestureDetector(
+        onTap: widget.toggleView,
+        child: Align(
+          alignment: Alignment.centerLeft,
+          child: Text(
+            _appLocalizations.translate('loginTxtSignUp'),
+            style: const TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.w700,
+              decoration: TextDecoration.underline,
             ),
           ),
-          GestureDetector(
-            onTap: () => Navigator.pushNamed(
-              context,
-              Routes.forgotPasswordScreenRouteName,
-            ),
-            child: Text(
-              _appLocalizations.translate('loginTxtForgotPassword'),
-              style: const TextStyle(
-                // fontSize: 16,
-                fontWeight: FontWeight.w500,
-                decoration: TextDecoration.underline,
-              ),
-            ),
-          ),
-        ],
+        ),
       ),
+      // Row(
+      //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      //   children: [
+      //     GestureDetector(
+      //       onTap: widget.toggleView,
+      //       child: Text(
+      //         _appLocalizations.translate('loginTxtSignUp'),
+      //         style: const TextStyle(
+      //           fontSize: 16,
+      //           fontWeight: FontWeight.w700,
+      //           decoration: TextDecoration.underline,
+      //         ),
+      //       ),
+      //     ),
+      //     GestureDetector(
+      //       onTap: () => Navigator.pushNamed(
+      //         context,
+      //         Routes.forgotPasswordScreenRouteName,
+      //       ),
+      //       child: Text(
+      //         _appLocalizations.translate('loginTxtForgotPassword'),
+      //         style: const TextStyle(
+      //           // fontSize: 16,
+      //           fontWeight: FontWeight.w500,
+      //           decoration: TextDecoration.underline,
+      //         ),
+      //       ),
+      //     ),
+      //   ],
+      // ),
     ];
 
     final inputFormChildren = [
