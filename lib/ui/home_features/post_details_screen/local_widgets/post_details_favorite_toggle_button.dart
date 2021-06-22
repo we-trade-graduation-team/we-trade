@@ -77,8 +77,8 @@ class _PostDetailsFavoriteToggleButtonState
         postId: _postId,
       );
 
-      await PostServiceFireStore().updateWishList(
-        isAdd: true,
+      return PostServiceFireStore().updateWishList(
+        isAdd: false,
         thisUserId: _currentUser.uid!,
         postId: _postId,
       );
@@ -88,8 +88,8 @@ class _PostDetailsFavoriteToggleButtonState
       postId: _postId,
     );
 
-    await PostServiceFireStore().updateWishList(
-      isAdd: false,
+    return PostServiceFireStore().updateWishList(
+      isAdd: true,
       thisUserId: _currentUser.uid!,
       postId: _postId,
     );
