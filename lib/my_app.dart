@@ -18,6 +18,7 @@ import 'services/firestore/firestore_database.dart';
 import 'ui/authentication_features/shared_widgets/authentication.dart';
 import 'ui/main_menu.dart';
 import 'utils/routes/routes.dart';
+import 'widgets/shared_circular_progress_indicator.dart';
 
 /// We are using a StatefulWidget such that we only create the [Future] once,
 /// no matter how many times our widget rebuild.
@@ -73,11 +74,7 @@ class _MyAppState extends State<MyApp> {
         }
 
         // Otherwise, show something whilst waiting for initialization to complete
-        return const Center(
-          child: CircularProgressIndicator(
-            //color: Colors.white,
-          ),
-        );
+        return const SharedCircularProgressIndicator();
       },
     );
   }
@@ -122,8 +119,8 @@ class _MyAppState extends State<MyApp> {
           locale: _languageProvider.appLocale,
           //List of all supported locales
           supportedLocales: const [
-            Locale('en', 'US'),
             Locale('vi', 'VN'),
+            Locale('en', 'US'),
           ],
           //These delegates make sure that the localization data for the proper language is loaded
           localizationsDelegates: const [

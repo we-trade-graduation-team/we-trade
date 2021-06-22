@@ -43,15 +43,17 @@ class CustomAnimationLimiterForListView<T> extends StatelessWidget {
           if (addLastSeparator && index == list.length) {
             return Container();
           }
-          return AnimationConfiguration.staggeredList(
-            position: index,
-            duration: duration,
-            child: SlideAnimation(
-              verticalOffset: verticalOffset,
-              child: FadeInAnimation(
-                child: builder(
-                  context,
-                  list[index],
+          return KeepAliveListViewItem(
+            child: AnimationConfiguration.staggeredList(
+              position: index,
+              duration: duration,
+              child: SlideAnimation(
+                verticalOffset: verticalOffset,
+                child: FadeInAnimation(
+                  child: builder(
+                    context,
+                    list[index],
+                  ),
                 ),
               ),
             ),
@@ -91,5 +93,35 @@ class CustomAnimationLimiterForListView<T> extends StatelessWidget {
     properties.add(ColorProperty('separatorColor', separatorColor));
     properties.add(DoubleProperty('endIndent', endIndent));
     properties.add(DoubleProperty('verticalOffset', verticalOffset));
+  }
+}
+
+class KeepAliveListViewItem extends StatefulWidget {
+  const KeepAliveListViewItem({
+    Key? key,
+    required this.child,
+  }) : super(key: key);
+
+  final Widget child;
+
+  @override
+  _KeepAliveListViewItemState createState() => _KeepAliveListViewItemState();
+}
+
+class _KeepAliveListViewItemState extends State<KeepAliveListViewItem>
+    with AutomaticKeepAliveClientMixin {
+  @override
+  Widget build(BuildContext context) {
+    super.build(context);
+    return widget.child;
+  }
+
+  @override
+  bool get wantKeepAlive => true;
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(DiagnosticsProperty<bool>('wantKeepAlive', wantKeepAlive));
   }
 }

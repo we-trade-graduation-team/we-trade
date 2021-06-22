@@ -25,10 +25,11 @@ class HomeScreenPopularPostCardsSection extends StatelessWidget {
         sectionTitleRowModel: SectionTitleRowModel(
           title:
               _appLocalization.translate('homeScreenTxtPopularPostCardsTitle'),
-          press: () {},
+          seeMore: false,
+          // press: () {},
         ),
-        child: StreamProvider<List<PostCard>>.value(
-          initialData: const [],
+        child: StreamProvider<List<PostCard>?>.value(
+          initialData: null,
           value: _firestoreDatabase.popularPostCardsStream(),
           catchError: (_, __) => const [],
           child: const HomeScreenPopularPostCards(),

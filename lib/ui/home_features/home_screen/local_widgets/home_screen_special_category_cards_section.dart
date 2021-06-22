@@ -30,7 +30,7 @@ class HomeScreenSpecialCategoryCardsSection extends StatelessWidget {
         sectionTitleRowModel: SectionTitleRowModel(
           title:
               _appLocalization.translate('homeScreenTxtSpecialCategoryCardsTitle'),
-          press: () {},
+          seeMore: false,
         ),
         child: SizedBox(
           height: _cardHeight,

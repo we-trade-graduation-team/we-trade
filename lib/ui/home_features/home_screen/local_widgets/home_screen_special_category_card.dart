@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../models/cloud_firestore/special_category_card/special_category_card.dart';
+import '../../../../widgets/shared_circular_progress_indicator.dart';
 import 'home_screen_category_card_fundamental.dart';
 
 class HomeScreenSpecialCategoryCard extends StatelessWidget {
@@ -39,11 +40,8 @@ class HomeScreenSpecialCategoryCard extends StatelessWidget {
                         ),
                       ),
                     ),
-                    placeholder: (_, __) => const Center(
-                      child: CircularProgressIndicator(
-                        backgroundColor: Colors.white,
-                      ),
-                    ),
+                    placeholder: (_, __) =>
+                        const SharedCircularProgressIndicator(),
                     errorWidget: (_, __, dynamic ___) =>
                         const Icon(Icons.error),
                   ),

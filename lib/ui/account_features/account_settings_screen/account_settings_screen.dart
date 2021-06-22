@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import '../../../app_localizations.dart';
 import '../../../providers/auth_provider.dart';
 import '../../../utils/helper/flash/flash_helper.dart';
+import '../../../widgets/shared_circular_progress_indicator.dart';
 
 class AccountSettingsScreen extends StatefulWidget {
   const AccountSettingsScreen({
@@ -56,9 +57,7 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
         progressIndicator: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const CircularProgressIndicator(
-              //color: Theme.of(context).primaryColor,
-            ),
+            const SharedCircularProgressIndicator(),
             const SizedBox(height: 20),
             Text(
               _appLocalizations.translate('logoutFlashTxtLoggingOut'),
@@ -92,7 +91,7 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
     final _appLocalizations = AppLocalizations.of(context);
 
     // Show dialog Ok-Cancel
-    await FlashHelper.showDialogFlash(
+    return FlashHelper.showDialogFlash(
       context,
       title: Text(_appLocalizations.translate('logoutAlertTxtTitle')),
       content: Text(_appLocalizations.translate('logoutAlertTxtContent')),

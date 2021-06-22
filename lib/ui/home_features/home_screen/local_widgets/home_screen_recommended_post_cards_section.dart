@@ -26,14 +26,13 @@ class HomeScreenRecommendedSection extends StatelessWidget {
           title: _appLocalization
               .translate('homeScreenTxtRecommendedSectionTitle'),
           seeMore: false,
-          press: () {},
         ),
-        child: FutureProvider<List<PostCard>>.value(
-          value: _firestoreDatabase.getHomeScreenRecommendedPostCards(),
-          initialData: const [],
-          catchError: (_, __) => const [],
-          child: const Center(
-            child: HomeScreenRecommendedPostCards(),
+        child: Center(
+          child: FutureProvider<List<PostCard>?>.value(
+            value: _firestoreDatabase.getHomeScreenRecommendedPostCards(),
+            initialData: null,
+            catchError: (_, __) => const [],
+            child: const HomeScreenRecommendedPostCards(),
           ),
         ),
       ),

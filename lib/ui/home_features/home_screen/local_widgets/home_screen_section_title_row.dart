@@ -1,6 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import '../../../../app_localizations.dart';
+// import '../../../../app_localizations.dart';
 import '../../../../models/ui/home_features/home_screen/section_title_row_model.dart';
 
 class HomeScreenSectionTitleRow extends StatelessWidget {
@@ -15,7 +15,7 @@ class HomeScreenSectionTitleRow extends StatelessWidget {
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
 
-    final _appLocalization = AppLocalizations.of(context);
+    // final _appLocalization = AppLocalizations.of(context);
 
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: size.width * 0.05),
@@ -26,18 +26,18 @@ class HomeScreenSectionTitleRow extends StatelessWidget {
             sectionTitleRowModel.title,
             style: const TextStyle(fontSize: 18),
           ),
-          if (sectionTitleRowModel.seeMore)
-            GestureDetector(
-              onTap: sectionTitleRowModel.press,
-              child: Text(
-                _appLocalization
-                    .translate('homeScreenTxtSectionTitleRowSeeMore'),
-                style: TextStyle(
-                  color: ((Theme.of(context).textTheme.bodyText2)!.color)!
-                      .withOpacity(0.5),
-                ),
-              ),
-            ),
+          // if (sectionTitleRowModel.seeMore)
+          //   GestureDetector(
+          //     onTap: sectionTitleRowModel.press,
+          //     child: Text(
+          //       _appLocalization
+          //           .translate('homeScreenTxtSectionTitleRowSeeMore'),
+          //       style: TextStyle(
+          //         color: ((Theme.of(context).textTheme.bodyText2)!.color)!
+          //             .withOpacity(0.5),
+          //       ),
+          //     ),
+          //   ),
         ],
       ),
     );

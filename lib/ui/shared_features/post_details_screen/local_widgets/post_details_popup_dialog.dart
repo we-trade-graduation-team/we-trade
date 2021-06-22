@@ -2,21 +2,19 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:line_icons/line_icons.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
+
 import '../../../../constants/app_colors.dart';
 import '../../../../constants/app_dimens.dart';
-import '../../../../utils/routes/routes.dart';
-
-import '../../../shared_features/other_user_profile/other_user_profile_screen.dart';
 import '../../../shared_features/report/report_screen.dart';
 
-class PersonalChatDialog extends StatelessWidget {
-  const PersonalChatDialog({
+class PostDetailsPopupDialog extends StatelessWidget {
+  const PostDetailsPopupDialog({
     Key? key,
     required this.parentContext,
-    required this.userId,
+    required this.objectId,
   }) : super(key: key);
 
-  final String userId;
+  final String objectId;
   final BuildContext parentContext;
 
   @override
@@ -48,20 +46,8 @@ class PersonalChatDialog extends StatelessWidget {
                   children: [
                     InkWell(
                       onTap: () {
-                        pushNewScreenWithRouteSettings<void>(
-                          parentContext,
-                          settings: const RouteSettings(
-                            name: Routes.otherProfileScreenRouteName,
-                            // arguments:
-                            //     OtherUserProfileArguments(userId: userId)
-                          ),
-                          screen: OtherUserProfileScreen(
-                            userId: userId,
-                          ),
-                          withNavBar: false,
-                          pageTransitionAnimation:
-                              PageTransitionAnimation.cupertino,
-                        );
+                        Navigator.of(parentContext)
+                            .popUntil(ModalRoute.withName('/'));
                       },
                       child: Container(
                         margin: const EdgeInsets.fromLTRB(0, 0, 0, 10),
@@ -74,58 +60,12 @@ class PersonalChatDialog extends StatelessWidget {
                         child: Row(
                           children: [
                             Icon(
-                              LineIcons.values['userCircleAlt'],
+                              LineIcons.values['home'],
                               color: AppColors.kTextLightColor,
                               size: 30,
                             ),
                             const SizedBox(width: 15),
-                            const Text('Xem hồ sơ'),
-                          ],
-                        ),
-                      ),
-                    ),
-                    InkWell(
-                      onTap: () {},
-                      child: Container(
-                        margin: const EdgeInsets.fromLTRB(0, 0, 0, 10),
-                        padding: const EdgeInsets.fromLTRB(0, 0, 20, 10),
-                        decoration: BoxDecoration(
-                          border: Border(
-                            bottom: AppDimens.kBorderSide(),
-                          ),
-                        ),
-                        child: Row(
-                          children: [
-                            Icon(
-                              LineIcons.values['alternateTrashAlt'],
-                              color: AppColors.kTextLightColor,
-                              size: 30,
-                            ),
-                            const SizedBox(width: 15),
-                            const Text('Xóa cuộc trò chuyện'),
-                          ],
-                        ),
-                      ),
-                    ),
-                    InkWell(
-                      onTap: () {},
-                      child: Container(
-                        margin: const EdgeInsets.fromLTRB(0, 0, 0, 10),
-                        padding: const EdgeInsets.fromLTRB(0, 0, 20, 10),
-                        decoration: BoxDecoration(
-                          border: Border(
-                            bottom: AppDimens.kBorderSide(),
-                          ),
-                        ),
-                        child: Row(
-                          children: [
-                            Icon(
-                              LineIcons.values['ban'],
-                              color: AppColors.kTextLightColor,
-                              size: 30,
-                            ),
-                            const SizedBox(width: 15),
-                            const Text('Chặn người dùng'),
+                            const Text('Quay lại trang chủ'),
                           ],
                         ),
                       ),
@@ -134,7 +74,9 @@ class PersonalChatDialog extends StatelessWidget {
                       onTap: () {
                         pushNewScreen<void>(
                           parentContext,
-                          screen: const ReportScreen(objectId: '',),
+                          screen: ReportScreen(
+                            objectId: objectId,
+                          ),
                           withNavBar: true, // OPTIONAL VALUE. True by default.
                           pageTransitionAnimation:
                               PageTransitionAnimation.cupertino,
@@ -151,7 +93,7 @@ class PersonalChatDialog extends StatelessWidget {
                               size: 30,
                             ),
                             const SizedBox(width: 15),
-                            const Text('Báo cáo người dùng'),
+                            const Text('Báo cáo bài đăng'),
                           ],
                         ),
                       ),
@@ -171,6 +113,6 @@ class PersonalChatDialog extends StatelessWidget {
     super.debugFillProperties(properties);
     properties
         .add(DiagnosticsProperty<BuildContext>('parentContext', parentContext));
-    properties.add(StringProperty('userId', userId));
+    properties.add(StringProperty('objectId', objectId));
   }
 }
