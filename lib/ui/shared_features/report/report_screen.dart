@@ -7,13 +7,10 @@ import 'package:flutter/material.dart';
 import 'package:group_button/group_button.dart';
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:provider/provider.dart';
-import 'package:we_trade/models/cloud_firestore/post_card_model/post_card/post_card.dart';
-import 'package:we_trade/models/cloud_firestore/post_card_model/post_card_item/post_card_item.dart';
-import 'package:we_trade/services/firestore/firestore_database.dart';
-import 'package:we_trade/ui/home_features/home_screen/home_screen.dart';
 
 import '../../../bloc/report_bloc.dart';
-import '../../../models/ui/shared_models/product_model.dart';
+import '../../../models/cloud_firestore/post_card_model/post_card/post_card.dart';
+import '../../../services/firestore/firestore_database.dart';
 import 'local_widgets/pop_header.dart';
 
 class ReportScreenBody extends StatelessWidget {
@@ -23,7 +20,7 @@ class ReportScreenBody extends StatelessWidget {
   }) : super(key: key);
   final String objectId;
 
-  final FirebaseAuth auth = FirebaseAuth.instance;
+  final auth = FirebaseAuth.instance;
   Future<void> report(String objectId, String reason) {
     final user = auth.currentUser;
     final uid = user!.uid;
@@ -34,22 +31,22 @@ class ReportScreenBody extends StatelessWidget {
       'reason': reason,
       'reporterId': uid,
       'type': 0
-    }).then((value) => print("User Added"));
+    });
+    // .then((value) => print('User Added'));
   }
 
   void showAlertDialog(BuildContext context) {
-
     // set up the AlertDialog
     const alert = AlertDialog(
       title: Text('Đã báo cáo'),
-      content:  Text(
-          'Chúng tôi sẽ xem xét báo cáo và phản hồi bạn sớm nhất có thể.'),
+      content:
+          Text('Chúng tôi sẽ xem xét báo cáo và phản hồi bạn sớm nhất có thể.'),
     );
 
     // show the dialog
     showDialog<AlertDialog>(
       context: context,
-      builder: (BuildContext context) {
+      builder: (context) {
         return alert;
       },
     );
@@ -65,8 +62,8 @@ class ReportScreenBody extends StatelessWidget {
       'Khác'
     ];
 
-    String reason = '';
-    TextEditingController textController = TextEditingController();
+    var reason = '';
+    final textController = TextEditingController();
 
     final reportBloc = context.watch<ReportBloc>();
 
@@ -241,6 +238,7 @@ class ReportScreenBody extends StatelessWidget {
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
     properties.add(StringProperty('objectId', objectId));
+    properties.add(DiagnosticsProperty<FirebaseAuth>('auth', auth));
   }
 }
 

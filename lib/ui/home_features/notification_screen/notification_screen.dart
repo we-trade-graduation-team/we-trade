@@ -1,11 +1,9 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
-import 'package:we_trade/ui/home_features/home_screen/local_widgets/home_screen_app_bar.dart';
-import '../../../utils/routes/routes.dart';
 
+import '../../../utils/routes/routes.dart';
+import '../home_screen/local_widgets/home_screen_app_bar.dart';
 import 'detailed_notification_screen.dart';
 import 'local_widgets/notification_app_bar.dart';
 import 'notification.dart';

@@ -74,7 +74,9 @@ class PostDetailsPopupDialog extends StatelessWidget {
                       onTap: () {
                         pushNewScreen<void>(
                           parentContext,
-                          screen: ReportScreen(objectId: objectId,),
+                          screen: ReportScreen(
+                            objectId: objectId,
+                          ),
                           withNavBar: true, // OPTIONAL VALUE. True by default.
                           pageTransitionAnimation:
                               PageTransitionAnimation.cupertino,
@@ -111,5 +113,6 @@ class PostDetailsPopupDialog extends StatelessWidget {
     super.debugFillProperties(properties);
     properties
         .add(DiagnosticsProperty<BuildContext>('parentContext', parentContext));
+    properties.add(StringProperty('objectId', objectId));
   }
 }

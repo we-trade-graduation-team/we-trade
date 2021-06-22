@@ -4,7 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:line_icons/line_icons.dart';
 import 'package:provider/provider.dart';
-import 'package:we_trade/models/arguments/shared/post_details_arguments.dart';
+import '../../../../models/arguments/shared/post_details_arguments.dart';
 
 import '../../../../models/cloud_firestore/post_model/post/post.dart';
 import 'post_details_item_images_carousel_slider.dart';

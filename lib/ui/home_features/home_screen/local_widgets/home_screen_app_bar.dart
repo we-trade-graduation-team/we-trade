@@ -24,7 +24,6 @@ class HomeScreenAppBar extends StatefulWidget {
 }
 
 class _HomeScreenAppBarState extends State<HomeScreenAppBar> {
-
   final FirebaseAuth auth = FirebaseAuth.instance;
 
   Future<bool> getNotificationDatas() async {
@@ -38,55 +37,67 @@ class _HomeScreenAppBarState extends State<HomeScreenAppBar> {
         .then((querySnapshot) {
       // ignore: avoid_function_literals_in_foreach_calls
       querySnapshot.docs.forEach((doc) {
-        String follower='';
-        String offerer='';
-        if(int.parse(doc['type'].toString())>1){
+        var follower = '';
+        var offerer = '';
+        if (int.parse(doc['type'].toString()) > 1) {
           FirebaseFirestore.instance
               .collection('users')
               .where('objectId', isEqualTo: doc['followerId'].toString())
-              .get().then((value) {
-            follower=value.docs[0]['name'].toString();
+              .get()
+              .then((value) {
+            follower = value.docs[0]['name'].toString();
           });
 
           FirebaseFirestore.instance
               .collection('users')
               .where('objectId', isEqualTo: doc['offererId'].toString())
-              .get().then((value)=>offerer=value.docs[0]['name'].toString());
-
+              .get()
+              .then((value) => offerer = value.docs[0]['name'].toString());
         }
-        String title='';
-        String content='';
-        switch(int.parse(doc['type'].toString())){
+        var title = '';
+        var content = '';
+        switch (int.parse(doc['type'].toString())) {
           case 0:
-            title='bài post của bạn đã được đăng';
-            content='bài post ${doc['postId'].toString()} của bạn đã được đăng lên hệ thống thành công.';
+            {
+              title = 'bài post của bạn đã được đăng';
+              content =
+                  'bài post ${doc['postId'].toString()} của bạn đã được đăng lên hệ thống thành công.';
+            }
             break;
           case 1:
-            title='bài post của bạn đã vi phạm chính sách của hệ thống';
-            content='bài post ${doc['postId'].toString()} của bạn đã vi phạm chính sách hệ thống với lý do ${doc['reason'].toString()}. '
-                'Chúng tôi mong bạn chú ý hơn trong các bài post tương lai';
+            {
+              title = 'bài post của bạn đã vi phạm chính sách của hệ thống';
+              content =
+                  'bài post ${doc['postId'].toString()} của bạn đã vi phạm chính sách hệ thống với lý do ${doc['reason'].toString()}. '
+                  'Chúng tôi mong bạn chú ý hơn trong các bài post tương lai';
+            }
             break;
           case 2:
-            title='${offerer} mong muốn trao đổi sản phẩm với bạn';
-            content='${offerer} mong muốn trao đổi bài post ${doc['postId'].toString()} của bạn. Hãy vào phần chat để thảo luận thêm.';
+            {
+              title = '$offerer mong muốn trao đổi sản phẩm với bạn';
+              content =
+                  '$offerer mong muốn trao đổi bài post ${doc['postId'].toString()} của bạn. Hãy vào phần chat để thảo luận thêm.';
+            }
             break;
           default:
-            title='${follower} vừa đăng sản phẩm mới';
-            content='${follower} vừa đăng bài post ${doc['postId'].toString()}.';
+            {
+              title = '$follower vừa đăng sản phẩm mới';
+              content =
+                  '$follower vừa đăng bài post ${doc['postId'].toString()}.';
+            }
             break;
         }
-        var data = NotificationData(
-            title: title,
-            content: content,
-            seen: doc['seen'].toString().toLowerCase() == 'true',
-            createAt: doc['createAt'].toString(),
-            followerId: doc['followerId'].toString(),
-            offererId: doc['offererId'].toString(),
-            postId: doc['postId'].toString(),
-            type: int.parse(doc['type'].toString()),
+        final data = NotificationData(
+          title: title,
+          content: content,
+          seen: doc['seen'].toString().toLowerCase() == 'true',
+          createAt: doc['createAt'].toString(),
+          followerId: doc['followerId'].toString(),
+          offererId: doc['offererId'].toString(),
+          postId: doc['postId'].toString(),
+          type: int.parse(doc['type'].toString()),
           reason: doc['reason'].toString(),
         );
-
 
         _notes.add(data);
       });
@@ -98,11 +109,11 @@ class _HomeScreenAppBarState extends State<HomeScreenAppBar> {
   }
 
   @override
-  initState(){
+  void initState() {
     super.initState();
-    print(true);
-    getNotificationDatas().then((value){
-      print('get notification data');
+    // print(true);
+    getNotificationDatas().then((value) {
+      // print('get notification data');
     });
   }
 
@@ -142,6 +153,7 @@ class _HomeScreenAppBarState extends State<HomeScreenAppBar> {
       ),
     );
   }
+
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
