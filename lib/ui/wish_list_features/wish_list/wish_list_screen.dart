@@ -24,7 +24,7 @@ class _WishListScreenState extends State<WishListScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('lƯỢT THÍCH'),
+        title: const Text('LƯỢT THÍCH'),
       ),
       body: DefaultTabController(
         length: tabData.length,

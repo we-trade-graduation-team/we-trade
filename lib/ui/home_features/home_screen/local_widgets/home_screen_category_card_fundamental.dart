@@ -6,7 +6,7 @@ import 'package:provider/provider.dart';
 
 import '../../../../services/firestore/firestore_database.dart';
 import '../../../../utils/routes/routes.dart';
-import '../../category_kind_screen/category_kind_screen.dart';
+import '../../searching_screen/search_screen.dart';
 // import '../../../../utils/routes/routes.dart';
 // import '../../category_kind_screen/category_kind_screen.dart';
 
@@ -22,11 +22,11 @@ class HomeScreenCategoryCardFundamental extends StatefulWidget {
   final String categoryId;
   final String categoryName;
 
-
   @override
   _HomeScreenCategoryCardFundamentalState createState() =>
       // ignore: no_logic_in_create_state
-      _HomeScreenCategoryCardFundamentalState(categoryId: categoryId,categoryName: categoryName);
+      _HomeScreenCategoryCardFundamentalState(
+          categoryId: categoryId, categoryName: categoryName);
 
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
@@ -38,7 +38,8 @@ class HomeScreenCategoryCardFundamental extends StatefulWidget {
 
 class _HomeScreenCategoryCardFundamentalState
     extends State<HomeScreenCategoryCardFundamental> {
-  _HomeScreenCategoryCardFundamentalState({required this.categoryId, required this.categoryName});
+  _HomeScreenCategoryCardFundamentalState(
+      {required this.categoryId, required this.categoryName});
   final String categoryId;
   final String categoryName;
   @override
@@ -71,14 +72,11 @@ class _HomeScreenCategoryCardFundamentalState
   Future<void> _navigateToCategoryKindScreen() async {
     return pushNewScreenWithRouteSettings<void>(
       context,
-      screen: CategoryKindScreen(
-        mainCategory: categoryId,
-        mainCategoryName: categoryName,
+      screen: SearchScreen(
+        cateId: categoryId,
       ),
-      settings: const RouteSettings(
-        name: Routes.categoryKindScreenRouteName,
-      ),
-      withNavBar: true,
+      settings: const RouteSettings(name: Routes.searchScreenRouteName),
+      withNavBar: false,
     );
   }
 

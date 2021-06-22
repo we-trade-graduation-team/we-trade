@@ -159,7 +159,7 @@ class GroupChatDialog extends StatelessWidget {
                       onTap: () {
                         pushNewScreen<void>(
                           parentContext,
-                          screen: const ReportScreen(),
+                          screen: const ReportScreen(objectId: '',),
                           withNavBar: true, // OPTIONAL VALUE. True by default.
                           pageTransitionAnimation:
                               PageTransitionAnimation.cupertino,

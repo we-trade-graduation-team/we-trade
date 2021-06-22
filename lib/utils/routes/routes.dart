@@ -9,7 +9,6 @@ import '../../ui/account_features/trading_history/trading_history_screen.dart';
 import '../../ui/account_features/user_info/change_password_screen.dart';
 import '../../ui/account_features/user_info/user_info_screen.dart';
 import '../../ui/authentication_features/shared_widgets/authentication.dart';
-import '../../ui/home_features/category_kind_screen/category_kind_screen.dart';
 import '../../ui/home_features/notification_screen/detailed_notification_screen.dart';
 import '../../ui/home_features/notification_screen/notification_screen.dart';
 import '../../ui/home_features/searching_screen/search_screen.dart';
@@ -94,10 +93,8 @@ class Routes {
   };
 
   static final Map<String, WidgetBuilder> homeFeaturesRoutes = {
-    categoryKindScreenRouteName: (_) => const CategoryKindScreen(
-          mainCategory: '',
-          mainCategoryName: '',
-        ),
+    // categoryKindScreenRouteName: (_) => const CategoryKindScreen(mainCategory: '',mainCategoryName: '',),
+    // postDetailScreenRouteName: (_) => const PostDetailsScreen(),
     detailNotificationScreenRouteName: (_) => DetailedNotificationScreen(
           note: chosenNote,
         ),
@@ -110,7 +107,7 @@ class Routes {
     otherProfileScreenRouteName: (_) => const OtherUserProfileScreen(
           userId: '',
         ),
-    reportScreenRouteName: (_) => const ReportScreen(),
+    reportScreenRouteName: (_) => const ReportScreen(objectId: '',),
     makeOfferScreenRouteName: (_) => const MakeOfferScreen(
           otherUserPostId: '',
         ),
