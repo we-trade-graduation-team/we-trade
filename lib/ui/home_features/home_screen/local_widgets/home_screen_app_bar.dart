@@ -40,17 +40,20 @@ class _HomeScreenAppBarState extends State<HomeScreenAppBar> {
       querySnapshot.docs.forEach((doc) {
         String follower='';
         String offerer='';
+        if(int.parse(doc['type'].toString())>1){
+          FirebaseFirestore.instance
+              .collection('users')
+              .where('objectId', isEqualTo: doc['followerId'].toString())
+              .get().then((value) {
+            follower=value.docs[0]['name'].toString();
+          });
 
-        FirebaseFirestore.instance
-            .collection('user')
-            .where('ObjectId', isEqualTo: doc['followerId'].toString())
-            .get().then((value)=>follower=value.docs[0]['name'].toString());
+          FirebaseFirestore.instance
+              .collection('users')
+              .where('objectId', isEqualTo: doc['offererId'].toString())
+              .get().then((value)=>offerer=value.docs[0]['name'].toString());
 
-        FirebaseFirestore.instance
-            .collection('user')
-            .where('ObjectId', isEqualTo: doc['offererId'].toString())
-            .get().then((value)=>offerer=value.docs[0]['name'].toString());
-
+        }
         String title='';
         String content='';
         switch(int.parse(doc['type'].toString())){
@@ -95,8 +98,9 @@ class _HomeScreenAppBarState extends State<HomeScreenAppBar> {
   }
 
   @override
-  void initState(){
+  initState(){
     super.initState();
+    print(true);
     getNotificationDatas().then((value){
       print('get notification data');
     });
