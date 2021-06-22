@@ -2,9 +2,9 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../../../app_localizations.dart';
 import '../../../../constants/app_dimens.dart';
 import '../../../../models/cloud_firestore/post_details_question/post_details_question.dart';
-// import '../../../../providers/post_details_question_provider.dart';
 import 'post_details_no_items_section.dart';
 import 'post_details_question_column.dart';
 import 'post_details_question_form.dart';
@@ -25,9 +25,12 @@ class _PostDetailsQuestionsSectionState
   Widget build(BuildContext context) {
     final _questions = context.watch<List<PostDetailsQuestion>>();
 
-    // final _questionProvider = context.watch<PostDetailsQuestionProvider>();
-
     final _size = MediaQuery.of(context).size;
+
+    final _appLocalization = AppLocalizations.of(context);
+
+    final _titleText =
+        _appLocalization.translate('postDetailsTxtQuestionsSectionTitle');
 
     return Container(
       width: _size.width,
@@ -40,7 +43,7 @@ class _PostDetailsQuestionsSectionState
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'faq'.toUpperCase(),
+            _titleText.toUpperCase(),
             style: Theme.of(context).textTheme.headline6,
           ),
           SizedBox(height: _size.height * 0.025),
@@ -49,20 +52,21 @@ class _PostDetailsQuestionsSectionState
           if (_questions.isNotEmpty)
             buildQuestionColumn(_questions)
           else
-            const PostDetailsNoItemsSection(text: 'No questions')
+            PostDetailsNoItemsSection(
+                text: _appLocalization.translate('postDetailsTxtNoQuestions'))
         ],
       ),
     );
   }
 
   Widget buildQuestionColumn(List<PostDetailsQuestion> questions) {
-    // questions.sort((a, b) => b.votes.compareTo(a.votes));
-
     final _size = MediaQuery.of(context).size;
 
     final _spacingHeight = _size.height * 0.025;
 
-    // const numberItemToShow = 2;
+    if (questions.isEmpty) {
+      return Container();
+    }
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -83,39 +87,6 @@ class _PostDetailsQuestionsSectionState
           itemCount: questions.length,
         ),
       ],
-      // children: [
-      //   ...List.generate(
-      //     numberItemToShow,
-      //     (index) => PostDetailsQuestionColumn(question: questions[index]),
-      //   ),
-      //   SizedBox(height: _spacingHeight),
-      //   if (questions.length > numberItemToShow)
-      //     ExpandChild(
-      //       collapsedHint: 'Show more questions',
-      //       expandedHint: 'Collapse all questions',
-      //       hintTextStyle: TextStyle(color: Theme.of(context).primaryColor),
-      //       arrowColor: Theme.of(context).primaryColor,
-      //       arrowSize: 24,
-      //       expandArrowStyle: ExpandArrowStyle.both,
-      //       capitalArrowtext: false,
-      //       child: Column(
-      //         children: [
-      //           ListView.separated(
-      //             shrinkWrap: true,
-      //             physics: const NeverScrollableScrollPhysics(),
-      //             padding: EdgeInsets.zero,
-      //             itemBuilder: (_, index) => PostDetailsQuestionColumn(
-      //                 question: questions[index + numberItemToShow]),
-      //             separatorBuilder: (_, __) => Divider(
-      //               height: _spacingHeight,
-      //               color: Colors.transparent,
-      //             ),
-      //             itemCount: questions.length - numberItemToShow,
-      //           ),
-      //         ],
-      //       ),
-      //     ),
-      // ],
     );
   }
 }

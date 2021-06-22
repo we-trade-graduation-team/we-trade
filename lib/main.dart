@@ -13,17 +13,9 @@ import 'providers/loading_overlay_provider.dart';
 import 'providers/theme_provider.dart';
 import 'services/firestore/firestore_database.dart';
 
-// bool useFirestoreEmulator = false;
-
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  // if (useFirestoreEmulator) {
-  //   FirebaseFirestore.instance.settings = const Settings(
-  //     host: 'localhost:8080',
-  //     sslEnabled: false,
-  //     persistenceEnabled: false,
-  //   );
-  // }
+  
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
   ]).then(

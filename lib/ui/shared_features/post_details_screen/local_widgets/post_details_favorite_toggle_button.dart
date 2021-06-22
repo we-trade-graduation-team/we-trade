@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../../../models/arguments/shared/post_details_arguments.dart';
 import '../../../../models/cloud_firestore/user_model/user/user.dart';
 import '../../../../providers/post_details_favorite_provider.dart';
 import '../../../../services/firestore/firestore_database.dart';
@@ -68,29 +69,25 @@ class _PostDetailsFavoriteToggleButtonState
 
     final _isCurrentUserFavoritePost = _postDetailsFavoriteProvider.isFavorite;
 
-    final _postId = context.read<String>();
+    final _args = context.read<PostDetailsArguments>();
+
+    final _postId = _args.postId;
 
     _postDetailsFavoriteProvider.updatePostDetailsFavorite();
 
-    if (_isCurrentUserFavoritePost) {
-      await _firestoreDatabase.deleteJunctionUserFavoritePost(
-        postId: _postId,
-      );
+    await PostServiceFireStore().updateWishList(
+      isAdd: !_isCurrentUserFavoritePost,
+      thisUserId: _currentUser.uid!,
+      postId: _postId,
+    );
 
-      await PostServiceFireStore().updateWishList(
-        isAdd: true,
-        thisUserId: _currentUser.uid!,
+    if (_isCurrentUserFavoritePost) {
+      return _firestoreDatabase.deleteJunctionUserFavoritePost(
         postId: _postId,
       );
     }
 
-    await _firestoreDatabase.setJunctionUserFavoritePost(
-      postId: _postId,
-    );
-
-    await PostServiceFireStore().updateWishList(
-      isAdd: false,
-      thisUserId: _currentUser.uid!,
+    return _firestoreDatabase.setJunctionUserFavoritePost(
       postId: _postId,
     );
   }

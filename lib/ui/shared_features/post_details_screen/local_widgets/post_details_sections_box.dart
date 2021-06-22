@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 import 'package:provider/provider.dart';
 
+import '../../../../app_localizations.dart';
 import '../../../../constants/app_dimens.dart';
 import '../../../../models/arguments/shared/post_details_arguments.dart';
 import '../../../../models/cloud_firestore/user_model/user/user.dart';
@@ -28,59 +29,26 @@ class PostDetailsSectionsBox extends StatefulWidget {
 }
 
 class _PostDetailsSectionsBoxState extends State<PostDetailsSectionsBox> {
-  Future<void> _showMyDialog(String alertStr) async {
-    return showDialog<void>(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: const Text('Thông báo'),
-          content: Text(alertStr),
-          actions: <Widget>[
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: const Text('OK'),
-            ),
-          ],
-        );
-      },
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     final _size = MediaQuery.of(context).size;
 
-    final _postId = context.watch<String>();
-
-    final _ownerId = context.watch<PostDetailsArguments>().ownerId;
-
-    final _currentUser = context.watch<User>();
+    final _appLocalization = AppLocalizations.of(context);
 
     final _detailChildren = [
       const PostDetailsTitleSection(),
-      ElevatedButton(
-        onPressed: () {
-          if (_ownerId != _currentUser.uid) {
-            pushNewScreenWithRouteSettings<void>(
-              context,
-              settings: const RouteSettings(
-                name: Routes.makeOfferScreenRouteName,
-              ),
-              screen: MakeOfferScreen(
-                otherUserPostId: _postId,
-              ),
-              withNavBar: false,
-              pageTransitionAnimation: PageTransitionAnimation.cupertino,
-            );
-          } else {
-            _showMyDialog('Bạn không thể make offer với chính mình');
-          }
-        },
-        child: const Text('Make offer'),
-      ),
       const PostDetailsTradeForInfoSection(),
+      ElevatedButton(
+        onPressed: _onPressed,
+        style: ElevatedButton.styleFrom(
+            padding: EdgeInsets.symmetric(
+          horizontal: _size.width * 0.05,
+          vertical: _size.height * 0.02,
+        )),
+        child: Text(
+          _appLocalization.translate('postDetailsTxtMakeOfferButton'),
+        ),
+      ),
       const PostDetailsDescriptionSection(),
       const PostDetailsOwnerInfoSection(),
       const PostDetailsOwnerOtherPostCardsSection(),
@@ -101,5 +69,57 @@ class _PostDetailsSectionsBoxState extends State<PostDetailsSectionsBox> {
         builder: (_, widget) => widget,
       ),
     );
+  }
+
+  Future<void> _showMyDialog(String alertStr) async {
+    final _appLocalization = AppLocalizations.of(context);
+
+    return showDialog<void>(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text(_appLocalization.translate('postDetailsTxtNotification')),
+          content: Text(alertStr),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('OK'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Future<void> _onPressed() async {
+    final _args = context.read<PostDetailsArguments>();
+
+    final _postId = _args.postId;
+
+    final _ownerId = _args.ownerId;
+
+    final _currentUser = context.read<User>();
+
+    final _currentUserId = _currentUser.uid!;
+
+    if (_ownerId != _currentUserId) {
+      return pushNewScreenWithRouteSettings<void>(
+        context,
+        settings: const RouteSettings(
+          name: Routes.makeOfferScreenRouteName,
+        ),
+        screen: MakeOfferScreen(
+          otherUserPostId: _postId,
+        ),
+        withNavBar: false,
+        pageTransitionAnimation: PageTransitionAnimation.cupertino,
+      );
+    }
+    final _appLocalization = AppLocalizations.of(context);
+
+    return _showMyDialog(
+        _appLocalization.translate('postDetailsTxtSameOwnerNotification'));
   }
 }

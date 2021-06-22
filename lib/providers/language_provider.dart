@@ -7,7 +7,7 @@ class LanguageProvider extends ChangeNotifier {
   // shared pref object
   final SharedPreferenceHelper _sharedPrefsHelper;
 
-  var _appLocale = const Locale('en');
+  var _appLocale = const Locale('vi');
 
   Locale get appLocale {
     _sharedPrefsHelper.appLocale.then((localeValue) {

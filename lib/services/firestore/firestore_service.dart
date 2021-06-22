@@ -37,20 +37,20 @@ class FirestoreService {
     }
   }
 
-  Future<bool> checkIfWishPost(String postId, String userId) {
-    return _fireStoreInstance
-        .collection('users')
-        .where('wishList', arrayContains: postId)
-        .get()
-        .then((value) {
-      for (final doc in value.docs) {
-        if (doc.id == userId) {
-          return true;
-        }
-      }
-      return false;
-    });
-  }
+  // Future<bool> checkIfWishPost(String postId, String userId) {
+  //   return _fireStoreInstance
+  //       .collection('users')
+  //       .where('wishList', arrayContains: postId)
+  //       .get()
+  //       .then((value) {
+  //     for (final doc in value.docs) {
+  //       if (doc.id == userId) {
+  //         return true;
+  //       }
+  //     }
+  //     return false;
+  //   });
+  // }
 
   Future<DocumentReference<Map<String, dynamic>>> addData({
     required String path,

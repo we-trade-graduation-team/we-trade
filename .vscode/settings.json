@@ -1,6 +1,7 @@
 {
     "java.configuration.updateBuildConfiguration": "interactive",
     "cSpell.words": [
+        "Alives",
         "Appbar",
         "Firestore",
         "LTRB",
@@ -9,6 +10,7 @@
         "cupertino",
         "reorderable",
         "sublist",
-        "timeago"
+        "timeago",
+        "unfocus"
     ]
 }

@@ -4,7 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../models/cloud_firestore/post_model/post/post.dart';
-import '../../shared_widgets/custom_carousel_slider.dart';
+import '../../../../widgets/shared_circular_progress_indicator.dart';
+import '../../../home_features/shared_widgets/custom_carousel_slider.dart';
 
 class PostDetailsItemImagesCarouselSlider extends StatelessWidget {
   const PostDetailsItemImagesCarouselSlider({
@@ -31,12 +32,7 @@ class PostDetailsItemImagesCarouselSlider extends StatelessWidget {
                   ),
                 ),
               ),
-              placeholder: (_, __) => Center(
-                child: CircularProgressIndicator(
-                  backgroundColor: Colors.white,
-                  color: Theme.of(context).primaryColor,
-                ),
-              ),
+              placeholder: (_, __) => const SharedCircularProgressIndicator(),
               errorWidget: (_, __, dynamic ___) => const Icon(Icons.error),
             ),
           ),

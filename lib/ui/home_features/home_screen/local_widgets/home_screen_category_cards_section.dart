@@ -23,8 +23,8 @@ class HomeScreenCategoryCardsSection extends StatelessWidget {
           _size.height * 0.25,
         ),
       ),
-      child: StreamProvider<List<CategoryCard>>.value(
-        initialData: const [],
+      child: StreamProvider<List<CategoryCard>?>.value(
+        initialData: null,
         value: _firestoreDatabase.categoryCardsStream(),
         catchError: (_, __) => const [],
         child: const HomeScreenCategoryCards(),

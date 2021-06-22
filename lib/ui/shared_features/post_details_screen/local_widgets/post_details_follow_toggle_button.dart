@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../../../app_localizations.dart';
 import '../../../../models/arguments/shared/post_details_arguments.dart';
 import '../../../../providers/post_details_follow_provider.dart';
 import '../../../../services/firestore/firestore_database.dart';
@@ -26,8 +27,13 @@ class _PostDetailsFollowToggleButtonState
     final _isCurrentUserAFollowerOfPostOwner =
         _postDetailsFollowProvider.isFollowed;
 
-    final _buttonText =
-        _isCurrentUserAFollowerOfPostOwner ? 'Followed' : 'Follow';
+    final _appLocalization = AppLocalizations.of(context);
+
+    final _buttonTextKey = _isCurrentUserAFollowerOfPostOwner
+        ? 'postDetailsTxtFollowedButton'
+        : 'postDetailsTxtFollowButton';
+
+    final _buttonText = _appLocalization.translate(_buttonTextKey);
 
     const _buttonWidth = 120.0;
 

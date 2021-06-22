@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../../../app_localizations.dart';
 import '../../../../models/cloud_firestore/post_model/post/post.dart';
 import 'post_details_section_container.dart';
 import 'post_details_separator.dart';
@@ -19,14 +20,17 @@ class PostDetailsTradeForInfoSection extends StatelessWidget {
 
     final _size = MediaQuery.of(context).size;
 
+    final _appLocalization = AppLocalizations.of(context);
+
     return Column(
       children: [
-        const PostDetailsSectionContainer(
+        PostDetailsSectionContainer(
           height: 50,
           child: FittedBox(
             fit: BoxFit.fitHeight,
             alignment: Alignment.centerLeft,
-            child: Text('Trade for'),
+            child: Text(_appLocalization
+                .translate('postDetailsTxtTradeForSectionTitle')),
           ),
         ),
         PostDetailsSeparator(height: _size.height * 0.004),
@@ -35,8 +39,11 @@ class PostDetailsTradeForInfoSection extends StatelessWidget {
             spacing: 15,
             runSpacing: 15,
             children: _postDetailsTradeForList
-                .map((category) => PostDetailsTradeForCategoryPreview(
-                    tradeForCategory: category))
+                .map(
+                  (category) => PostDetailsTradeForCategoryPreview(
+                    tradeForCategory: category,
+                  ),
+                )
                 .toList(),
           ),
         ),

@@ -3,9 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:line_icons/line_icons.dart';
 import 'package:provider/provider.dart';
 
+import '../../../../models/arguments/shared/post_details_arguments.dart';
 import '../../../../models/cloud_firestore/post_model/post/post.dart';
 import '../../../../providers/post_details_favorite_provider.dart';
 import '../../../../services/firestore/firestore_database.dart';
+import '../../../../widgets/shared_circular_progress_indicator.dart';
 import 'post_details_favorite_toggle_button.dart';
 import 'post_details_section_container.dart';
 import 'post_details_separator.dart';
@@ -19,9 +21,11 @@ class PostDetailsTitleSection extends StatelessWidget {
   Widget build(BuildContext context) {
     final _postDetails = context.watch<Post>();
 
-    final _postId = context.watch<String>();
-
     final _itemInfo = _postDetails.itemInfo;
+
+    final _args = context.watch<PostDetailsArguments>();
+
+    final _postId = _args.postId;
 
     final _firestoreDatabase = context.watch<FirestoreDatabase>();
 
@@ -72,19 +76,15 @@ class PostDetailsTitleSection extends StatelessWidget {
                 catchError: (_, __) => false,
                 child: Consumer<bool?>(
                   builder: (_, isFavorite, __) {
-                    return isFavorite == null
-                        ? Center(
-                            child: CircularProgressIndicator(
-                              backgroundColor: Colors.white,
-                              color: Theme.of(context).primaryColor,
-                            ),
-                          )
-                        : ChangeNotifierProvider<PostDetailsFavoriteProvider>(
-                            create: (_) => PostDetailsFavoriteProvider(
-                              isFavorite: isFavorite,
-                            ),
-                            child: const PostDetailsFavoriteToggleButton(),
-                          );
+                    if (isFavorite == null) {
+                      return const SharedCircularProgressIndicator();
+                    }
+                    return ChangeNotifierProvider<PostDetailsFavoriteProvider>(
+                      create: (_) => PostDetailsFavoriteProvider(
+                        isFavorite: isFavorite,
+                      ),
+                      child: const PostDetailsFavoriteToggleButton(),
+                    );
                   },
                 ),
               ),
@@ -102,7 +102,6 @@ class PostDetailsTitleSection extends StatelessWidget {
                 const Icon(
                   LineIcons.mapMarker,
                   size: 18,
-                  // color: Theme.of(context).primaryColor,
                 ),
                 SizedBox(width: _size.width * 0.01),
                 Text(
