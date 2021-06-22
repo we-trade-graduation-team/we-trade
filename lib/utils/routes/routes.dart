@@ -13,7 +13,6 @@ import '../../ui/home_features/notification_screen/detailed_notification_screen.
 import '../../ui/home_features/notification_screen/notification_screen.dart';
 import '../../ui/home_features/searching_screen/search_screen.dart';
 import '../../ui/message_features/chat_screen/chat_room/chat_room.dart';
-import '../../ui/message_features/match_post/match_post_screen.dart';
 import '../../ui/message_features/offer_screens/make_offer_screen.dart';
 import '../../ui/message_features/offer_screens/offer_detail_screen.dart';
 import '../../ui/posting_features/post_items/post_item_step_four.dart';
@@ -116,7 +115,6 @@ class Routes {
 
   static final Map<String, WidgetBuilder> messageFeaturesRoutes = {
     chatRoomScreenRouteName: (_) => ChatRoomScreen(chat: Chat.nullChat()),
-    matchPostsScreenRouteName: (_) => const MatchPostsScreen(),
     offerDetailScreenRouteName: (_) => OfferDetailScreen(
           trading: Trading.nullTrading(),
         ),

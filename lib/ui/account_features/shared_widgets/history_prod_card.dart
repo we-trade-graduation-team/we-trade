@@ -181,7 +181,6 @@ class _HistoryProductCardState extends State<HistoryProductCard> {
     return _isLoaded
         ? GestureDetector(
             onTap: () async {
-              // TODO Quang ơi, màn hình sửa truyền vào trading model nha
               final trading = await TradingServiceFireStore()
                   .getTradingByTradingId(tradingId: widget.tradingID);
               await pushNewScreenWithRouteSettings<void>(
