@@ -6,10 +6,10 @@ import 'package:provider/provider.dart';
 
 import '../../../../constants/app_colors.dart';
 import '../../../../models/cloud_firestore/user_model/user/user.dart';
-import '../../../../models/ui/chat/temp_class.dart';
+import '../../../../models/ui/chat/chat.dart';
 import '../../../../services/message/firestore_message_service.dart';
 import '../../const_string/const_str.dart';
-import '../../helper/ulti.dart';
+import '../../helper/util.dart';
 import '../dialogs/chat_dialog.dart';
 import '../dialogs/group_chat_dialog.dart';
 import '../widgets/users_card.dart';
@@ -198,16 +198,16 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
-    properties.add(IterableProperty<String>('usersImage', usersImage));
-    properties.add(StringProperty('chatRoomName', chatRoomName));
-    properties.add(DiagnosticsProperty<TextEditingController>(
-        'newChatRoomNameController', newChatRoomNameController));
-    properties
-        .add(DiagnosticsProperty<Map<String, String>>('user_ava', userAndAva));
-    properties.add(DiagnosticsProperty<User>('thisUser', thisUser));
     properties.add(DiagnosticsProperty<MessageServiceFireStore>(
         'messageServiceFireStore', messageServiceFireStore));
     properties.add(
         DiagnosticsProperty<Map<String, String>>('userAndName', userAndName));
+    properties.add(
+        DiagnosticsProperty<Map<String, String>>('userAndAva', userAndAva));
+    properties.add(DiagnosticsProperty<TextEditingController>(
+        'newChatRoomNameController', newChatRoomNameController));
+    properties.add(StringProperty('chatRoomName', chatRoomName));
+    properties.add(IterableProperty<String>('usersImage', usersImage));
+    properties.add(DiagnosticsProperty<User>('thisUser', thisUser));
   }
 }

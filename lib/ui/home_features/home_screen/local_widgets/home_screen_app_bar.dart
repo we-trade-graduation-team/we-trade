@@ -4,7 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 
-import '../../../../constants/app_dimens.dart';
+import '../../../../constants/app_number_constants.dart';
 import '../../../../utils/routes/routes.dart';
 import '../../notification_screen/notification.dart';
 import '../../notification_screen/notification_screen.dart';
@@ -202,7 +202,7 @@ class _HomeScreenAppBarState extends State<HomeScreenAppBar> {
     return SliverAppBar(
       automaticallyImplyLeading: false,
       backgroundColor: Theme.of(context).primaryColor,
-      expandedHeight: AppDimens.kHomeScreenFlexibleSpaceExpandedHeight,
+      expandedHeight: AppNumberConstants.kHomeScreenFlexibleSpaceExpandedHeight,
       toolbarHeight: defaultToolbarHeight + 20,
       pinned: true,
       title: const HomeScreenSearchBar(),

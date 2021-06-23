@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../app_localizations.dart';
-import '../../../../constants/app_dimens.dart';
+import '../../../../constants/app_number_constants.dart';
 import '../../../../models/cloud_firestore/post_details_question/post_details_question.dart';
 import 'post_details_no_items_section.dart';
 import 'post_details_question_column.dart';
@@ -36,8 +36,8 @@ class _PostDetailsQuestionsSectionState
       width: _size.width,
       color: Colors.white,
       padding: EdgeInsets.symmetric(
-        horizontal: _size.width * AppDimens.kDetailHorizontalPaddingPercent,
-        vertical: _size.height * AppDimens.kDetailVerticalPaddingPercent,
+        horizontal: _size.width * AppNumberConstants.kDetailHorizontalPaddingPercent,
+        vertical: _size.height * AppNumberConstants.kDetailVerticalPaddingPercent,
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

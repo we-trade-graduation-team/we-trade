@@ -33,18 +33,18 @@ class _MakeOfferScreenState extends State<MakeOfferScreen> {
   final _formKey = GlobalKey<FormState>();
   final _textEditingController = TextEditingController();
   late bool _isHaveMoney = false;
-  late List<String> choosedPostsId = [];
+  late List<String> chosenPostsId = [];
   late List<PostCard> posts = [];
   late bool loading = true;
 
   void clickPostCard(String postId) {
-    if (!choosedPostsId.contains(postId)) {
+    if (!chosenPostsId.contains(postId)) {
       setState(() {
-        choosedPostsId.add(postId);
+        chosenPostsId.add(postId);
       });
     } else {
       setState(() {
-        choosedPostsId.remove(postId);
+        chosenPostsId.remove(postId);
       });
     }
   }
@@ -56,28 +56,38 @@ class _MakeOfferScreenState extends State<MakeOfferScreen> {
     final thisUser = Provider.of<User?>(context, listen: false)!;
     final ownerId = await TradingServiceFireStore()
         .getOwnerIdOfPost(widget.otherUserPostId);
+
     if (_isHaveMoney) {
       await TradingServiceFireStore()
           .addTrading(
-              makeOfferUser: thisUser.uid!,
-              ownerPost: widget.otherUserPostId,
-              offerUserPosts: choosedPostsId,
-              money: int.parse(_textEditingController.text))
-          .then((value) {
+        makeOfferUser: thisUser.uid!,
+        ownerPost: widget.otherUserPostId,
+        offerUserPosts: chosenPostsId,
+        money: int.parse(
+          _textEditingController.text,
+        ),
+      )
+          .then((_) {
         HelperNavigateChatRoom.checkAndSendChatRoomOneUserByIds(
-            context: context, thisUser: thisUser, userId: ownerId);
+          context: context,
+          thisUser: thisUser,
+          userId: ownerId,
+        );
       });
     } else {
-      if (choosedPostsId.isNotEmpty) {
+      if (chosenPostsId.isNotEmpty) {
         await TradingServiceFireStore()
             .addTrading(
           makeOfferUser: thisUser.uid!,
           ownerPost: widget.otherUserPostId,
-          offerUserPosts: choosedPostsId,
+          offerUserPosts: chosenPostsId,
         )
-            .then((value) async {
+            .then((_) async {
           HelperNavigateChatRoom.checkAndSendChatRoomOneUserByIds(
-              context: context, thisUser: thisUser, userId: ownerId);
+            context: context,
+            thisUser: thisUser,
+            userId: ownerId,
+          );
         });
       } else {
         setState(() {
@@ -112,7 +122,7 @@ class _MakeOfferScreenState extends State<MakeOfferScreen> {
                                     ItemPostCard(
                                         isNavigateToDetailScreen: false,
                                         postCard: posts[index]),
-                                    if (choosedPostsId
+                                    if (chosenPostsId
                                         .contains(posts[index].postId))
                                       Align(
                                         alignment: Alignment.topRight,
@@ -141,7 +151,8 @@ class _MakeOfferScreenState extends State<MakeOfferScreen> {
                         style: TextStyle(color: AppColors.kReviewTextLabel),
                       ),
                     ],
-                  ));
+                  ),
+          );
   }
 
   @override
@@ -252,30 +263,32 @@ class _MakeOfferScreenState extends State<MakeOfferScreen> {
                   child: Padding(
                     padding: const EdgeInsets.all(8),
                     child: CustomMaterialButton(
-                        press: () {
-                          Navigator.of(context).pop();
-                        },
-                        isFilled: false,
-                        text: 'Hủy',
-                        width: MediaQuery.of(context).size.width / 4,
-                        fontSize: 15,
-                        height: 40),
+                      press: () {
+                        Navigator.of(context).pop();
+                      },
+                      isFilled: false,
+                      text: 'Hủy',
+                      width: MediaQuery.of(context).size.width / 4,
+                      fontSize: 15,
+                      height: 40,
+                    ),
                   ),
                 ),
                 Expanded(
                   child: Padding(
                     padding: const EdgeInsets.all(8),
                     child: CustomMaterialButton(
-                        press: () {
-                          if (_formKey.currentState!.validate() ||
-                              !_isHaveMoney) {
-                            sendOfferClick();
-                          }
-                        },
-                        text: 'Gửi offer',
-                        width: MediaQuery.of(context).size.width / 4,
-                        fontSize: 15,
-                        height: 40),
+                      press: () {
+                        if (_formKey.currentState!.validate() ||
+                            !_isHaveMoney) {
+                          sendOfferClick();
+                        }
+                      },
+                      text: 'Gửi offer',
+                      width: MediaQuery.of(context).size.width / 4,
+                      fontSize: 15,
+                      height: 40,
+                    ),
                   ),
                 ),
               ],
@@ -289,8 +302,8 @@ class _MakeOfferScreenState extends State<MakeOfferScreen> {
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
-    properties.add(IterableProperty<String>('choosedPostsId', choosedPostsId));
     properties.add(IterableProperty<PostCard>('posts', posts));
     properties.add(DiagnosticsProperty<bool>('loading', loading));
+    properties.add(IterableProperty<String>('chosenPostsId', chosenPostsId));
   }
 }

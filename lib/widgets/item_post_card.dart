@@ -195,11 +195,6 @@ class _ItemPostCardState extends State<ItemPostCard> {
       ownerId: _ownerId,
     );
 
-    // Navigate to post details screen
-    await _navigateToPostDetailsScreen(
-      arguments: _postDetailsArguments,
-    );
-
     _loadingOverlayProvider.updateLoading(
       isLoading: false,
     );
@@ -209,6 +204,8 @@ class _ItemPostCardState extends State<ItemPostCard> {
       _firestoreDatabase.increasePostCardView(postId: _postId),
       // Update current user's keyword history
       _firestoreDatabase.updateCurrentUserKeywordHistory(postId: _postId),
+      // Navigate to post details screen
+      _navigateToPostDetailsScreen(arguments: _postDetailsArguments)
     ]);
   }
 

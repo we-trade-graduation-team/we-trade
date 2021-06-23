@@ -10,6 +10,7 @@ import '../../../../models/arguments/shared/post_details_arguments.dart';
 import '../../../../models/cloud_firestore/user_model/user/user.dart';
 import '../../../../providers/post_details_follow_provider.dart';
 import '../../../../services/firestore/firestore_database.dart';
+import '../../../../services/message/firestore_message_service.dart';
 import '../../../../utils/routes/routes.dart';
 import '../../../../widgets/shared_circular_progress_indicator.dart';
 import '../../../home_features/shared_widgets/rounded_outline_button.dart';
@@ -143,11 +144,18 @@ class _PostDetailsOwnerInfoSectionState
                             if (isFollowed == null) {
                               return const SharedCircularProgressIndicator();
                             }
-                            return ChangeNotifierProvider<
-                                PostDetailsFollowProvider>(
-                              create: (_) => PostDetailsFollowProvider(
-                                isFollowed: isFollowed,
-                              ),
+                            return MultiProvider(
+                              providers: [
+                                ChangeNotifierProvider<
+                                    PostDetailsFollowProvider>(
+                                  create: (_) => PostDetailsFollowProvider(
+                                    isFollowed: isFollowed,
+                                  ),
+                                ),
+                                Provider<MessageServiceFireStore>(
+                                  create: (_) => MessageServiceFireStore(),
+                                )
+                              ],
                               child: const PostDetailsFollowToggleButton(),
                             );
                           },

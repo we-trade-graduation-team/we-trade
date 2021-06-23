@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 
-import '../../../models/ui/shared_models/product_model.dart';
 import '../../../services/trading_feature/trading_service_firestore.dart';
 import '../../../utils/routes/routes.dart';
 import '../../message_features/offer_screens/offer_detail_screen.dart';
@@ -20,9 +19,6 @@ class HistoryProductCard extends StatefulWidget {
   HistoryProductCard({
     Key? key,
     required this.tradingID,
-    required this.forProduct,
-    this.offerSideProducts,
-    this.offerSideMoney,
   }) : super(key: key);
 
   final statusValue = <String, int>{
@@ -32,9 +28,6 @@ class HistoryProductCard extends StatefulWidget {
   };
 
   final String tradingID;
-  final List<Product>? offerSideProducts;
-  final int? offerSideMoney;
-  final Product forProduct;
 
   @override
   _HistoryProductCardState createState() => _HistoryProductCardState();
@@ -42,10 +35,6 @@ class HistoryProductCard extends StatefulWidget {
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
     properties.add(StringProperty('tradingID', tradingID));
-    properties
-        .add(IterableProperty<Product>('offerSideProducts', offerSideProducts));
-    properties.add(IntProperty('offerSideMoney', offerSideMoney));
-    properties.add(DiagnosticsProperty<Product>('forProduct', forProduct));
     properties
         .add(DiagnosticsProperty<Map<String, int>>('statusValue', statusValue));
   }
@@ -321,11 +310,6 @@ class _HistoryProductCardState extends State<HistoryProductCard> {
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
-    properties.add(IterableProperty<Product>(
-        'offerSideProducts', widget.offerSideProducts));
-    properties.add(IntProperty('offerSideMoney', widget.offerSideMoney));
-    properties
-        .add(DiagnosticsProperty<Product>('forProduct', widget.forProduct));
     properties.add(StringProperty('tradingID', widget.tradingID));
     properties.add(IntProperty('timeOut', timeOut));
     properties.add(DiagnosticsProperty('referenceDatabase', referenceDatabase));

@@ -11,7 +11,6 @@ import 'package:provider/provider.dart';
 import 'app_localizations.dart';
 import 'auth_widget_builder.dart';
 import 'constants/app_themes.dart';
-import 'flavor.dart';
 import 'providers/language_provider.dart';
 import 'providers/theme_provider.dart';
 import 'services/firestore/firestore_database.dart';
@@ -83,8 +82,6 @@ class _MyAppState extends State<MyApp> {
     return AuthWidgetBuilder(
       databaseBuilder: widget.databaseBuilder,
       builder: (context, user) {
-        final _flavor = context.read<Flavor>();
-
         final _botToastBuilder = BotToastInit(); //1. call BotToastInit
 
         final _themeProvider = context.read<ThemeProvider>();
@@ -145,7 +142,7 @@ class _MyAppState extends State<MyApp> {
             //user the first one from the list (in our case, that will be English)
             return supportedLocales.first;
           },
-          title: _flavor.toString(),
+          title: 'We Trade',
           routes: Routes.authenticationFeaturesRoutes,
           theme: themeData(),
           // theme: AppThemes.lightTheme,

@@ -8,6 +8,7 @@ import '../../../../models/cloud_firestore/user_model/user/user.dart';
 import '../../../../providers/post_details_favorite_provider.dart';
 import '../../../../services/firestore/firestore_database.dart';
 import '../../../../services/post_feature/post_service_firestore.dart';
+import '../../../../utils/helper/flash/flash_helper.dart';
 
 class PostDetailsFavoriteToggleButton extends StatefulWidget {
   const PostDetailsFavoriteToggleButton({
@@ -74,6 +75,14 @@ class _PostDetailsFavoriteToggleButtonState
     final _postId = _args.postId;
 
     _postDetailsFavoriteProvider.updatePostDetailsFavorite();
+
+    final _flashText = _isCurrentUserFavoritePost ? 'Đã bỏ thích' : 'Đã thích';
+
+    await FlashHelper.showBasicsFlash(
+      context,
+      message: _flashText,
+      duration: const Duration(seconds: 2),
+    );
 
     await PostServiceFireStore().updateWishList(
       isAdd: !_isCurrentUserFavoritePost,

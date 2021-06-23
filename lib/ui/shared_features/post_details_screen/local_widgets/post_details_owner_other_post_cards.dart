@@ -21,7 +21,8 @@ class PostDetailsOwnerOtherPostCards extends StatelessWidget {
       return const SharedCircularProgressIndicator();
     }
 
-    if (_postOwnerOtherPostCards.isEmpty) {
+    // If empty or owner only have this post
+    if (_postOwnerOtherPostCards.isEmpty || _postOwnerOtherPostCards.length < 2) {
       final _appLocalization = AppLocalizations.of(context);
 
       return PostDetailsNoItemsSection(

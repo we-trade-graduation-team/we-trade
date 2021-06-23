@@ -5,7 +5,6 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'cache/shared_preference/shared_preference_helper.dart';
-import 'flavor.dart';
 import 'my_app.dart';
 import 'providers/auth_provider.dart';
 import 'providers/language_provider.dart';
@@ -15,7 +14,7 @@ import 'services/firestore/firestore_database.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  
+
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
   ]).then(
@@ -31,9 +30,6 @@ void main() {
         */
         MultiProvider(
           providers: [
-            Provider<Flavor>.value(
-              value: Flavor.dev,
-            ),
             ChangeNotifierProvider<ThemeProvider>(
               create: (_) => ThemeProvider(
                 _sharedPreferenceHelper,

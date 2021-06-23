@@ -63,6 +63,7 @@
   "homeScreenTxtSpecialEventBannerFourthSmallTitle": "Đã có cập nhật mới",
   "homeScreenTxtSpecialEventBannerFourthBigTitle": "Cập nhật ngay",
   "postDetailsTxtMakeOfferButton": "Trao đổi",
+  "postDetailsTxtChatButton": "Nhắn tin",
   "postDetailsTxtNotification": "Thông báo",
   "postDetailsTxtSameOwnerNotification": "Bạn không thể make offer với chính mình",
   "postDetailsTxtTradeForSectionTitle": "Trao đổi với",
@@ -89,5 +90,6 @@
   "postDetailsTxtNoPostCards": "Chưa có bài đăng nào",
   "postDetailsTxtSimilarPostCardsSectionTitle": "Bài đăng tương tự",
   "postDetailsTxtCurrentUserMayAlsoLikePostCardsSectionTitle": "Có thể bạn sẽ thích",
+  "postDetailsTxtViewerIsOwner": "Bạn đang xem bài đăng của chính mình",
   "itemPostCardTxtDistrict": "Quận"
 }

@@ -10,22 +10,23 @@ import '../../../../models/cloud_firestore/post_model/post/post.dart';
 import 'post_details_item_images_carousel_slider.dart';
 import 'post_details_popup_dialog.dart';
 
-class PostDetailsAppBar extends StatelessWidget {
+class PostDetailsAppBar extends StatefulWidget {
   const PostDetailsAppBar({
     Key? key,
   }) : super(key: key);
 
+  @override
+  _PostDetailsAppBarState createState() => _PostDetailsAppBarState();
+}
 
+class _PostDetailsAppBarState extends State<PostDetailsAppBar> {
   @override
   Widget build(BuildContext context) {
-    // const appBarExpandedHeight = 414.0 - 100.0;
-
     final _args = context.watch<PostDetailsArguments>();
 
     final _postId = _args.postId;
 
-    final _postDetailsTitle =
-        context.select<Post, String>((post) => post.name);
+    final _postDetailsTitle = context.select<Post, String>((post) => post.name);
 
     final _size = MediaQuery.of(context).size;
 
@@ -57,23 +58,24 @@ class PostDetailsAppBar extends StatelessWidget {
       ),
       toolBarColor: Theme.of(context).primaryColor,
       background: const PostDetailsItemImagesCarouselSlider(),
-      actions: Builder(builder: (context) {
-        return IconButton(
-          icon: const Icon(
-            Icons.more_vert,
-            color: Colors.white,
-          ),
-          onPressed: () {
-            showOverlay(context: context,id: _postId);
-          },
-        );
-      }),
+      actions: IconButton(
+        icon: const Icon(
+          Icons.more_vert,
+          color: Colors.white,
+        ),
+        onPressed: () => _showOverlay(id: _postId),
+      ),
     );
   }
 
-  void showOverlay({required BuildContext context,required String id}) {
+  void _showOverlay({
+    required String id,
+  }) {
     BotToast.showAttachedWidget(
-      attachedBuilder: (_) => PostDetailsPopupDialog(parentContext: context,objectId: id,),
+      attachedBuilder: (_) => PostDetailsPopupDialog(
+        parentContext: context,
+        objectId: id,
+      ),
       targetContext: context,
     );
   }

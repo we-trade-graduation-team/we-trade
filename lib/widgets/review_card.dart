@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
 import '../constants/app_colors.dart';
-import '../constants/app_dimens.dart';
-import '../models/ui/chat/temp_class.dart';
+import '../constants/app_number_constants.dart';
+import '../models/ui/chat/chat.dart';
 import 'custom_user_avatar.dart';
 
 class ReviewCard extends StatelessWidget {
@@ -23,7 +23,7 @@ class ReviewCard extends StatelessWidget {
       decoration: BoxDecoration(
         //color: Colors.white,
         border: Border(
-          bottom: AppDimens.kBorderSide(),
+          bottom: AppNumberConstants.kBorderSide(),
         ),
       ),
       child: Column(
@@ -95,7 +95,7 @@ class ReviewCard extends StatelessWidget {
               ),
             ),
           ),
-          if (review.reply!.isNotEmpty) getWidgetReplie(review.reply),
+          if (review.reply!.isNotEmpty) getWidgetReply(review.reply),
         ],
       ),
     );
@@ -107,8 +107,8 @@ class ReviewCard extends StatelessWidget {
     properties.add(DiagnosticsProperty<Review>('review', review));
   }
 
-  Widget getWidgetReplie(String? replie) {
-    if (replie == null) {
+  Widget getWidgetReply(String? reply) {
+    if (reply == null) {
       return Container();
     }
     return Container(
@@ -130,7 +130,7 @@ class ReviewCard extends StatelessWidget {
             fontWeight: FontWeight.normal,
           ),
         ),
-        initialValue: replie,
+        initialValue: reply,
         maxLines: null,
         style: const TextStyle(fontSize: 14),
         enabled: false,

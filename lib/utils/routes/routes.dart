@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../models/ui/chat/temp_class.dart';
+import '../../models/ui/chat/chat.dart';
 import '../../ui/account_features/follow_screen/follow_screen.dart';
 import '../../ui/account_features/my_rate_screen/my_rate_screen.dart';
 import '../../ui/account_features/post_management/hide_post_screen.dart';

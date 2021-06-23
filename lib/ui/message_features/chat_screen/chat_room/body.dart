@@ -13,7 +13,7 @@ import '../../../../services/trading_feature/trading_service_firestore.dart';
 import '../../../../utils/helper/image_data_storage_helper/image_data_storage_helper.dart';
 import '../../../../widgets/custom_material_button.dart';
 import '../../const_string/const_str.dart';
-import '../../helper/ulti.dart';
+import '../../helper/util.dart';
 import '../../shared_widgets/offer_card.dart';
 import '../widgets/message_tile.dart';
 
@@ -45,8 +45,11 @@ class _BodyState extends State<Body> {
   TextEditingController messageTextController = TextEditingController();
   final FocusNode focusNode = FocusNode();
   late User thisUser = Provider.of<User?>(context, listen: false)!;
+  // ignore: diagnostic_describe_all_properties
   late Stream<QuerySnapshot> chats;
+  // ignore: diagnostic_describe_all_properties
   late Stream<DocumentSnapshot<Map<String, dynamic>>> seenHistory;
+  // ignore: diagnostic_describe_all_properties
   late Stream<DocumentSnapshot<Map<String, dynamic>>> tradingDeal;
 
   late Map<String, String> seenHistoryMap = {};
@@ -477,13 +480,5 @@ class _BodyState extends State<Body> {
     properties.add(DiagnosticsProperty<bool>('isLoadingImage', isLoadingImage));
     properties.add(DiagnosticsProperty<Map<String, String>>(
         'seenHistoryMap', seenHistoryMap));
-    properties.add(
-        DiagnosticsProperty<Stream<DocumentSnapshot<Map<String, dynamic>>>>(
-            'seenHistory', seenHistory));
-    properties.add(
-        DiagnosticsProperty<Stream<QuerySnapshot<Object?>>>('chats', chats));
-    properties.add(
-        DiagnosticsProperty<Stream<DocumentSnapshot<Map<String, dynamic>>>>(
-            'tradingDeal', tradingDeal));
   }
 }

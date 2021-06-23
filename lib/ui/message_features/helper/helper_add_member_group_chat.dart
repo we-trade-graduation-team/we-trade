@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import '../../../models/cloud_firestore/user_model/user/user.dart';
 
-import '../../../models/ui/chat/temp_class.dart';
+import '../../../models/ui/chat/chat.dart';
 import '../../../services/message/firestore_message_service.dart';
 import '../chat_screen/chat_room/chat_room.dart';
-import 'ulti.dart';
+import 'util.dart';
 
 class HelperAddMemberGroupChat {
   static Future<void> addUserToGroupChat(

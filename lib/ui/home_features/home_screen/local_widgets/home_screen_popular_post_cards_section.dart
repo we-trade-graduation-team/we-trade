@@ -28,9 +28,9 @@ class HomeScreenPopularPostCardsSection extends StatelessWidget {
           seeMore: false,
           // press: () {},
         ),
-        child: StreamProvider<List<PostCard>?>.value(
+        child: FutureProvider<List<PostCard>?>.value(
           initialData: null,
-          value: _firestoreDatabase.popularPostCardsStream(),
+          value: _firestoreDatabase.getHomeScreenPopularPostCards(),
           catchError: (_, __) => const [],
           child: const HomeScreenPopularPostCards(),
         ),

@@ -3,7 +3,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-import '../../../models/ui/shared_models/product_model.dart';
 import '../shared_widgets/getting_data_status.dart';
 import '../shared_widgets/history_prod_card.dart';
 import '../utils.dart';
@@ -25,9 +24,6 @@ class _TradingHistoryScreenState extends State<TradingHistoryScreen> {
   @override
   Widget build(BuildContext context) {
     final referenceDatabase = FirebaseFirestore.instance;
-    final offerSideProducts = [allProduct[0], allProduct[1]];
-    const money = 100000;
-    final forProduct = allProduct[3];
 
     return Scaffold(
       appBar: AppBar(
@@ -81,9 +77,9 @@ class _TradingHistoryScreenState extends State<TradingHistoryScreen> {
                               child: HistoryProductCard(
                                 key: Key(snapshot.data!.id.toString()),
                                 tradingID: snapshot.data!.id,
-                                offerSideProducts: offerSideProducts,
-                                forProduct: forProduct,
-                                offerSideMoney: money,
+                                // offerSideProducts: offerSideProducts,
+                                // forProduct: forProduct,
+                                // offerSideMoney: money,
                               ),
                             );
                           }

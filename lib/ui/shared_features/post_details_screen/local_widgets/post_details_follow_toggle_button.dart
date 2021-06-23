@@ -4,8 +4,11 @@ import 'package:provider/provider.dart';
 
 import '../../../../app_localizations.dart';
 import '../../../../models/arguments/shared/post_details_arguments.dart';
+import '../../../../models/cloud_firestore/user_model/user/user.dart';
 import '../../../../providers/post_details_follow_provider.dart';
 import '../../../../services/firestore/firestore_database.dart';
+import '../../../../services/message/firestore_message_service.dart';
+import '../../../../utils/helper/flash/flash_helper.dart';
 
 class PostDetailsFollowToggleButton extends StatefulWidget {
   const PostDetailsFollowToggleButton({
@@ -69,14 +72,35 @@ class _PostDetailsFollowToggleButtonState
 
     final _firestoreDatabase = context.read<FirestoreDatabase>();
 
-    final _isCurrentUserAFollowerOfPostOwner =
-        _postDetailsFollowProvider.isFollowed;
+    final _messageServiceFirestore = context.read<MessageServiceFireStore>();
+
+    final _currentUser = context.read<User>();
+
+    final _currentUserId = _currentUser.uid!;
 
     final _args = context.read<PostDetailsArguments>();
 
     final _ownerId = _args.ownerId;
 
+    final _isCurrentUserAFollowerOfPostOwner =
+        _postDetailsFollowProvider.isFollowed;
+
     _postDetailsFollowProvider.updatePostDetailsFollow();
+
+    final _flashText =
+        _isCurrentUserAFollowerOfPostOwner ? 'Đã bỏ theo dõi' : 'Đã theo dõi';
+
+    await FlashHelper.showBasicsFlash(
+      context,
+      message: _flashText,
+      duration: const Duration(seconds: 2),
+    );
+
+    await _messageServiceFirestore.handleFollowButton(
+      thisUserId: _currentUserId,
+      userId: _ownerId,
+      isAddFollowing: !_isCurrentUserAFollowerOfPostOwner,
+    );
 
     if (_isCurrentUserAFollowerOfPostOwner) {
       return _firestoreDatabase.deleteJunctionUserFollower(

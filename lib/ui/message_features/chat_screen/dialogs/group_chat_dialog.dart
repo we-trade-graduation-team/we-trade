@@ -5,12 +5,12 @@ import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../constants/app_colors.dart';
-import '../../../../constants/app_dimens.dart';
+import '../../../../constants/app_number_constants.dart';
 import '../../../../models/cloud_firestore/user_model/user/user.dart';
 import '../../../../services/message/firestore_message_service.dart';
 import '../../../../utils/routes/routes.dart';
 import '../../../shared_features/report/report_screen.dart';
-import '../../helper/ulti.dart';
+import '../../helper/util.dart';
 import '../group_chat/members/all_members_screen.dart';
 
 class GroupChatDialog extends StatelessWidget {
@@ -67,7 +67,7 @@ class GroupChatDialog extends StatelessWidget {
                         padding: const EdgeInsets.fromLTRB(0, 0, 20, 10),
                         decoration: BoxDecoration(
                           border: Border(
-                            bottom: AppDimens.kBorderSide(),
+                            bottom: AppNumberConstants.kBorderSide(),
                           ),
                         ),
                         child: Row(
@@ -93,7 +93,7 @@ class GroupChatDialog extends StatelessWidget {
                         padding: const EdgeInsets.fromLTRB(0, 0, 20, 10),
                         decoration: BoxDecoration(
                           border: Border(
-                            bottom: AppDimens.kBorderSide(),
+                            bottom: AppNumberConstants.kBorderSide(),
                           ),
                         ),
                         child: Row(
@@ -116,7 +116,7 @@ class GroupChatDialog extends StatelessWidget {
                         padding: const EdgeInsets.fromLTRB(0, 0, 20, 10),
                         decoration: BoxDecoration(
                           border: Border(
-                            bottom: AppDimens.kBorderSide(),
+                            bottom: AppNumberConstants.kBorderSide(),
                           ),
                         ),
                         child: Row(
@@ -139,7 +139,7 @@ class GroupChatDialog extends StatelessWidget {
                         padding: const EdgeInsets.fromLTRB(0, 0, 20, 10),
                         decoration: BoxDecoration(
                           border: Border(
-                            bottom: AppDimens.kBorderSide(),
+                            bottom: AppNumberConstants.kBorderSide(),
                           ),
                         ),
                         child: Row(
