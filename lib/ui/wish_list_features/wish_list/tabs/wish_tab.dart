@@ -59,52 +59,57 @@ class _WishTabState extends State<WishTab> {
               }
 
               return posts.isNotEmpty
-                  ? Wrap(
-                      spacing: 20,
-                      runSpacing: 15,
-                      children: posts.map(
-                        (post) {
-                          return FutureBuilder<DocumentSnapshot>(
-                            future: referenceDatabase
-                                .collection('postCards')
-                                .doc(post)
-                                .get(),
-                            builder: (context, snapshot) {
-                              if (snapshot.hasError) {
-                                return const WentWrong();
-                              }
+                  ? Center(
+                      child: Wrap(
+                        spacing: 20,
+                        runSpacing: 15,
+                        children: posts.map(
+                          (post) {
+                            return FutureBuilder<DocumentSnapshot>(
+                              future: referenceDatabase
+                                  .collection('postCards')
+                                  .doc(post)
+                                  .get(),
+                              builder: (context, snapshot) {
+                                if (snapshot.hasError) {
+                                  return const WentWrong();
+                                }
 
-                              if (snapshot.hasData && !snapshot.data!.exists) {
-                                return const DataDoesNotExist();
-                              }
-                              if (snapshot.connectionState ==
-                                  ConnectionState.done) {
-                                final post = snapshot.data!.data()
-                                    as Map<String, dynamic>;
-                                final item = PostCardItem(
-                                  image: post['item']['image'].toString(),
-                                  condition:
-                                      post['item']['condition'].toString(),
-                                  district: post['item']['district'].toString(),
-                                  price: double.parse(
-                                      post['item']['price'].toString()),
-                                );
-                                final postCard = PostCard(
-                                  item: item,
-                                  title: post['title'].toString(),
-                                  postId: snapshot.data!.id,
-                                );
+                                if (snapshot.hasData &&
+                                    !snapshot.data!.exists) {
+                                  return const DataDoesNotExist();
+                                }
+                                if (snapshot.connectionState ==
+                                    ConnectionState.done) {
+                                  final post = snapshot.data!.data()
+                                      as Map<String, dynamic>;
+                                  final item = PostCardItem(
+                                    image: post['item']['image'].toString(),
+                                    condition:
+                                        post['item']['condition'].toString(),
+                                    district:
+                                        post['item']['district'].toString(),
+                                    price: double.parse(
+                                        post['item']['price'].toString()),
+                                  );
+                                  final postCard = PostCard(
+                                    item: item,
+                                    title: post['title'].toString(),
+                                    postId: snapshot.data!.id,
+                                  );
 
-                                return ItemPostCard(postCard: postCard);
-                              }
-                              return const Center(
-                                child: CustomLinearProgressIndicator(
-                                    verticalPadding: 80, horizontalPadding: 30),
-                              );
-                            },
-                          );
-                        },
-                      ).toList(),
+                                  return ItemPostCard(postCard: postCard);
+                                }
+                                return const Center(
+                                  child: CustomLinearProgressIndicator(
+                                      verticalPadding: 80,
+                                      horizontalPadding: 30),
+                                );
+                              },
+                            );
+                          },
+                        ).toList(),
+                      ),
                     )
                   : const CenterNotificationWhenHaveNoRecord(
                       text: 'Bạn chưa có bài đăng nào ở đây');
