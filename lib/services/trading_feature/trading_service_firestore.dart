@@ -35,15 +35,16 @@ class TradingServiceFireStore {
           .collection(tradingsCollectionStr)
           .add(trading)
           .then((value) => value.id);
-      await Future.wait([
-        updateTradingListInUser(userId: owner, tradingId: tradingId),
-        updateTradingListInUser(userId: makeOfferUser, tradingId: tradingId),
-        updateLatestTrading(
-          thisUserId: makeOfferUser,
-          otherUserId: owner,
-          tradingId: tradingId,
-        ),
-      ]);
+      // ignore: unawaited_futures
+      updateTradingListInUser(userId: owner, tradingId: tradingId);
+      // ignore: unawaited_futures
+      updateTradingListInUser(userId: makeOfferUser, tradingId: tradingId);
+      // ignore: unawaited_futures
+      updateLatestTrading(
+        thisUserId: makeOfferUser,
+        otherUserId: owner,
+        tradingId: tradingId,
+      );
     } on FirebaseException catch (_) {
       // print('Lỗi make offer: $error');
     }
@@ -157,9 +158,11 @@ class TradingServiceFireStore {
     final ownerId = trading.ownerId;
     final ownerPost = trading.ownerPost;
     if (offerPosts.isNotEmpty) {
-      await updateUserPostAndHiddenPost(offerId, offerPosts);
+      // ignore: unawaited_futures
+      updateUserPostAndHiddenPost(offerId, offerPosts);
     }
-    await updateUserPostAndHiddenPost(ownerId, [ownerPost]);
+    // ignore: unawaited_futures
+    updateUserPostAndHiddenPost(ownerId, [ownerPost]);
   }
 
   Future<void> updateUserPostAndHiddenPost(
@@ -175,13 +178,15 @@ class TradingServiceFireStore {
       postsId.forEach(posts.remove);
       postsId.forEach(hiddenPosts.add);
 
-      await FirebaseFirestore.instance.collection('users').doc(userId).update({
+      // ignore: unawaited_futures
+      FirebaseFirestore.instance.collection('users').doc(userId).update({
         'hiddenPosts': hiddenPosts,
         'posts': posts,
       });
 
       for (final postId in postsId) {
-        await FirebaseFirestore.instance
+        // ignore: unawaited_futures
+        FirebaseFirestore.instance
             .collection('posts')
             .doc(postId)
             .update({'isHidden': true});

@@ -290,7 +290,8 @@ class MessageServiceFireStore {
 
         //add chat to chat room
         message = message.substring(0, message.length - 2);
-        return addMessageToChatRoom('', 0, message, chatRoomId, '');
+        // ignore: unawaited_futures
+        addMessageToChatRoom('', 0, message, chatRoomId, '');
       }
     });
   }

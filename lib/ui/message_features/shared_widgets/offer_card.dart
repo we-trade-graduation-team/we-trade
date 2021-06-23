@@ -31,6 +31,7 @@ class OfferCard extends StatefulWidget {
 }
 
 class _OfferCardState extends State<OfferCard> {
+  // ignore: diagnostic_describe_all_properties
   late Trading trading;
   late bool loading = true;
 
@@ -148,7 +149,6 @@ class _OfferCardState extends State<OfferCard> {
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
     properties.add(DiagnosticsProperty<bool>('loading', loading));
-    properties.add(DiagnosticsProperty<Trading>('trading', trading));
   }
 }
 

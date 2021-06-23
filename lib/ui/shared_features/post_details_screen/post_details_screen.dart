@@ -103,6 +103,7 @@ class _PostDetailsScreenState extends State<PostDetailsScreen> {
                       padding: _buttonPadding,
                       onPrimary: Theme.of(context).primaryColor,
                       primary: Colors.white,
+                      // elevation: 20,
                     ),
                     child: Text(
                       _appLocalization.translate('postDetailsTxtChatButton'),

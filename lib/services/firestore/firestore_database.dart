@@ -604,21 +604,6 @@ class FirestoreDatabase {
     );
 
     return _result;
-
-    // final _postCardsWithMostView =
-    //     await _getMostViewPostCardsNotBelongToCurrentUser(
-    //         limit: _numberOfPostCardToTake);
-
-    // // If take enough amount
-    // if (_postCardsWithMostView.length == _numberOfPostCardToTake) {
-    //   return _postCardsWithMostView;
-    // }
-
-    // // Else take only _numberOfPostCardToTake amount
-    // final _result =
-    //     _postCardsWithMostView.take(_numberOfPostCardToTake).toList();
-
-    // return _result;
   }
 
   // Method to retrieve a List of postCard recommended for current user
@@ -649,23 +634,6 @@ class FirestoreDatabase {
       );
 
       return _result;
-
-      // // Take top most view post cards (sort by view - default)
-      // final _postCardsWithMostView =
-      //     await _getMostViewPostCardsNotBelongToCurrentUser(
-      //   limit: _numberOfPostCardToTake,
-      // );
-
-      // // If take enough amount
-      // if (_postCardsWithMostView.length == _numberOfPostCardToTake) {
-      //   return _postCardsWithMostView;
-      // }
-
-      // // Else take only _numberOfPostCardToTake amount
-      // final _result =
-      //     _postCardsWithMostView.take(_numberOfPostCardToTake).toList();
-
-      // return _result;
     }
 
     // Sort descending category history by times

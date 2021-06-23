@@ -10,16 +10,11 @@ import '../../../../models/cloud_firestore/post_model/post/post.dart';
 import 'post_details_item_images_carousel_slider.dart';
 import 'post_details_popup_dialog.dart';
 
-class PostDetailsAppBar extends StatefulWidget {
+class PostDetailsAppBar extends StatelessWidget {
   const PostDetailsAppBar({
     Key? key,
   }) : super(key: key);
 
-  @override
-  _PostDetailsAppBarState createState() => _PostDetailsAppBarState();
-}
-
-class _PostDetailsAppBarState extends State<PostDetailsAppBar> {
   @override
   Widget build(BuildContext context) {
     final _args = context.watch<PostDetailsArguments>();
@@ -63,12 +58,13 @@ class _PostDetailsAppBarState extends State<PostDetailsAppBar> {
           Icons.more_vert,
           color: Colors.white,
         ),
-        onPressed: () => _showOverlay(id: _postId),
+        onPressed: () => _showOverlay(context: context, id: _postId),
       ),
     );
   }
 
   void _showOverlay({
+    required BuildContext context,
     required String id,
   }) {
     BotToast.showAttachedWidget(
