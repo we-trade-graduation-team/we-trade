@@ -36,9 +36,8 @@ class OfferDetailScreen extends StatefulWidget {
 
 class _OfferDetailScreenState extends State<OfferDetailScreen> {
   late bool loading = true;
-  // ignore: avoid_init_to_null
   // ignore: diagnostic_describe_all_properties
-  late PostCard? ownerPost = null;
+  late PostCard? ownerPost;
   late List<PostCard> offerPosts = [];
   late int status = 0;
 
