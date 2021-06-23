@@ -33,7 +33,7 @@ class _RateTabState extends State<RateTab> {
   @override
   void dispose() {
     node.unfocus();
-    node.dispose();
+    // node.dispose();
     super.dispose();
   }
 

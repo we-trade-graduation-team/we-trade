@@ -35,7 +35,7 @@ class _MyRateScreenState extends State<MyRateScreen> {
 
   @override
   void dispose() {
-    node.dispose();
+    // node.dispose();
     super.dispose();
   }
 

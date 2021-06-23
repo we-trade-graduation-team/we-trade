@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:line_icons/line_icons.dart';
 import 'package:provider/provider.dart';
 import '../../../../models/arguments/shared/post_details_arguments.dart';
-
 import '../../../../models/cloud_firestore/post_model/post/post.dart';
 import 'post_details_item_images_carousel_slider.dart';
 import 'post_details_popup_dialog.dart';
@@ -17,6 +16,8 @@ class PostDetailsAppBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // const appBarExpandedHeight = 414.0 - 100.0;
+
     final _args = context.watch<PostDetailsArguments>();
 
     final _postId = _args.postId;
@@ -53,20 +54,21 @@ class PostDetailsAppBar extends StatelessWidget {
       ),
       toolBarColor: Theme.of(context).primaryColor,
       background: const PostDetailsItemImagesCarouselSlider(),
-      actions: IconButton(
-        icon: const Icon(
-          Icons.more_vert,
-          color: Colors.white,
-        ),
-        onPressed: () => _showOverlay(context: context, id: _postId),
-      ),
+      actions: Builder(builder: (context) {
+        return IconButton(
+          icon: const Icon(
+            Icons.more_vert,
+            color: Colors.white,
+          ),
+          onPressed: () {
+            showOverlay(context: context, id: _postId);
+          },
+        );
+      }),
     );
   }
 
-  void _showOverlay({
-    required BuildContext context,
-    required String id,
-  }) {
+  void showOverlay({required BuildContext context, required String id}) {
     BotToast.showAttachedWidget(
       attachedBuilder: (_) => PostDetailsPopupDialog(
         parentContext: context,
