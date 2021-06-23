@@ -40,7 +40,7 @@ List<BottomNavigationBarItemSource> navBarItemSourceList = [
     ),
   ),
   BottomNavigationBarItemSource(
-    title: 'Favourite',
+    title: 'Favorite',
     iconData: Icons.favorite,
     routeAndNavigatorSettings: const RouteAndNavigatorSettings(
       initialRoute: '/',

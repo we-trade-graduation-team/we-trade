@@ -3,7 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-import '../../shared_widgets/geting_data_status.dart';
+import '../../shared_widgets/getting_data_status.dart';
 import '../../shared_widgets/trading_prod_card.dart';
 import '../../utils.dart';
 

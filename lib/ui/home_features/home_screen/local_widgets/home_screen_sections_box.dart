@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../../constants/app_dimens.dart';
+import '../../../../constants/app_number_constants.dart';
 import '../../../../widgets/custom_animation_limiter_for_list_view.dart';
 import 'home_screen_category_cards_section.dart';
 import 'home_screen_popular_post_cards_section.dart';
@@ -29,7 +29,7 @@ class HomeScreenSectionsBox extends StatelessWidget {
         scrollPhysics: const NeverScrollableScrollPhysics(),
         separatorHeight: size.height * 0.04,
         duration: const Duration(
-            milliseconds: AppDimens.kFlutterStaggeredAnimationsDuration ~/ 2),
+            milliseconds: AppNumberConstants.kFlutterStaggeredAnimationsDuration ~/ 2),
         list: homeSections,
         builder: (_, widget) => widget,
       ),

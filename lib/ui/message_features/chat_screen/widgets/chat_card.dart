@@ -3,11 +3,11 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 
-import '../../../../models/ui/chat/temp_class.dart';
+import '../../../../models/ui/chat/chat.dart';
 import '../../../../services/message/algolia_user_service.dart';
 import '../../../../widgets/custom_user_avatar.dart';
 import '../../const_string/const_str.dart';
-import '../../helper/ulti.dart';
+import '../../helper/util.dart';
 import '../chat_room/chat_room.dart';
 
 class ChatCard extends StatefulWidget {

@@ -38,7 +38,7 @@ class _ReplyButtonState extends State<ReplyButton> {
 
   @override
   void dispose() {
-    myFocusNode.dispose();
+    // myFocusNode.dispose();
 
     super.dispose();
   }
@@ -61,10 +61,9 @@ class _ReplyButtonState extends State<ReplyButton> {
               Navigator.of(context).pop();
             });
       });
-    } on FirebaseException catch (error) {
-      // ignore: avoid_print
-      print('Lỗi khi lưu: $error');
-      await showMyNotificationDialog(
+    } on FirebaseException catch (_) {
+      // print('Lỗi khi lưu: $error');
+      return showMyNotificationDialog(
           context: context,
           title: 'Thất bại',
           content: 'Thao tác không thành công. Vui lòng thử lại sau.',

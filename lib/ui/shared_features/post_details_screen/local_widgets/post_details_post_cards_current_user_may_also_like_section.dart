@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../app_localizations.dart';
-import '../../../../constants/app_dimens.dart';
+import '../../../../constants/app_number_constants.dart';
 import '../../../../models/cloud_firestore/post_card_model/post_card/post_card.dart';
 import '../../../../services/firestore/firestore_database.dart';
 import 'post_details_post_cards_current_user_may_also_like.dart';
@@ -37,7 +37,7 @@ class PostDetailsPostCardsCurrentUserMayAlsoLikeSection
           color: Colors.white,
           padding: EdgeInsets.symmetric(
             // horizontal: size.width * kDetailHorizontalPaddingPercent,
-            vertical: _size.height * AppDimens.kDetailVerticalPaddingPercent,
+            vertical: _size.height * AppNumberConstants.kDetailVerticalPaddingPercent,
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,

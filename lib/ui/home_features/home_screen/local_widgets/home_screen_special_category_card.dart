@@ -20,7 +20,6 @@ class HomeScreenSpecialCategoryCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return HomeScreenCategoryCardFundamental(
       categoryId: specialCategoryCard.categoryId!,
-      categoryName: specialCategoryCard.category,
       child: SizedBox(
         height: cardHeight,
         child: AspectRatio(

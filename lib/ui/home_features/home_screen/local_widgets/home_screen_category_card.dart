@@ -22,7 +22,6 @@ class HomeScreenCategoryCard extends StatelessWidget {
 
     return HomeScreenCategoryCardFundamental(
       categoryId: categoryCard.categoryId!,
-      categoryName: categoryCard.category,
       child: Container(
         width: _cardSize,
         height: _cardSize,

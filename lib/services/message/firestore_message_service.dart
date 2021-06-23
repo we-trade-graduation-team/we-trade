@@ -1,9 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
 
-import '../../models/ui/chat/temp_class.dart';
+import '../../models/ui/chat/chat.dart';
 import '../../ui/message_features/const_string/const_str.dart';
-import '../../ui/message_features/helper/ulti.dart';
+import '../../ui/message_features/helper/util.dart';
 import '../post_feature/post_service_firestore.dart';
 import 'algolia_user_service.dart';
 

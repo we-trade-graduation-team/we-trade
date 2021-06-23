@@ -22,16 +22,16 @@ class _PostItemTwoState extends State<PostItemTwo> {
   PostServiceFireStore dataServiceFireStore = PostServiceFireStore();
   bool isLoading = true;
   //argument for next screen
-  late TypeofGoods mainCategory = TypeofGoods(id: '', name: '');
-  late TypeofGoods subCategory = TypeofGoods(id: '', name: '');
+  late TypeOfGoods mainCategory = TypeOfGoods(id: '', name: '');
+  late TypeOfGoods subCategory = TypeOfGoods(id: '', name: '');
   List<String> newKeywordID = [];
   late Conditions conditions;
   late List<String> keywordToSave = [];
   late List<String> idKeywordToSave = [];
 
   //Category
-  List<TypeofGoods> _type = [];
-  List<TypeofGoods> _subType = [];
+  List<TypeOfGoods> _type = [];
+  List<TypeOfGoods> _subType = [];
   late String previousID = '-1';
 
   //keyWord Choice
@@ -47,23 +47,23 @@ class _PostItemTwoState extends State<PostItemTwo> {
   List<Conditions> conditionsList = [];
 
   //Function
-  Future<List<TypeofGoods>> getMainCategoryData() {
-    final _tempCategory = <TypeofGoods>[];
+  Future<List<TypeOfGoods>> getMainCategoryData() {
+    final _tempCategory = <TypeOfGoods>[];
     return dataServiceFireStore.getMainCategory().then((value) {
       for (final item in value.docs) {
         final itemCate =
-            TypeofGoods(id: item.id, name: item.data()['category'].toString());
+            TypeOfGoods(id: item.id, name: item.data()['category'].toString());
         _tempCategory.add(itemCate);
       }
       return _tempCategory;
     });
   }
 
-  Future<List<TypeofGoods>> getSubCategoryData(String main) {
-    final _typeSubTemp = <TypeofGoods>[];
+  Future<List<TypeOfGoods>> getSubCategoryData(String main) {
+    final _typeSubTemp = <TypeOfGoods>[];
     return dataServiceFireStore.getSubCategory(main).then((value) {
       for (final item in value.docs) {
-        final subCate = TypeofGoods(
+        final subCate = TypeOfGoods(
             id: item.id, name: item.data()['subCategory'].toString());
         _typeSubTemp.add(subCate);
       }
@@ -96,7 +96,7 @@ class _PostItemTwoState extends State<PostItemTwo> {
     });
   }
 
-  Widget categoryDropDown() => DropdownButton<TypeofGoods>(
+  Widget categoryDropDown() => DropdownButton<TypeOfGoods>(
         value: _type.isNotEmpty ? mainCategory : null,
         icon: const Icon(Icons.arrow_drop_down),
         elevation: 16,
@@ -113,8 +113,8 @@ class _PostItemTwoState extends State<PostItemTwo> {
           });
         },
         items: _type.isNotEmpty
-            ? _type.map<DropdownMenuItem<TypeofGoods>>((value) {
-                return DropdownMenuItem<TypeofGoods>(
+            ? _type.map<DropdownMenuItem<TypeOfGoods>>((value) {
+                return DropdownMenuItem<TypeOfGoods>(
                   value: value,
                   child: Text(value.name),
                 );
@@ -122,7 +122,7 @@ class _PostItemTwoState extends State<PostItemTwo> {
             : [],
       );
 
-  Widget subCategoryDropDown() => DropdownButton<TypeofGoods>(
+  Widget subCategoryDropDown() => DropdownButton<TypeOfGoods>(
         value: _subType.isNotEmpty ? subCategory : null,
         icon: const Icon(Icons.arrow_drop_down),
         elevation: 16,
@@ -138,8 +138,8 @@ class _PostItemTwoState extends State<PostItemTwo> {
           });
         },
         items: _subType.isNotEmpty
-            ? _subType.map<DropdownMenuItem<TypeofGoods>>((value) {
-                return DropdownMenuItem<TypeofGoods>(
+            ? _subType.map<DropdownMenuItem<TypeOfGoods>>((value) {
+                return DropdownMenuItem<TypeOfGoods>(
                   value: value,
                   child: Text(value.name),
                 );
@@ -526,9 +526,9 @@ class _PostItemTwoState extends State<PostItemTwo> {
         .add(IterableProperty<Conditions>('conditionList', conditionsList));
     properties.add(DiagnosticsProperty<Conditions>('conditions', conditions));
     properties
-        .add(DiagnosticsProperty<TypeofGoods>('mainCategory', mainCategory));
+        .add(DiagnosticsProperty<TypeOfGoods>('mainCategory', mainCategory));
     properties
-        .add(DiagnosticsProperty<TypeofGoods>('subCategory', subCategory));
+        .add(DiagnosticsProperty<TypeOfGoods>('subCategory', subCategory));
     properties.add(IterableProperty<String>('newKeywordID', newKeywordID));
     properties.add(IterableProperty<String>('keywordToSave', keywordToSave));
     properties.add(IterableProperty<KeyWord>('listKeyWord', listKeyWord));

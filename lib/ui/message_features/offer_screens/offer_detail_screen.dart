@@ -8,7 +8,7 @@ import 'package:provider/provider.dart';
 import '../../../constants/app_colors.dart';
 import '../../../models/cloud_firestore/post_card_model/post_card/post_card.dart';
 import '../../../models/cloud_firestore/user_model/user/user.dart';
-import '../../../models/ui/chat/temp_class.dart';
+import '../../../models/ui/chat/chat.dart';
 import '../../../services/firestore/firestore_database.dart';
 import '../../../services/trading_feature/trading_service_firestore.dart';
 import '../../../utils/routes/routes.dart';
@@ -37,8 +37,7 @@ class OfferDetailScreen extends StatefulWidget {
 class _OfferDetailScreenState extends State<OfferDetailScreen> {
   late bool loading = true;
   // ignore: diagnostic_describe_all_properties
-  // ignore: avoid_init_to_null
-  late PostCard? ownerPost = null;
+  late PostCard? ownerPost;
   late List<PostCard> offerPosts = [];
   late int status = 0;
 
@@ -433,7 +432,6 @@ class _OfferDetailScreenState extends State<OfferDetailScreen> {
     properties.add(DiagnosticsProperty<bool>('loading', loading));
     properties.add(IntProperty('status', status));
     properties.add(IterableProperty<PostCard>('offerPosts', offerPosts));
-    properties.add(DiagnosticsProperty<PostCard?>('ownerPost', ownerPost));
   }
 }
 

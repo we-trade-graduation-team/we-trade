@@ -65,7 +65,7 @@ class _CustomFormBuilderTextFieldState
   @override
   void dispose() {
     // Clean up the focus node when the Form is disposed.
-    myFocusNode.dispose();
+    // myFocusNode.dispose();
 
     super.dispose();
   }

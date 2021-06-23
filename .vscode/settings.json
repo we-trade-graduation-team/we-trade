@@ -11,6 +11,7 @@
         "reorderable",
         "sublist",
         "timeago",
+        "unawaited",
         "unfocus"
     ]
 }

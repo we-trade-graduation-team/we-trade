@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import '../../../../constants/app_colors.dart';
-import '../../../../models/ui/chat/temp_class.dart';
+import '../../../../models/ui/chat/chat.dart';
 
 import '../../../../widgets/custom_user_avatar.dart';
 

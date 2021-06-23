@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-import '../../../constants/app_dimens.dart';
+import '../../../constants/app_number_constants.dart';
 import '../../../models/cloud_firestore/post_card_model/post_card/post_card.dart';
 import '../../../widgets/custom_animation_limiter_for_list_view.dart';
 import '../../../widgets/item_post_card.dart';
@@ -26,7 +26,7 @@ class HorizontalScrollPostCardListView extends StatelessWidget {
         scrollDirection: Axis.horizontal,
         separatorWidth: _separatorWidth,
         duration: const Duration(
-          milliseconds: AppDimens.kFlutterStaggeredAnimationsDuration * 2,
+          milliseconds: AppNumberConstants.kFlutterStaggeredAnimationsDuration * 2,
         ),
         addLastSeparator: true,
         list: postCards,

@@ -7,13 +7,13 @@ import 'package:provider/provider.dart';
 
 import '../../../../constants/app_colors.dart';
 import '../../../../models/cloud_firestore/user_model/user/user.dart';
-import '../../../../models/ui/chat/temp_class.dart';
+import '../../../../models/ui/chat/chat.dart';
 import '../../../../services/message/algolia_user_service.dart';
 import '../../../../widgets/custom_material_button.dart';
 import '../../const_string/const_str.dart';
 import '../../helper/helper_add_member_group_chat.dart';
 import '../../helper/helper_navigate_chat_room.dart';
-import '../../helper/ulti.dart';
+import '../../helper/util.dart';
 import '../widgets/user_card.dart';
 import '../widgets/user_choice_chip.dart';
 

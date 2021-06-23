@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 
-import '../../../models/ui/shared_models/product_model.dart';
 import '../../../services/trading_feature/trading_service_firestore.dart';
 import '../../../utils/routes/routes.dart';
 import '../../message_features/offer_screens/offer_detail_screen.dart';
@@ -13,16 +12,13 @@ import '../account_screen/local_widgets/getter.dart';
 import '../trading_history/rate_for_trading.dart';
 import '../utils.dart';
 import 'custom_overlay_icon_button.dart';
-import 'geting_data_status.dart';
+import 'getting_data_status.dart';
 import 'trading_prod_overlay.dart';
 
 class HistoryProductCard extends StatefulWidget {
   HistoryProductCard({
     Key? key,
     required this.tradingID,
-    required this.forProduct,
-    this.offerSideProducts,
-    this.offerSideMoney,
   }) : super(key: key);
 
   final statusValue = <String, int>{
@@ -32,9 +28,6 @@ class HistoryProductCard extends StatefulWidget {
   };
 
   final String tradingID;
-  final List<Product>? offerSideProducts;
-  final int? offerSideMoney;
-  final Product forProduct;
 
   @override
   _HistoryProductCardState createState() => _HistoryProductCardState();
@@ -42,10 +35,6 @@ class HistoryProductCard extends StatefulWidget {
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
     properties.add(StringProperty('tradingID', tradingID));
-    properties
-        .add(IterableProperty<Product>('offerSideProducts', offerSideProducts));
-    properties.add(IntProperty('offerSideMoney', offerSideMoney));
-    properties.add(DiagnosticsProperty<Product>('forProduct', forProduct));
     properties
         .add(DiagnosticsProperty<Map<String, int>>('statusValue', statusValue));
   }
@@ -86,9 +75,8 @@ class _HistoryProductCardState extends State<HistoryProductCard> {
           });
         });
       });
-    } catch (error) {
-      // ignore: avoid_print
-      print(error);
+    } catch (_) {
+      // print(error);
     }
   }
 
@@ -181,7 +169,6 @@ class _HistoryProductCardState extends State<HistoryProductCard> {
     return _isLoaded
         ? GestureDetector(
             onTap: () async {
-              // TODO Quang ơi, màn hình sửa truyền vào trading model nha
               final trading = await TradingServiceFireStore()
                   .getTradingByTradingId(tradingId: widget.tradingID);
               await pushNewScreenWithRouteSettings<void>(
@@ -323,11 +310,6 @@ class _HistoryProductCardState extends State<HistoryProductCard> {
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
-    properties.add(IterableProperty<Product>(
-        'offerSideProducts', widget.offerSideProducts));
-    properties.add(IntProperty('offerSideMoney', widget.offerSideMoney));
-    properties
-        .add(DiagnosticsProperty<Product>('forProduct', widget.forProduct));
     properties.add(StringProperty('tradingID', widget.tradingID));
     properties.add(IntProperty('timeOut', timeOut));
     properties.add(DiagnosticsProperty('referenceDatabase', referenceDatabase));

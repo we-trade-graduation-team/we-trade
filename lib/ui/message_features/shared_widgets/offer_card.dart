@@ -6,7 +6,7 @@ import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 import 'package:provider/provider.dart';
 
 import '../../../models/cloud_firestore/user_model/user/user.dart';
-import '../../../models/ui/chat/temp_class.dart';
+import '../../../models/ui/chat/chat.dart';
 import '../../../services/post_feature/post_service_firestore.dart';
 import '../../../services/trading_feature/trading_service_firestore.dart';
 import '../../../utils/routes/routes.dart';

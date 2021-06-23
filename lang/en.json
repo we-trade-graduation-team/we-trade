@@ -63,6 +63,7 @@
   "homeScreenTxtSpecialEventBannerFourthSmallTitle": "New update",
   "homeScreenTxtSpecialEventBannerFourthBigTitle": "GET NOW",
   "postDetailsTxtMakeOfferButton": "Make offer",
+  "postDetailsTxtChatButton": "Chat",
   "postDetailsTxtNotification": "Notification",
   "postDetailsTxtSameOwnerNotification": "You can't make offers to yourself",
   "postDetailsTxtTradeForSectionTitle": "Trade for",
@@ -89,5 +90,6 @@
   "postDetailsTxtNoPostCards": "No post cards",
   "postDetailsTxtSimilarPostCardsSectionTitle": "Similar post cards",
   "postDetailsTxtCurrentUserMayAlsoLikePostCardsSectionTitle": "You may also like",
+  "postDetailsTxtViewerIsOwner": "You are viewing your own post",
   "itemPostCardTxtDistrict": "District"
 }

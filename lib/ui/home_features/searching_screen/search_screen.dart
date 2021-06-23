@@ -37,8 +37,8 @@ class _SearchScreenState extends State<SearchScreen> {
   bool isLoading = true;
   bool isGetInitData = true;
   // categories
-  late TypeofGoods selectedCategory = TypeofGoods(id: '', name: '');
-  List<TypeofGoods> categories = [];
+  late TypeOfGoods selectedCategory = TypeOfGoods(id: '', name: '');
+  List<TypeOfGoods> categories = [];
   //adress city and districts
   List<Cities> cities = [];
   Cities selectedCity = Cities(id: 'init', name: 'init');
@@ -47,13 +47,13 @@ class _SearchScreenState extends State<SearchScreen> {
   late Conditions selectedCondtion = Conditions(description: '', priority: 0);
 
   // funtcion future ... ==============================
-  Future<List<TypeofGoods>> getMainCategoryData() {
+  Future<List<TypeOfGoods>> getMainCategoryData() {
     // get main categories
-    final _tempCategory = <TypeofGoods>[];
+    final _tempCategory = <TypeOfGoods>[];
     return serviceFireStore.getMainCategory().then((value) {
       for (final item in value.docs) {
         final itemCate =
-            TypeofGoods(id: item.id, name: item.data()['category'].toString());
+            TypeOfGoods(id: item.id, name: item.data()['category'].toString());
         _tempCategory.add(itemCate);
       }
       return _tempCategory;
@@ -296,7 +296,7 @@ class _SearchScreenState extends State<SearchScreen> {
             : [],
       );
 
-  Widget categoryDropDown() => DropdownButton<TypeofGoods>(
+  Widget categoryDropDown() => DropdownButton<TypeOfGoods>(
         value: categories.isNotEmpty ? selectedCategory : null,
         icon: const Icon(
           Icons.arrow_drop_down,
@@ -316,8 +316,8 @@ class _SearchScreenState extends State<SearchScreen> {
           });
         },
         items: categories.isNotEmpty
-            ? categories.map<DropdownMenuItem<TypeofGoods>>((value) {
-                return DropdownMenuItem<TypeofGoods>(
+            ? categories.map<DropdownMenuItem<TypeOfGoods>>((value) {
+                return DropdownMenuItem<TypeOfGoods>(
                   value: value,
                   child: Center(child: Text(value.name)),
                 );
@@ -327,13 +327,12 @@ class _SearchScreenState extends State<SearchScreen> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     getMainCategoryData().then((resultCategories) {
       getCities().then((resultCities) {
         getConditions().then((resultConditions) {
           setState(() {
-            resultCategories.add(TypeofGoods(id: '', name: 'Tất cả'));
+            resultCategories.add(TypeOfGoods(id: '', name: 'Tất cả'));
             categories = resultCategories;
             selectedCategory = resultCategories.last;
             resultCities.add(Cities(id: '', name: 'Tất cả'));
@@ -481,8 +480,8 @@ class _SearchScreenState extends State<SearchScreen> {
         'searchTextController', searchTextController));
     properties.add(DiagnosticsProperty<bool>('isGetInitData', isGetInitData));
     properties.add(
-        DiagnosticsProperty<TypeofGoods>('selectedCategory', selectedCategory));
-    properties.add(IterableProperty<TypeofGoods>('categories', categories));
+        DiagnosticsProperty<TypeOfGoods>('selectedCategory', selectedCategory));
+    properties.add(IterableProperty<TypeOfGoods>('categories', categories));
     properties.add(IterableProperty<Cities>('cities', cities));
     properties.add(DiagnosticsProperty<Cities>('selectedCity', selectedCity));
     properties.add(IterableProperty<Conditions>('conditions', conditions));
