@@ -467,10 +467,15 @@ class FirestoreDatabase {
   // Method to retrieve a List of post card by a List of postId
   Future<List<PostCard>> getPostCardsByPostIdList({
     required List<String> postIdList,
+    bool shouldSortViewDescending = true,
   }) async {
     final _result = await Stream.fromIterable(postIdList)
         .asyncMap((postId) => getPostCard(postId: postId))
         .toList();
+
+    if (shouldSortViewDescending) {
+      _result.sort((a, b) => b.view.compareTo(a.view));
+    }
 
     return _result;
   }
@@ -628,10 +633,13 @@ class FirestoreDatabase {
     // If null or empty
     if (_currentUserKeywordHistory == null ||
         _currentUserKeywordHistory.isEmpty) {
-      final _result =
+      final _listReceived =
           await _getPostCardsNotBelongToCurrentUserWithDeterminedAmount(
         amount: _numberOfPostCardToTake,
       );
+      final _result = [
+        ...{..._listReceived}
+      ];
 
       return _result;
     }
@@ -701,8 +709,8 @@ class FirestoreDatabase {
         postIdList: _postCardIdListFromJunction,
       );
 
-      // Sort descending by view
-      _postCardsFromJunction.sort((a, b) => b.view.compareTo(a.view));
+      // // Sort descending by view
+      // _postCardsFromJunction.sort((a, b) => b.view.compareTo(a.view));
 
       // Get most view post card
       final _postCardToTake = _postCardsFromJunction
@@ -747,7 +755,11 @@ class FirestoreDatabase {
       // Concatenate two list
       final _fullList = [..._flattenPostCardList, ..._mostViewPostCards];
 
-      return _fullList;
+      final _result = [
+        ...{..._fullList}
+      ];
+
+      return _result;
     }
 
     // Separate list
@@ -783,7 +795,11 @@ class FirestoreDatabase {
         ..._mostViewPostCardsExcludedFirstHalf
       ];
 
-      return _fullList;
+      final _result = [
+        ...{..._fullList}
+      ];
+
+      return _result;
     }
 
     // Else, we have take more than enough than take exactly amount missing
@@ -796,7 +812,11 @@ class FirestoreDatabase {
       ..._exactlyAmountMissingPostCardList
     ];
 
-    return _fullList;
+    final _result = [
+      ...{..._fullList}
+    ];
+
+    return _result;
   }
 
   // Method to retrieve a List of similar postCards by postId
@@ -838,6 +858,7 @@ class FirestoreDatabase {
       // Fetch for each retrieved junction, fetch the associated postCard
       final _postCardsFromJunction = await getPostCardsByPostIdList(
         postIdList: _postCardIdListFromJunction,
+        shouldSortViewDescending: false,
       );
 
       return _postCardsFromJunction;
