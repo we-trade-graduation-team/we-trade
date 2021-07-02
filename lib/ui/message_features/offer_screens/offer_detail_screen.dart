@@ -120,7 +120,7 @@ class _OfferDetailScreenState extends State<OfferDetailScreen> {
           ])
         : SingleChildScrollView(
             scrollDirection: Axis.horizontal,
-            child: posts != null
+            child: posts.isNotEmpty
                 ? Row(
                     children: [
                       ...List.generate(
@@ -129,8 +129,9 @@ class _OfferDetailScreenState extends State<OfferDetailScreen> {
                           return Row(
                             children: [
                               ItemPostCard(
-                                  isNavigateToDetailScreen: false,
-                                  postCard: posts[index]),
+                                isNavigateToDetailScreen: false,
+                                postCard: posts[index],
+                              ),
                               const SizedBox(width: 20),
                             ],
                           );
