@@ -56,11 +56,24 @@ class _OtherUserProfileScreenState extends State<OtherUserProfileScreen> {
     );
   }
 
-  void handleFollowButtonClick(String userId) {
+  Future<void> handleFollowButtonClick(String userId) async {
+    // ignore: unawaited_futures
     serviceFireStore.handleFollowButton(
       userId: userId,
       thisUserId: thisUser.uid!,
       isAddFollowing: !isFollow,
+    );
+
+    final _firestoreDatabase = context.read<FirestoreDatabase>();
+
+    if (isFollow) {
+      await _firestoreDatabase.deleteJunctionUserFollower(
+        userId: userId,
+      );
+    }
+
+    await _firestoreDatabase.setJunctionUserFollower(
+      userId: userId,
     );
 
     setState(() {

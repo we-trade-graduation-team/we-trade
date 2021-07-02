@@ -1,4 +1,3 @@
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:multi_image_picker2/multi_image_picker2.dart';
@@ -526,8 +525,7 @@ class _UpdatePostTwoState extends State<UpdatePostTwo> {
                                       'keyword': keywordToSave,
                                       'keywordId': idKeywordToSave,
                                     }),
-                                screen:
-                                    UpdatePostThree(oldPost: _oldPostInfo),
+                                screen: UpdatePostThree(oldPost: _oldPostInfo),
                                 withNavBar: true,
                                 pageTransitionAnimation:
                                     PageTransitionAnimation.cupertino,

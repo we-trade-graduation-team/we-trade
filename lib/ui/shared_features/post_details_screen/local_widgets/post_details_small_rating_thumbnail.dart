@@ -19,9 +19,12 @@ class PostDetailsSmallRatingThumbnail extends StatelessWidget {
 
     final _appLocalization = AppLocalizations.of(context);
 
-    return SizedBox(
-      // height: size.height * 0.075,
-      width: 90,
+    final _size = MediaQuery.of(context).size;
+
+    return Container(
+      // color: Colors.blue,
+      width: _size.width * 0.24,
+      margin: EdgeInsets.only(left: _size.width * 0.01),
       child: AspectRatio(
         aspectRatio: 3 / 2,
         child: Column(
