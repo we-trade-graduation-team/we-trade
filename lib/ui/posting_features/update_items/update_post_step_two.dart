@@ -409,6 +409,9 @@ class _UpdatePostTwoState extends State<UpdatePostTwo> {
 
     if (mainCategory.id == '' || mainCategory.id == previousID) {
       //no run getSub when setState
+      setState(() {
+        isLoading = false;
+      });
     } else {
       getSubCategoryData(mainCategory.name).then((value) {
         if (value.isNotEmpty) {

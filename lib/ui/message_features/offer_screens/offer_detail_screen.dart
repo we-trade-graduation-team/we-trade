@@ -37,7 +37,8 @@ class OfferDetailScreen extends StatefulWidget {
 class _OfferDetailScreenState extends State<OfferDetailScreen> {
   late bool loading = true;
   // ignore: diagnostic_describe_all_properties
-  late PostCard? ownerPost;
+  // ignore: avoid_init_to_null
+  late PostCard? ownerPost = null;
   late List<PostCard> offerPosts = [];
   late int status = 0;
 
@@ -119,7 +120,7 @@ class _OfferDetailScreenState extends State<OfferDetailScreen> {
           ])
         : SingleChildScrollView(
             scrollDirection: Axis.horizontal,
-            child: posts.isNotEmpty
+            child: posts != null
                 ? Row(
                     children: [
                       ...List.generate(
@@ -435,6 +436,7 @@ class _OfferDetailScreenState extends State<OfferDetailScreen> {
     properties.add(DiagnosticsProperty<bool>('loading', loading));
     properties.add(IntProperty('status', status));
     properties.add(IterableProperty<PostCard>('offerPosts', offerPosts));
+    properties.add(DiagnosticsProperty<PostCard?>('ownerPost', ownerPost));
   }
 }
 

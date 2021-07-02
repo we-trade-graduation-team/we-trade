@@ -74,34 +74,36 @@ class _MessageTileState extends State<MessageTile> {
                     if (!widget.sendByMe)
                       CustomUserAvatar(image: widget.senderImage, radius: 13),
                     const SizedBox(width: 5),
-                    Column(
-                      crossAxisAlignment: widget.sendByMe
-                          ? CrossAxisAlignment.end
-                          : CrossAxisAlignment.start,
-                      children: [
-                        if (!widget.sendByMe)
-                          Padding(
-                            padding: const EdgeInsets.only(left: 8),
-                            child: Text(
-                              widget.senderName,
-                              style: const TextStyle(
-                                fontSize: 10,
-                                fontWeight: FontWeight.w200,
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: widget.sendByMe
+                            ? CrossAxisAlignment.end
+                            : CrossAxisAlignment.start,
+                        children: [
+                          if (!widget.sendByMe)
+                            Padding(
+                              padding: const EdgeInsets.only(left: 8),
+                              child: Text(
+                                widget.senderName,
+                                style: const TextStyle(
+                                  fontSize: 10,
+                                  fontWeight: FontWeight.w200,
+                                ),
                               ),
                             ),
-                          ),
-                        buildContentSend(),
-                        if (isVisible || widget.type == imageType)
-                          const SizedBox(height: 5),
-                        if (isVisible || widget.type == imageType)
-                          Text(
-                            date_time.DateFormat.yMd('en_US').add_jm().format(
-                                DateTime.fromMillisecondsSinceEpoch(
-                                    int.parse(widget.time.toString()))),
-                            style: const TextStyle(
-                                fontSize: 10, fontWeight: FontWeight.w300),
-                          ),
-                      ],
+                          buildContentSend(),
+                          if (isVisible || widget.type == imageType)
+                            const SizedBox(height: 5),
+                          if (isVisible || widget.type == imageType)
+                            Text(
+                              date_time.DateFormat.yMd('en_US').add_jm().format(
+                                  DateTime.fromMillisecondsSinceEpoch(
+                                      int.parse(widget.time.toString()))),
+                              style: const TextStyle(
+                                  fontSize: 10, fontWeight: FontWeight.w300),
+                            ),
+                        ],
+                      ),
                     ),
                     const SizedBox(width: 5),
                   ],
