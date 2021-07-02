@@ -294,8 +294,8 @@ class FirestoreDatabase {
 
   // Method to retrieve a List of Post not belong a user
   Future<List<Post>> _getPostsNotBelongToUser({
+    required int limit,
     String? userId,
-    int? limit,
   }) async {
     return _fireStoreService.collectionFuture(
       path: FirestorePath.posts(),
@@ -303,19 +303,6 @@ class FirestoreDatabase {
         const _ownerIdField = ModelProperties.postOwnerIdProperty;
 
         const _isHiddenField = ModelProperties.postIsHiddenProperty;
-
-        if (limit != null) {
-          return query
-              .where(
-                _ownerIdField,
-                isNotEqualTo: userId ?? uid,
-              )
-              .where(
-                _isHiddenField,
-                isEqualTo: false,
-              )
-              .limit(limit);
-        }
 
         return query
             .where(
@@ -325,7 +312,8 @@ class FirestoreDatabase {
             .where(
               _isHiddenField,
               isEqualTo: false,
-            );
+            )
+            .limit(limit);
       },
       builder: (data) => Post.fromDocumentSnapshot(data),
     );
@@ -335,19 +323,25 @@ class FirestoreDatabase {
   Future<List<PostCard>> getPostCardsByUserId({
     String? userId,
   }) async {
-    final _postsFromUser = await _getPostsByUserId(userId: userId);
+    final _postsFromUser = await _getPostsByUserId(
+      userId: userId,
+    );
 
     final _postIdList = _postsFromUser.map((post) => post.postId!).toList();
 
-    final _result = await getPostCardsByPostIdList(postIdList: _postIdList);
+    final _result = await getPostCardsByPostIdList(
+      postIdList: _postIdList,
+      shouldSortViewDescending: true,
+    );
 
     return _result;
   }
 
   // Method to retrieve a List of postCard by userId
   Future<List<PostCard>> _getPostCardsNotBelongToUser({
+    required int limit,
+    required bool shouldSortViewDescending,
     String? userId,
-    int? limit,
   }) async {
     final _postNotFromUser = await _getPostsNotBelongToUser(
       userId: userId,
@@ -356,7 +350,10 @@ class FirestoreDatabase {
 
     final _postIdList = _postNotFromUser.map((post) => post.postId!).toList();
 
-    final _result = await getPostCardsByPostIdList(postIdList: _postIdList);
+    final _result = await getPostCardsByPostIdList(
+      postIdList: _postIdList,
+      shouldSortViewDescending: shouldSortViewDescending,
+    );
 
     return _result;
   }
@@ -459,7 +456,10 @@ class FirestoreDatabase {
 
     final _postIdList = _postsFromUser.map((post) => post.postId!).toList();
 
-    final _result = await getPostCardsByPostIdList(postIdList: _postIdList);
+    final _result = await getPostCardsByPostIdList(
+      postIdList: _postIdList,
+      shouldSortViewDescending: true,
+    );
 
     return _result;
   }
@@ -467,7 +467,7 @@ class FirestoreDatabase {
   // Method to retrieve a List of post card by a List of postId
   Future<List<PostCard>> getPostCardsByPostIdList({
     required List<String> postIdList,
-    bool shouldSortViewDescending = true,
+    required bool shouldSortViewDescending,
   }) async {
     final _result = await Stream.fromIterable(postIdList)
         .asyncMap((postId) => getPostCard(postId: postId))
@@ -565,47 +565,14 @@ class FirestoreDatabase {
     return _fullList;
   }
 
-  // Method to retrieve a list of post cards that not belong to current user
-  Future<List<PostCard>>
-      _getPostCardsNotBelongToCurrentUserWithDeterminedAmount({
-    required int amount,
-  }) async {
-    // Take top most view post cards (sort by view - default)
-    final _postCardsWithMostView =
-        await _getMostViewPostCardsNotBelongToCurrentUser(
-      limit: amount,
-    );
-
-    // If take enough amount
-    if (_postCardsWithMostView.length == amount) {
-      return _postCardsWithMostView;
-    }
-
-    // Else take only _numberOfPostCardToTake amount
-    final _result = _postCardsWithMostView.take(amount).toList();
-
-    return _result;
-  }
-
-  // Method to retrieve a list of post cards that not belong to current user
-  Future<List<PostCard>> _getMostViewPostCardsNotBelongToCurrentUser({
-    required int limit,
-  }) async {
-    final _postCards = await _getPostCardsNotBelongToUser(limit: limit);
-
-    _postCards.sort((a, b) => b.view.compareTo(a.view));
-
-    return _postCards;
-  }
-
   // Method to retrieve a List of Popular Post Card for Home Screen
   Future<List<PostCard>> getHomeScreenPopularPostCards() async {
     const _numberOfPostCardToTake =
         AppFirestoreConstant.kHomeScreenPopularPostCardAmount;
 
-    final _result =
-        await _getPostCardsNotBelongToCurrentUserWithDeterminedAmount(
-      amount: _numberOfPostCardToTake,
+    final _result = await _getPostCardsNotBelongToUser(
+      limit: _numberOfPostCardToTake,
+      shouldSortViewDescending: true,
     );
 
     return _result;
@@ -623,25 +590,15 @@ class FirestoreDatabase {
     const _numberOfPostCardToTake =
         AppFirestoreConstant.kHomeScreenRecommendedPostCardEachPullAmount;
 
-    // Get current user's posts
-    final _currentUserPosts = await _getPostsByUserId();
-
-    // Get a list of postId from above list
-    final _currentUserPostIdList =
-        _currentUserPosts.map((post) => post.postId!).toList();
-
     // If null or empty
     if (_currentUserKeywordHistory == null ||
         _currentUserKeywordHistory.isEmpty) {
-      final _listReceived =
-          await _getPostCardsNotBelongToCurrentUserWithDeterminedAmount(
-        amount: _numberOfPostCardToTake,
+      final _listReceived = await _getPostCardsNotBelongToUser(
+        limit: _numberOfPostCardToTake,
+        shouldSortViewDescending: true,
       );
-      final _result = [
-        ...{..._listReceived}
-      ];
 
-      return _result;
+      return _listReceived;
     }
 
     // Sort descending category history by times
@@ -664,6 +621,13 @@ class FirestoreDatabase {
             _getJunctionKeywordPostListByKeywordId(keywordId: keywordId))
         .toList();
 
+    // Get current user's posts
+    final _currentUserPosts = await _getPostsByUserId();
+
+    // Get a list of postId from above list
+    final _currentUserPostIdList =
+        _currentUserPosts.map((post) => post.postId!).toList();
+
     // Remove post cards that belong to current user
     for (final junctions in _junctionsList) {
       // This list contains junctions that should be remove later
@@ -677,8 +641,6 @@ class FirestoreDatabase {
         if (_currentUserPostIdList.contains(_junctionPostId)) {
           // Add junction to should remove list
           _shouldRemoveJunction.add(junction);
-          // // Remove it from junctions
-          // junctions.remove(junction);
         }
       }
 
@@ -707,10 +669,8 @@ class FirestoreDatabase {
       // Fetch for each retrieved junction, fetch the associated postCard
       final _postCardsFromJunction = await getPostCardsByPostIdList(
         postIdList: _postCardIdListFromJunction,
+        shouldSortViewDescending: true,
       );
-
-      // // Sort descending by view
-      // _postCardsFromJunction.sort((a, b) => b.view.compareTo(a.view));
 
       // Get most view post card
       final _postCardToTake = _postCardsFromJunction
@@ -762,37 +722,27 @@ class FirestoreDatabase {
       return _result;
     }
 
-    // Separate list
-    // First list contains item from index 0 => 9
-    final _firstHalfExcludedPostIdList =
-        _excludedPostIdList.sublist(0, _maxWhereNotInAmount);
-
-    // Second list contains item from index 10 => end
-    final _secondHalfExcludedPostIdList =
-        _excludedPostIdList.sublist(_maxWhereNotInAmount);
-
     // Get more postCard excluded first half
     // plus _secondHalfExcludedPostIdList.length
-    final _mostViewPostCardsExcludedFirstHalf = await _getPostCardsWithLimit(
+    final _mostViewPostCardsExcluded = await _getPostCardsWithLimit(
       // Plus more
-      limit: _missingAmount + _secondHalfExcludedPostIdList.length,
-      excludedPostIdList: _firstHalfExcludedPostIdList,
+      limit: _missingAmount + _excludedPostIdList.length,
+      // excludedPostIdList: _firstHalfExcludedPostIdList,
     );
 
     // Remove postCard where postId is in second half
-    _mostViewPostCardsExcludedFirstHalf.removeWhere(
-        (postCard) => _secondHalfExcludedPostIdList.contains(postCard.postId));
+    _mostViewPostCardsExcluded.removeWhere(
+        (postCard) => _excludedPostIdList.contains(postCard.postId));
 
     // Sort descending by view
-    _mostViewPostCardsExcludedFirstHalf
-        .sort((a, b) => b.view.compareTo(a.view));
+    _mostViewPostCardsExcluded.sort((a, b) => b.view.compareTo(a.view));
 
     // If have take enough missing amount
-    if (_mostViewPostCardsExcludedFirstHalf.length == _missingAmount) {
+    if (_mostViewPostCardsExcluded.length == _missingAmount) {
       // Concatenate two list
       final _fullList = [
         ..._flattenPostCardList,
-        ..._mostViewPostCardsExcludedFirstHalf
+        ..._mostViewPostCardsExcluded
       ];
 
       final _result = [
@@ -804,7 +754,7 @@ class FirestoreDatabase {
 
     // Else, we have take more than enough than take exactly amount missing
     final _exactlyAmountMissingPostCardList =
-        _mostViewPostCardsExcludedFirstHalf.take(_missingAmount).toList();
+        _mostViewPostCardsExcluded.take(_missingAmount).toList();
 
     // Concatenate two list
     final _fullList = [

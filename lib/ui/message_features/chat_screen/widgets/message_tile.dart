@@ -95,9 +95,9 @@ class _MessageTileState extends State<MessageTile> {
                           const SizedBox(height: 5),
                         if (isVisible || widget.type == imageType)
                           Text(
-                            date_time.DateFormat('mm-dd-yy kk:mm').format(
+                            date_time.DateFormat.yMd('en_US').add_jm().format(
                                 DateTime.fromMillisecondsSinceEpoch(
-                                    widget.time)),
+                                    int.parse(widget.time.toString()))),
                             style: const TextStyle(
                                 fontSize: 10, fontWeight: FontWeight.w300),
                           ),
@@ -122,8 +122,9 @@ class _MessageTileState extends State<MessageTile> {
             child: Column(
               children: [
                 Text(
-                  date_time.DateFormat('mm-dd-yy kk:mm')
-                      .format(DateTime.fromMillisecondsSinceEpoch(widget.time)),
+                  date_time.DateFormat.yMd('en_US').add_jm().format(
+                      DateTime.fromMillisecondsSinceEpoch(
+                          int.parse(widget.time.toString()))),
                   style: const TextStyle(
                       fontSize: 10, fontWeight: FontWeight.w300),
                 ),
@@ -193,8 +194,9 @@ class _MessageTileState extends State<MessageTile> {
             context,
             screen: ImageZoomScreen(
               photoURL: widget.message,
-              tittle: date_time.DateFormat('mm-dd-yy kk:mm')
-                  .format(DateTime.fromMillisecondsSinceEpoch(widget.time)),
+              tittle: date_time.DateFormat.yMd('en_US').add_jm().format(
+                  DateTime.fromMillisecondsSinceEpoch(
+                      int.parse(widget.time.toString()))),
             ),
             withNavBar: false,
             pageTransitionAnimation: PageTransitionAnimation.cupertino,

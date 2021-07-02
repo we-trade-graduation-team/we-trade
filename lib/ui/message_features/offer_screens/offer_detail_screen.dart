@@ -335,7 +335,10 @@ class _OfferDetailScreenState extends State<OfferDetailScreen> {
         .then((resultOwnerPost) {
       if (widget.trading.offerPosts.isNotEmpty) {
         _firestoreDatabase
-            .getPostCardsByPostIdList(postIdList: widget.trading.offerPosts)
+            .getPostCardsByPostIdList(
+          postIdList: widget.trading.offerPosts,
+          shouldSortViewDescending: true,
+        )
             .then((resultOfferPosts) {
           setState(() {
             ownerPost = resultOwnerPost;

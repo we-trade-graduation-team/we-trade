@@ -179,6 +179,7 @@ class _OtherUserProfileScreenState extends State<OtherUserProfileScreen> {
         await _firestoreDatabase
             .getPostCardsByPostIdList(
               postIdList: resultUser.postsId,
+              shouldSortViewDescending: true,
             )
             .then((resultListPosts) => setState(() {
                   posts = resultListPosts;
