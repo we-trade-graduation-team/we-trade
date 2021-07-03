@@ -9,9 +9,9 @@ class TradingProdOverlay extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final widthOfOverlay = MediaQuery.of(context).size.width * 0.38 > 220.0
+    final widthOfOverlay = MediaQuery.of(context).size.width * 0.55 > 220.0
         ? 220.0
-        : MediaQuery.of(context).size.width * 0.38;
+        : MediaQuery.of(context).size.width * 0.55;
     const heightOfOverlayItem = 40.0;
 
     return Material(
