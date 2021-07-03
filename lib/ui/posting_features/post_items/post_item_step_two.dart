@@ -189,12 +189,13 @@ class _PostItemTwoState extends State<PostItemTwo> {
                         value: inputString,
                         child: Text(inputString),
                       ));
-                      // dataServiceFireStore
-                      //     .addKeyword(inputString)
-                      //     .then((newkeywordId) {
-                      final keyword = KeyWord(id: 'new', value: inputString);
-                      listKeyWord.add(keyword);
-                      //});
+                      dataServiceFireStore
+                          .addKeyword(inputString)
+                          .then((newkeywordId) {
+                        final keyword =
+                            KeyWord(id: newkeywordId, value: inputString);
+                        listKeyWord.add(keyword);
+                      });
                       Navigator.pop(alertContext, inputString);
                     }
                   },
@@ -221,9 +222,9 @@ class _PostItemTwoState extends State<PostItemTwo> {
         tempKeyword
             .add(editableItems[editableSelectedItems[i]].value.toString());
         idKeywordToSave.add(listKeyWord
-            .firstWhere((element) =>
-                tempKeyword[i] == element.value.toString() &&
-                element.id != 'new')
+            .firstWhere((element) => tempKeyword[i] == element.value.toString()
+                //  && element.id != 'new'
+                )
             .id);
       }
       return tempKeyword;
