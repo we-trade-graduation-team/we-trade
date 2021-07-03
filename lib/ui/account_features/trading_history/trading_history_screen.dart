@@ -77,9 +77,6 @@ class _TradingHistoryScreenState extends State<TradingHistoryScreen> {
                               child: HistoryProductCard(
                                 key: Key(snapshot.data!.id.toString()),
                                 tradingID: snapshot.data!.id,
-                                // offerSideProducts: offerSideProducts,
-                                // forProduct: forProduct,
-                                // offerSideMoney: money,
                               ),
                             );
                           }

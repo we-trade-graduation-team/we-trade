@@ -175,6 +175,7 @@ class _ItemPostCardState extends State<ItemPostCard> {
   }
 
   Future<void> _onTap() async {
+    // TODO
     final _loadingOverlayProvider = context.read<LoadingOverlayProvider>();
 
     _loadingOverlayProvider.updateLoading(isLoading: true);
@@ -229,19 +230,22 @@ class _ItemPostCardState extends State<ItemPostCard> {
       ownerId: _ownerId,
     );
 
+    if (_isNotSameUser) {
+      await Future.wait([
+        // Increase view by 1
+        _firestoreDatabase.increasePostCardView(postId: _postId),
+        // Update current user's keyword history
+        _firestoreDatabase.updateCurrentUserKeywordHistory(postId: _postId),
+        // Update current user's category history
+        _firestoreDatabase.updateCurrentUserCategoryHistory(
+            categoryId: _categoryId),
+        // Navigate to post details screen
+      ]);
+    }
+
     _loadingOverlayProvider.updateLoading(isLoading: false);
 
-    await Future.wait([
-      // Increase view by 1
-      _firestoreDatabase.increasePostCardView(postId: _postId),
-      // Update current user's keyword history
-      _firestoreDatabase.updateCurrentUserKeywordHistory(postId: _postId),
-      // Update current user's category history
-      _firestoreDatabase.updateCurrentUserCategoryHistory(
-          categoryId: _categoryId),
-      // Navigate to post details screen
-      _navigateToPostDetailsScreen(arguments: _postDetailsArguments)
-    ]);
+    return _navigateToPostDetailsScreen(arguments: _postDetailsArguments);
   }
 
   Future<void> _navigateToPostDetailsScreen({

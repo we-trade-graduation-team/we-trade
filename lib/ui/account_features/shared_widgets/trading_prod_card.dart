@@ -3,7 +3,13 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
+import 'package:we_trade/models/arguments/shared/post_details_arguments.dart';
+import 'package:we_trade/providers/loading_overlay_provider.dart';
+import 'package:we_trade/services/firestore/firestore_database.dart';
+import 'package:we_trade/ui/shared_features/post_details_screen/post_details_screen.dart';
+import 'package:we_trade/utils/helper/flash/flash_helper.dart';
 import '../../../services/post_feature/post_service_algolia.dart';
 
 import '../../../utils/routes/routes.dart';
@@ -13,7 +19,7 @@ import '../utils.dart';
 import 'custom_overlay_icon_button.dart';
 import 'trading_prod_overlay.dart';
 
-class TradingProductCard extends StatelessWidget {
+class TradingProductCard extends StatefulWidget {
   TradingProductCard({
     Key? key,
     required this.id,
@@ -31,7 +37,13 @@ class TradingProductCard extends StatelessWidget {
   final DateTime dateTime;
   final bool isHiddenPost;
 
+  @override
+  _TradingProductCardState createState() => _TradingProductCardState();
+}
+
+class _TradingProductCardState extends State<TradingProductCard> {
   final referenceDatabase = FirebaseFirestore.instance;
+
   final userID = FirebaseAuth.instance.currentUser!.uid;
 
   Future<void> _removePost(String postID) async {
@@ -90,6 +102,47 @@ class TradingProductCard extends StatelessWidget {
     }
   }
 
+  Future<void> navigateToDetailScreen() async {
+    final _loadingOverlayProvider = context.read<LoadingOverlayProvider>();
+
+    _loadingOverlayProvider.updateLoading(isLoading: true);
+
+    final _firestoreDatabase = context.read<FirestoreDatabase>();
+
+    final _isPostExists = await _firestoreDatabase.checkIfPostExists(
+      postId: widget.id,
+    );
+
+    if (!_isPostExists) {
+      _loadingOverlayProvider.updateLoading(isLoading: false);
+
+      return FlashHelper.showDialogFlash(
+        context,
+        title: const Text('Bài đăng không còn tồn tại'),
+        content: const Text('Có vẻ có lỗi hoặc bài đăng của bạn đã bị xóa'),
+        showBothAction: false,
+      );
+    }
+
+    final _postDetailsArguments = PostDetailsArguments(
+      postId: widget.id,
+      ownerId: userID,
+    );
+
+    _loadingOverlayProvider.updateLoading(isLoading: false);
+
+    return pushNewScreenWithRouteSettings<void>(
+      context,
+      screen: const PostDetailsScreen(),
+      settings: RouteSettings(
+        name: Routes.postDetailScreenRouteName,
+        arguments: _postDetailsArguments,
+      ),
+      withNavBar: false,
+      pageTransitionAnimation: PageTransitionAnimation.cupertino,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final deletePostOverlayItem = OverlayItem(
@@ -101,7 +154,7 @@ class TradingProductCard extends StatelessWidget {
             title: 'Thông báo',
             content: 'Bạn có chắc muốn xóa bài đăng này không?',
             onConfirmFunction: () {
-              _removePost(id);
+              _removePost(widget.id);
               Navigator.of(context).pop();
             },
             onCancelFunction: () {
@@ -121,7 +174,7 @@ class TradingProductCard extends StatelessWidget {
             context,
             settings:
                 RouteSettings(name: Routes.hidePostScreenRouteName, arguments: {
-              'id': id,
+              'id': widget.id,
             }),
             screen: const HidePostScreen(),
             pageTransitionAnimation: PageTransitionAnimation.cupertino,
@@ -136,7 +189,7 @@ class TradingProductCard extends StatelessWidget {
             context,
             settings: const RouteSettings(
                 name: Routes.updateItemStepOneScreenRouteName),
-            screen: UpdatePostOne(postId: id),
+            screen: UpdatePostOne(postId: widget.id),
             // withNavBar: true,
             pageTransitionAnimation: PageTransitionAnimation.cupertino,
           );
@@ -155,7 +208,7 @@ class TradingProductCard extends StatelessWidget {
               content:
                   'Bạn có chắc muốn hiển thị bài đăng này không? Người dùng khác có thể xem bài đăng này của bạn.',
               onConfirmFunction: () {
-                _reShowPost(id);
+                _reShowPost(widget.id);
                 Navigator.of(context).pop();
               },
               onCancelFunction: () {
@@ -167,9 +220,7 @@ class TradingProductCard extends StatelessWidget {
     ];
 
     return GestureDetector(
-      onTap: () {
-        // print('product tapped');
-      },
+      onTap: navigateToDetailScreen,
       child: Container(
         margin: const EdgeInsets.fromLTRB(15, 3, 8, 3),
         padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 10),
@@ -193,7 +244,7 @@ class TradingProductCard extends StatelessWidget {
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(10),
                     child: Image.network(
-                      imageUrl,
+                      widget.imageUrl,
                       fit: BoxFit.cover,
                     ),
                   ),
@@ -205,7 +256,7 @@ class TradingProductCard extends StatelessWidget {
                     Container(
                       width: width * 0.45,
                       child: Text(
-                        name,
+                        widget.name,
                         overflow: TextOverflow.ellipsis,
                         maxLines: 2,
                         style: const TextStyle(
@@ -216,7 +267,7 @@ class TradingProductCard extends StatelessWidget {
                     ),
                     const SizedBox(height: 10),
                     Text(
-                      '\$ $price',
+                      '\$ ${widget.price}',
                       style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.w400,
@@ -230,7 +281,7 @@ class TradingProductCard extends StatelessWidget {
                     alignment: Alignment.topRight,
                     child: CustomOverlayIconButton(
                       iconData: Icons.more_vert,
-                      overlayItems: isHiddenPost
+                      overlayItems: widget.isHiddenPost
                           ? overlayItemsOfHiddenPosts
                           : overlayItemsOfVisiblePosts,
                     ),
@@ -245,7 +296,7 @@ class TradingProductCard extends StatelessWidget {
                 child: Text(
                   DateFormat.yMMMMd('en_US')
                       .add_jm()
-                      .format(dateTime)
+                      .format(widget.dateTime)
                       .toString(),
                   style: const TextStyle(
                     fontSize: 11,
@@ -258,19 +309,5 @@ class TradingProductCard extends StatelessWidget {
         ),
       ),
     );
-  }
-
-  @override
-  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
-    super.debugFillProperties(properties);
-    properties.add(DiagnosticsProperty<bool>('isHiddenPost', isHiddenPost));
-    properties.add(StringProperty('name', name));
-    properties.add(StringProperty('price', price));
-    properties.add(DiagnosticsProperty<DateTime>('dateTime', dateTime));
-    properties.add(StringProperty('userID', userID));
-    properties.add(StringProperty('postID', id));
-    properties.add(StringProperty('imageUrl', imageUrl));
-    properties.add(DiagnosticsProperty<FirebaseFirestore>(
-        'referenceDatabase', referenceDatabase));
   }
 }

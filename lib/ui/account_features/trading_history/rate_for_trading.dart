@@ -100,8 +100,8 @@ class _RateForTradingState extends State<RateForTrading> {
           title: 'Lỗi',
           content: 'Thao tác không thành công! Vui lòng thử lại sau.',
           handleFunction: () {
-            Navigator.of(context).pop();
-            Navigator.of(context).pop();
+            Navigator.of(context).pop(false);
+            Navigator.of(context).pop(false);
           });
     }
   }
@@ -123,8 +123,8 @@ class _RateForTradingState extends State<RateForTrading> {
               title: 'Lỗi',
               content: 'Không có dữ liệu! Vui lòng thử lại.',
               handleFunction: () {
-                Navigator.of(context).pop();
-                Navigator.of(context).pop();
+                Navigator.of(context).pop(false);
+                Navigator.of(context).pop(false);
               });
         } else {
           final amIOwner = trading['owner'] == userID;
@@ -191,8 +191,8 @@ class _RateForTradingState extends State<RateForTrading> {
           title: 'Lỗi',
           content: 'Tải dữ liệu không thành công. Vui lòng thử lại!',
           handleFunction: () {
-            Navigator.of(context).pop();
-            Navigator.of(context).pop();
+            Navigator.of(context).pop(false);
+            Navigator.of(context).pop(false);
           });
     }
 
@@ -223,10 +223,11 @@ class _RateForTradingState extends State<RateForTrading> {
       showMyNotificationDialog(
           context: context,
           title: 'Thông báo',
-          content: 'Đánh giá giao dịch thành công!',
+          content:
+              'Đánh giá giao dịch thành công! Các bài đăng của bạn đã được cộng điểm ưu tiên.',
           handleFunction: () {
-            Navigator.of(context).pop();
-            Navigator.of(context).pop();
+            Navigator.of(context).pop(true);
+            Navigator.of(context).pop(true);
           });
     });
   }
@@ -496,10 +497,10 @@ class _RateForTradingState extends State<RateForTrading> {
                                 comment: _commentController.text.trim(),
                                 post: post,
                               );
-                              Navigator.of(context).pop();
+                              Navigator.of(context).pop(true);
                             },
                             onCancelFunction: () {
-                              Navigator.of(context).pop();
+                              Navigator.of(context).pop(false);
                             });
                       },
                 style: ElevatedButton.styleFrom(

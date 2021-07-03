@@ -353,6 +353,10 @@ class _SearchScreenState extends State<SearchScreen> {
                   .firstWhere((element) => element.id == widget.cateId);
             });
             initiateSearch();
+          } else {
+            setState(() {
+              isLoading = false;
+            });
           }
         });
       });
@@ -401,7 +405,7 @@ class _SearchScreenState extends State<SearchScreen> {
               ],
             ),
           ),
-          body: isGetInitData
+          body: isGetInitData || isLoading
               ? Center(
                   child: Column(
                     children: [
@@ -429,33 +433,18 @@ class _SearchScreenState extends State<SearchScreen> {
                             ),
                             Center(
                               child: posts.isNotEmpty
-                                  ? !isLoading
-                                      ? Wrap(
-                                          spacing: 20,
-                                          runSpacing: 15,
-                                          children: posts
-                                              .map(
-                                                (post) => ItemPostCard(
-                                                    postCard: post),
-                                              )
-                                              .toList(),
-                                        )
-                                      : Center(
-                                          child: Column(
-                                            children: [
-                                              Lottie.network(
-                                                messageLoadingStr2,
-                                                width: 100,
-                                                height: 100,
-                                                fit: BoxFit.fill,
-                                              ),
-                                              const SizedBox(height: 20),
-                                              const Text(loadingDataStr),
-                                            ],
-                                          ),
-                                        )
+                                  ? Wrap(
+                                      spacing: 20,
+                                      runSpacing: 15,
+                                      children: posts
+                                          .map(
+                                            (post) =>
+                                                ItemPostCard(postCard: post),
+                                          )
+                                          .toList(),
+                                    )
                                   : const Center(
-                                      child: Text('no data'),
+                                      child: Text('no result found'),
                                     ),
                             )
                           ],

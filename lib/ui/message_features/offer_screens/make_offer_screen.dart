@@ -158,7 +158,7 @@ class _MakeOfferScreenState extends State<MakeOfferScreen> {
                     children: const [
                       SizedBox(width: 20),
                       Text(
-                        'no data',
+                        'Bạn chưa có bài đăng',
                         style: TextStyle(color: AppColors.kReviewTextLabel),
                       ),
                     ],

@@ -49,7 +49,9 @@ class _HistoryProductCardState extends State<HistoryProductCard> {
   late int status;
   late String statusText;
   late Color statusTextColor;
+  late DateTime d;
   late String dateTime;
+  bool _isRating = false;
   bool _isLoaded = false;
   Map<String, dynamic>? _user;
   Map<String, dynamic>? _trading;
@@ -80,6 +82,71 @@ class _HistoryProductCardState extends State<HistoryProductCard> {
     }
   }
 
+  Widget buildNotifyRatingTime() {
+    final today = DateTime.now();
+    final lastRatingDate = d.add(const Duration(days: 10));
+    if (lastRatingDate.compareTo(today) > 0 && status == 1 && !_isRating) {
+      final dateStr =
+          DateFormat.yMMMMd('en_US').add_jm().format(lastRatingDate);
+      return Container(
+        padding: const EdgeInsets.only(top: 3, left: 10, right: 15),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.end,
+          children: [
+            Text(
+              'Bạn hãy đánh giá trước $dateStr nhé',
+              style: const TextStyle(
+                fontSize: 10,
+                fontWeight: FontWeight.w300,
+              ),
+            ),
+            const SizedBox(height: 8),
+            const Text(
+              'Đánh giá và nhận ngay điểm ưu tiên',
+              style: TextStyle(
+                color: Colors.red,
+                fontSize: 10,
+              ),
+            ),
+          ],
+        ),
+      );
+    }
+    if (_isRating) {
+      return Container(
+        padding: const EdgeInsets.only(top: 3, left: 10, right: 15),
+        child: const Text(
+          'Đã đánh giá',
+          style: TextStyle(
+            fontSize: 10,
+            fontWeight: FontWeight.w300,
+          ),
+        ),
+      );
+    }
+    return Container();
+  }
+
+  void getIsRating() {
+    referenceDatabase
+        .collection('ratings')
+        .where('trading', isEqualTo: widget.tradingID)
+        .where('userMakeRating', isEqualTo: userID)
+        .get()
+        .then((value) {
+      if (value.docs.isNotEmpty) {
+        setState(() {
+          _isRating = true;
+          _isLoaded = true;
+        });
+      } else {
+        setState(() {
+          _isLoaded = true;
+        });
+      }
+    });
+  }
+
   @override
   void initState() {
     super.initState();
@@ -99,16 +166,16 @@ class _HistoryProductCardState extends State<HistoryProductCard> {
                 : _trading!['owner'].toString();
             ownerPostID = _trading!['ownerPosts'][0].toString();
             final temp = _trading!['createAt'] as Timestamp;
-            final d = temp.toDate();
+            d = temp.toDate();
             dateTime = DateFormat.yMMMMd('en_US').add_jm().format(d);
             status = _trading!['status'] as int;
             switch (status) {
               case 1:
-                statusText = 'Thành công';
+                statusText = 'Chấp nhận giao dịch';
                 statusTextColor = Colors.green;
                 break;
               case 2:
-                statusText = 'Đang giao dịch';
+                statusText = 'Đang chờ xác nhận';
                 statusTextColor = Colors.yellow[700]!;
                 break;
               case 3:
@@ -121,7 +188,7 @@ class _HistoryProductCardState extends State<HistoryProductCard> {
                 break;
             }
 
-            _isLoaded = true;
+            getIsRating();
           });
         }
       }).timeout(Duration(seconds: timeOut));
@@ -135,7 +202,7 @@ class _HistoryProductCardState extends State<HistoryProductCard> {
     final width = MediaQuery.of(context).size.width;
 
     final rateOverlayItem = OverlayItem(
-      text: 'Đánh giá',
+      text: _isRating ? 'Xem lại đánh giá' : 'Đánh giá',
       iconData: Icons.star,
       handleFunction: () {
         pushNewScreenWithRouteSettings<void>(
@@ -145,9 +212,16 @@ class _HistoryProductCardState extends State<HistoryProductCard> {
           screen: RateForTrading(
               tradingID: widget.tradingID, otherSideUserID: otherSideUserID),
           pageTransitionAnimation: PageTransitionAnimation.cupertino,
-        );
+        ).then((value) {
+          if (value as bool && !_isRating) {
+            setState(() {
+              _isRating = true;
+            });
+          }
+        });
       },
     );
+
     final removeOverlayItem = OverlayItem(
       text: 'Xóa',
       iconData: Icons.delete,
@@ -181,6 +255,7 @@ class _HistoryProductCardState extends State<HistoryProductCard> {
               );
             },
             child: Container(
+              width: width,
               margin: const EdgeInsets.fromLTRB(0, 5, 0, 5),
               padding: const EdgeInsets.symmetric(vertical: 10),
               decoration: BoxDecoration(
@@ -193,6 +268,7 @@ class _HistoryProductCardState extends State<HistoryProductCard> {
                 ),
               ),
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -277,16 +353,13 @@ class _HistoryProductCardState extends State<HistoryProductCard> {
                             ],
                           ),
                           const SizedBox(height: 7),
-                          Container(
-                            width: width * 0.30,
-                            child: Text(
-                              dateTime.toString(),
-                              overflow: TextOverflow.ellipsis,
-                              maxLines: 2,
-                              style: const TextStyle(
-                                fontSize: 12,
-                                fontWeight: FontWeight.w400,
-                              ),
+                          Text(
+                            dateTime.toString(),
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 1,
+                            style: const TextStyle(
+                              fontSize: 12,
+                              fontWeight: FontWeight.w400,
                             ),
                           ),
                         ],
@@ -299,6 +372,7 @@ class _HistoryProductCardState extends State<HistoryProductCard> {
                       ),
                     ],
                   ),
+                  buildNotifyRatingTime(),
                 ],
               ),
             ),
@@ -320,5 +394,6 @@ class _HistoryProductCardState extends State<HistoryProductCard> {
     properties.add(StringProperty('status', statusText));
     properties.add(IntProperty('status', status));
     properties.add(StringProperty('ownerPostID', ownerPostID));
+    properties.add(DiagnosticsProperty<DateTime>('d', d));
   }
 }
