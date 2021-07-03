@@ -66,7 +66,7 @@ class PostServiceFireStore {
   Future<QuerySnapshot<Map<String, dynamic>>> getKeyword() {
     try {
       return FirebaseFirestore.instance
-          .collection('keywords')
+          .collection('noShowKeyWord')
           .orderBy('keyword')
           .get();
     } catch (e) {
@@ -92,7 +92,7 @@ class PostServiceFireStore {
       final doc = await keywordDB.add({'keyword': keyword});
       return doc.id;
     } catch (e) {
-      return 'Error: $e';
+      rethrow;
     }
   }
 
