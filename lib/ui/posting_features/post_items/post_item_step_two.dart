@@ -195,7 +195,6 @@ class _PostItemTwoState extends State<PostItemTwo> {
                         final keyword =
                             KeyWord(id: newkeywordId, value: inputString);
                         listKeyWord.add(keyword);
-                        print(keyword.value);
                       });
                       Navigator.pop(alertContext, inputString);
                     }
