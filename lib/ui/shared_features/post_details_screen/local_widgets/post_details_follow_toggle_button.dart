@@ -104,12 +104,12 @@ class _PostDetailsFollowToggleButtonState
 
     if (_isCurrentUserAFollowerOfPostOwner) {
       return _firestoreDatabase.deleteJunctionUserFollower(
-        postOwnerId: _ownerId,
+        userId: _ownerId,
       );
     }
 
     return _firestoreDatabase.setJunctionUserFollower(
-      postOwnerId: _ownerId,
+      userId: _ownerId,
     );
   }
 }

@@ -1,12 +1,10 @@
 import 'package:back_button_interceptor/back_button_interceptor.dart';
 import 'package:flutter/material.dart';
-import 'package:loading_overlay/loading_overlay.dart';
 import 'package:provider/provider.dart';
 
 import '../../../app_localizations.dart';
 import '../../../providers/auth_provider.dart';
 import '../../../utils/helper/flash/flash_helper.dart';
-import '../../../widgets/shared_circular_progress_indicator.dart';
 
 class AccountSettingsScreen extends StatefulWidget {
   const AccountSettingsScreen({
@@ -23,17 +21,14 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
   @override
   void initState() {
     super.initState();
-    BackButtonInterceptor.add((_,__) => false);
+    BackButtonInterceptor.add((_, __) => false);
   }
 
   @override
   void dispose() {
-    BackButtonInterceptor.remove((_,__) => false);
+    BackButtonInterceptor.remove((_, __) => false);
     super.dispose();
   }
-  
-  // manage state of modal progress HUD widget
-  bool _isLoading = false;
 
   @override
   Widget build(BuildContext context) {
@@ -43,38 +38,23 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
 
     return Scaffold(
       key: _key,
-      body: LoadingOverlay(
-        isLoading: _isLoading,
-        color: Colors.white,
-        opacity: 1,
-        progressIndicator: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+      body: SafeArea(
+        child: Stack(
           children: [
-            const SharedCircularProgressIndicator(),
-            const SizedBox(height: 20),
-            Text(
-              _appLocalizations.translate('logoutFlashTxtLoggingOut'),
-            ),
-          ],
-        ),
-        child: SafeArea(
-          child: Stack(
-            children: [
-              Positioned(
-                bottom: 0,
-                child: SizedBox(
-                  height: 50,
-                  width: _size.width,
-                  child: ElevatedButton(
-                    onPressed: onSignOutPressed,
-                    child: Text(
-                      _appLocalizations.translate('logoutTxtSignOut'),
-                    ),
+            Positioned(
+              bottom: 0,
+              child: SizedBox(
+                height: 50,
+                width: _size.width,
+                child: ElevatedButton(
+                  onPressed: onSignOutPressed,
+                  child: Text(
+                    _appLocalizations.translate('logoutTxtSignOut'),
                   ),
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
@@ -98,11 +78,6 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
 
     final _appLocalizations = AppLocalizations.of(context);
 
-    // start the modal progress HUD
-    setState(() {
-      _isLoading = true;
-    });
-
     const secondsDelay = 1;
 
     await Future.wait([
@@ -123,10 +98,5 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
     }
 
     await Navigator.of(context).pushNamedAndRemoveUntil('/', (_) => false);
-
-    // stop the modal progress HUD
-    setState(() {
-      _isLoading = false;
-    });
   }
 }

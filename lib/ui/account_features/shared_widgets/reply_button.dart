@@ -38,7 +38,7 @@ class _ReplyButtonState extends State<ReplyButton> {
 
   @override
   void dispose() {
-    // myFocusNode.dispose();
+    myFocusNode.dispose();
 
     super.dispose();
   }

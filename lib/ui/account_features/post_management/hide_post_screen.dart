@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import '../../../services/post_feature/post_service_algolia.dart';
 
 import '../utils.dart';
 
@@ -101,6 +102,10 @@ class _HidePostScreenState extends State<HidePostScreen> {
 
         if (res) {
           hiddenPosts.add(postID);
+          final algoliaService = PostServiceAlgolia();
+          // ignore: unawaited_futures
+          algoliaService.updateIsHiddentPost(postId: postID, isHidden: true);
+
           await referenceDatabase
               .collection('posts')
               .doc(postID)

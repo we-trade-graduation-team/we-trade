@@ -7,9 +7,11 @@ import 'package:provider/provider.dart';
 import '../app_localizations.dart';
 import '../models/arguments/shared/post_details_arguments.dart';
 import '../models/cloud_firestore/post_card_model/post_card/post_card.dart';
+import '../models/cloud_firestore/user_model/user/user.dart';
 import '../providers/loading_overlay_provider.dart';
 import '../services/firestore/firestore_database.dart';
 import '../ui/shared_features/post_details_screen/post_details_screen.dart';
+import '../utils/helper/flash/flash_helper.dart';
 import '../utils/routes/routes.dart';
 import 'shared_circular_progress_indicator.dart';
 
@@ -175,13 +177,30 @@ class _ItemPostCardState extends State<ItemPostCard> {
   Future<void> _onTap() async {
     final _loadingOverlayProvider = context.read<LoadingOverlayProvider>();
 
-    _loadingOverlayProvider.updateLoading(
-      isLoading: true,
-    );
+    _loadingOverlayProvider.updateLoading(isLoading: true);
 
     final _firestoreDatabase = context.read<FirestoreDatabase>();
 
     final _postId = widget.postCard.postId!;
+
+    final _isPostExists = await _firestoreDatabase.checkIfPostExists(
+      postId: _postId,
+    );
+
+    if (!_isPostExists) {
+      _loadingOverlayProvider.updateLoading(isLoading: false);
+
+      return FlashHelper.showDialogFlash(
+        context,
+        title: const Text('Bài đăng không còn tồn tại'),
+        content: const Text('Bạn hãy chọn bài đăng khác nhé'),
+        showBothAction: false,
+      );
+    }
+
+    final _currentUser = context.read<User>();
+
+    final _currentUserId = _currentUser.uid!;
 
     final _post = await _firestoreDatabase.getPost(
       postId: _postId,
@@ -189,21 +208,37 @@ class _ItemPostCardState extends State<ItemPostCard> {
 
     final _ownerId = _post.owner;
 
+    final _isNotSameUser = _currentUserId != _ownerId;
+
+    if (_post.isHidden && _isNotSameUser) {
+      _loadingOverlayProvider.updateLoading(isLoading: false);
+
+      return FlashHelper.showDialogFlash(
+        context,
+        title: const Text('Bài đăng hiện không khả dụng'),
+        content: const Text('Bạn hãy chọn bài đăng khác nhé'),
+        showBothAction: false,
+      );
+    }
+
+    final _categoryId = _post.categoryInfo.mainCategoryId;
+
     // Create postDetailsArguments param
     final _postDetailsArguments = PostDetailsArguments(
       postId: _postId,
       ownerId: _ownerId,
     );
 
-    _loadingOverlayProvider.updateLoading(
-      isLoading: false,
-    );
+    _loadingOverlayProvider.updateLoading(isLoading: false);
 
     await Future.wait([
       // Increase view by 1
       _firestoreDatabase.increasePostCardView(postId: _postId),
       // Update current user's keyword history
       _firestoreDatabase.updateCurrentUserKeywordHistory(postId: _postId),
+      // Update current user's category history
+      _firestoreDatabase.updateCurrentUserCategoryHistory(
+          categoryId: _categoryId),
       // Navigate to post details screen
       _navigateToPostDetailsScreen(arguments: _postDetailsArguments)
     ]);

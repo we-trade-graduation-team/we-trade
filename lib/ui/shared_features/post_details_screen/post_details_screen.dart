@@ -44,6 +44,8 @@ class _PostDetailsScreenState extends State<PostDetailsScreen> {
 
     final _appLocalization = AppLocalizations.of(context);
 
+    final _size = MediaQuery.of(context).size;
+
     return Scaffold(
       extendBodyBehindAppBar: true,
       backgroundColor: AppColors.kScreenBackgroundColor,
@@ -114,9 +116,13 @@ class _PostDetailsScreenState extends State<PostDetailsScreen> {
             )
           : Container(
               color: Theme.of(context).primaryColor,
+              padding: EdgeInsets.symmetric(vertical: _size.height * 0.02),
               child: Text(
                 _appLocalization.translate('postDetailsTxtViewerIsOwner'),
                 textAlign: TextAlign.center,
+                style: const TextStyle(
+                  color: Colors.white,
+                ),
               ),
             ),
     );
