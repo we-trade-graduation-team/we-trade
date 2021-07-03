@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../models/ui/chat/chat.dart';
+import '../../ui/account_features/desired_post_screen/desired_post_screen.dart';
 import '../../ui/account_features/follow_screen/follow_screen.dart';
 import '../../ui/account_features/my_rate_screen/my_rate_screen.dart';
 import '../../ui/account_features/post_management/hide_post_screen.dart';
@@ -37,6 +38,7 @@ class Routes {
   static const userInfoScreenRouteName = '/user-info';
   static const wishListScreenRouteName = '/wish-list';
   static const authenticationRouteName = '/authentication';
+  static const desiredPostScreenRouteName = '/desired-post';
 
   // Authentication features
   static const completeProfileScreenRouteName = '/complete-profile';
@@ -85,6 +87,7 @@ class Routes {
     userInfoScreenRouteName: (_) => const UserInfoScreen(),
     wishListScreenRouteName: (_) => const WishListScreen(),
     authenticationRouteName: (_) => const Authentication(),
+    desiredPostScreenRouteName: (_) => const DesiredPostScreen(posts: []),
   };
 
   static final Map<String, WidgetBuilder> authenticationFeaturesRoutes = {
@@ -106,7 +109,9 @@ class Routes {
     otherProfileScreenRouteName: (_) => const OtherUserProfileScreen(
           userId: '',
         ),
-    reportScreenRouteName: (_) => const ReportScreen(objectId: '',),
+    reportScreenRouteName: (_) => const ReportScreen(
+          objectId: '',
+        ),
     makeOfferScreenRouteName: (_) => const MakeOfferScreen(
           otherUserPostId: '',
         ),

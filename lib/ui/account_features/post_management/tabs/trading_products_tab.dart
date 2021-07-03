@@ -87,6 +87,7 @@ class _TradingProductsTabState extends State<TradingProductsTab> {
                             imageUrl: post['imagesUrl'][0].toString(),
                             dateTime: dateTime,
                             isHiddenPost: widget.isHiddenPosts,
+                            tradeForList: post['tradeForList'] as List,
                           );
                         }
                         return const Center(

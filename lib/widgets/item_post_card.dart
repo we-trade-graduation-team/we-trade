@@ -175,7 +175,6 @@ class _ItemPostCardState extends State<ItemPostCard> {
   }
 
   Future<void> _onTap() async {
-    // TODO
     final _loadingOverlayProvider = context.read<LoadingOverlayProvider>();
 
     _loadingOverlayProvider.updateLoading(isLoading: true);
