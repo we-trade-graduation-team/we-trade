@@ -130,12 +130,13 @@ class _MakeOfferScreenState extends State<MakeOfferScreen> {
                                           margin: const EdgeInsets.only(
                                               left: 3, top: 3),
                                           child: CircleAvatar(
-                                            radius: 15,
+                                            radius: 10,
                                             backgroundColor: Colors.purple,
                                             child: IconButton(
                                               padding: const EdgeInsets.all(0),
                                               icon: const Icon(
                                                 Icons.check,
+                                                size: 10,
                                                 color: Colors.white,
                                               ),
                                               onPressed: () {},
