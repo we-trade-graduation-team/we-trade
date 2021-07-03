@@ -27,6 +27,7 @@ class PostServiceAlgolia {
       'price': price,
       'district': district,
       'city': city,
+      'isHiddent': true
     };
     await algolia.instance.index(postsAlgoliaIndex).addObject(mapData);
   }
@@ -63,6 +64,8 @@ class PostServiceAlgolia {
   Future<List<AlgoliaObjectSnapshot>> searchPostByAlgolia(
       String str, String cateId, String city, String condition) async {
     var query = algolia.instance.index(postsAlgoliaIndex).query(str);
+    query = query.facetFilter('isHiddent:${false}');
+
     if (cateId.isNotEmpty) {
       query = query.facetFilter('mainCategoyId:$cateId');
     }
@@ -85,5 +88,17 @@ class PostServiceAlgolia {
       postsIds.add(hit.data['objectID'].toString());
     }
     return postsIds;
+  }
+
+  Future<void> updateIsHiddentPost(
+      {required String postId, required bool isHidden}) async {
+    final object =
+        await Future.delayed(const Duration(milliseconds: 1500), () async {
+      return algolia.instance.index('posts').object(postId).getObject();
+    });
+
+    final updateData = Map<String, dynamic>.from(object.data);
+    updateData['isHiddent'] = isHidden;
+    await algolia.instance.index('posts').object(postId).updateData(updateData);
   }
 }
