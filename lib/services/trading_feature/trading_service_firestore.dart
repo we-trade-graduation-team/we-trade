@@ -1,7 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+
 import '../../models/ui/chat/chat.dart';
 import '../../ui/message_features/const_string/const_str.dart';
 import '../../ui/message_features/helper/helper_navigate_chat_room.dart';
+import '../post_feature/post_service_algolia.dart';
 
 class TradingServiceFireStore {
   Future<String> getOwnerIdOfPost(String postId) {
@@ -184,12 +186,16 @@ class TradingServiceFireStore {
         'posts': posts,
       });
 
+      final algoliaService = PostServiceAlgolia();
       for (final postId in postsId) {
         // ignore: unawaited_futures
         FirebaseFirestore.instance
             .collection('posts')
             .doc(postId)
             .update({'isHidden': true});
+
+        // ignore: unawaited_futures
+        algoliaService.updateIsHiddentPost(postId: postId, isHidden: true);
       }
     });
   }
