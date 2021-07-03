@@ -1,10 +1,10 @@
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
+import '../../../services/post_feature/post_service_algolia.dart';
 
 import '../../../utils/routes/routes.dart';
 import '../../posting_features/update_items/update_post_step_one.dart';
@@ -82,6 +82,9 @@ class TradingProductCard extends StatelessWidget {
           });
         }
       });
+
+      final algoliaService = PostServiceAlgolia();
+      await algoliaService.updateIsHiddentPost(postId: postID, isHidden: false);
     } catch (error) {
       rethrow;
     }

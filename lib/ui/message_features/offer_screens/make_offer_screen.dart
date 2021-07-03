@@ -126,11 +126,22 @@ class _MakeOfferScreenState extends State<MakeOfferScreen> {
                                         .contains(posts[index].postId))
                                       Align(
                                         alignment: Alignment.topRight,
-                                        child: IconButton(
-                                          icon: const Icon(
-                                              Icons.check_box_rounded),
-                                          color: Colors.white,
-                                          onPressed: () {},
+                                        child: Container(
+                                          margin: const EdgeInsets.only(
+                                              left: 3, top: 3),
+                                          child: CircleAvatar(
+                                            radius: 10,
+                                            backgroundColor: Colors.purple,
+                                            child: IconButton(
+                                              padding: const EdgeInsets.all(0),
+                                              icon: const Icon(
+                                                Icons.check,
+                                                size: 10,
+                                                color: Colors.white,
+                                              ),
+                                              onPressed: () {},
+                                            ),
+                                          ),
                                         ),
                                       ),
                                   ],

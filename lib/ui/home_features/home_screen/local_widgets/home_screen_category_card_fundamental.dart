@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 import 'package:provider/provider.dart';
 
+import '../../../../providers/loading_overlay_provider.dart';
 import '../../../../services/firestore/firestore_database.dart';
+import '../../../../utils/helper/flash/flash_helper.dart';
 import '../../../../utils/routes/routes.dart';
 import '../../searching_screen/search_screen.dart';
 
@@ -39,12 +41,31 @@ class _HomeScreenCategoryCardFundamentalState
   }
 
   Future<void> _onTap() async {
+    final _loadingOverlayProvider = context.read<LoadingOverlayProvider>();
+
+    _loadingOverlayProvider.updateLoading(isLoading: true);
+
     final _firestoreDatabase = context.read<FirestoreDatabase>();
 
     final _categoryId = widget.categoryId;
 
-    // // Navigate to category kind screen
-    // await _navigateToCategoryKindScreen();
+    final _postCardsFromCategoryId =
+        await _firestoreDatabase.getPostCardsByMainCategoryId(
+      mainCategoryId: _categoryId,
+    );
+
+    final _itemsCount = _postCardsFromCategoryId.length;
+
+    _loadingOverlayProvider.updateLoading(isLoading: false);
+
+    if (_itemsCount == 0) {
+      return FlashHelper.showDialogFlash(
+        context,
+        title: const Text('Danh mục này chưa có bài đăng nào'),
+        content: const Text('Bạn hãy chọn danh mục khác nhé'),
+        showBothAction: false,
+      );
+    }
 
     await Future.wait([
       // Increase view by 1

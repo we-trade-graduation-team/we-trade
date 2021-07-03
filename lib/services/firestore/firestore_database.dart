@@ -1167,6 +1167,18 @@ class FirestoreDatabase {
     return _result;
   }
 
+  Future<bool> checkIfPostExists({
+    required String postId,
+  }) async {
+    final _result = await _fireStoreService.checkIfDocExists(
+      path: FirestorePath.post(
+        postId: postId,
+      ),
+    );
+
+    return _result;
+  }
+
   // Method to retrieve uid of post Owner by postId
   Future<String> getPostOwnerId({
     required String postId,

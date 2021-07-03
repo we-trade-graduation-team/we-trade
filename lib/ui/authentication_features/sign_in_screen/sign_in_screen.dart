@@ -196,7 +196,7 @@ class _SignInScreenState extends State<SignInScreen> {
         ? myDialogContent.content
         : _appLocalizations.translate('authenticationAlertTxtErrorContent');
 
-    await FlashHelper.showDialogFlash(
+    return FlashHelper.showDialogFlash(
       context,
       title: Text(dialogTitleText),
       content: Text(dialogContentText),
