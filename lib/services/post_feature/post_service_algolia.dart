@@ -11,6 +11,7 @@ class PostServiceAlgolia {
     required String mainCategoyId,
     required String subCategoryId,
     required List<String> tradeForList,
+    required List<String> keywords,
     required String condition,
     required int price,
     required String
@@ -23,6 +24,7 @@ class PostServiceAlgolia {
       'mainCategoyId': mainCategoyId,
       'subCategoryId': subCategoryId,
       'tradeForList': tradeForList,
+      'keywords': keywords,
       'condition': condition,
       'price': price,
       'district': district,
@@ -38,6 +40,7 @@ class PostServiceAlgolia {
     required String mainCategoyId,
     required String subCategoryId,
     required List<String> tradeForList,
+    required List<String> keywords,
     required String condition,
     required int price,
     required String
@@ -50,6 +53,7 @@ class PostServiceAlgolia {
       'mainCategoyId': mainCategoyId,
       'subCategoryId': subCategoryId,
       'tradeForList': tradeForList,
+      'keywords': keywords,
       'condition': condition,
       'price': price,
       'district': district,
