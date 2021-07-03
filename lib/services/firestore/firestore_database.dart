@@ -568,10 +568,10 @@ class FirestoreDatabase {
     _mostViewSpecialCategoryCards.sort((a, b) => b.view.compareTo(a.view));
 
     // Concatenate two list
-    final _fullList = [
+    final _fullList = <SpecialCategoryCard>{
       ..._specialCategoryCards,
       ..._mostViewSpecialCategoryCards
-    ];
+    }.toList();
 
     return _fullList;
   }
@@ -612,6 +612,30 @@ class FirestoreDatabase {
 
     _postCardsToReturn
         .removeWhere((postCard) => _isHiddenPostIds.contains(postCard.postId!));
+
+    return _postCardsToReturn;
+  }
+
+  Future<List<PostCard>> _getIsNotHiddenPostCardsByPostIdList({
+    required List<String> postIdList,
+  }) async {
+    if (postIdList.isEmpty) {
+      return [];
+    }
+
+    final _postsCorresponding = await _getPostsByPostIdList(
+      postIdList: postIdList,
+    );
+
+    final _isNotHiddenPostIds = _postsCorresponding
+        .where((post) => post.isHidden == false)
+        .map((post) => post.postId!)
+        .toList();
+
+    final _postCardsToReturn = getPostCardsByPostIdList(
+      postIdList: _isNotHiddenPostIds,
+      shouldSortViewDescending: true,
+    );
 
     return _postCardsToReturn;
   }
@@ -704,22 +728,13 @@ class FirestoreDatabase {
       final _postCardIdListFromJunction =
           _junctions.map((junction) => junction.postId).toList();
 
-      // Get post from post id list
-      final _postListFromJunction = await _getPostsByPostIdList(
+      final _postCardsFromJunction = await _getIsNotHiddenPostCardsByPostIdList(
         postIdList: _postCardIdListFromJunction,
       );
 
-      // Get post that is not hidden
-      final _isNotHiddenPostIdList = _postListFromJunction
-          .where((post) => post.isHidden == false)
-          .map((post) => post.postId!)
-          .toList();
-
-      // Fetch for each retrieved junction, fetch the associated postCard
-      final _postCardsFromJunction = await getPostCardsByPostIdList(
-        postIdList: _isNotHiddenPostIdList,
-        shouldSortViewDescending: true,
-      );
+      if (_postCardsFromJunction.isEmpty) {
+        return _postCardsFromJunction;
+      }
 
       // Get most view post card
       final _postCardToTake = _postCardsFromJunction
@@ -751,33 +766,12 @@ class FirestoreDatabase {
     final _missingAmount =
         _numberOfPostCardToTake - _flattenPostCardList.length;
 
-    // Get postId from existing postCardList
-    final _excludedPostIdList =
+    final _flattenPostIdList =
         _flattenPostCardList.map((postCard) => postCard.postId!).toList();
 
-    const _maxWhereNotInAmount = AppFirestoreConstant.whereNotInAmountMaximum;
-
-    if (_excludedPostIdList.length <= _maxWhereNotInAmount) {
-      // Get more to have enough post card
-      final _mostViewPostCards = await _getPostCardsWithLimit(
-        limit: _missingAmount,
-        excludedPostIdList: _excludedPostIdList,
-      );
-
-      final _isNotHiddenPostCards = await _getIsNotHiddenPostCards(
-        postCards: _mostViewPostCards,
-      );
-
-      // Locally sorting descending by view - because =>
-      // If you include a filter with a range comparison (<, <=, >, >=),
-      // your first ordering must be on the same field:
-      _isNotHiddenPostCards.sort((a, b) => b.view.compareTo(a.view));
-
-      // Concatenate two list
-      final _fullList = [..._flattenPostCardList, ..._isNotHiddenPostCards];
-
-      return _fullList;
-    }
+    // Get postId from existing postCardList
+    final _excludedPostIdList =
+        <String>{..._flattenPostIdList, ..._currentUserPostIdList}.toList();
 
     final _mostViewPostCardsExcluded = await _getPostCardsWithLimit(
       limit: _missingAmount + _excludedPostIdList.length,
@@ -797,10 +791,10 @@ class FirestoreDatabase {
     // If have take enough missing amount
     if (_isNotHiddenPostCards.length == _missingAmount) {
       // Concatenate two list
-      final _fullList = [
+      final _fullList = <PostCard>{
         ..._flattenPostCardList,
         ..._isNotHiddenPostCards
-      ];
+      }.toList();
 
       return _fullList;
     }
@@ -810,10 +804,10 @@ class FirestoreDatabase {
         _isNotHiddenPostCards.take(_missingAmount).toList();
 
     // Concatenate two list
-    final _fullList = [
+    final _fullList = <PostCard>{
       ..._flattenPostCardList,
       ..._exactlyAmountMissingPostCardList
-    ];
+    }.toList();
 
     return _fullList;
   }
@@ -933,10 +927,10 @@ class FirestoreDatabase {
 
     if (_postCardsFromMainCategoryIdLength == _missingAmount) {
       // Concatenate two list
-      final _fullList = [
+      final _fullList = <PostCard>{
         ..._flattenPostCardList,
         ..._postCardsFromMainCategoryId
-      ];
+      }.toList();
 
       return _fullList;
     }
@@ -946,10 +940,10 @@ class FirestoreDatabase {
         _postCardsFromMainCategoryId.take(_missingAmount).toList();
 
     // Concatenate two list
-    final _fullList = [
+    final _fullList = <PostCard>{
       ..._flattenPostCardList,
       ..._postCardsFromMainCategoryIdExactlyAmount
-    ];
+    }.toList();
 
     return _fullList;
   }
