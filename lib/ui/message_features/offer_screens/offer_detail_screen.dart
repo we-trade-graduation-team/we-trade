@@ -129,8 +129,9 @@ class _OfferDetailScreenState extends State<OfferDetailScreen> {
                           return Row(
                             children: [
                               ItemPostCard(
-                                  isNavigateToDetailScreen: false,
-                                  postCard: posts[index]),
+                                isNavigateToDetailScreen: false,
+                                postCard: posts[index],
+                              ),
                               const SizedBox(width: 20),
                             ],
                           );
@@ -336,7 +337,10 @@ class _OfferDetailScreenState extends State<OfferDetailScreen> {
         .then((resultOwnerPost) {
       if (widget.trading.offerPosts.isNotEmpty) {
         _firestoreDatabase
-            .getPostCardsByPostIdList(postIdList: widget.trading.offerPosts)
+            .getPostCardsByPostIdList(
+          postIdList: widget.trading.offerPosts,
+          shouldSortViewDescending: true,
+        )
             .then((resultOfferPosts) {
           setState(() {
             ownerPost = resultOwnerPost;

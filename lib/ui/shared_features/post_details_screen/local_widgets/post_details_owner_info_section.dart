@@ -65,37 +65,41 @@ class _PostDetailsOwnerInfoSectionState
                 PostDetailsSectionContainer(
                   child: IntrinsicHeight(
                     child: Row(
-                      // mainAxisAlignment: MainAxisAlignment.start,
                       children: [
                         Flexible(
-                          child: SizedBox(
-                            height: _size.height * 0.068,
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(5),
-                              child: AspectRatio(
-                                aspectRatio: 1,
-                                child: CachedNetworkImage(
-                                  imageUrl:
-                                      user.avatarUrl ?? AppAssets.userImageStr,
-                                  imageBuilder: (_, imageProvider) => Container(
-                                    decoration: BoxDecoration(
-                                      image: DecorationImage(
-                                        image: imageProvider,
-                                        fit: BoxFit.cover,
+                          child: GestureDetector(
+                            onTap: _onProfileButtonPress,
+                            child: SizedBox(
+                              height: _size.height * 0.068,
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(5),
+                                child: AspectRatio(
+                                  aspectRatio: 1,
+                                  child: CachedNetworkImage(
+                                    imageUrl: user.avatarUrl ??
+                                        AppAssets.userImageStr,
+                                    imageBuilder: (_, imageProvider) =>
+                                        Container(
+                                      decoration: BoxDecoration(
+                                        image: DecorationImage(
+                                          image: imageProvider,
+                                          fit: BoxFit.cover,
+                                        ),
                                       ),
                                     ),
+                                    placeholder: (_, __) =>
+                                        const SharedCircularProgressIndicator(),
+                                    errorWidget: (_, __, dynamic ___) =>
+                                        const Icon(Icons.error),
                                   ),
-                                  placeholder: (_, __) =>
-                                      const SharedCircularProgressIndicator(),
-                                  errorWidget: (_, __, dynamic ___) =>
-                                      const Icon(Icons.error),
                                 ),
                               ),
                             ),
                           ),
                         ),
                         const SizedBox(width: 15),
-                        Flexible(
+                        Expanded(
+                          flex: 2,
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -119,7 +123,7 @@ class _PostDetailsOwnerInfoSectionState
                             ],
                           ),
                         ),
-                        const SizedBox(width: 25),
+                        // const SizedBox(width: 20),
                         PostDetailsSmallRatingThumbnail(
                           legitimacy: user.legit,
                         )
