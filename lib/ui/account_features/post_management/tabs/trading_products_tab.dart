@@ -85,6 +85,7 @@ class _TradingProductsTabState extends State<TradingProductsTab> {
                             name: post['name'].toString(),
                             price: post['price'].toString(),
                             imageUrl: post['imagesUrl'][0].toString(),
+                            priority: post['priority'].toString(),
                             dateTime: dateTime,
                             isHiddenPost: widget.isHiddenPosts,
                             tradeForList: post['tradeForList'] as List,

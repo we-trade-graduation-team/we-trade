@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:we_trade/services/post_feature/post_service_firestore.dart';
 
 import '../../../constants/app_assets.dart';
 import '../../../constants/app_colors.dart';
@@ -217,6 +218,9 @@ class _RateForTradingState extends State<RateForTrading> {
       'reply': '',
       'post': post,
     };
+
+    final postFireStoreServier = PostServiceFireStore();
+    postFireStoreServier.updatePriorityOfUser(userMakeRating);
 
     return referenceDatabase.collection('ratings').add(rating).then((_) {
       updateLegit(userBeRated, star);

@@ -30,12 +30,14 @@ class TradingProductCard extends StatefulWidget {
     required this.dateTime,
     required this.isHiddenPost,
     required this.tradeForList,
+    required this.priority,
   }) : super(key: key);
 
   final String id;
   final String name;
   final String price;
   final String imageUrl;
+  final String priority;
   final DateTime dateTime;
   final bool isHiddenPost;
   final List tradeForList;
@@ -52,6 +54,7 @@ class TradingProductCard extends StatefulWidget {
     properties.add(StringProperty('id', id));
     properties.add(DiagnosticsProperty<bool>('isHiddenPost', isHiddenPost));
     properties.add(StringProperty('name', name));
+    properties.add(StringProperty('priority', priority));
   }
 }
 
@@ -295,6 +298,7 @@ class _TradingProductCardState extends State<TradingProductCard> {
           ),
         ),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.end,
           children: [
             Row(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -350,21 +354,37 @@ class _TradingProductCardState extends State<TradingProductCard> {
                 ),
               ],
             ),
-            Align(
-              alignment: Alignment.bottomRight,
-              child: Container(
-                margin: const EdgeInsets.fromLTRB(0, 10, 0, 0),
-                child: Text(
-                  DateFormat.yMMMMd('en_US')
-                      .add_jm()
-                      .format(widget.dateTime)
-                      .toString(),
-                  style: const TextStyle(
-                    fontSize: 11,
-                    fontWeight: FontWeight.w300,
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(4),
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).primaryColorLight.withOpacity(0.5),
+                  ),
+                  child: Text(
+                    'Điểm ưu tiên: ${widget.priority}',
+                    style: Theme.of(context).textTheme.bodyText2!.copyWith(
+                          color: Theme.of(context).primaryColor,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 10,
+                        ),
                   ),
                 ),
-              ),
+                Container(
+                  margin: const EdgeInsets.fromLTRB(0, 10, 0, 0),
+                  child: Text(
+                    DateFormat.yMMMMd('en_US')
+                        .add_jm()
+                        .format(widget.dateTime)
+                        .toString(),
+                    style: const TextStyle(
+                      fontSize: 11,
+                      fontWeight: FontWeight.w300,
+                    ),
+                  ),
+                ),
+              ],
             ),
           ],
         ),

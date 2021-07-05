@@ -98,6 +98,7 @@ class PostServiceFireStore {
 
   Future<String> addPost(Map arguments) async {
     try {
+      arguments['priority'] = 0;
       final CollectionReference postDB =
           FirebaseFirestore.instance.collection('posts');
       final doc = await postDB.add(arguments);
@@ -220,6 +221,19 @@ class PostServiceFireStore {
         allWishId.removeWhere((element) => element == postId);
       }
       user.reference.update({'wishList': allWishId});
+    });
+  }
+
+  Future<void> updatePriorityOfUser(String userId) async {
+    await FirebaseFirestore.instance
+        .collection('posts')
+        .where('owner', isEqualTo: userId)
+        .get()
+        .then((posts) {
+      for (final post in posts.docs) {
+        final priority = int.parse(post.data()['priority'].toString());
+        post.reference.update({'priority': priority + 1});
+      }
     });
   }
 }
