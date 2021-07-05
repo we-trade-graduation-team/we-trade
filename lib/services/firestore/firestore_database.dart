@@ -182,7 +182,7 @@ class FirestoreDatabase {
       path: FirestorePath.postCards(),
       queryBuilder: (query) {
         // If has this argument
-        if (excludedPostIdList != null) {
+        if (excludedPostIdList != null && excludedPostIdList.isNotEmpty) {
           const _maxWhereNotInAmount =
               AppFirestoreConstant.whereNotInAmountMaximum;
 
@@ -192,6 +192,7 @@ class FirestoreDatabase {
                   FirestoreErrors.errorWhereNotInMaximumUpToTenComparisonValues,
             );
           }
+
           return query
               .where(
                 FieldPath.documentId,
@@ -266,11 +267,11 @@ class FirestoreDatabase {
     return _result;
   }
 
-  // Method to retrieve a List of postCard by userId
-  Future<List<PostCard>> getPostCardsByUserId({
+  // Method to retrieve a List of Post by userId
+  Future<List<Post>> _getPostsByUserId({
     String? userId,
   }) async {
-    final _postsFromUser = await _fireStoreService.collectionFuture(
+    return _fireStoreService.collectionFuture(
       path: FirestorePath.posts(),
       queryBuilder: (query) {
         const _ownerIdField = ModelProperties.postOwnerIdProperty;
@@ -289,10 +290,70 @@ class FirestoreDatabase {
       },
       builder: (data) => Post.fromDocumentSnapshot(data),
     );
+  }
+
+  // Method to retrieve a List of Post not belong a user
+  Future<List<Post>> _getPostsNotBelongToUser({
+    required int limit,
+    String? userId,
+  }) async {
+    return _fireStoreService.collectionFuture(
+      path: FirestorePath.posts(),
+      queryBuilder: (query) {
+        const _ownerIdField = ModelProperties.postOwnerIdProperty;
+
+        const _isHiddenField = ModelProperties.postIsHiddenProperty;
+
+        return query
+            .where(
+              _ownerIdField,
+              isNotEqualTo: userId ?? uid,
+            )
+            .where(
+              _isHiddenField,
+              isEqualTo: false,
+            )
+            .limit(limit);
+      },
+      builder: (data) => Post.fromDocumentSnapshot(data),
+    );
+  }
+
+  // Method to retrieve a List of postCard by userId
+  Future<List<PostCard>> getPostCardsByUserId({
+    String? userId,
+  }) async {
+    final _postsFromUser = await _getPostsByUserId(
+      userId: userId,
+    );
 
     final _postIdList = _postsFromUser.map((post) => post.postId!).toList();
 
-    final _result = await getPostCardsByPostIdList(postIdList: _postIdList);
+    final _result = await getPostCardsByPostIdList(
+      postIdList: _postIdList,
+      shouldSortViewDescending: true,
+    );
+
+    return _result;
+  }
+
+  // Method to retrieve a List of postCard by userId
+  Future<List<PostCard>> _getPostCardsNotBelongToUser({
+    required int limit,
+    required bool shouldSortViewDescending,
+    String? userId,
+  }) async {
+    final _postNotFromUser = await _getPostsNotBelongToUser(
+      userId: userId,
+      limit: limit,
+    );
+
+    final _postIdList = _postNotFromUser.map((post) => post.postId!).toList();
+
+    final _result = await getPostCardsByPostIdList(
+      postIdList: _postIdList,
+      shouldSortViewDescending: shouldSortViewDescending,
+    );
 
     return _result;
   }
@@ -395,7 +456,21 @@ class FirestoreDatabase {
 
     final _postIdList = _postsFromUser.map((post) => post.postId!).toList();
 
-    final _result = await getPostCardsByPostIdList(postIdList: _postIdList);
+    final _result = await getPostCardsByPostIdList(
+      postIdList: _postIdList,
+      shouldSortViewDescending: true,
+    );
+
+    return _result;
+  }
+
+  // Method to retrieve a List of post card by a List of postId
+  Future<List<Post>> _getPostsByPostIdList({
+    required List<String> postIdList,
+  }) async {
+    final _result = await Stream.fromIterable(postIdList)
+        .asyncMap((postId) => getPost(postId: postId))
+        .toList();
 
     return _result;
   }
@@ -403,10 +478,15 @@ class FirestoreDatabase {
   // Method to retrieve a List of post card by a List of postId
   Future<List<PostCard>> getPostCardsByPostIdList({
     required List<String> postIdList,
+    required bool shouldSortViewDescending,
   }) async {
     final _result = await Stream.fromIterable(postIdList)
         .asyncMap((postId) => getPostCard(postId: postId))
         .toList();
+
+    if (shouldSortViewDescending) {
+      _result.sort((a, b) => b.view.compareTo(a.view));
+    }
 
     return _result;
   }
@@ -488,12 +568,76 @@ class FirestoreDatabase {
     _mostViewSpecialCategoryCards.sort((a, b) => b.view.compareTo(a.view));
 
     // Concatenate two list
-    final _fullList = [
+    final _fullList = <SpecialCategoryCard>{
       ..._specialCategoryCards,
       ..._mostViewSpecialCategoryCards
-    ];
+    }.toList();
 
     return _fullList;
+  }
+
+  // Method to retrieve a List of Popular Post Card for Home Screen
+  Future<List<PostCard>> getHomeScreenPopularPostCards() async {
+    const _numberOfPostCardToTake =
+        AppFirestoreConstant.kHomeScreenPopularPostCardAmount;
+
+    final _result = await _getPostCardsNotBelongToUser(
+      limit: _numberOfPostCardToTake,
+      shouldSortViewDescending: true,
+    );
+
+    return _result;
+  }
+
+  Future<List<PostCard>> _getIsNotHiddenPostCards({
+    required List<PostCard> postCards,
+  }) async {
+    if (postCards.isEmpty) {
+      return postCards;
+    }
+
+    final _postCardsToReturn = postCards.map((postCard) => postCard).toList();
+
+    final _ids =
+        _postCardsToReturn.map((postCard) => postCard.postId!).toList();
+
+    final _postsCorresponding = await _getPostsByPostIdList(
+      postIdList: _ids,
+    );
+
+    final _isHiddenPostIds = _postsCorresponding
+        .where((post) => post.isHidden == true)
+        .map((post) => post.postId!)
+        .toList();
+
+    _postCardsToReturn
+        .removeWhere((postCard) => _isHiddenPostIds.contains(postCard.postId!));
+
+    return _postCardsToReturn;
+  }
+
+  Future<List<PostCard>> _getIsNotHiddenPostCardsByPostIdList({
+    required List<String> postIdList,
+  }) async {
+    if (postIdList.isEmpty) {
+      return [];
+    }
+
+    final _postsCorresponding = await _getPostsByPostIdList(
+      postIdList: postIdList,
+    );
+
+    final _isNotHiddenPostIds = _postsCorresponding
+        .where((post) => post.isHidden == false)
+        .map((post) => post.postId!)
+        .toList();
+
+    final _postCardsToReturn = getPostCardsByPostIdList(
+      postIdList: _isNotHiddenPostIds,
+      shouldSortViewDescending: true,
+    );
+
+    return _postCardsToReturn;
   }
 
   // Method to retrieve a List of postCard recommended for current user
@@ -511,11 +655,12 @@ class FirestoreDatabase {
     // If null or empty
     if (_currentUserKeywordHistory == null ||
         _currentUserKeywordHistory.isEmpty) {
-      // Take top most view post cards
-      final _result =
-          await _getPostCardsWithLimit(limit: _numberOfPostCardToTake);
+      final _listReceived = await _getPostCardsNotBelongToUser(
+        limit: _numberOfPostCardToTake,
+        shouldSortViewDescending: true,
+      );
 
-      return _result;
+      return _listReceived;
     }
 
     // Sort descending category history by times
@@ -538,6 +683,32 @@ class FirestoreDatabase {
             _getJunctionKeywordPostListByKeywordId(keywordId: keywordId))
         .toList();
 
+    // Get current user's posts
+    final _currentUserPosts = await _getPostsByUserId();
+
+    // Get a list of postId from above list
+    final _currentUserPostIdList =
+        _currentUserPosts.map((post) => post.postId!).toList();
+
+    // Remove post cards that belong to current user
+    for (final junctions in _junctionsList) {
+      // This list contains junctions that should be remove later
+      final _shouldRemoveJunction = <JunctionKeywordPost>[];
+
+      // Check each junction in each junctions
+      for (final junction in junctions) {
+        // Get this junction's postId
+        final _junctionPostId = junction.postId;
+        // If this _junctionPostId is in _currentUserPostIdList
+        if (_currentUserPostIdList.contains(_junctionPostId)) {
+          // Add junction to should remove list
+          _shouldRemoveJunction.add(junction);
+        }
+      }
+
+      junctions.removeWhere(_shouldRemoveJunction.contains);
+    }
+
     // Equally divided the quantity of post cards for each keyword
     // Example: If user has less keyword than _numberOfKeywordToTake
     // then take only those keyword, otherwise take _numberOfKeywordToTake
@@ -557,13 +728,13 @@ class FirestoreDatabase {
       final _postCardIdListFromJunction =
           _junctions.map((junction) => junction.postId).toList();
 
-      // Fetch for each retrieved junction, fetch the associated postCard
-      final _postCardsFromJunction = await getPostCardsByPostIdList(
+      final _postCardsFromJunction = await _getIsNotHiddenPostCardsByPostIdList(
         postIdList: _postCardIdListFromJunction,
       );
 
-      // Sort descending by view
-      _postCardsFromJunction.sort((a, b) => b.view.compareTo(a.view));
+      if (_postCardsFromJunction.isEmpty) {
+        return _postCardsFromJunction;
+      }
 
       // Get most view post card
       final _postCardToTake = _postCardsFromJunction
@@ -578,6 +749,14 @@ class FirestoreDatabase {
         .expand((postCards) => postCards)
         .toList();
 
+    // Get _flattenPostCardList ids set
+    final _ids =
+        _flattenPostCardList.map((postCard) => postCard.postId!).toSet();
+
+    // Get unique post Cards
+    _flattenPostCardList
+        .retainWhere((postCard) => _ids.remove(postCard.postId!));
+
     // Return if has enough cards
     if (_flattenPostCardList.length == _numberOfPostCardToTake) {
       return _flattenPostCardList;
@@ -587,75 +766,48 @@ class FirestoreDatabase {
     final _missingAmount =
         _numberOfPostCardToTake - _flattenPostCardList.length;
 
-    // Get postId from existing postCardList
-    final _excludedPostIdList =
+    final _flattenPostIdList =
         _flattenPostCardList.map((postCard) => postCard.postId!).toList();
 
-    const _maxWhereNotInAmount = AppFirestoreConstant.whereNotInAmountMaximum;
+    // Get postId from existing postCardList
+    final _excludedPostIdList =
+        <String>{..._flattenPostIdList, ..._currentUserPostIdList}.toList();
 
-    if (_excludedPostIdList.length <= _maxWhereNotInAmount) {
-      // Get more to have enough post card
-      final _mostViewPostCards = await _getPostCardsWithLimit(
-        limit: _missingAmount,
-        excludedPostIdList: _excludedPostIdList,
-      );
-
-      // Locally sorting descending by view - because =>
-      // If you include a filter with a range comparison (<, <=, >, >=),
-      // your first ordering must be on the same field:
-      _mostViewPostCards.sort((a, b) => b.view.compareTo(a.view));
-
-      // Concatenate two list
-      final _fullList = [..._flattenPostCardList, ..._mostViewPostCards];
-
-      return _fullList;
-    }
-
-    // Separate list
-    // First list contains item from index 0 => 9
-    final _firstHalfExcludedPostIdList =
-        _excludedPostIdList.sublist(0, _maxWhereNotInAmount);
-
-    // Second list contains item from index 10 => end
-    final _secondHalfExcludedPostIdList =
-        _excludedPostIdList.sublist(_maxWhereNotInAmount);
-
-    // Get more postCard excluded first half
-    // plus _secondHalfExcludedPostIdList.length
-    final _mostViewPostCardsExcludedFirstHalf = await _getPostCardsWithLimit(
-      // Plus more
-      limit: _missingAmount + _secondHalfExcludedPostIdList.length,
-      excludedPostIdList: _firstHalfExcludedPostIdList,
+    final _mostViewPostCardsExcluded = await _getPostCardsWithLimit(
+      limit: _missingAmount + _excludedPostIdList.length,
     );
 
-    // Remove postCard where postId is in second half
-    _mostViewPostCardsExcludedFirstHalf.removeWhere(
-        (postCard) => _secondHalfExcludedPostIdList.contains(postCard.postId));
+    final _isNotHiddenPostCards = await _getIsNotHiddenPostCards(
+      postCards: _mostViewPostCardsExcluded,
+    );
+
+    // Remove postCard where postId is _excludedPostIdList
+    _isNotHiddenPostCards.removeWhere(
+        (postCard) => _excludedPostIdList.contains(postCard.postId));
 
     // Sort descending by view
-    _mostViewPostCardsExcludedFirstHalf
-        .sort((a, b) => b.view.compareTo(a.view));
+    _isNotHiddenPostCards.sort((a, b) => b.view.compareTo(a.view));
 
     // If have take enough missing amount
-    if (_mostViewPostCardsExcludedFirstHalf.length == _missingAmount) {
+    if (_isNotHiddenPostCards.length == _missingAmount) {
       // Concatenate two list
-      final _fullList = [
+      final _fullList = <PostCard>{
         ..._flattenPostCardList,
-        ..._mostViewPostCardsExcludedFirstHalf
-      ];
+        ..._isNotHiddenPostCards
+      }.toList();
 
       return _fullList;
     }
 
     // Else, we have take more than enough than take exactly amount missing
     final _exactlyAmountMissingPostCardList =
-        _mostViewPostCardsExcludedFirstHalf.take(_missingAmount).toList();
+        _isNotHiddenPostCards.take(_missingAmount).toList();
 
     // Concatenate two list
-    final _fullList = [
+    final _fullList = <PostCard>{
       ..._flattenPostCardList,
       ..._exactlyAmountMissingPostCardList
-    ];
+    }.toList();
 
     return _fullList;
   }
@@ -699,6 +851,7 @@ class FirestoreDatabase {
       // Fetch for each retrieved junction, fetch the associated postCard
       final _postCardsFromJunction = await getPostCardsByPostIdList(
         postIdList: _postCardIdListFromJunction,
+        shouldSortViewDescending: false,
       );
 
       return _postCardsFromJunction;
@@ -750,21 +903,47 @@ class FirestoreDatabase {
     final _excludedPostIdList =
         _flattenPostCardList.map((postCard) => postCard.postId!).toList();
 
+    // Also excluded this postId
+    _excludedPostIdList.add(postId);
+
+    final _excludedPostIdListLength = _excludedPostIdList.length;
+
     // Get postCards by main category id, with missing amount
     final _postCardsFromMainCategoryId = await getPostCardsByMainCategoryId(
       mainCategoryId: _postMainCategoryId,
-      limit: _missingAmount,
-      excludedPostIdList: _excludedPostIdList,
+      limit: _missingAmount + _excludedPostIdListLength,
+      // excludedPostIdList: _excludedPostIdList,
     );
+
+    // Remove post card that _excludedPostIdListLength contains its postId
+    _postCardsFromMainCategoryId.removeWhere(
+        (postCard) => _excludedPostIdList.contains(postCard.postId));
 
     // Sort descending by view
     _postCardsFromMainCategoryId.sort((a, b) => b.view.compareTo(a.view));
 
+    final _postCardsFromMainCategoryIdLength =
+        _postCardsFromMainCategoryId.length;
+
+    if (_postCardsFromMainCategoryIdLength == _missingAmount) {
+      // Concatenate two list
+      final _fullList = <PostCard>{
+        ..._flattenPostCardList,
+        ..._postCardsFromMainCategoryId
+      }.toList();
+
+      return _fullList;
+    }
+
+    // Take enough
+    final _postCardsFromMainCategoryIdExactlyAmount =
+        _postCardsFromMainCategoryId.take(_missingAmount).toList();
+
     // Concatenate two list
-    final _fullList = [
+    final _fullList = <PostCard>{
       ..._flattenPostCardList,
-      ..._postCardsFromMainCategoryId
-    ];
+      ..._postCardsFromMainCategoryIdExactlyAmount
+    }.toList();
 
     return _fullList;
   }
@@ -988,6 +1167,18 @@ class FirestoreDatabase {
     return _result;
   }
 
+  Future<bool> checkIfPostExists({
+    required String postId,
+  }) async {
+    final _result = await _fireStoreService.checkIfDocExists(
+      path: FirestorePath.post(
+        postId: postId,
+      ),
+    );
+
+    return _result;
+  }
+
   // Method to retrieve uid of post Owner by postId
   Future<String> getPostOwnerId({
     required String postId,
@@ -1059,10 +1250,10 @@ class FirestoreDatabase {
 
   // Method to set new data at junction user follower collection
   Future<void> setJunctionUserFollower({
-    required String postOwnerId,
+    required String userId,
   }) async {
     final _junction = JunctionUserFollower(
-      uid: postOwnerId,
+      uid: userId,
       followerId: uid,
     );
 
@@ -1070,7 +1261,7 @@ class FirestoreDatabase {
 
     return _fireStoreService.setData(
       path: FirestorePath.junctionUserFollower(
-        uid: postOwnerId,
+        uid: userId,
         followerId: uid,
       ),
       data: _newData,
@@ -1079,11 +1270,11 @@ class FirestoreDatabase {
 
   // Method to delete data at junction user follower collection
   Future<void> deleteJunctionUserFollower({
-    required String postOwnerId,
+    required String userId,
   }) async {
     return _fireStoreService.deleteData(
       path: FirestorePath.junctionUserFollower(
-        uid: postOwnerId,
+        uid: userId,
         followerId: uid,
       ),
     );
@@ -1164,49 +1355,6 @@ class FirestoreDatabase {
         questionId: questionId,
       ),
       builder: (data) => PostDetailsQuestionAnswer.fromDocumentSnapshot(data),
-    );
-  }
-
-  // Method to retrieve a List of Popular Post Card (Stream)
-  Stream<List<PostCard>> popularPostCardsStream() {
-    const _viewField = ModelProperties.postCardViewProperty;
-
-    const _defaultFilerField = _viewField;
-
-    const _defaultOrderField = _viewField;
-
-    const _numberOfDocumentToTake =
-        AppFirestoreConstant.kHomeScreenPopularPostCardAmount;
-
-    const _isDescendingOrder = true;
-
-    return _fireStoreService.collectionStream(
-      path: FirestorePath.postCards(),
-      queryBuilder: (query) {
-        return query
-            .where(
-              _defaultFilerField,
-              isGreaterThan: 0,
-            )
-            .orderBy(
-              _defaultOrderField,
-              descending: _isDescendingOrder,
-            )
-            .limit(_numberOfDocumentToTake);
-      },
-      builder: (data) => PostCard.fromDocumentSnapshot(data),
-    );
-  }
-
-  // Method to retrieve post (Stream)
-  Stream<Post> postStream({
-    required String postId,
-  }) {
-    return _fireStoreService.documentStream(
-      path: FirestorePath.postQuestions(
-        postId: postId,
-      ),
-      builder: (data) => Post.fromDocumentSnapshot(data),
     );
   }
 }

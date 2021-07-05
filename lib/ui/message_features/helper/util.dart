@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
-import '../../../models/ui/chat/temp_class.dart';
+import '../../../models/ui/chat/chat.dart';
 
 import '../const_string/const_str.dart';
 

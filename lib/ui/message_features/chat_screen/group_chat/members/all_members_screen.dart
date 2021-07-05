@@ -5,7 +5,7 @@ import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 import 'package:provider/provider.dart';
 import '../../../../../models/cloud_firestore/user_model/user/user.dart';
 
-import '../../../../../models/ui/chat/temp_class.dart';
+import '../../../../../models/ui/chat/chat.dart';
 import '../../../../../services/message/firestore_message_service.dart';
 import '../../../../../utils/routes/routes.dart';
 import '../../../../shared_features/other_user_profile/other_user_profile_screen.dart';

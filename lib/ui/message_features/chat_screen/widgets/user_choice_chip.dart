@@ -2,7 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:line_icons/line_icons.dart';
 import '../../../../constants/app_colors.dart';
-import '../../../../models/ui/chat/temp_class.dart';
+import '../../../../models/ui/chat/chat.dart';
 
 class UserChoiceChip extends StatelessWidget {
   const UserChoiceChip({Key? key, required this.user, required this.press})

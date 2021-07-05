@@ -44,19 +44,13 @@ class _SignInScreenState extends State<SignInScreen> {
   @override
   void initState() {
     super.initState();
-    BackButtonInterceptor.add(onBackPressed);
+    BackButtonInterceptor.add((_,__) => false);
   }
 
   @override
   void dispose() {
-    BackButtonInterceptor.remove(onBackPressed);
+    BackButtonInterceptor.remove((_,__) => false);
     super.dispose();
-  }
-
-  // ignore: avoid_positional_boolean_parameters
-  bool onBackPressed(bool stopDefaultButtonEvent, RouteInfo routeInfo) {
-    // Handle android back event here. WillPopScope is not recommended.
-    return false;
   }
 
   @override
@@ -202,7 +196,7 @@ class _SignInScreenState extends State<SignInScreen> {
         ? myDialogContent.content
         : _appLocalizations.translate('authenticationAlertTxtErrorContent');
 
-    await FlashHelper.showDialogFlash(
+    return FlashHelper.showDialogFlash(
       context,
       title: Text(dialogTitleText),
       content: Text(dialogContentText),

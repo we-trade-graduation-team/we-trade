@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tiengviet/tiengviet.dart';
 
 Future<void> showMyNotificationDialog({
   required BuildContext context,
@@ -108,4 +109,33 @@ Future<void> showMyPickerMethodDialog({
       );
     },
   );
+}
+
+List<String> splitStr(String str, String pattern) {
+  return str.split(pattern);
+}
+
+List<String> splitStrList(List listStr) {
+  var splitListStr = <String>[];
+  for (final item in listStr) {
+    final splitComma = splitStr(item.toString(), ',');
+    for (final item in splitComma) {
+      final splitDot = splitStr(item.toString(), '.');
+      splitListStr = <String>[...splitListStr, ...splitDot];
+    }
+  }
+  return splitListStr;
+}
+
+bool checkIfContains(List listStr, String str) {
+  for (final item in listStr) {
+    if (item.trim() == '') {
+      continue;
+    }
+    if (TiengViet.parse(str.toLowerCase())
+        .contains(TiengViet.parse(item.toString().trim().toLowerCase()))) {
+      return true;
+    }
+  }
+  return false;
 }

@@ -56,9 +56,9 @@ class _UserImagePickerState extends State<UserImagePicker> {
     final _storage = FirebaseStorage.instance;
     final _picker = ImagePicker();
     await Permission.photos.request();
-    final permissonStatus = await Permission.photos.status;
+    final permissionStatus = await Permission.photos.status;
 
-    if (permissonStatus.isGranted) {
+    if (permissionStatus.isGranted) {
       final pickedImageFile =
           (await _picker.getImage(source: ImageSource.gallery))!;
       final file = File(pickedImageFile.path);
@@ -77,7 +77,6 @@ class _UserImagePickerState extends State<UserImagePicker> {
               .doc(widget.userID)
               .update(updateData);
           await UserServiceAlgolia().updateUser(updateData);
-          //TODO: Nếu ai cần cập nhật  User(avatarUrl) của provider thì cập nhật ở đây
         } on FirebaseException catch (_) {
           await showMyNotificationDialog(
               context: context,
@@ -96,8 +95,8 @@ class _UserImagePickerState extends State<UserImagePicker> {
     final picker = ImagePicker();
 
     await Permission.photos.request();
-    final permissonStatus = await Permission.photos.status;
-    if (permissonStatus.isGranted) {
+    final permissionStatus = await Permission.photos.status;
+    if (permissionStatus.isGranted) {
       final pickedImageFile = await picker.getImage(source: ImageSource.camera);
       final file = File(pickedImageFile!.path);
       if (pickedImageFile.path.isNotEmpty) {
@@ -115,7 +114,6 @@ class _UserImagePickerState extends State<UserImagePicker> {
             .doc(widget.userID)
             .update(updateData);
         await UserServiceAlgolia().updateUser(updateData);
-        //TODO: Nếu ai cần cập nhật  User(avatarUrl) của provider thì cập nhật ở đây
         //
       }
     }

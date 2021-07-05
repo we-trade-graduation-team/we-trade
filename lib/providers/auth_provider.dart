@@ -232,7 +232,6 @@ class AuthProvider extends ChangeNotifier {
       ),
     ]);
 
-    // TODO update algolia presence
     _status = Status.unauthenticated;
 
     notifyListeners();

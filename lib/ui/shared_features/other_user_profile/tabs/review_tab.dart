@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-import '../../../../models/ui/chat/temp_class.dart';
+import '../../../../models/ui/chat/chat.dart';
 import '../../../../widgets/review_card.dart';
 
 class ReviewTab extends StatefulWidget {

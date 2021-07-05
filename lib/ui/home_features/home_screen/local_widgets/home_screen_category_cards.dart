@@ -3,7 +3,7 @@ import 'package:flutter_card_swipper/flutter_card_swiper.dart';
 import 'package:provider/provider.dart';
 import 'package:quiver/iterables.dart';
 
-import '../../../../constants/app_dimens.dart';
+import '../../../../constants/app_number_constants.dart';
 import '../../../../models/cloud_firestore/category_card/category_card.dart';
 import '../../../../widgets/shared_circular_progress_indicator.dart';
 import 'home_screen_category_card.dart';
@@ -24,7 +24,7 @@ class HomeScreenCategoryCards extends StatelessWidget {
     final _categoryCardsLength = _categoryCards.length;
 
     const _numberOfCardsEachPage =
-        AppDimens.kHomeScreenCategoryCardsEachPageAmount;
+        AppNumberConstants.kHomeScreenCategoryCardsEachPageAmount;
 
     final _itemCount = (_categoryCardsLength / _numberOfCardsEachPage).ceil();
 

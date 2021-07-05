@@ -4,7 +4,7 @@ import 'package:line_icons/line_icons.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 
 import '../../../../constants/app_colors.dart';
-import '../../../../constants/app_dimens.dart';
+import '../../../../constants/app_number_constants.dart';
 import '../../../shared_features/report/report_screen.dart';
 
 class PostDetailsPopupDialog extends StatelessWidget {
@@ -54,7 +54,7 @@ class PostDetailsPopupDialog extends StatelessWidget {
                         padding: const EdgeInsets.fromLTRB(0, 0, 20, 10),
                         decoration: BoxDecoration(
                           border: Border(
-                            bottom: AppDimens.kBorderSide(),
+                            bottom: AppNumberConstants.kBorderSide(),
                           ),
                         ),
                         child: Row(

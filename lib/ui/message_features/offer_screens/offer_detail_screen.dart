@@ -8,7 +8,7 @@ import 'package:provider/provider.dart';
 import '../../../constants/app_colors.dart';
 import '../../../models/cloud_firestore/post_card_model/post_card/post_card.dart';
 import '../../../models/cloud_firestore/user_model/user/user.dart';
-import '../../../models/ui/chat/temp_class.dart';
+import '../../../models/ui/chat/chat.dart';
 import '../../../services/firestore/firestore_database.dart';
 import '../../../services/trading_feature/trading_service_firestore.dart';
 import '../../../utils/routes/routes.dart';
@@ -129,8 +129,9 @@ class _OfferDetailScreenState extends State<OfferDetailScreen> {
                           return Row(
                             children: [
                               ItemPostCard(
-                                  isNavigateToDetailScreen: false,
-                                  postCard: posts[index]),
+                                isNavigateToDetailScreen: false,
+                                postCard: posts[index],
+                              ),
                               const SizedBox(width: 20),
                             ],
                           );
@@ -336,7 +337,10 @@ class _OfferDetailScreenState extends State<OfferDetailScreen> {
         .then((resultOwnerPost) {
       if (widget.trading.offerPosts.isNotEmpty) {
         _firestoreDatabase
-            .getPostCardsByPostIdList(postIdList: widget.trading.offerPosts)
+            .getPostCardsByPostIdList(
+          postIdList: widget.trading.offerPosts,
+          shouldSortViewDescending: true,
+        )
             .then((resultOfferPosts) {
           setState(() {
             ownerPost = resultOwnerPost;

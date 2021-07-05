@@ -5,10 +5,10 @@ import 'package:line_icons/line_icons.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 
-import '../../../constants/app_dimens.dart';
+import '../../../constants/app_number_constants.dart';
 import '../../../models/cloud_firestore/post_card_model/post_card/post_card.dart';
 import '../../../models/cloud_firestore/user_model/user/user.dart';
-import '../../../models/ui/chat/temp_class.dart';
+import '../../../models/ui/chat/chat.dart';
 import '../../../services/firestore/firestore_database.dart';
 import '../../../services/message/firestore_message_service.dart';
 import '../../../widgets/custom_material_button.dart';
@@ -39,10 +39,8 @@ class _OtherUserProfileScreenState extends State<OtherUserProfileScreen> {
   final tabData = ['ABOUT', 'POSTS', 'REVIEW'];
   final mainInfoKey = GlobalKey();
   Size flexibleSpaceBarSize = const Size(0, 0);
-  MessageServiceFireStore serviceFireStore = MessageServiceFireStore();
-  // ignore: diagnostic_describe_all_properties
+  final serviceFireStore = MessageServiceFireStore();
   late UserDetail userDetail;
-  // ignore: diagnostic_describe_all_properties
   late User thisUser;
   bool isFollow = false;
   bool visible = true;
@@ -50,14 +48,34 @@ class _OtherUserProfileScreenState extends State<OtherUserProfileScreen> {
   List<PostCard> posts = [];
 
 // function handle ==================================
-  void navigateToChatRoom(String userid) {
+  void navigateToChatRoom(String userId) {
     HelperNavigateChatRoom.checkAndSendChatRoomOneUserByIds(
-        userId: userid, thisUser: thisUser, context: context);
+      userId: userId,
+      thisUser: thisUser,
+      context: context,
+    );
   }
 
-  void handleFollowButtonClick(String userId) {
+  Future<void> handleFollowButtonClick(String userId) async {
+    // ignore: unawaited_futures
     serviceFireStore.handleFollowButton(
-        userId: userId, thisUserId: thisUser.uid!, isAddFollowing: !isFollow);
+      userId: userId,
+      thisUserId: thisUser.uid!,
+      isAddFollowing: !isFollow,
+    );
+
+    final _firestoreDatabase = context.read<FirestoreDatabase>();
+
+    if (isFollow) {
+      await _firestoreDatabase.deleteJunctionUserFollower(
+        userId: userId,
+      );
+    }
+
+    await _firestoreDatabase.setJunctionUserFollower(
+      userId: userId,
+    );
+
     setState(() {
       isFollow = !isFollow;
     });
@@ -174,6 +192,7 @@ class _OtherUserProfileScreenState extends State<OtherUserProfileScreen> {
         await _firestoreDatabase
             .getPostCardsByPostIdList(
               postIdList: resultUser.postsId,
+              shouldSortViewDescending: true,
             )
             .then((resultListPosts) => setState(() {
                   posts = resultListPosts;
@@ -420,6 +439,8 @@ class _OtherUserProfileScreenState extends State<OtherUserProfileScreen> {
     properties.add(DiagnosticsProperty<MessageServiceFireStore>(
         'serviceFireStore', serviceFireStore));
     properties.add(IterableProperty<PostCard>('posts', posts));
+    properties.add(DiagnosticsProperty<UserDetail>('userDetail', userDetail));
+    properties.add(DiagnosticsProperty<User>('thisUser', thisUser));
   }
 }
 
@@ -437,8 +458,8 @@ class MyDelegate extends SliverPersistentHeaderDelegate {
       decoration: BoxDecoration(
         color: Colors.white,
         border: Border(
-          top: AppDimens.kBorderSide(),
-          bottom: AppDimens.kBorderSide(),
+          top: AppNumberConstants.kBorderSide(),
+          bottom: AppNumberConstants.kBorderSide(),
         ),
       ),
       child: tabBar,

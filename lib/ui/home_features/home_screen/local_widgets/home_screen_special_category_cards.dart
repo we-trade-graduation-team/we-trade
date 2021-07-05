@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../../../constants/app_dimens.dart';
+import '../../../../constants/app_number_constants.dart';
 import '../../../../models/cloud_firestore/special_category_card/special_category_card.dart';
 import '../../../../widgets/custom_animation_limiter_for_list_view.dart';
 import '../../../../widgets/shared_circular_progress_indicator.dart';
@@ -26,7 +26,7 @@ class HomeScreenSpecialCategoryCards extends StatelessWidget {
       scrollDirection: Axis.horizontal,
       separatorWidth: 15,
       duration: const Duration(
-        milliseconds: AppDimens.kFlutterStaggeredAnimationsDuration * 2,
+        milliseconds: AppNumberConstants.kFlutterStaggeredAnimationsDuration * 2,
       ),
       addLastSeparator: true,
       list: _specialOfferCards,

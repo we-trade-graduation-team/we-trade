@@ -4,7 +4,7 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:line_icons/line_icons.dart';
 
 import '../../../constants/app_colors.dart';
-import '../../../constants/app_dimens.dart';
+import '../../../constants/app_number_constants.dart';
 import 'custom_animation_limiter_for_column.dart';
 import 'rounded_icon_button.dart';
 import 'top_rounded_container.dart';
@@ -78,7 +78,7 @@ class AuthCustomBackground extends StatelessWidget {
                     child: CustomAnimationLimiterForColumn(
                       duration: const Duration(
                           milliseconds:
-                              AppDimens.kFlutterStaggeredAnimationsDuration),
+                              AppNumberConstants.kFlutterStaggeredAnimationsDuration),
                       children: [
                         if (title != null)
                           Container(

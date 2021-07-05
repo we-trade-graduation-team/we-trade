@@ -1,6 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import '../../../../constants/app_dimens.dart';
+import '../../../../constants/app_number_constants.dart';
 
 import 'post_details_section_container.dart';
 
@@ -19,7 +19,7 @@ class PostDetailsNoItemsSection extends StatelessWidget {
     return PostDetailsSectionContainer(
       child: Padding(
         padding: EdgeInsets.only(
-          right: _size.width * AppDimens.kDetailHorizontalPaddingPercent * 2,
+          right: _size.width * AppNumberConstants.kDetailHorizontalPaddingPercent * 2,
         ),
         child: Text(
           text,

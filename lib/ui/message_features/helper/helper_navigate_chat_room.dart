@@ -2,18 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 import '../../../models/cloud_firestore/user_model/user/user.dart';
 
-import '../../../models/ui/chat/temp_class.dart';
+import '../../../models/ui/chat/chat.dart';
 import '../../../services/message/algolia_user_service.dart';
 import '../../../services/message/firestore_message_service.dart';
 import '../chat_screen/chat_room/chat_room.dart';
 import '../const_string/const_str.dart';
-import 'ulti.dart';
+import 'util.dart';
 
 class HelperNavigateChatRoom {
-  static void checkAndSendChatRoomOneUser(
-      {required UserAlgolia user,
-      required User thisUser,
-      required BuildContext context}) {
+  static void checkAndSendChatRoomOneUser({
+    required UserAlgolia user,
+    required User thisUser,
+    required BuildContext context,
+  }) {
     final messageServiceFireStore = MessageServiceFireStore();
     final chatRoomId =
         createChatRoomId(userId: user.id, thisUserId: thisUser.uid!);
@@ -39,10 +40,11 @@ class HelperNavigateChatRoom {
     });
   }
 
-  static void checkAndSendChatRoomOneUserByIds(
-      {required String userId,
-      required User thisUser,
-      required BuildContext context}) {
+  static void checkAndSendChatRoomOneUserByIds({
+    required String userId,
+    required User thisUser,
+    required BuildContext context,
+  }) {
     final messageServiceFireStore = MessageServiceFireStore();
     final chatRoomId =
         createChatRoomId(userId: userId, thisUserId: thisUser.uid!);
@@ -70,10 +72,11 @@ class HelperNavigateChatRoom {
     });
   }
 
-  static void sendNewChatRoomGroup(
-      {required List<UserAlgolia> users,
-      required User thisUser,
-      required BuildContext context}) {
+  static void sendNewChatRoomGroup({
+    required List<UserAlgolia> users,
+    required User thisUser,
+    required BuildContext context,
+  }) {
     final messageServiceFireStore = MessageServiceFireStore();
     final mapData = createChatRoomMap(users: users, thisUser: thisUser);
     messageServiceFireStore
@@ -92,13 +95,19 @@ class HelperNavigateChatRoom {
     });
   }
 
-  static Future<void> startNewChatRoom(
-      {required String chatRoomId,
-      required String thisUserId,
-      required String thisUserName}) async {
+  static Future<void> startNewChatRoom({
+    required String chatRoomId,
+    required String thisUserId,
+    required String thisUserName,
+  }) async {
     final messageServiceFireStore = MessageServiceFireStore();
     await messageServiceFireStore.addMessageToChatRoom(
-        thisUserId, 0, 'hi, cùng chat nào', chatRoomId, thisUserName);
+      thisUserId,
+      0,
+      'hi, cùng chat nào',
+      chatRoomId,
+      thisUserName,
+    );
   }
 
   static void navigateToChatRoom(
@@ -120,8 +129,10 @@ class HelperNavigateChatRoom {
     );
   }
 
-  static String createChatRoomId(
-      {required String userId, required String thisUserId}) {
+  static String createChatRoomId({
+    required String userId,
+    required String thisUserId,
+  }) {
     final chatRoomId = StringBuffer();
     final usersId = <String>[userId, thisUserId];
     usersId.sort();
@@ -129,8 +140,10 @@ class HelperNavigateChatRoom {
     return chatRoomId.toString();
   }
 
-  static Map<String, dynamic> createChatRoomMap(
-      {required List<UserAlgolia> users, required User thisUser}) {
+  static Map<String, dynamic> createChatRoomMap({
+    required List<UserAlgolia> users,
+    required User thisUser,
+  }) {
     final usersId = <String>[];
     final usersName = <String>[];
     final usersAva = <String>[];

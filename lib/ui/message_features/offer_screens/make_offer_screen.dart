@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
@@ -10,6 +11,7 @@ import '../../../services/firestore/firestore_database.dart';
 import '../../../services/trading_feature/trading_service_firestore.dart';
 import '../../../widgets/custom_material_button.dart';
 import '../../../widgets/item_post_card.dart';
+import '../../account_features/utils.dart';
 import '../const_string/const_str.dart';
 import '../helper/helper_navigate_chat_room.dart';
 
@@ -33,18 +35,20 @@ class _MakeOfferScreenState extends State<MakeOfferScreen> {
   final _formKey = GlobalKey<FormState>();
   final _textEditingController = TextEditingController();
   late bool _isHaveMoney = false;
-  late List<String> choosedPostsId = [];
+  late List<String> chosenPostsId = [];
   late List<PostCard> posts = [];
+  late List<PostCard> relatedPosts = [];
+  late List<String> splitList = [];
   late bool loading = true;
 
   void clickPostCard(String postId) {
-    if (!choosedPostsId.contains(postId)) {
+    if (!chosenPostsId.contains(postId)) {
       setState(() {
-        choosedPostsId.add(postId);
+        chosenPostsId.add(postId);
       });
     } else {
       setState(() {
-        choosedPostsId.remove(postId);
+        chosenPostsId.remove(postId);
       });
     }
   }
@@ -56,28 +60,38 @@ class _MakeOfferScreenState extends State<MakeOfferScreen> {
     final thisUser = Provider.of<User?>(context, listen: false)!;
     final ownerId = await TradingServiceFireStore()
         .getOwnerIdOfPost(widget.otherUserPostId);
+
     if (_isHaveMoney) {
       await TradingServiceFireStore()
           .addTrading(
-              makeOfferUser: thisUser.uid!,
-              ownerPost: widget.otherUserPostId,
-              offerUserPosts: choosedPostsId,
-              money: int.parse(_textEditingController.text))
-          .then((value) {
+        makeOfferUser: thisUser.uid!,
+        ownerPost: widget.otherUserPostId,
+        offerUserPosts: chosenPostsId,
+        money: int.parse(
+          _textEditingController.text,
+        ),
+      )
+          .then((_) {
         HelperNavigateChatRoom.checkAndSendChatRoomOneUserByIds(
-            context: context, thisUser: thisUser, userId: ownerId);
+          context: context,
+          thisUser: thisUser,
+          userId: ownerId,
+        );
       });
     } else {
-      if (choosedPostsId.isNotEmpty) {
+      if (chosenPostsId.isNotEmpty) {
         await TradingServiceFireStore()
             .addTrading(
           makeOfferUser: thisUser.uid!,
           ownerPost: widget.otherUserPostId,
-          offerUserPosts: choosedPostsId,
+          offerUserPosts: chosenPostsId,
         )
-            .then((value) async {
+            .then((_) async {
           HelperNavigateChatRoom.checkAndSendChatRoomOneUserByIds(
-              context: context, thisUser: thisUser, userId: ownerId);
+            context: context,
+            thisUser: thisUser,
+            userId: ownerId,
+          );
         });
       } else {
         setState(() {
@@ -87,7 +101,18 @@ class _MakeOfferScreenState extends State<MakeOfferScreen> {
     }
   }
 
-  Widget buildListPostCard() {
+  Future<void> _findRelatedPost(List<PostCard> posts) async {
+    relatedPosts.clear();
+    // ignore: avoid_function_literals_in_foreach_calls
+    posts.forEach((post) {
+      final name = post.title.toString();
+      if (checkIfContains(splitList, name)) {
+        relatedPosts.add(post);
+      }
+    });
+  }
+
+  Widget buildListPostCard(List<PostCard> posts) {
     return loading
         ? Column(mainAxisAlignment: MainAxisAlignment.center, children: [
             Lottie.network(messageLoadingStr2, width: 100, height: 100),
@@ -112,15 +137,26 @@ class _MakeOfferScreenState extends State<MakeOfferScreen> {
                                     ItemPostCard(
                                         isNavigateToDetailScreen: false,
                                         postCard: posts[index]),
-                                    if (choosedPostsId
+                                    if (chosenPostsId
                                         .contains(posts[index].postId))
                                       Align(
                                         alignment: Alignment.topRight,
-                                        child: IconButton(
-                                          icon: const Icon(
-                                              Icons.check_box_rounded),
-                                          color: Colors.white,
-                                          onPressed: () {},
+                                        child: Container(
+                                          margin: const EdgeInsets.only(
+                                              left: 3, top: 3),
+                                          child: CircleAvatar(
+                                            radius: 10,
+                                            backgroundColor: Colors.purple,
+                                            child: IconButton(
+                                              padding: const EdgeInsets.all(0),
+                                              icon: const Icon(
+                                                Icons.check,
+                                                size: 10,
+                                                color: Colors.white,
+                                              ),
+                                              onPressed: () {},
+                                            ),
+                                          ),
                                         ),
                                       ),
                                   ],
@@ -136,20 +172,38 @@ class _MakeOfferScreenState extends State<MakeOfferScreen> {
                 : Row(
                     children: const [
                       SizedBox(width: 20),
-                      Text(
-                        'no data',
-                        style: TextStyle(color: AppColors.kReviewTextLabel),
-                      ),
+                      Text('Bạn chưa có bài đăng nào ở đây',
+                          style: TextStyle(
+                            color: AppColors.kReviewTextLabel,
+                            fontSize: 18,
+                          )),
                     ],
-                  ));
+                  ),
+          );
   }
 
   @override
   void initState() {
     super.initState();
+    final referenceDatabase = FirebaseFirestore.instance;
+    try {
+      referenceDatabase
+          .collection('posts')
+          .doc(widget.otherUserPostId)
+          .get()
+          .then((documentSnapshot) async {
+        final _post = documentSnapshot.data();
+        final tradeForList = _post!['tradeForList'] as List;
+        splitList = splitStrList(tradeForList);
+      });
+    } catch (error) {
+      rethrow;
+    }
+
     final thisUserId = Provider.of<User?>(context, listen: false)!.uid!;
     final _firestoreDatabase = context.read<FirestoreDatabase>();
     _firestoreDatabase.getPostCardsByUserId(userId: thisUserId).then((value) {
+      _findRelatedPost(value);
       setState(() {
         loading = false;
         posts = value;
@@ -174,6 +228,16 @@ class _MakeOfferScreenState extends State<MakeOfferScreen> {
                   children: [
                     const SizedBox(height: 5),
                     const Text(
+                      'Các sản phẩm có thể đối tác mong muốn',
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+                    buildListPostCard(relatedPosts),
+                    const SizedBox(height: 20),
+                    const Text(
                       'Tất cả sản phẩm',
                       style: TextStyle(
                         fontSize: 20,
@@ -181,7 +245,7 @@ class _MakeOfferScreenState extends State<MakeOfferScreen> {
                       ),
                     ),
                     const SizedBox(height: 20),
-                    buildListPostCard(),
+                    buildListPostCard(posts),
                     const SizedBox(height: 20),
                     Column(
                       children: [
@@ -252,30 +316,32 @@ class _MakeOfferScreenState extends State<MakeOfferScreen> {
                   child: Padding(
                     padding: const EdgeInsets.all(8),
                     child: CustomMaterialButton(
-                        press: () {
-                          Navigator.of(context).pop();
-                        },
-                        isFilled: false,
-                        text: 'Hủy',
-                        width: MediaQuery.of(context).size.width / 4,
-                        fontSize: 15,
-                        height: 40),
+                      press: () {
+                        Navigator.of(context).pop();
+                      },
+                      isFilled: false,
+                      text: 'Hủy',
+                      width: MediaQuery.of(context).size.width / 4,
+                      fontSize: 15,
+                      height: 40,
+                    ),
                   ),
                 ),
                 Expanded(
                   child: Padding(
                     padding: const EdgeInsets.all(8),
                     child: CustomMaterialButton(
-                        press: () {
-                          if (_formKey.currentState!.validate() ||
-                              !_isHaveMoney) {
-                            sendOfferClick();
-                          }
-                        },
-                        text: 'Gửi offer',
-                        width: MediaQuery.of(context).size.width / 4,
-                        fontSize: 15,
-                        height: 40),
+                      press: () {
+                        if (_formKey.currentState!.validate() ||
+                            !_isHaveMoney) {
+                          sendOfferClick();
+                        }
+                      },
+                      text: 'Gửi offer',
+                      width: MediaQuery.of(context).size.width / 4,
+                      fontSize: 15,
+                      height: 40,
+                    ),
                   ),
                 ),
               ],
@@ -289,8 +355,10 @@ class _MakeOfferScreenState extends State<MakeOfferScreen> {
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
-    properties.add(IterableProperty<String>('choosedPostsId', choosedPostsId));
     properties.add(IterableProperty<PostCard>('posts', posts));
     properties.add(DiagnosticsProperty<bool>('loading', loading));
+    properties.add(IterableProperty<String>('chosenPostsId', chosenPostsId));
+    properties.add(IterableProperty<PostCard>('relatedPosts', relatedPosts));
+    properties.add(IterableProperty<String>('splitList', splitList));
   }
 }

@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../app_localizations.dart';
-import '../../../../constants/app_dimens.dart';
+import '../../../../constants/app_number_constants.dart';
 import '../../../../models/cloud_firestore/post_model/post/post.dart';
 import 'post_details_section_container.dart';
 import 'post_details_separator.dart';
@@ -39,8 +39,8 @@ class PostDetailsDescriptionSection extends StatelessWidget {
           width: _size.width,
           color: Colors.white,
           padding: EdgeInsets.symmetric(
-            horizontal: _size.width * AppDimens.kDetailHorizontalPaddingPercent,
-            vertical: _size.height * AppDimens.kDetailVerticalPaddingPercent,
+            horizontal: _size.width * AppNumberConstants.kDetailHorizontalPaddingPercent,
+            vertical: _size.height * AppNumberConstants.kDetailVerticalPaddingPercent,
           ),
           child: ExpandText(
             _postDetailsDescription,

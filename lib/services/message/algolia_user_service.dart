@@ -2,7 +2,7 @@ import 'package:algolia/algolia.dart';
 import 'package:intl/intl.dart';
 import '../../models/cloud_firestore/user_model/user/user.dart';
 
-import '../../models/ui/chat/temp_class.dart';
+import '../../models/ui/chat/chat.dart';
 import '../../ui/message_features/const_string/const_str.dart';
 import '../algolia/algolia.dart';
 import 'firestore_message_service.dart';

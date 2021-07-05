@@ -15,7 +15,10 @@ import 'post_details_separator.dart';
 class PostDetailsTitleSection extends StatelessWidget {
   const PostDetailsTitleSection({
     Key? key,
+    required this.shouldShowFavoriteButton,
   }) : super(key: key);
+
+  final bool shouldShowFavoriteButton;
 
   @override
   Widget build(BuildContext context) {
@@ -68,26 +71,29 @@ class PostDetailsTitleSection extends StatelessWidget {
                   ],
                 ),
               ),
-              FutureProvider<bool?>.value(
-                value: _firestoreDatabase.isFavoritePostOfCurrentUser(
-                  postId: _postId,
+              if (shouldShowFavoriteButton)
+                FutureProvider<bool?>.value(
+                  value: _firestoreDatabase.isFavoritePostOfCurrentUser(
+                    postId: _postId,
+                  ),
+                  initialData: null,
+                  catchError: (_, __) => false,
+                  child: Consumer<bool?>(
+                    builder: (_, isFavorite, __) {
+                      if (isFavorite == null) {
+                        return const SharedCircularProgressIndicator();
+                      }
+
+                      return ChangeNotifierProvider<
+                          PostDetailsFavoriteProvider>(
+                        create: (_) => PostDetailsFavoriteProvider(
+                          isFavorite: isFavorite,
+                        ),
+                        child: const PostDetailsFavoriteToggleButton(),
+                      );
+                    },
+                  ),
                 ),
-                initialData: null,
-                catchError: (_, __) => false,
-                child: Consumer<bool?>(
-                  builder: (_, isFavorite, __) {
-                    if (isFavorite == null) {
-                      return const SharedCircularProgressIndicator();
-                    }
-                    return ChangeNotifierProvider<PostDetailsFavoriteProvider>(
-                      create: (_) => PostDetailsFavoriteProvider(
-                        isFavorite: isFavorite,
-                      ),
-                      child: const PostDetailsFavoriteToggleButton(),
-                    );
-                  },
-                ),
-              ),
             ],
           ),
         ),
@@ -117,5 +123,12 @@ class PostDetailsTitleSection extends StatelessWidget {
         ),
       ],
     );
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(DiagnosticsProperty<bool>(
+        'shouldShowFavoriteButton', shouldShowFavoriteButton));
   }
 }

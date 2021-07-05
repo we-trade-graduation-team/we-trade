@@ -10,6 +10,7 @@ import '../../../../models/arguments/shared/post_details_arguments.dart';
 import '../../../../models/cloud_firestore/user_model/user/user.dart';
 import '../../../../providers/post_details_follow_provider.dart';
 import '../../../../services/firestore/firestore_database.dart';
+import '../../../../services/message/firestore_message_service.dart';
 import '../../../../utils/routes/routes.dart';
 import '../../../../widgets/shared_circular_progress_indicator.dart';
 import '../../../home_features/shared_widgets/rounded_outline_button.dart';
@@ -64,37 +65,41 @@ class _PostDetailsOwnerInfoSectionState
                 PostDetailsSectionContainer(
                   child: IntrinsicHeight(
                     child: Row(
-                      // mainAxisAlignment: MainAxisAlignment.start,
                       children: [
                         Flexible(
-                          child: SizedBox(
-                            height: _size.height * 0.068,
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(5),
-                              child: AspectRatio(
-                                aspectRatio: 1,
-                                child: CachedNetworkImage(
-                                  imageUrl:
-                                      user.avatarUrl ?? AppAssets.userImageStr,
-                                  imageBuilder: (_, imageProvider) => Container(
-                                    decoration: BoxDecoration(
-                                      image: DecorationImage(
-                                        image: imageProvider,
-                                        fit: BoxFit.cover,
+                          child: GestureDetector(
+                            onTap: _onProfileButtonPress,
+                            child: SizedBox(
+                              height: _size.height * 0.068,
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(5),
+                                child: AspectRatio(
+                                  aspectRatio: 1,
+                                  child: CachedNetworkImage(
+                                    imageUrl: user.avatarUrl ??
+                                        AppAssets.userImageStr,
+                                    imageBuilder: (_, imageProvider) =>
+                                        Container(
+                                      decoration: BoxDecoration(
+                                        image: DecorationImage(
+                                          image: imageProvider,
+                                          fit: BoxFit.cover,
+                                        ),
                                       ),
                                     ),
+                                    placeholder: (_, __) =>
+                                        const SharedCircularProgressIndicator(),
+                                    errorWidget: (_, __, dynamic ___) =>
+                                        const Icon(Icons.error),
                                   ),
-                                  placeholder: (_, __) =>
-                                      const SharedCircularProgressIndicator(),
-                                  errorWidget: (_, __, dynamic ___) =>
-                                      const Icon(Icons.error),
                                 ),
                               ),
                             ),
                           ),
                         ),
                         const SizedBox(width: 15),
-                        Flexible(
+                        Expanded(
+                          flex: 2,
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -118,7 +123,7 @@ class _PostDetailsOwnerInfoSectionState
                             ],
                           ),
                         ),
-                        const SizedBox(width: 25),
+                        // const SizedBox(width: 20),
                         PostDetailsSmallRatingThumbnail(
                           legitimacy: user.legit,
                         )
@@ -143,11 +148,18 @@ class _PostDetailsOwnerInfoSectionState
                             if (isFollowed == null) {
                               return const SharedCircularProgressIndicator();
                             }
-                            return ChangeNotifierProvider<
-                                PostDetailsFollowProvider>(
-                              create: (_) => PostDetailsFollowProvider(
-                                isFollowed: isFollowed,
-                              ),
+                            return MultiProvider(
+                              providers: [
+                                ChangeNotifierProvider<
+                                    PostDetailsFollowProvider>(
+                                  create: (_) => PostDetailsFollowProvider(
+                                    isFollowed: isFollowed,
+                                  ),
+                                ),
+                                Provider<MessageServiceFireStore>(
+                                  create: (_) => MessageServiceFireStore(),
+                                )
+                              ],
                               child: const PostDetailsFollowToggleButton(),
                             );
                           },
