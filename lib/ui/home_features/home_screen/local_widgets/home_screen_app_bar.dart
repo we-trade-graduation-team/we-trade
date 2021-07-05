@@ -98,8 +98,9 @@ class _HomeScreenAppBarState extends State<HomeScreenAppBar> {
           type: int.parse(doc['type'].toString()),
           reason: doc['reason'].toString(),
         );
-
+        print(data.postId);
         _notes.add(data);
+
       });
       setState(() {
         notes = _notes;
