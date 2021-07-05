@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 import 'package:provider/provider.dart';
-import 'package:tiengviet/tiengviet.dart';
 
 import '../../../models/arguments/shared/post_details_arguments.dart';
 import '../../../providers/loading_overlay_provider.dart';
@@ -161,33 +160,11 @@ class _TradingProductCardState extends State<TradingProductCard> {
     );
   }
 
-  List<String> splitStr(String str, String pattern) {
-    return str.split(pattern);
-  }
+  @override
+  void initState() {
+    splitTradeForList = splitStrList(widget.tradeForList);
 
-  List<String> splitStrList(List listStr) {
-    var splitListStr = <String>[];
-    for (final item in listStr) {
-      final splitComma = splitStr(item.toString(), ',');
-      for (final item in splitComma) {
-        final splitDot = splitStr(item.toString(), '.');
-        splitListStr = <String>[...splitListStr, ...splitDot];
-      }
-    }
-    return splitListStr;
-  }
-
-  bool checkIfContains(List listStr, String str) {
-    for (final item in listStr) {
-      if (item.trim() == '') {
-        continue;
-      }
-      if (TiengViet.parse(str.toLowerCase())
-          .contains(TiengViet.parse(item.toString().trim().toLowerCase()))) {
-        return true;
-      }
-    }
-    return false;
+    super.initState();
   }
 
   Future<void> _findRelatedPost() async {
@@ -210,13 +187,6 @@ class _TradingProductCardState extends State<TradingProductCard> {
     } catch (error) {
       rethrow;
     }
-  }
-
-  @override
-  void initState() {
-    splitTradeForList = splitStrList(widget.tradeForList);
-
-    super.initState();
   }
 
   @override

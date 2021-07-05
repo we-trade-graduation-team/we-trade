@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
@@ -10,6 +11,7 @@ import '../../../services/firestore/firestore_database.dart';
 import '../../../services/trading_feature/trading_service_firestore.dart';
 import '../../../widgets/custom_material_button.dart';
 import '../../../widgets/item_post_card.dart';
+import '../../account_features/utils.dart';
 import '../const_string/const_str.dart';
 import '../helper/helper_navigate_chat_room.dart';
 
@@ -35,6 +37,8 @@ class _MakeOfferScreenState extends State<MakeOfferScreen> {
   late bool _isHaveMoney = false;
   late List<String> chosenPostsId = [];
   late List<PostCard> posts = [];
+  late List<PostCard> relatedPosts = [];
+  late List<String> splitList = [];
   late bool loading = true;
 
   void clickPostCard(String postId) {
@@ -97,7 +101,18 @@ class _MakeOfferScreenState extends State<MakeOfferScreen> {
     }
   }
 
-  Widget buildListPostCard() {
+  Future<void> _findRelatedPost(List<PostCard> posts) async {
+    relatedPosts.clear();
+    // ignore: avoid_function_literals_in_foreach_calls
+    posts.forEach((post) {
+      final name = post.title.toString();
+      if (checkIfContains(splitList, name)) {
+        relatedPosts.add(post);
+      }
+    });
+  }
+
+  Widget buildListPostCard(List<PostCard> posts) {
     return loading
         ? Column(mainAxisAlignment: MainAxisAlignment.center, children: [
             Lottie.network(messageLoadingStr2, width: 100, height: 100),
@@ -157,10 +172,11 @@ class _MakeOfferScreenState extends State<MakeOfferScreen> {
                 : Row(
                     children: const [
                       SizedBox(width: 20),
-                      Text(
-                        'Bạn chưa có bài đăng',
-                        style: TextStyle(color: AppColors.kReviewTextLabel),
-                      ),
+                      Text('Bạn chưa có bài đăng nào ở đây',
+                          style: TextStyle(
+                            color: AppColors.kReviewTextLabel,
+                            fontSize: 18,
+                          )),
                     ],
                   ),
           );
@@ -169,9 +185,25 @@ class _MakeOfferScreenState extends State<MakeOfferScreen> {
   @override
   void initState() {
     super.initState();
+    final referenceDatabase = FirebaseFirestore.instance;
+    try {
+      referenceDatabase
+          .collection('posts')
+          .doc(widget.otherUserPostId)
+          .get()
+          .then((documentSnapshot) async {
+        final _post = documentSnapshot.data();
+        final tradeForList = _post!['tradeForList'] as List;
+        splitList = splitStrList(tradeForList);
+      });
+    } catch (error) {
+      rethrow;
+    }
+
     final thisUserId = Provider.of<User?>(context, listen: false)!.uid!;
     final _firestoreDatabase = context.read<FirestoreDatabase>();
     _firestoreDatabase.getPostCardsByUserId(userId: thisUserId).then((value) {
+      _findRelatedPost(value);
       setState(() {
         loading = false;
         posts = value;
@@ -196,6 +228,16 @@ class _MakeOfferScreenState extends State<MakeOfferScreen> {
                   children: [
                     const SizedBox(height: 5),
                     const Text(
+                      'Các sản phẩm có thể đối tác mong muốn',
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+                    buildListPostCard(relatedPosts),
+                    const SizedBox(height: 20),
+                    const Text(
                       'Tất cả sản phẩm',
                       style: TextStyle(
                         fontSize: 20,
@@ -203,7 +245,7 @@ class _MakeOfferScreenState extends State<MakeOfferScreen> {
                       ),
                     ),
                     const SizedBox(height: 20),
-                    buildListPostCard(),
+                    buildListPostCard(posts),
                     const SizedBox(height: 20),
                     Column(
                       children: [
@@ -316,5 +358,7 @@ class _MakeOfferScreenState extends State<MakeOfferScreen> {
     properties.add(IterableProperty<PostCard>('posts', posts));
     properties.add(DiagnosticsProperty<bool>('loading', loading));
     properties.add(IterableProperty<String>('chosenPostsId', chosenPostsId));
+    properties.add(IterableProperty<PostCard>('relatedPosts', relatedPosts));
+    properties.add(IterableProperty<String>('splitList', splitList));
   }
 }
