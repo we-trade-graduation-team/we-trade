@@ -29,7 +29,8 @@ class PostServiceAlgolia {
       'price': price,
       'district': district,
       'city': city,
-      'isHiddent': true
+      'isHiddent': true,
+      'priority': 0
     };
     await algolia.instance.index(postsAlgoliaIndex).addObject(mapData);
   }
@@ -47,29 +48,49 @@ class PostServiceAlgolia {
         district, // từ map address lấy thông tin cái quận lưu dô thôi,ex: 5
     required String city,
   }) async {
-    final mapData = <String, dynamic>{
-      'objectID': objectID,
-      'name': name,
-      'mainCategoyId': mainCategoyId,
-      'subCategoryId': subCategoryId,
-      'tradeForList': tradeForList,
-      'keywords': keywords,
-      'condition': condition,
-      'price': price,
-      'district': district,
-      'city': city,
-    };
+    final object =
+        await Future.delayed(const Duration(milliseconds: 1500), () async {
+      return algolia.instance.index('posts').object(objectID).getObject();
+    });
+
+    final updateData = Map<String, dynamic>.from(object.data);
+    updateData['name'] = name;
+    updateData['mainCategoyId'] = mainCategoyId;
+    updateData['subCategoryId'] = subCategoryId;
+    updateData['tradeForList'] = tradeForList;
+    updateData['keywords'] = keywords;
+    updateData['condition'] = condition;
+    updateData['price'] = price;
+    updateData['district'] = district;
+    updateData['city'] = city;
+
     await algolia.instance
         .index(postsAlgoliaIndex)
         .object(objectID)
-        .updateData(mapData);
+        .updateData(updateData);
   }
 
   Future<List<AlgoliaObjectSnapshot>> searchPostByAlgolia(
       String str, String cateId, String city, String condition) async {
-    var query = algolia.instance.index(postsAlgoliaIndex).query(str);
-    query = query.facetFilter('isHiddent:${false}');
+    // Set Settings // TODO sửa sorting search by priority
+    var index = algolia.instance.index(postsAlgoliaIndex);
+    // AlgoliaSettings settingsData = index.settings;
+    // settingsData = settingsData.setReplicas(['priority']);
+    // settingsData = settingsData.setRanking([
+    //   'desc(priority)',
+    //   'typo',
+    //   'geo',
+    //   'words',
+    //   'filters',
+    //   'proximity',
+    //   'attribute',
+    //   'exact',
+    //   'custom'
+    // ]);
+    // AlgoliaTask setSettings = await settingsData.setSettings();
 
+    var query = index.query(str);
+    query = query.facetFilter('isHiddent:${false}');
     if (cateId.isNotEmpty) {
       query = query.facetFilter('mainCategoyId:$cateId');
     }
