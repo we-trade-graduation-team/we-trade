@@ -20,6 +20,7 @@ class Post {
     required this.tradeForList,
     required this.price,
     required this.createAt,
+    this.priority = 0,
     this.isHidden = false,
   });
 
@@ -71,6 +72,9 @@ class Post {
 
   @JsonKey(required: true)
   final int price;
+
+  @JsonKey(defaultValue: 0)
+  final int priority;
 
   Map<String, dynamic> toJson() {
     final json = _$PostToJson(this);

@@ -30,6 +30,7 @@ Post _$PostFromJson(Map<String, dynamic> json) {
         .toList(),
     price: json['price'] as int,
     createAt: Post._rawDateTime(json['createAt'] as Timestamp),
+    priority: json['priority'] as int? ?? 0,
     isHidden: json['isHidden'] as bool? ?? false,
   );
 }
@@ -44,4 +45,5 @@ Map<String, dynamic> _$PostToJson(Post instance) => <String, dynamic>{
       'tradeForList': instance.tradeForList,
       'isHidden': instance.isHidden,
       'price': instance.price,
+      'priority': instance.priority,
     };

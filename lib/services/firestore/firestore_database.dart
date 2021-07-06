@@ -337,6 +337,34 @@ class FirestoreDatabase {
     return _result;
   }
 
+  Future<List<PostCard>> _sortPostCardsByPriority({
+    required List<PostCard> postCards,
+    bool shouldSortDescending = true,
+  }) async {
+    final _postIdList = postCards.map((post) => post.postId!).toList();
+
+    final _posts = await _getPostsByPostIdList(postIdList: _postIdList);
+
+    _posts.sort((a, b) {
+      if (shouldSortDescending) {
+        return b.priority.compareTo(a.priority);
+      }
+      return a.priority.compareTo(b.priority);
+    });
+
+    final _sortedPostCards = <PostCard>[];
+
+    for (final post in _posts) {
+      for (final postCard in postCards) {
+        if (post.postId! == postCard.postId!) {
+          _sortedPostCards.add(postCard);
+        }
+      }
+    }
+
+    return _sortedPostCards;
+  }
+
   // Method to retrieve a List of postCard by userId
   Future<List<PostCard>> _getPostCardsNotBelongToUser({
     required int limit,
@@ -576,19 +604,6 @@ class FirestoreDatabase {
     return _fullList;
   }
 
-  // Method to retrieve a List of Popular Post Card for Home Screen
-  Future<List<PostCard>> getHomeScreenPopularPostCards() async {
-    const _numberOfPostCardToTake =
-        AppFirestoreConstant.kHomeScreenPopularPostCardAmount;
-
-    final _result = await _getPostCardsNotBelongToUser(
-      limit: _numberOfPostCardToTake,
-      shouldSortViewDescending: true,
-    );
-
-    return _result;
-  }
-
   Future<List<PostCard>> _getIsNotHiddenPostCards({
     required List<PostCard> postCards,
   }) async {
@@ -640,6 +655,19 @@ class FirestoreDatabase {
     return _postCardsToReturn;
   }
 
+  // Method to retrieve a List of Popular Post Card for Home Screen
+  Future<List<PostCard>> getHomeScreenPopularPostCards() async {
+    const _numberOfPostCardToTake =
+        AppFirestoreConstant.kHomeScreenPopularPostCardAmount;
+
+    final _result = await _getPostCardsNotBelongToUser(
+      limit: _numberOfPostCardToTake,
+      shouldSortViewDescending: true,
+    );
+
+    return _result;
+  }
+
   // Method to retrieve a List of postCard recommended for current user
   // at Home Screen
   Future<List<PostCard>> getHomeScreenRecommendedPostCards() async {
@@ -655,12 +683,16 @@ class FirestoreDatabase {
     // If null or empty
     if (_currentUserKeywordHistory == null ||
         _currentUserKeywordHistory.isEmpty) {
-      final _listReceived = await _getPostCardsNotBelongToUser(
+      final _postCardsWithMostView = await _getPostCardsNotBelongToUser(
         limit: _numberOfPostCardToTake,
-        shouldSortViewDescending: true,
+        shouldSortViewDescending: false,
       );
 
-      return _listReceived;
+      final _result = await _sortPostCardsByPriority(
+        postCards: _postCardsWithMostView,
+      );
+
+      return _result;
     }
 
     // Sort descending category history by times
@@ -733,6 +765,7 @@ class FirestoreDatabase {
       );
 
       if (_postCardsFromJunction.isEmpty) {
+        // Return empty list
         return _postCardsFromJunction;
       }
 
@@ -759,7 +792,11 @@ class FirestoreDatabase {
 
     // Return if has enough cards
     if (_flattenPostCardList.length == _numberOfPostCardToTake) {
-      return _flattenPostCardList;
+      final _result = await _sortPostCardsByPriority(
+        postCards: _flattenPostCardList,
+      );
+
+      return _result;
     }
 
     // Calculate number of missing cards
@@ -785,9 +822,6 @@ class FirestoreDatabase {
     _isNotHiddenPostCards.removeWhere(
         (postCard) => _excludedPostIdList.contains(postCard.postId));
 
-    // Sort descending by view
-    _isNotHiddenPostCards.sort((a, b) => b.view.compareTo(a.view));
-
     // If have take enough missing amount
     if (_isNotHiddenPostCards.length == _missingAmount) {
       // Concatenate two list
@@ -796,7 +830,12 @@ class FirestoreDatabase {
         ..._isNotHiddenPostCards
       }.toList();
 
-      return _fullList;
+      // Sort descending by priority
+      final _result = await _sortPostCardsByPriority(
+        postCards: _fullList,
+      );
+
+      return _result;
     }
 
     // Else, we have take more than enough than take exactly amount missing
@@ -809,7 +848,12 @@ class FirestoreDatabase {
       ..._exactlyAmountMissingPostCardList
     }.toList();
 
-    return _fullList;
+    // Sort descending by priority
+    final _result = await _sortPostCardsByPriority(
+      postCards: _fullList,
+    );
+
+    return _result;
   }
 
   // Method to retrieve a List of similar postCards by postId

@@ -3,10 +3,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
-import 'package:we_trade/services/post_feature/post_service_firestore.dart';
 
 import '../../../constants/app_assets.dart';
 import '../../../constants/app_colors.dart';
+import '../../../services/post_feature/post_service_firestore.dart';
 import '../account_screen/local_widgets/getter.dart';
 import '../shared_widgets/rating_bar.dart';
 import '../utils.dart';
