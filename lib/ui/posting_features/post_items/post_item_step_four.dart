@@ -239,7 +239,7 @@ class _PostItemFourState extends State<PostItemFour> {
           dataServiceAlgolia.addPost(
               objectID: postId,
               name: arguments['name'] as String,
-              keywords: arguments['keywords'] as List<String>,
+              keywords: arguments['keyword'] as List<String>,
               mainCategoyId: arguments['mainCategoryId'] as String,
               subCategoryId: arguments['subCategoryId'] as String,
               tradeForList: arguments['tradeForList'] as List<String>,

@@ -112,7 +112,7 @@ class PostServiceFireStore {
     try {
       final CollectionReference postCard =
           FirebaseFirestore.instance.collection('posts');
-      await postCard.doc(postId).set(arguments);
+      await postCard.doc(postId).set(arguments, SetOptions(merge: true));
       return 'true';
     } catch (e) {
       rethrow;
