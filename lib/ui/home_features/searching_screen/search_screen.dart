@@ -115,7 +115,7 @@ class _SearchScreenState extends State<SearchScreen> {
       _firestoreDatabase
           .getPostCardsByPostIdList(
             postIdList: listId,
-            shouldSortViewDescending: true,
+            shouldSortViewDescending: false,
           )
           .then((value) => setState(() {
                 posts = value;

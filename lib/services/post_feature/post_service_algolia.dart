@@ -72,24 +72,7 @@ class PostServiceAlgolia {
 
   Future<List<AlgoliaObjectSnapshot>> searchPostByAlgolia(
       String str, String cateId, String city, String condition) async {
-    // Set Settings // TODO sửa sorting search by priority
-    var index = algolia.instance.index(postsAlgoliaIndex);
-    // AlgoliaSettings settingsData = index.settings;
-    // settingsData = settingsData.setReplicas(['priority']);
-    // settingsData = settingsData.setRanking([
-    //   'desc(priority)',
-    //   'typo',
-    //   'geo',
-    //   'words',
-    //   'filters',
-    //   'proximity',
-    //   'attribute',
-    //   'exact',
-    //   'custom'
-    // ]);
-    // AlgoliaTask setSettings = await settingsData.setSettings();
-
-    var query = index.query(str);
+    var query = algolia.index(postsAlgoliaIndex).query(str);
     query = query.facetFilter('isHiddent:${false}');
     if (cateId.isNotEmpty) {
       query = query.facetFilter('mainCategoyId:$cateId');
