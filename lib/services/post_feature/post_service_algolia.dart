@@ -29,7 +29,7 @@ class PostServiceAlgolia {
       'price': price,
       'district': district,
       'city': city,
-      'isHiddent': true,
+      'isHiddent': false,
       'priority': 0
     };
     await algolia.instance.index(postsAlgoliaIndex).addObject(mapData);
